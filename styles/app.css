@@ -1,0 +1,16 @@
+#navitems-holder {
+    align-items: center;
+}
+
+#navitems-holder a {
+    color: #007cef;
+    padding-bottom: 4px;
+    letter-spacing: 0.535px
+}
+
+
+#navitems-holder a.active, #navitems-holder a:hover {
+    border-bottom: 2px #007cef solid;
+    font-weight: bold;
+    letter-spacing: 0
+}

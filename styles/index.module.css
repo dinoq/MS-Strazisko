@@ -1,0 +1,5 @@
+.hero{
+    min-height: 1490px;
+    width: 100%;
+    background-image: url("/public/img/main-bg.png");
+}
