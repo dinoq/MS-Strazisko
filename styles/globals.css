@@ -1,9 +1,13 @@
+:root {
+  --blue-color: #0074e0;
+}
+
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
+    Helvetica Neue, sans-serif;
 }
 
 a {
@@ -15,10 +19,11 @@ a {
   box-sizing: border-box;
 }
 
-h1{
+h1 {
   font-size: 2rem;
 }
 
-h1,p{
-  color: #007CEF;
+h1,
+p {
+  color: var(--blue-color);
 }

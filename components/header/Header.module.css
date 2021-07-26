@@ -19,7 +19,7 @@ nav .list{
 
 .list li{
     padding: 10px 10px;
-    color: #007CEF;
+    color: var(--blue-color);
     letter-spacing: 0.7px;
     cursor: pointer;
 }
@@ -27,7 +27,7 @@ nav .list{
 
 
 .list li.active{
-    border-bottom: 2px solid #007CEF;
+    border-bottom: 2px solid var(--blue-color);
     font-weight: bold;
 }
 
