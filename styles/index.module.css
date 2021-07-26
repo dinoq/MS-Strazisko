@@ -1,5 +1,8 @@
 .hero{
-    min-height: 1490px;
+    background: url("/img/main-bg.png");
+    background-size: contain;
+    /*background-size: 700px;*/
+    background-repeat: repeat-x;
     width: 100%;
-    background-image: url("/public/img/main-bg.png");
+    min-height: 400px;
 }

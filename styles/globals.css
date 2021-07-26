@@ -8,9 +8,17 @@ body {
 
 a {
   color: inherit;
-  text-decoration: none;
+  text-decoration: none !important;
 }
 
 * {
   box-sizing: border-box;
+}
+
+h1{
+  font-size: 2rem;
+}
+
+h1,p{
+  color: #007CEF;
 }

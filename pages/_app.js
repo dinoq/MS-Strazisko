@@ -2,7 +2,6 @@ import { Container, Nav, Navbar } from 'react-bootstrap'
 import '../styles/globals.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Image from 'next/image'
-import "/styles/app.css"
 import Head from "next/head";
 import Header from '../components/header/Header';
 
