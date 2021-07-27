@@ -6,3 +6,7 @@
     width: 100%;
     min-height: 400px;
 }
+
+#toys-img{
+    object-fit: contain !important;
+}

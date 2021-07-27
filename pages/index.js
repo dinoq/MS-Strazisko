@@ -2,6 +2,8 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Container8 from '../components/UI/Container8'
 import classes from "/styles/index.module.css"
+import toys from "../public/img/toys.jpg"
+
 
 export default function Home() {
   return (
@@ -23,7 +25,7 @@ export default function Home() {
                 <Container8>
                     <div className="row">
                         <div className="col-4 position-relative">
-                          <Image src="/img/toys.jpg" layout="fill" alt="Hračky"/>
+                          <Image src={toys} layout="responsive" width={1599} height={1066} alt="Hračky" placeholder="blur" quality={5} id={classes["toys-img"]}/>
                         </div>
                         <div className="col-8">
                             <h1>O MŠ Stražisko</h1>

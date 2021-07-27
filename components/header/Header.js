@@ -14,7 +14,9 @@ const Header = (props) => {
                     <div className={classes.logo}>
                         <Image src="/img/logo.png"
                             alt="Logo školky"
-                            layout={"fill"} />
+                            width={234}
+                            height={119}
+                            layout={"responsive"} />
                     </div>
                     <nav className={classes.nav}>
                         <ul className={classes.list + " d-flex"}>
