@@ -1,0 +1,45 @@
+@import "./custom.scss";
+
+:root {
+  --blue-color: #0074e0;
+}
+
+.text-blue {
+  color: var(--blue-color)!important;
+}
+
+@font-face {
+  font-family: dosis;
+  src: url("/fonts/Dosis-Regular.ttf");
+}
+
+@font-face {
+  font-family: dosis;
+  src: url("/fonts/Dosis-Bold.ttf");
+  font-weight: bold;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: dosis, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
+    Helvetica Neue, sans-serif !important;
+}
+
+a {
+  color: inherit;
+  text-decoration: none !important;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+.h3{
+  font-size: 1.45rem;
+}

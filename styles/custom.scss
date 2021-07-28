@@ -1,0 +1,9 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+//není možné importovat celý Bootstrap tímto importem (způsobovalo by problémy v SASS modulech):
+//@import '~bootstrap/scss/bootstrap.scss';
+
+
+//$blue-100: rgb(98, 98, 255);

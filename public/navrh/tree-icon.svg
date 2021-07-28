@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="13.714765mm"
+   height="14.008231mm"
+   viewBox="0 0 13.714765 14.008231"
+   version="1.1"
+   id="svg24140"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   sodipodi:docname="tree-icon.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview24142"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="11.859035"
+     inkscape:cx="25.255006"
+     inkscape:cy="21.882051"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="1272"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs24137" />
+  <g
+     inkscape:label="Vrstva 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-21.878796,-16.912956)">
+    <g
+       id="g18616"
+       transform="translate(-8.0998779,-3.2233427)"
+       style="fill:#000000;fill-opacity:1;stroke:#b60000;stroke-opacity:1"
+       inkscape:export-filename="C:\Users\dinok\Documents\GitHub\ms-strazisko\public\img\tree-icon2.webp"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
+      <path
+         style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 35.830978,33.64453 h 2.320314 l -0.512559,-1.912898 h -1.249987 z"
+         id="path16897"
+         sodipodi:nodetypes="ccccc" />
+      <g
+         id="g18530"
+         style="fill:#000000;fill-opacity:1;stroke:#b60000;stroke-opacity:1">
+        <path
+           style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m 37.026379,31.315451 h 6.16713 L 38.86962,26.991558 h 2.717519 l -3.656761,-3.656761 h 1.604176 l -2.698498,-2.698498"
+           id="path17850" />
+        <path
+           style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m 36.645733,31.315451 h -6.16713 l 4.323889,-4.323893 h -2.717519 l 3.656761,-3.656761 h -1.604176 l 2.698498,-2.698498"
+           id="path17850-9" />
+      </g>
+    </g>
+  </g>
+</svg>

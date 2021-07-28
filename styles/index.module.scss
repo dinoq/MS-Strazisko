@@ -1,0 +1,32 @@
+@import "./custom.scss";
+
+.hero{
+    background: url("/img/main-bg.png");
+    background-size: contain;
+    /*background-size: 700px;*/
+    background-repeat: repeat-x;
+    width: 100%;
+    min-height: 400px;
+}
+
+.about{
+    color: $blue-600;
+}
+
+#toys-img{
+    object-fit: contain !important;
+}
+
+.school-features{
+    min-height: 300px;
+    background: linear-gradient( rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2) ),url("/img/green.png");
+}
+
+.teachers{
+    min-height: 300px;
+}
+
+.events{    
+    min-height: 300px;
+    background: url("/img/yellow.png");
+}
