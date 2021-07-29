@@ -5,19 +5,11 @@ import SchoolFeature from '../components/SchoolFeature'
 
 import classes from "/styles/index.module.scss"
 
-import toys from "../public/img/toys.jpg"
+import toys from "../public/img/toys.webp"
 import playIcon from "../public/img/play-icon-optimal.svg"
 import treeIcon from "../public/img/tree-icon-optimal.svg"
 import foodIcon from "../public/img/food-icon-optimal.svg"
 import smileIcon from "../public/img/smile-icon-optimal.svg"
-
-//import "bootstrap/scss/_functions.scss";
-//import 'bootstrap/scss/bootstrap.scss';
-//import 'bootstrap/dist/css/bootstrap.css';
-// 2. Include any default variable overrides here
-//import 'bootstrap/scss/bootstrap.scss';
-
-// 3. Include remainder of required Bootstrap stylesheets
 
 export default function Home() {
   return (

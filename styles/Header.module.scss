@@ -1,3 +1,4 @@
+@import "./custom.scss";
 
 .header{
     display: flex;
@@ -19,7 +20,7 @@ nav .list{
 
 .list li{
     padding: 10px 10px;
-    color: var(--blue-color);
+    color: $primary;
     letter-spacing: 0.7px;
     cursor: pointer;
 }
@@ -27,7 +28,7 @@ nav .list{
 
 
 .list li.active{
-    border-bottom: 2px solid var(--blue-color);
+    border-bottom: 2px solid $primary;
     font-weight: bold;
 }
 

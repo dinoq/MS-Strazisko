@@ -1,7 +1,8 @@
 @import "./custom.scss";
 
+
 .hero{
-    background: url("/img/main-bg.png");
+    background: url("/img/main-bg.webp");
     background-size: contain;
     /*background-size: 700px;*/
     background-repeat: repeat-x;
@@ -10,7 +11,8 @@
 }
 
 .about{
-    color: $blue-600;
+    color: $primary;
+    transition: color 1s ease-out;
 }
 
 #toys-img{

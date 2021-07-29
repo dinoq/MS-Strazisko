@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-import classes from "./Header.module.css";
+import classes from "../../styles/Header.module.scss";
 import Image from "next/image";
 import Link from "next/link";
 import Container8 from "../UI/Container8";

@@ -4,10 +4,6 @@ import Image from "next/image"
 
 
 const SchoolFeature: React.FC<{icon: any, title: string, description: string, alt: string}> = (props) => {
-    console.log('icon: ', props.icon);
-    
-    console.log('icon: ', typeof props.icon);
-    console.log('icon: ', typeof props.title);
     
     return (
         <>

@@ -1,11 +1,8 @@
 @import "./custom.scss";
 
-:root {
-  --blue-color: #0074e0;
-}
 
 .text-blue {
-  color: var(--blue-color)!important;
+  color: $primary!important;
 }
 
 @font-face {
