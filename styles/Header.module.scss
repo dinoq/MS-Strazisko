@@ -1,39 +1,76 @@
 @import "./custom.scss";
 
-.header{
-    display: flex;
+@mixin transition($prop) {
+    transition: $prop 0.3s ease-out;
 }
+.header {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 1000;
+    box-shadow: 1px -2px 6px black;
+    height: 60px;
+    @include transition(height);
 
-.logo{
-    position: relative;
+    .logo-container {
+        /*position: relative;
     object-fit: contain;
     min-width: 100px;
-    min-height: 10px;
-    
-}
+    min-height: 10px;*/
 
-nav .list{
-    list-style: none;
-    display: flex;
-    justify-content: space-evenly;
-}
+        :global(#logo) {
+            font-weight: 900 !important;
+            color: $primary;
+            font-size: 1.5rem;
+            user-select: none;
+            text-shadow: 4px 2px 4px #5d8acc;
+            @include transition(font-size);
+        }
+    }
 
-.list li{
-    padding: 10px 10px;
-    color: $primary;
-    letter-spacing: 0.7px;
-    cursor: pointer;
-}
+    .nav {
+        display: flex;
+        align-items: center;
+        font-size: 1.2rem;
+        @include transition(font-size);
 
+        .list {
+            list-style: none;
+            display: flex;
+            justify-content: space-evenly;
+            margin: 0;
+        }
+    }
 
+    .list li {
+        padding: 0px 10px;
+        color: $primary;
+        letter-spacing: 0.7px;
+        cursor: pointer;
+    }
 
-.list li.active{
-    border-bottom: 2px solid $primary;
-    font-weight: bold;
-}
+    .list li.active {
+        border-bottom: 2px solid $primary;
+        font-weight: bold;
+    }
 
-.list li:hover{
-    background: whitesmoke;
-    font-weight: bold;
-    letter-spacing: 0;
+    .list li:hover {
+        background: whitesmoke;
+        font-weight: bold;
+        letter-spacing: 0;
+    }
+
+    &.expanded {
+        height: 80px;
+
+        .logo-container {
+            :global(#logo) {
+                font-size: 2rem;
+            }
+        }
+
+        .nav {
+            font-size: 1.4rem;
+        }
+    }
 }

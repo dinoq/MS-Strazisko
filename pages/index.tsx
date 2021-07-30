@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import Container8 from '../components/UI/Container8'
 import SchoolFeature from '../components/SchoolFeature'
 
 import classes from "/styles/index.module.scss"
@@ -28,19 +27,17 @@ export default function Home() {
           </div>
         </div>
         <div className={"row py-3 " + classes.about}>
-          <Container8>
-            <div className="row">
+            <div className="row d-flex justify-content-center align-items-center">
               <div className="col-4 position-relative">
-                <Image src={toys} layout="responsive" width={1599} height={1066} alt="Hračky" placeholder="blur" id={classes["toys-img"]} />
+                <Image src={toys} layout="responsive" sizes="33vw" alt="Hračky" placeholder="blur" id={classes["toys-img"]} />
               </div>
-              <div className="col-8">
+              <div className="col-4">
                 <h1 className="fw-bold">O MŠ Stražisko</h1>
                 <p>
                   Mateřská školka se nachází v malé vesničce Stražisko na Konicku uprostřed malebné přírody, obklopené lesy. Mateřská školka se nachází v malé vesničce Stražisko na Konicku uprostřed malebné přírody, obklopená lesy. Mateřská školka se nachází v malé vesničce Stražisko na Konicku uprostřed malebné přírody, obklopená lesy.
                 </p>
               </div>
             </div>
-          </Container8>
         </div>
         <div className={classes["school-features"] + " row py-3 text-white text-center"}>
           <div className={"row justify-content-center"}>
@@ -51,22 +48,12 @@ export default function Home() {
 
             </div>
             <div className="col-8 row py-3">
-              <SchoolFeature icon={playIcon} alt="Ikona herní konzole" title="Zábava" description="Školka vlastní mnoho různých hraček, kterými se vaše děti zabaví." />
-              <div className="col-3 d-flex flex-column">
-                <Image src={treeIcon} />
-                <h3 className={"my-2"}><u><strong>Krásná příroda</strong></u></h3>
-                <p>Školka vlastní mnoho různých hraček, kterými se vaše děti zabaví.</p>
-              </div>
-              <div className="col-3 d-flex flex-column">
-                <Image src={foodIcon} />
-                <h3 className={"my-2"}><u><strong>Stravování</strong></u></h3>
-                <p>Školka vlastní mnoho různých hraček, kterými se vaše děti zabaví.</p>
-              </div>
-              <div className="col-3 d-flex flex-column">
-                <Image src={smileIcon} />
-                <h3 className={"my-2"}><u><strong>Příjemná atmosféra</strong></u></h3>
-                <p>Školka vlastní mnoho různých hraček, kterými se vaše děti zabaví.</p>
-              </div>
+              <SchoolFeature icon={playIcon} bgColor="#0a58ca" alt="Ikona herní konzole" title="Zábava" description="Školka vlastní mnoho různých hraček, kterými se vaše děti zabaví." />
+              <SchoolFeature icon={treeIcon} bgColor="#0aca10" alt="Ikona přírody" title="Krásná příroda" description="školka se nachází uprostřed krásné přírody." />
+              <SchoolFeature icon={foodIcon} bgColor="#ca3f0a" alt="Ikona jídla (ovoce)" title="Stravování" description="Každý den jsou do školy dováženy obědy z nedaleké MŠ Ptení." />
+              <SchoolFeature icon={smileIcon} bgColor="#0acaa7" alt="Ikona úsměvu" title="Příjemná atmosféra" description="Vaše děti se u nás budou cítit jako doma." />
+           
+        
 
             </div>
 
@@ -74,14 +61,10 @@ export default function Home() {
         </div>
 
         <div className={classes["teachers"] + " row py-4"}>
-          <Container8>
-
-          </Container8>
+          
         </div>
         <div className={classes["events"] + " row py-4"}>
-          <Container8>
-
-          </Container8>
+          
         </div>
 
 

@@ -1,25 +1,26 @@
 module.exports = {
   reactStrictMode: true,
   i18n: {
-    locales: ['cs', /*'en-US', 'nl-NL', 'nl-BE'*/],
+    locales: ['cs'],
     defaultLocale: 'cs',
 
     domains: [
       {
         domain: 'http://localhost:3000/',
         defaultLocale: 'cs',
-      }/*,
-      {
-        domain: 'example.fr',
-        defaultLocale: 'fr',
-      },
-      {
-        domain: 'example.nl',
-        defaultLocale: 'nl-NL',
-        // specify other locales that should be redirected
-        // to this domain
-        locales: ['nl-BE'],
-      },*/
+      }
     ],
+  },
+  images: {
+    deviceSizes: [320, 640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+  },
+  async redirects() {
+    return [
+      {
+        source: '/a',
+        destination: '/',
+        permanent: true,
+      },
+    ]
   },
 }
