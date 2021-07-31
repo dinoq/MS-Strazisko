@@ -11,6 +11,23 @@ const Header = (props) => {
     const [headerExpanded, setHeaderExpanded] = useState(false);
     const [menuExpanded, setMenuExpanded] = useState(false);
 
+
+    const toggleHamburgerMenu = e => {
+        setMenuExpanded(prevVal => {
+            return !prevVal;
+        })
+    }
+
+
+    const router = useRouter();
+
+
+    const navigation = [["/", "Domů"], ["/foto", "Foto"], ["/stravovani", "Stravování"], ["/dokumenty", "Dokumenty"], ["/kontakt", "Kontakt"]];
+    const links = navigation.map((link, index, array) =>
+        <Link key={index} href={link[0]}><li onClick={toggleHamburgerMenu} key={link[0]} className={router.pathname == link[0] ? classes.active : ""}><a>{link[1]}</a></li></Link>
+    );
+
+
     const handleNavigation = useCallback(
         e => {
             const window = e.currentTarget;
@@ -33,23 +50,20 @@ const Header = (props) => {
         };
     }, [handleNavigation]);
 
-    const toggleHamburgerMenu = e => {
-        setMenuExpanded(prevVal=>{
-            console.log('prevVal: ', prevVal);
-            return !prevVal;
-        })
-    }
 
-    const router = useRouter();
-    
-    const navigation = [["/", "Domů"], ["/foto", "Foto"], ["/stravovani", "Stravování"], ["/dokumenty", "Dokumenty"], ["/kontakt", "Kontakt"]];
-    const links = navigation.map((link, index, array) =>
-        <li key={link[0]} className={router.pathname == link[0] ? classes.active : ""}><Link key={index} href={link[0]}><a>{link[1]}</a></Link></li>
-    );
+    useEffect(() => {
+        // Accessing scss variable "--background-color"
+        // and "--text-color" using plain JavaScript
+        // and changing the same according to the state of "darkTheme"
+        const root = document.documentElement;
+        root?.style.setProperty(
+            "--navbar-items-count", links.length
+        );
+    }, []);
     return (
         <>
             <div className={classes.header + " " + (headerExpanded ? classes["header-expanded"] : "") + " row justify-content-center"}>
-                <div className={"col-8 d-flex justify-content-between align-items-center"}>
+                <div className={"col-8 d-flex justify-content-between align-items-center flex-wrap"}>
                     <div className={classes["logo-container"] + " d-flex align-items-center"}>
                         {/* <Image src="/img/logo.png"
                             alt="Logo školky"
@@ -58,12 +72,12 @@ const Header = (props) => {
                             layout={"responsive"} /> */}
                         <span id="logo">MŠ Stražisko</span>
                     </div>
-                    <div className={classes["hamburger-menu-container"] + " d-flex flex-column justify-content-evenly d-md-none"} onClick={toggleHamburgerMenu}>
+                    <div className={classes["hamburger-menu-container"] + " d-flex flex-column justify-content-evenly d-lg-none"} onClick={toggleHamburgerMenu}>
                         <div></div>
                         <div></div>
                         <div></div>
                     </div>
-                    <nav className={classes.nav + (menuExpanded? " " + classes["menu-expanded"] : "") /*+ " d-none d-md-flex"*/ }>
+                    <nav className={classes.nav + (menuExpanded ? " " + classes["menu-expanded"] : "") /*+ " d-none d-lg-flex"*/}>
                         <ul className={classes.list + " d-flex"}>
                             {links}
                         </ul>

@@ -1,17 +1,21 @@
 @import "./custom.scss";
 
-@mixin transition($prop) {
-    transition: $prop 0.3s ease-out;
-}
-
+$navbar-items-count: 3;
+$header-expanding-transition-delay: 0.3s;
+$header-expanded-height: 80px;
+$header-shrinked-height: 60px;
+$nav-li-padding-y: 8px;
+$font-size: 1.2rem;
 .header {
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
     background-color: white;
     z-index: 1000;
     box-shadow: 1px -2px 6px black;
-    height: 60px;
-    @include transition(height);
+    height: $header-shrinked-height;
+    transition: height $header-expanding-transition-delay;
 
     .logo-container {
         /*position: relative;
@@ -25,7 +29,7 @@
             font-size: 1.5rem;
             user-select: none;
             text-shadow: 4px 2px 4px #5d8acc;
-            @include transition(font-size);
+            transition: font-size $header-expanding-transition-delay;
         }
     }
 
@@ -33,6 +37,8 @@
         $menu-size: 32px;
         width: $menu-size;
         height: $menu-size;
+        cursor: pointer;
+
         div {
             background-color: black;
             width: 100%;
@@ -41,13 +47,40 @@
     }
 
     .nav {
-        display: none;
+        display: flex;
+        max-height: 0px;
+        width: 100%;
         align-items: center;
-        font-size: 1.2rem;
-        @include transition(font-size);
-        @include media-breakpoint-up(md) { 
+        font-size: $font-size;
+        overflow: hidden;
+        flex-direction: column;
+        background: white;
+        position: fixed;
+        top: 50px;
+        left: 0;
+
+        ul {
+            flex-direction: column;
+        }
+
+        transition: font-size $header-expanding-transition-delay;
+        @include media-breakpoint-up(lg) {
             display: flex;
-         }
+            position: static;
+            max-height: 1000px;
+            width: auto;
+            ul {
+                flex-direction: row;
+            }
+        }
+
+        transition: max-height 0.5s;
+
+        &.menu-expanded {
+            //overflow-y: scroll;
+
+            max-height: calc(var(--navbar-items-count) * (#{$nav-li-padding-y} * 2 + #{$font-size} * 1.5));
+        }
 
         .list {
             list-style: none;
@@ -56,7 +89,7 @@
             margin: 0;
 
             li {
-                padding: 8px 10px;
+                padding: $nav-li-padding-y 10px;
                 color: $primary;
                 cursor: pointer;
                 position: relative;
@@ -91,26 +124,10 @@
                 }
             }
         }
-
-        &.menu-expanded {
-            display: flex;
-            width: 100%;
-            position: absolute;
-            left: 0;
-            top: 50px;
-            background: white;
-            transition: max-height 1s;
-            max-height: 1000px;
-            overflow-y: scroll;
-
-            ul {
-                flex-direction: column;
-            }
-        }
     }
 
     &.header-expanded {
-        height: 80px;
+        height: $header-expanded-height;
 
         .logo-container {
             :global(#logo) {
