@@ -8,7 +8,7 @@ const SchoolFeature: React.FC<{icon: any, title: string, description: string, al
     
     return (
         <>
-            <div className="col-3 d-flex flex-column align-items-center">
+            <div className="col-6 col-lg-3 d-flex flex-column align-items-center">
                 <div className={styles["circle-bh-container"]}>
                     <div style={{backgroundColor: props.bgColor}} className={styles["circle-bg"]}>
                         <Image src={props.icon} alt={props.alt}/>

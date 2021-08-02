@@ -26,18 +26,20 @@ export default function Home() {
 
           </div>
         </div>
+        <div className="container">
         <div className={"row py-3 " + classes.about}>
             <div className="row d-flex justify-content-center align-items-center">
-              <div className="col-4 position-relative">
+              <div className="d-none d-lg-block col-lg-4 position-relative">
                 <Image src={toys} layout="responsive" sizes="33vw" alt="Hračky" placeholder="blur" id={classes["toys-img"]} />
               </div>
-              <div className="col-4">
+              <div className="col col-lg-4">
                 <h1 className="fw-bold">O MŠ Stražisko</h1>
                 <p>
                   Mateřská školka se nachází v malé vesničce Stražisko na Konicku uprostřed malebné přírody, obklopené lesy. Mateřská školka se nachází v malé vesničce Stražisko na Konicku uprostřed malebné přírody, obklopená lesy. Mateřská školka se nachází v malé vesničce Stražisko na Konicku uprostřed malebné přírody, obklopená lesy.
                 </p>
               </div>
             </div>
+        </div>
         </div>
         <div className={classes["school-features"] + " row py-3 text-white text-center"}>
           <div className={"row justify-content-center"}>

@@ -7,7 +7,7 @@ $header-shrinked-height: 60px;
 $nav-li-padding-y: 8px;
 $font-size: 1.2rem;
 .header {
-    position: fixed;
+    position: sticky;
     top: 0;
     left: 0;
     right: 0;
@@ -79,7 +79,7 @@ $font-size: 1.2rem;
         &.menu-expanded {
             //overflow-y: scroll;
 
-            max-height: calc(var(--navbar-items-count) * (#{$nav-li-padding-y} * 2 + #{$font-size} * 1.5));
+            max-height: calc(var(--navbar-items-count) * (#{$nav-li-padding-y} * 2 + #{$font-size} * 3));
         }
 
         .list {
