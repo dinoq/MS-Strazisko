@@ -31,9 +31,9 @@ const Header = (props) => {
     const handleNavigation = useCallback(
         e => {
             const window = e.currentTarget;
-            if (scrollY > window.scrollY && window.scrollY < 50 && !headerExpanded.length) { // scrolling up
+            if (scrollY > window.scrollY && window.scrollY < 50 && !headerExpanded) { // scrolling up
                 setHeaderExpanded(true);
-            } else if (scrollY < window.scrollY && window.scrollY > 50 && headerExpanded.length) { // scrolling down
+            } else if (scrollY < window.scrollY && window.scrollY > 80 && headerExpanded) { // scrolling down
                 setHeaderExpanded(false);
 
             }
@@ -52,17 +52,15 @@ const Header = (props) => {
 
 
     useEffect(() => {
-        // Accessing scss variable "--background-color"
-        // and "--text-color" using plain JavaScript
-        // and changing the same according to the state of "darkTheme"
         const root = document.documentElement;
         root?.style.setProperty(
             "--navbar-items-count", links.length
         );
     }, []);
+
     return (
         <>
-            <div className={classes.header + " " + (headerExpanded ? classes["header-expanded"] : "") + " row justify-content-center"}>
+            <div className={classes.header + " " + (headerExpanded ? classes["header-expanded"] : "") + " container-fluid row justify-content-center"}>
                 <div className={"col-8 d-flex justify-content-between align-items-center flex-wrap"}>
                     <div className={classes["logo-container"] + " d-flex align-items-center"}>
                         {/* <Image src="/img/logo.png"

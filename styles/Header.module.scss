@@ -56,14 +56,14 @@ $font-size: 1.2rem;
         flex-direction: column;
         background: white;
         position: fixed;
-        top: 50px;
+        top: $header-shrinked-height;
         left: 0;
-
+        transition: max-height 0.5s, font-size $header-expanding-transition-delay, top $header-expanding-transition-delay;
+        
         ul {
             flex-direction: column;
         }
 
-        transition: font-size $header-expanding-transition-delay;
         @include media-breakpoint-up(lg) {
             display: flex;
             position: static;
@@ -74,7 +74,6 @@ $font-size: 1.2rem;
             }
         }
 
-        transition: max-height 0.5s;
 
         &.menu-expanded {
             //overflow-y: scroll;
@@ -137,6 +136,7 @@ $font-size: 1.2rem;
 
         .nav {
             font-size: 1.4rem;
+            top: $header-expanded-height;
         }
     }
 }
