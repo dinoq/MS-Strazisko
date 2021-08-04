@@ -1,0 +1,39 @@
+
+.photo-container{
+    $size: 196px;
+    width: $size;
+    height: $size;
+    background: linear-gradient(rgb(212, 212, 212), rgb(212, 212, 212)), rgba(0, 128, 0, 0.637);
+    border-radius: 45%;
+
+    img{
+        border-radius: 50%;
+    }
+}
+
+.text-container{
+    position: relative;
+    width: 100%;
+    
+    .text{
+        position: absolute;
+        top: -30px;
+        margin-bottom: -30px;
+        background-color: #00C7D3;
+        max-width: 80%;
+        min-width: 50%;
+        text-align: center;
+        border-radius: 15px;
+        padding: 5px 20px;
+        color: white;
+    
+        .name{
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+    
+        .description{
+            font-size: 1.1rem;
+        }
+    }
+}

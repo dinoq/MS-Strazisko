@@ -9,6 +9,8 @@ import playIcon from "../public/img/play-icon-optimal.svg"
 import treeIcon from "../public/img/tree-icon-optimal.svg"
 import foodIcon from "../public/img/food-icon-optimal.svg"
 import smileIcon from "../public/img/smile-icon-optimal.svg"
+import Teacher from '../components/Teacher'
+import CardsStack from '../components/CardsStack'
 
 export default function Home() {
   return (
@@ -21,13 +23,11 @@ export default function Home() {
 
       <main>
         <div className="container-fluid">
-
-          <div className="row pb-3">
+          <div className="row mb-4">
             <div className={classes.hero + " col-12"}>
-
             </div>
           </div>
-          <div className={"row my-3 justify-content-center align-items-center " + classes.about}>
+          <div className={"row my-4 justify-content-center align-items-center " + classes.about}>
             <div className="d-none d-lg-block col-lg-4 position-relative">
               <Image src={toys} layout="responsive" sizes="33vw" alt="Hračky" placeholder="blur" id={classes["toys-img"]} />
             </div>
@@ -38,32 +38,43 @@ export default function Home() {
               </p>
             </div>
           </div>
-          <div className={classes["school-features"] + " row py-3 text-white text-center justify-content-center"}>
-            <div className="col-10">
+          <div className={classes["school-features"] + " row my-4 text-white text-center justify-content-center"}>
+            <div className="col-10 d-flex flex-column justify-content-center">
               <div className="row"><h2>Zázemí</h2></div>
               <div className="row">
-                <SchoolFeature icon={playIcon} bgColor="#0a58ca" alt="Ikona herní konzole" title="Zábava" description="Školka vlastní mnoho různých hraček, kterými se vaše děti zabaví." />
-                <SchoolFeature icon={treeIcon} bgColor="#0aca10" alt="Ikona přírody" title="Krásná příroda" description="Školka se nachází uprostřed krásné přírody." />
-                <SchoolFeature icon={foodIcon} bgColor="#ca3f0a" alt="Ikona jídla (ovoce)" title="Stravování" description="Každý den jsou do školy dováženy obědy z nedaleké MŠ Ptení." />
-                <SchoolFeature icon={smileIcon} bgColor="#dbc506" alt="Ikona úsměvu" title="Příjemná atmosféra" description="Vaše děti se u nás budou cítit jako doma." /></div>
-              
+                <CardsStack minColumn={2}>
+                  <SchoolFeature icon={playIcon} bgColor="#0a58ca" alt="Ikona herní konzole" title="Zábava" description="Školka vlastní mnoho různých hraček, kterými se vaše děti zabaví." />
+                  <SchoolFeature icon={treeIcon} bgColor="#0aca10" alt="Ikona přírody" title="Krásná příroda" description="Školka se nachází uprostřed krásné přírody." />
+                  <SchoolFeature icon={foodIcon} bgColor="#ca3f0a" alt="Ikona jídla (ovoce)" title="Stravování" description="Každý den jsou do školy dováženy obědy z nedaleké MŠ Ptení." />
+                  <SchoolFeature icon={smileIcon} bgColor="#dbc506" alt="Ikona úsměvu" title="Příjemná atmosféra" description="Vaše děti se u nás budou cítit jako doma." />
+                </CardsStack>
+              </div>
 
             </div>
-
           </div>
+          <div className={classes["teachers"] + " row my-4 justify-content-center"}>
+            <div className="col-10 d-flex align-items-center mb-5">
+              <div className="row w-100 justify-content-center">
+                <CardsStack additionalClasses="my-5">
+                  <Teacher imgSrc="/img/photo.jpg" name="Iveta Marková" description="Ředitelka školky" />
+                  <Teacher imgSrc="/img/photo.jpg" name="Iveta Marková" description="Ředitelka školky" />
+                  <Teacher imgSrc="/img/photo.jpg" name="Iveta Marková" description="Ředitelka školky" />
 
-
-          {/* <div className={classes["teachers"] + " row py-4"}>
-
+                </CardsStack>
+                {/* <div className="col-6 col-md-4">
+                  <Teacher imgSrc="/img/photo.jpg" name="Iveta Marková" description="Ředitelka školky" />
+                </div>
+                <div className="col-6 col-md-4">
+                  <Teacher imgSrc="/img/photo.jpg" name="Iveta Marková" description="Ředitelka školky" />
+                </div>
+                <div className="col-6 col-md-4">
+                  <Teacher imgSrc="/img/photo.jpg" name="Iveta Marková" description="Ředitelka školky" />
+                </div> */}
+              </div>
+            </div>
           </div>
-          <div className={classes["events"] + " row py-4"}>
-
-          </div> */}
-
-
-
-
-
+          <div className={classes["events"] + " row my-4"}>
+          </div>
         </div>
       </main>
     </>
