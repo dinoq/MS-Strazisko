@@ -10,7 +10,8 @@ import treeIcon from "../public/img/tree-icon-optimal.svg"
 import foodIcon from "../public/img/food-icon-optimal.svg"
 import smileIcon from "../public/img/smile-icon-optimal.svg"
 import Teacher from '../components/Teacher'
-import CardsStack from '../components/CardsStack'
+import FeaturesStack from '../components/ui/FeaturesStack/FeaturesStack'
+import Card from '../components/ui/Card/Card'
 
 export default function Home() {
   return (
@@ -42,12 +43,12 @@ export default function Home() {
             <div className="col-10 d-flex flex-column justify-content-center">
               <div className="row"><h2>Zázemí</h2></div>
               <div className="row">
-                <CardsStack minColumn={2}>
+                <FeaturesStack minColumn={2}>
                   <SchoolFeature icon={playIcon} bgColor="#0a58ca" alt="Ikona herní konzole" title="Zábava" description="Školka vlastní mnoho různých hraček, kterými se vaše děti zabaví." />
                   <SchoolFeature icon={treeIcon} bgColor="#0aca10" alt="Ikona přírody" title="Krásná příroda" description="Školka se nachází uprostřed krásné přírody." />
                   <SchoolFeature icon={foodIcon} bgColor="#ca3f0a" alt="Ikona jídla (ovoce)" title="Stravování" description="Každý den jsou do školy dováženy obědy z nedaleké MŠ Ptení." />
                   <SchoolFeature icon={smileIcon} bgColor="#dbc506" alt="Ikona úsměvu" title="Příjemná atmosféra" description="Vaše děti se u nás budou cítit jako doma." />
-                </CardsStack>
+                </FeaturesStack>
               </div>
 
             </div>
@@ -55,12 +56,12 @@ export default function Home() {
           <div className={classes["teachers"] + " row my-4 justify-content-center"}>
             <div className="col-10 d-flex align-items-center mb-5">
               <div className="row w-100 justify-content-center">
-                <CardsStack additionalClasses="my-5">
+                <FeaturesStack additionalClasses="my-5">
                   <Teacher imgSrc="/img/photo.jpg" name="Iveta Marková" description="Ředitelka školky" />
                   <Teacher imgSrc="/img/photo.jpg" name="Iveta Marková" description="Ředitelka školky" />
                   <Teacher imgSrc="/img/photo.jpg" name="Iveta Marková" description="Ředitelka školky" />
 
-                </CardsStack>
+                </FeaturesStack>
                 {/* <div className="col-6 col-md-4">
                   <Teacher imgSrc="/img/photo.jpg" name="Iveta Marková" description="Ředitelka školky" />
                 </div>
@@ -74,6 +75,12 @@ export default function Home() {
             </div>
           </div>
           <div className={classes["events"] + " row my-4"}>
+                <FeaturesStack>
+                  <Card>
+                  </Card>
+                  <Card additionalStyles={{borderRadius: "0px"}}>
+                  </Card>
+                </FeaturesStack>
           </div>
         </div>
       </main>

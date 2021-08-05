@@ -8,7 +8,7 @@ const defaultProps = {
     additionalClasses : ""
 }
 
-const CardsStack: React.FC<{ minColumn?: number, additionalClasses?: string }> = (props) => {
+const FeaturesStack: React.FC<{ minColumn?: number, additionalClasses?: string }> = (props) => {
     const childCount = (props.children as any).length;
 
     const minColumn = props.minColumn || defaultProps.minColumn;
@@ -27,4 +27,4 @@ const CardsStack: React.FC<{ minColumn?: number, additionalClasses?: string }> =
     )
 }
 
-export default CardsStack;
+export default FeaturesStack;
