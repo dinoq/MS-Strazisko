@@ -12,6 +12,7 @@ import smileIcon from "../public/img/smile-icon-optimal.svg"
 import Teacher from '../components/Teacher'
 import FeaturesStack from '../components/ui/FeaturesStack/FeaturesStack'
 import Card from '../components/ui/Card/Card'
+import EventCard from '../components/EventCard'
 
 export default function Home() {
   return (
@@ -28,7 +29,8 @@ export default function Home() {
             <div className={classes.hero + " col-12"}>
             </div>
           </div>
-          <div className={"row my-4 justify-content-center align-items-center " + classes.about}>
+
+          <div className={classes.about + " row my-4 justify-content-center align-items-center"}>
             <div className="d-none d-lg-block col-lg-4 position-relative">
               <Image src={toys} layout="responsive" sizes="33vw" alt="Hračky" placeholder="blur" id={classes["toys-img"]} />
             </div>
@@ -39,6 +41,7 @@ export default function Home() {
               </p>
             </div>
           </div>
+
           <div className={classes["school-features"] + " row my-4 text-white text-center justify-content-center"}>
             <div className="col-10 d-flex flex-column justify-content-center">
               <div className="row"><h2>Zázemí</h2></div>
@@ -53,6 +56,7 @@ export default function Home() {
 
             </div>
           </div>
+
           <div className={classes["teachers"] + " row my-4 justify-content-center"}>
             <div className="col-10 d-flex align-items-center mb-5">
               <div className="row w-100 justify-content-center">
@@ -74,15 +78,22 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className={classes["events"] + " row my-4"}>
-                <FeaturesStack>
-                  <Card>
-                  </Card>
-                  <Card additionalStyles={{borderRadius: "0px"}}>
-                  </Card>
-                </FeaturesStack>
+
+          <div className={classes["events"] + " row my-4 align-items-center"}>
+            <FeaturesStack>
+              <EventCard imgSrc="/navrh/unused/camping.jpg" title="Schůzky" date={"19. 8. 2020"} description="<span style='color: red'>Ve čtvrtek 24.6</span> v 16:00 hodin se budou konat schůzky rodičů s pracovnicemi MŠ a se zřizovatelem MŠ. Prosím o aktivní účast VŠECH rodičů bez dětí." />
+              <EventCard imgSrc="/navrh/unused/camping.jpg" title="Schůzky" date={"19. 8. 2020"} description="<span style='color: red'>Ve čtvrtek 24.6</span> v 16:00 hodin se budou konat schůzky rodičů s pracovnicemi MŠ a se zřizovatelem MŠ. Prosím o aktivní účast VŠECH rodičů bez dětí." />
+            </FeaturesStack>
           </div>
         </div>
+
+        <div className={classes["teachers"] + " row my-4 justify-content-center text-center"}>
+          <div className="col-10 mb-5">
+            <h2>Foto školy</h2>
+            <div className="h5">(Pro více fotek přejděte z menu na Foto)</div>
+          </div>
+        </div>
+
       </main>
     </>
   )
