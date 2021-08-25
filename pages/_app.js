@@ -9,9 +9,9 @@ function MyApp({ Component, pageProps }) {
 
   if(router.pathname !== "/"){ // not index
     return (
-      <><div className="ASDF">
+      <>
         <Header />
-        <Component {...pageProps} /></div>
+        <Component {...pageProps} />
       </>
     )
 

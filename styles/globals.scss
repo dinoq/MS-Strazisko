@@ -5,6 +5,10 @@
   color: $primary!important;
 }
 
+.w-fit-content{
+  width: fit-content !important;
+}
+
 @font-face {
   font-family: dosis;
   src: url("/fonts/Dosis-Regular.ttf");
@@ -40,4 +44,3 @@ h1 {
 h3{
   font-size: 1.4rem !important;
 }
-

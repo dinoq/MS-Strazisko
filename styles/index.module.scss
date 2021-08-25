@@ -1,7 +1,6 @@
 @import "./custom.scss";
 
-
-.hero{
+.hero {
     background: url("/img/main-bg.webp");
     background-size: contain;
     /*background-size: 700px;*/
@@ -10,30 +9,152 @@
     min-height: 400px;
 }
 
-.about{
-    min-height: 300px;
+.about {
     color: $primary;
     transition: color 1s ease-out;
 }
 
-#toys-img{
+#toys-img {
     object-fit: contain !important;
 }
 
-.school-features{
-    min-height: 300px;
-    background: linear-gradient( rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3) ),url("/img/green.png");
+.school-features {
+    background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3)), url("/img/green.png");
 
-    p{
+    p {
         color: #e8e8e8;
     }
 }
 
-.teachers{
+.teachers {
     min-height: 300px;
 }
 
-.events{    
-    min-height: 300px;
+.events {
     background: url("/img/yellow.png");
+}
+
+.gallery {
+    .gallery-container {
+        $img-size: 256px;
+        .image-frame {
+            width: $img-size;
+            height: $img-size;
+            padding: 5px;
+            overflow: hidden;
+
+            .image-container {
+                width: 100%;
+                height: 100%;
+                border-radius: 15px;
+                div {
+                    border-radius: 15px;
+                    img {
+                        object-fit: cover;
+                        cursor: pointer;
+
+                        &:hover {
+                            opacity: 0.8;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.enrollment {
+    background-color: #e74040;
+
+    button {
+        padding: 15px 50px;
+        width: fit-content;
+        height: fit-content;
+        background-color: #22294d;
+        color: white;
+        border-radius: 10px;
+        border: none;
+        box-shadow: -2px 4px 4px #00000078;
+    }
+
+    .pen-image-container {
+        width: 78px;
+        height: 100px;
+        transform: rotate(30deg);
+        left: -40px;
+        top: -30px;
+        animation: pen-anim 3s infinite ease-in-out;
+
+        img {
+            object-fit: contain;
+        }
+    }
+
+    @keyframes pen-anim {
+        0% {
+            top: -30px;
+        }
+        50% {
+            top: -45px;
+        }
+        100% {
+            top: -30px;
+        }
+    }
+}
+
+.map {
+    /*.mapouter { // mapouter a gmap_canvas sice pocházejí ze zdroje (https://www.embedgooglemap.net/), ale nějak jim to nefunguje...
+        position: relative;
+        text-align: right;
+        height: 500px;
+        width: 800px;
+        
+        .gmap_canvas {
+            overflow: hidden;
+            background: none !important;
+            height: 500px;
+            width: 800px;
+
+        }
+    }*/
+    
+    iframe{
+        max-width: 100%;
+    }
+}
+
+.footer {
+    background-color: #2f375c;
+
+    a {
+        color: #83c3ff;
+    }
+
+    .contact-container {
+        width: fit-content;
+        .icon-container {
+            $size: 32px;
+            width: $size;
+            height: $size;
+            display: inline-block;
+        }
+    }
+
+    ul {
+        list-style-type: none;
+
+        &.left-items{
+            text-align: left;
+        }
+
+        &.right-items{
+            text-align: right;
+        }
+    }
+
+    .copyright {
+        color: rgb(211, 211, 211);
+        font-size: 0.8rem;
+    }
 }

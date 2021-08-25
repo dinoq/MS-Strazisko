@@ -1,6 +1,5 @@
 // eslint-disable-next-line
 import classes from "../../styles/Header.module.scss";
-import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
