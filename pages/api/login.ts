@@ -1,0 +1,24 @@
+import { withIronSession } from "next-iron-session";
+
+async function handler(req, res) {
+  const rigtPwd = "ASD";
+
+  const { pwd } = req.body;
+  if (req.method === "POST" && pwd === rigtPwd) {
+    req.session.set("loggedIn", true); 
+    await req.session.save();
+
+    return res.status(201).send("");
+  } else {
+    return res.status(401).send("");
+  }
+}
+
+export default withIronSession(handler, {
+  password: "P5hBP4iHlvp6obqtWK0mNuMrZow5x6DQV61W3EUG",
+  cookieName: "myapp_cookiename",
+  // if your localhost is served on http:// then disable the secure flag
+  cookieOptions: {
+    secure: process.env.NODE_ENV === "production",
+  },
+});

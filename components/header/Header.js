@@ -19,11 +19,12 @@ const Header = (props) => {
 
 
     const router = useRouter();
+    console.log('router: ', router.asPath);
 
 
     const navigation = [["/", "Domů"], ["/foto", "Foto"], ["/stravovani", "Stravování"], ["/dokumenty", "Dokumenty"], ["/kontakt", "Kontakt"]];
-    const links = navigation.map((link, index, array) =>
-        <Link key={index} href={link[0]}><li onClick={toggleHamburgerMenu} key={link[0]} className={router.pathname == link[0] ? classes.active : ""}><a>{link[1]}</a></li></Link>
+    const links = navigation.map((link, index) =>
+        <li key={"menu-link-" + index} onClick={toggleHamburgerMenu} className={router.asPath === link[0] ? classes.active : ""}><Link href={link[0]}><a>{link[1]}</a></Link></li>
     );
 
 
@@ -81,6 +82,14 @@ const Header = (props) => {
                     </nav>
                 </div>
             </div>
+            {!props.noBackground &&
+                <div className="container-fluid">
+                    <div className="row mb-4">
+                        <div className={classes.hero + " col-12"}>
+                        </div>
+                    </div>
+                </div>
+            }
 
         </>
     )

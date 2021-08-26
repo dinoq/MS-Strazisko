@@ -1,0 +1,36 @@
+@import "./custom.scss";
+
+.login{
+    background-color: #83c3ff;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    font-size: 1.25rem;
+    max-width: 500px;
+    padding: 20px 40px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    input[type=password]{
+        max-width: 200px;
+        margin-top: 20px;
+        border-radius: 5px;
+        outline: none;
+        border: 1px transparent solid;
+
+        &:focus{
+            outline: none;
+            border: 1px $primary solid;
+        }
+    }
+
+    input[type=submit]{
+        border: none;
+        background-color: white;
+        margin-top: 10px;
+        border-radius: 5px;
+    }
+}

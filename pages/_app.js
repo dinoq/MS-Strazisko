@@ -6,11 +6,11 @@ import { useRouter } from 'next/router';
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
-
-  if(router.pathname !== "/"){ // not index
+  
+  if(router.pathname === "/404"){ // not index
     return (
       <>
-        <Header />
+        <Header noBackground={true}/>
         <Component {...pageProps} />
       </>
     )

@@ -82,10 +82,11 @@ export default function Home() {
 
       <main>
         <div className="container-fluid">
+          {/*
           <div className="row mb-4">
             <div className={classes.hero + " col-12"}>
             </div>
-          </div>
+          </div> */}
 
           <div className={classes.about + " row my-4 justify-content-center align-items-center"}>
             <div className="d-none d-lg-block col-lg-4 position-relative">
@@ -202,9 +203,9 @@ export default function Home() {
             <div className="row d-flex flex-row justify-content-between align-items-center">
               <div className="w-fit-content my-2">
                 <ul className={classes["left-items"]}>
-                  <li>Mateřská školka Velké Březno</li>
-                  <li>Alej sportovců 286</li>
-                  <li>403 23 Velké Březno</li>
+                  <li>Mateřská školka Stražisko</li>
+                  <li>příspěvková organizace,</li>
+                  <li>798 44 Stražisko</li>
                 </ul>
               </div>
               <div className="w-fit-content my-2">
@@ -215,7 +216,7 @@ export default function Home() {
                 </ul>
               </div>
             </div>
-            <div className={classes["copyright"] + " row"}><span>Copyright © 2021{new Date().getFullYear() > 2021? " - " + new Date().getFullYear() : ""} <Link href="/"><a>Petr Marek</a></Link>. Všechna práva vyhrazena.</span></div>
+            <div className={classes["copyright"] + " row"}><span>Copyright © 2021{new Date().getFullYear() > 2021 ? " - " + new Date().getFullYear() : ""} <Link href="/"><a>Petr Marek</a></Link>. Všechna práva vyhrazena.</span></div>
           </div>
         </div>
 

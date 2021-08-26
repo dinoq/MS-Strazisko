@@ -143,3 +143,13 @@ $font-size: 1.2rem;
         }
     }
 }
+
+
+.hero {
+    background: url("/img/main-bg.webp");
+    background-size: contain;
+    /*background-size: 700px;*/
+    background-repeat: repeat-x;
+    width: 100%;
+    min-height: 400px;
+}
