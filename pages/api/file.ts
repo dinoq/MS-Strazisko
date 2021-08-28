@@ -44,3 +44,18 @@ export default (req, res) => {
     ? console.log("GET")
     : res.status(404).send("");
 };
+
+
+/*
+fetch("https://api.dropboxapi.com/2/files/create_folder_v2", {
+method: "POST",
+headers: {
+      'Content-Type': 'application/json',
+'Authorization': 'Bearer sl.A3YwSavrH20TpuFXWFD_eJHHJa6QIbZf93Aen7-FJFxDINZ3ccHC7T_oZ_196mTkBOOfG_U4V10F3TpzaiV9F7UktnrmQ8qlsHu6n0vMljU1WoYeMQTelu4Ed7sHM_F2jMRMpIac'
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+body: JSON.stringify({
+    path: "/asdf"
+})
+})
+ */

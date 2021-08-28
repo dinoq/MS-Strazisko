@@ -6,6 +6,7 @@ import { withIronSession } from "next-iron-session";
 import { useState } from "react";
 import { useRef } from "react";
 import classes from "/styles/login.module.scss"
+import Image from "next/image";
 
 const foto = (props) => {
     console.log("props.logged", props.logged);
@@ -15,7 +16,7 @@ const foto = (props) => {
             <div className="container-fluid">
                 <div className={" row my-4 justify-content-center align-items-center"}>
                     <div className="col-10 d-flex justify-content-center">
-                        {props.logged && <Gallery />}
+                        {props.logged && <Gallery photos={props.photos}/>}
                         {!props.logged && <Login />}
                     </div>
                 </div>
@@ -78,7 +79,7 @@ const Login = (props) => {
 }
 
 
-const Gallery = (props) => {
+const Gallery = ({photos}) => {
     let albums: Array<{ date: string, title: string, photos: Array<any> }> = [];
 
     let alb = { date: "2020-05-05", title: "Výlet v přírodě 20. 5.", photos: [1, 2, 3, 4, 5, 6, 7, 8] };
@@ -102,7 +103,9 @@ const Gallery = (props) => {
                             if (index < 4) {
                                 return (
                                     <div key={"photo-" + index + "-" + album.title + "-" + album.date}>
-                                        asd
+                                        <div className="position-relative" style={{width: "100px", height: "100px"}}>
+                                            <Image alt="TODO" src={photos[0]} layout="fill" />
+                                        </div>
 
                                     </div>
                                 );
@@ -135,9 +138,21 @@ export const getServerSideProps = withIronSession(
                 props: { logged: false }
             };
         }
+        const dev = process.env.NODE_ENV !== 'production';
+
+        const server = dev ? 'http://localhost:3000' : 'https://your_deployment.server.com';
+        //get photos URLs
+        let resp: any = await fetch(server + '/api/photos', {
+            method: "POST",
+            mode: "same-origin",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({  })
+        });
+        resp = await resp.json();
+        console.log('resp photos: ', resp);
 
         return {
-            props: { logged: true }
+            props: { logged: true, photos: resp.photos }
         };
     },
     {
