@@ -5,8 +5,9 @@ import { GetServerSideProps } from "next";
 import { withIronSession } from "next-iron-session";
 import { useEffect, useState } from "react";
 import { useRef } from "react";
-import classes from "/styles/login.module.scss"
+import classes from "/styles/foto.module.scss"
 import Image from "next/image";
+import Link from "next/link";
 
 const foto = (props) => {
     console.log("props.logged", props.logged);
@@ -82,7 +83,7 @@ const Login = (props) => {
 const Gallery = (props) => {
     let albums: Array<{ date: string, title: string, photos: Array<any> }> = [];
 
-    const [photos, setPhotos] = useState("");
+    const [photos, setPhotos] = useState([]);
 
 
     useEffect(() => {        
@@ -90,34 +91,39 @@ const Gallery = (props) => {
             console.log("QWER");
             value.json().then((value) => {
                 console.log('value: ', value);
-                setPhotos(value.albums);
+                setPhotos(["q.jpg"]);
                 
             })
         })
     }, [])
-    let alb = { date: "2020-05-05", title: "Výlet v přírodě 20. 5.", photos: [1, 2, 3, 4, 5, 6, 7, 8] };
+    let alb = { date: "2020-05-05", title: "Výlet v přírodě 20. 5.", photos: ["q.jpg", "a.jpg", "b.jpg", "q.jpg", "a.jpg", "b.jpg"] };
     albums.push(alb);
     albums.push(alb);
-    alb = { date: "2018-05-05", title: "Výlet v přírodě 20. 5.", photos: [1, 2, 3, 4, 5, 6, 7, 8] };
+    alb = { date: "2018-05-05", title: "Výlet v přírodě 20. 5.", photos: ["q.jpg", "a.jpg", "b.jpg", "q.jpg", "a.jpg", "b.jpg"] };
     albums.push(alb);
 
     let year = new Date(albums[0].date).getFullYear();
     console.log('year: ', year);
     let albumsComponents = albums.map((album, index, array) => {
         const albumYear = new Date(album.date).getFullYear();
-        const anotherYearComponent = (year !== albumYear || index === 0) ? <div key={"a"+index} className="text-blue text-center h2">{albumYear}</div> : "";
+        const anotherYearComponent = (year !== albumYear || index === 0) ? <div key={"a"+index} className="text-blue fw-bold text-center h2 my-3">{albumYear}</div> : "";
         return (
             <div  key={"album-" + index}>
                 {anotherYearComponent&& anotherYearComponent}
-                <div className={classes.gallery}>
-                    <div className="text-blue text-center h4">{album.title} {albumYear}</div>
+                    <div className="text-blue text-center h4 my-3">{album.title} {albumYear}</div>
+                        <Link href={"/foto/" + album.date}><a><div className={classes["overlay"]}>
+                            <div>
+                            Více &gt;&gt;
+                            </div>
+                        </div></a></Link>
                     <div className="album-images-preview d-flex">
                         {album.photos.map((photo, index, array) => {
                             if (index < 4) {
                                 return (
                                     <div key={"photo-" + index + "-" + album.title + "-" + album.date}>
-                                        <div className="position-relative" style={{width: "100px", height: "100px"}}>
-                                            {photos && photos[0] && <Image alt="TODO" src={photos[0]} layout="fill" />}
+                                        <div className={classes["img-container"]}>
+                                            {// eslint-disable-next-line @next/next/no-img-element
+                                            photo && <img alt="TODO" src={"/api/photo?file=" + photo} />}
                                         </div>
 
                                     </div>
@@ -126,14 +132,13 @@ const Gallery = (props) => {
                         })}
                     </div>
 
-                </div>
             </div>
         )
     })
 
     return (
         <>
-            <div className={classes.gallery}>
+            <div>
                 {albumsComponents}
             </div>
         </>
