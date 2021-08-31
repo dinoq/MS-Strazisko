@@ -3,7 +3,7 @@
 
 import { GetServerSideProps } from "next";
 import { withIronSession } from "next-iron-session";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRef } from "react";
 import classes from "/styles/login.module.scss"
 import Image from "next/image";
@@ -16,7 +16,7 @@ const foto = (props) => {
             <div className="container-fluid">
                 <div className={" row my-4 justify-content-center align-items-center"}>
                     <div className="col-10 d-flex justify-content-center">
-                        {props.logged && <Gallery photos={props.photos}/>}
+                        {props.logged && <Gallery />}
                         {!props.logged && <Login />}
                     </div>
                 </div>
@@ -79,9 +79,22 @@ const Login = (props) => {
 }
 
 
-const Gallery = ({photos}) => {
+const Gallery = (props) => {
     let albums: Array<{ date: string, title: string, photos: Array<any> }> = [];
 
+    const [photos, setPhotos] = useState("");
+
+
+    useEffect(() => {        
+        let resp: any = fetch('http://localhost:3000/api/photos').then((value) => {
+            console.log("QWER");
+            value.json().then((value) => {
+                console.log('value: ', value);
+                setPhotos(value.albums);
+                
+            })
+        })
+    }, [])
     let alb = { date: "2020-05-05", title: "Výlet v přírodě 20. 5.", photos: [1, 2, 3, 4, 5, 6, 7, 8] };
     albums.push(alb);
     albums.push(alb);
@@ -92,11 +105,11 @@ const Gallery = ({photos}) => {
     console.log('year: ', year);
     let albumsComponents = albums.map((album, index, array) => {
         const albumYear = new Date(album.date).getFullYear();
-        const anotherYearComponent = (year !== albumYear || index === 0) ? <div className="text-blue text-center h2">{albumYear}</div> : "";
+        const anotherYearComponent = (year !== albumYear || index === 0) ? <div key={"a"+index} className="text-blue text-center h2">{albumYear}</div> : "";
         return (
-            <>
-                {anotherYearComponent}
-                <div key={"album-" + index} className={classes.gallery}>
+            <div  key={"album-" + index}>
+                {anotherYearComponent&& anotherYearComponent}
+                <div className={classes.gallery}>
                     <div className="text-blue text-center h4">{album.title} {albumYear}</div>
                     <div className="album-images-preview d-flex">
                         {album.photos.map((photo, index, array) => {
@@ -104,7 +117,7 @@ const Gallery = ({photos}) => {
                                 return (
                                     <div key={"photo-" + index + "-" + album.title + "-" + album.date}>
                                         <div className="position-relative" style={{width: "100px", height: "100px"}}>
-                                            <Image alt="TODO" src={photos[0]} layout="fill" />
+                                            {photos && photos[0] && <Image alt="TODO" src={photos[0]} layout="fill" />}
                                         </div>
 
                                     </div>
@@ -114,7 +127,7 @@ const Gallery = ({photos}) => {
                     </div>
 
                 </div>
-            </>
+            </div>
         )
     })
 
@@ -130,29 +143,15 @@ const Gallery = ({photos}) => {
 export const getServerSideProps = withIronSession(
     async ({ req, res }) => {
         const loggedIn = req.session.get("loggedIn");
-        console.log('loggedIn: ', loggedIn);
 
         if (!loggedIn) {
-
             return {
                 props: { logged: false }
             };
         }
-        const dev = process.env.NODE_ENV !== 'production';
-
-        const server = dev ? 'http://localhost:3000' : 'https://your_deployment.server.com';
-        //get photos URLs
-        let resp: any = await fetch(server + '/api/photos', {
-            method: "POST",
-            mode: "same-origin",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({  })
-        });
-        resp = await resp.json();
-        console.log('resp photos: ', resp);
 
         return {
-            props: { logged: true, photos: resp.photos }
+            props: { logged: true }
         };
     },
     {

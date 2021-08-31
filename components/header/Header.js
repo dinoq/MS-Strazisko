@@ -24,7 +24,7 @@ const Header = (props) => {
 
     const navigation = [["/", "Domů"], ["/foto", "Foto"], ["/stravovani", "Stravování"], ["/dokumenty", "Dokumenty"], ["/kontakt", "Kontakt"]];
     const links = navigation.map((link, index) =>
-        <li key={"menu-link-" + index} onClick={toggleHamburgerMenu} className={router.asPath === link[0] ? classes.active : ""}><Link href={link[0]}><a>{link[1]}</a></Link></li>
+        <Link key={"menu-link-" + index} href={link[0]}><a><li onClick={toggleHamburgerMenu} className={router.asPath === link[0] ? classes.active : ""}>{link[1]}</li></a></Link>
     );
 
 

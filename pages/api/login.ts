@@ -5,6 +5,7 @@ async function handler(req, res) {
 
   const { pwd } = req.body;
   if (req.method === "POST" && pwd === rigtPwd) {
+    console.log("QWRETZTRZ", req.session.get("loggedIn"));
     req.session.set("loggedIn", true); 
     await req.session.save();
 

@@ -142,83 +142,84 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </div>
 
-        <div className={classes["gallery"] + " row my-4 justify-content-center text-center"}>
-          <div className="col-10">
-            <div className="row"><h2>Foto školy</h2></div>
-            <div className="h5">(Pro více fotek přejděte z menu na <Link href="/foto"><a>Foto</a></Link>)</div>
-            <div className={classes["gallery-container"] + " row justify-content-center"}>
-              {images.map((img, index) =>
-                <div key={"img-thumbnail-" + index} className={classes["image-frame"] + " col-4"}>
-                  <div className={classes["image-container"] + " position-relative"}>
-                    <Image src={img.thumbnail} alt="Fotka školky" layout="fill" />
+          <div className={classes["gallery"] + " row my-4 justify-content-center text-center"}>
+            <div className="col-10">
+              <div className="row"><h2>Foto školy</h2></div>
+              <div className="h5">(Pro více fotek přejděte z menu na <Link href="/foto"><a>Foto</a></Link>)</div>
+              <div className={classes["gallery-container"] + " row justify-content-center"}>
+                {images.map((img, index) =>
+                  <div key={"img-thumbnail-" + index} className={classes["image-frame"] + " col-4"}>
+                    <div className={classes["image-container"] + " position-relative"}>
+                      <Image src={img.thumbnail} alt="Fotka školky" layout="fill" />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className={classes["enrollment"] + " row my-4 justify-content-center text-center text-white"}>
+            <div className="col-10 p-4 d-flex flex-column justify-content-center">
+              <div className="row"><h2>Chcete svoje dítě přihlásit do naší MŠ?</h2></div>
+              <div className="row mt-4 justify-content-center align-items-center">
+                <button>Informace k přihláškám</button>
+                <div className={classes["pen-image-container"] + " position-relative"}>
+                  <Image src="/img/pen.png" alt="Fotka školky" layout="fill" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className={classes["map"] + " row my-4 justify-content-center text-center"}>
+            <div className="col-10">
+              <div className="row"><h2>Jak se k nám dostanete?</h2></div>
+              <div className={" row"}>
+                <div className={classes["mapouter"]}>
+                  <div className={classes["gmap_canvas"]}>
+                    <iframe width="800" height="400" id="gmap_canvas" src="https://maps.google.com/maps?q=M%C5%A0%20Stra%C5%BEisko&t=&z=13&ie=UTF8&iwloc=&output=embed" scrolling="no"></iframe>
                   </div>
                 </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className={classes["enrollment"] + " row my-4 justify-content-center text-center text-white"}>
-          <div className="col-10 p-4 d-flex flex-column justify-content-center">
-            <div className="row"><h2>Chcete svoje dítě přihlásit do naší MŠ?</h2></div>
-            <div className="row mt-4 justify-content-center align-items-center">
-              <button>Informace k přihláškám</button>
-              <div className={classes["pen-image-container"] + " position-relative"}>
-                <Image src="/img/pen.png" alt="Fotka školky" layout="fill" />
               </div>
             </div>
           </div>
-        </div>
 
-        <div className={classes["map"] + " row my-4 justify-content-center text-center"}>
-          <div className="col-10">
-            <div className="row"><h2>Jak se k nám dostanete?</h2></div>
-            <div className={" row"}>
-              <div className={classes["mapouter"]}>
-                <div className={classes["gmap_canvas"]}>
-                  <iframe width="800" height="400" id="gmap_canvas" src="https://maps.google.com/maps?q=M%C5%A0%20Stra%C5%BEisko&t=&z=13&ie=UTF8&iwloc=&output=embed" scrolling="no"></iframe>
+          <div className={classes["footer"] + " row mt-4 justify-content-center text-center text-white"}>
+            <div className="col-10 p-4 d-flex flex-column justify-content-center">
+              <div className="row"><h2>Kontakty</h2></div>
+              <div className="row d-flex flex-row justify-content-around align-items-center">
+                <div className={classes["contact-container"] + " d-flex align-items-center my-3"}>
+                  <div className={classes["icon-container"] + " position-relative mx-5"}>
+                    <Image src="/img/icons/phone.png" alt="Fotka školky" layout="fill" />
+                  </div><span className="">+420 728 426 363</span>
+                </div>
+                <div className={classes["contact-container"] + " d-flex align-items-center"}>
+                  <div className={classes["icon-container"] + " position-relative mx-5"}>
+                    <Image src="/img/icons/mail.png" alt="Fotka školky" layout="fill" />
+                  </div><span className="">msstrazisko@seznam.cz</span>
                 </div>
               </div>
+              <div className="row d-flex flex-row justify-content-between align-items-center">
+                <div className="w-fit-content my-2">
+                  <ul className={classes["left-items"]}>
+                    <li>Mateřská školka Stražisko</li>
+                    <li>příspěvková organizace,</li>
+                    <li>798 44 Stražisko</li>
+                  </ul>
+                </div>
+                <div className="w-fit-content my-2">
+                  <ul className={classes["right-items"]}>
+                    <li><Link href="/"><a>Informace o přístupnosti</a></Link></li>
+                    <li><Link href="/"><a>Informace o zpracování osobních údajů</a></Link></li>
+                    <li><Link href="/"><a>Levné webové stránky</a></Link></li>
+                  </ul>
+                </div>
+              </div>
+              <div className={classes["copyright"] + " row"}><span>Copyright © 2021{new Date().getFullYear() > 2021 ? " - " + new Date().getFullYear() : ""} <Link href="/"><a>Petr Marek</a></Link>. Všechna práva vyhrazena.</span></div>
             </div>
           </div>
         </div>
 
-        <div className={classes["footer"] + " row my-4 justify-content-center text-center text-white"}>
-          <div className="col-10 p-4 d-flex flex-column justify-content-center">
-            <div className="row"><h2>Kontakty</h2></div>
-            <div className="row d-flex flex-row justify-content-around align-items-center">
-              <div className={classes["contact-container"] + " d-flex align-items-center my-3"}>
-                <div className={classes["icon-container"] + " position-relative mx-5"}>
-                  <Image src="/img/icons/phone.png" alt="Fotka školky" layout="fill" />
-                </div><span className="">+420 728 426 363</span>
-              </div>
-              <div className={classes["contact-container"] + " d-flex align-items-center"}>
-                <div className={classes["icon-container"] + " position-relative mx-5"}>
-                  <Image src="/img/icons/mail.png" alt="Fotka školky" layout="fill" />
-                </div><span className="">msstrazisko@seznam.cz</span>
-              </div>
-            </div>
-            <div className="row d-flex flex-row justify-content-between align-items-center">
-              <div className="w-fit-content my-2">
-                <ul className={classes["left-items"]}>
-                  <li>Mateřská školka Stražisko</li>
-                  <li>příspěvková organizace,</li>
-                  <li>798 44 Stražisko</li>
-                </ul>
-              </div>
-              <div className="w-fit-content my-2">
-                <ul className={classes["right-items"]}>
-                  <li><Link href="/"><a>Informace o přístupnosti</a></Link></li>
-                  <li><Link href="/"><a>Informace o zpracování osobních údajů</a></Link></li>
-                  <li><Link href="/"><a>Levné webové stránky</a></Link></li>
-                </ul>
-              </div>
-            </div>
-            <div className={classes["copyright"] + " row"}><span>Copyright © 2021{new Date().getFullYear() > 2021 ? " - " + new Date().getFullYear() : ""} <Link href="/"><a>Petr Marek</a></Link>. Všechna práva vyhrazena.</span></div>
-          </div>
-        </div>
 
 
       </main>
