@@ -16,7 +16,7 @@ async function handler(req, res, session) {
       await sharp(Buffer.from(imageBuffer))
       .resize({
         fit: sharp.fit.contain,
-        width: 800
+        width: 400
       })
       .webp()
       .toBuffer();
