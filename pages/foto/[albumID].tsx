@@ -39,7 +39,7 @@ const Gallery: React.FC<{ albumTitle: any }> = (props) => {
         <>
             <div className={" container-fluid"}>
                     <div className="text-blue text-center h2 my-3">{album.title} {year}</div>
-                    <div className="album-images-preview row container-fluid justify-content-center">
+                    <div className="album-images-preview row justify-content-center">
                         <div className="col-12 col-md-10 row">
                             {album.photos.map((photo, index, array) => {
                                 return (

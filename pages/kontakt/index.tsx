@@ -7,7 +7,7 @@ const KontaktPage: React.FC<{ propname: any }> = (props) => {
         <>
             <div className="container-fluid">
                 <div className="row justify-content-center">
-                    <div className="col-10">
+                    <div className="col-12 col-md-10">
                         <h1 className="text-center mb-4">Kontakt</h1>
                         
                         <div className={classes["mapouter"]}>
