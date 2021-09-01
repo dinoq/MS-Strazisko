@@ -56,8 +56,7 @@ const Login = (props) => {
 
     return (
         <>
-            <div className="d-flex flex-column">
-
+            <div className="d-flex flex-column align-items-center">
                 {wrongPwd &&
                     <div className="alert alert-danger text-center" role="alert">
                         Špatné heslo!
