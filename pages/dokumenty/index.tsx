@@ -17,7 +17,7 @@ const Dokumenty = (props) => {
                 <div className="row justify-content-center">
                     <div className="col-8">
                         <h1 className="text-center mb-4">Dokumenty</h1>
-                        <a className="fw-bold h5" href="/dokumenty/gdpr">Dokument 1 - Informace o zpracování osobních údajů</a>
+                        <Link href="/dokumenty/gdpr.pdf"><a target="_blank" className="fw-bold h5">Dokument 1 - Informace o zpracování osobních údajů</a></Link>
                     </div>
                 </div>
             </div>
