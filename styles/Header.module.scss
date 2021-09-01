@@ -62,7 +62,7 @@ $font-size: 1.2rem;
         top: $header-shrinked-height;
         left: 0;
         transition: $transition-max-height, $transition-font-size, $transition-top;
-        
+
         ul {
             flex-direction: column;
         }
@@ -76,7 +76,6 @@ $font-size: 1.2rem;
                 flex-direction: row;
             }
         }
-
 
         &.menu-expanded {
             max-height: calc(var(--navbar-items-count) * (#{$nav-li-padding-y} * 2 + #{$font-size} * 3));
@@ -129,13 +128,13 @@ $font-size: 1.2rem;
     @include media-breakpoint-up(lg) {
         &.header-expanded {
             height: $header-expanded-height;
-    
+
             .logo-container {
                 :global(#logo) {
                     font-size: 2rem;
                 }
             }
-    
+
             .nav {
                 font-size: 1.4rem;
                 top: $header-expanded-height;
@@ -144,7 +143,6 @@ $font-size: 1.2rem;
     }
 }
 
-
 .hero {
     background: url("/img/main-bg.webp");
     background-size: contain;
@@ -152,4 +150,9 @@ $font-size: 1.2rem;
     background-repeat: repeat-x;
     width: 100%;
     min-height: 400px;
+
+    &.shifted {
+        min-height: 200px;
+        //transform: translate(0px, -30%);
+    }
 }

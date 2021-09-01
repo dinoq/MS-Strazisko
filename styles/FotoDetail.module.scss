@@ -2,10 +2,8 @@
 $size: 250px;
 $transition-time: 0.5s;
 
-.overlay-container{
-    
-    width: fit-content;
-    padding: 0px 0px;
+.overlay-container{    
+    padding: 2px;
     position: relative;
     cursor: pointer;
 
@@ -18,14 +16,14 @@ $transition-time: 0.5s;
             bottom: $offet;
             left: $offet;
             right: $offet;
-            height: $size;
-            width: $size;
+            height: 100%;
+            width: 100%;
         }
     }
     .overlay{
         background-color: white;
-        height: $size/2;
-        width: $size/2;
+        height: 50%;
+        width: 50%;
         position: absolute;
         opacity: 0.0;
         $offet: 25%;
@@ -39,7 +37,7 @@ $transition-time: 0.5s;
     }
     .img-container {
         height: $size;
-        width: $size;
+        //width: $size;
     
         img {
             object-fit: cover;

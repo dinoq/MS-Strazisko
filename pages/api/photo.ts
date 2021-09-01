@@ -1,4 +1,5 @@
 import { withIronSession } from "next-iron-session";
+import sharp from "sharp";
 
 const albums = ["https://www.ms-strazisko.cz/img/skolka.jpeg"];
 
@@ -7,7 +8,20 @@ async function handler(req, res, session) {
     const loggedIn = await req.session.get("loggedIn");
     res.setHeader('Content-Type', 'image/jpg');
     let imageBuffer;
-    imageBuffer = await (await fetch('https://ms-strazisko.cz/fileserver/getFile.php?file=' + req.query.file)).body;
+    if(req?.query?.minify == true){
+      imageBuffer = await (await fetch('https://ms-strazisko.cz/fileserver/getFile.php?file=' + req.query.file)).arrayBuffer();
+      imageBuffer = 
+      await sharp(Buffer.from(imageBuffer))
+      .resize({
+        fit: sharp.fit.contain,
+        width: 200
+      })
+      .webp()
+      .toBuffer();
+    }else{
+      imageBuffer = await (await fetch('https://ms-strazisko.cz/fileserver/getFile.php?file=' + req.query.file)).body;
+    }
+
     res.send(imageBuffer);
 }
 

@@ -9,14 +9,15 @@ import classes from "/styles/foto.module.scss"
 import Image from "next/image";
 import Link from "next/link";
 
-const foto = (props) => {
+const FotoPage = (props) => {
     console.log("props.logged", props.logged);
     return (
         <>
 
             <div className="container-fluid">
                 <div className={" row my-4 justify-content-center align-items-center"}>
-                    <div className="col-10 d-flex justify-content-center">
+                    <div className="col-10">
+                    <h1 className="text-center mb-4">Fotogalerie</h1>
                         {props.logged && <Gallery />}
                         {!props.logged && <Login />}
                     </div>
@@ -167,4 +168,4 @@ export const getServerSideProps = withIronSession(
         password: "P5hBP4iHlvp6obqtWK0mNuMrZow5x6DQV61W3EUG",
     }
 );
-export default foto;
+export default FotoPage;

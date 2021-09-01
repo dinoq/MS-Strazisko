@@ -27,6 +27,7 @@
     "react-google-maps": "^9.4.5",
     "responsive-loader": "^2.3.0",
     "sass": "^1.36.0",
+    "sharp": "^0.29.0",
     "svg-sprite-loader": "^6.0.9"
   },
   "devDependencies": {

@@ -19,13 +19,21 @@ const Header = (props) => {
 
 
     const router = useRouter();
-    console.log('router: ', router.asPath);
-
 
     const navigation = [["/", "Domů"], ["/foto", "Foto"], ["/stravovani", "Stravování"], ["/dokumenty", "Dokumenty"], ["/kontakt", "Kontakt"]];
-    const links = navigation.map((link, index) =>
-        <Link key={"menu-link-" + index} href={link[0]}><a><li onClick={toggleHamburgerMenu} className={router.asPath === link[0] ? classes.active : ""}>{link[1]}</li></a></Link>
+    const links = navigation.map((link, index) => {
+        let className = "";
+        if(router.asPath === link[0] || router.asPath.includes(link[0] + "/")){
+            //console.log("yeah:",router.asPath, link[0]);
+            className = classes.active;
+        }
+        // =  ? classes.active : JSON.stringify(router.asPath);
+        return <Link key={"menu-link-" + index} href={link[0]}><a><li onClick={toggleHamburgerMenu} className={className}>{link[1]}</li></a></Link>
+    }
     );
+
+    
+    const isHomePage = router.asPath === navigation[0][0];
 
 
     const handleNavigation = useCallback(
@@ -85,7 +93,7 @@ const Header = (props) => {
             {!props.noBackground &&
                 <div className="container-fluid">
                     <div className="row mb-4">
-                        <div className={classes.hero + " col-12"}>
+                        <div className={classes.hero + " col-12 " + (!isHomePage? classes.shifted : "")}>
                         </div>
                     </div>
                 </div>

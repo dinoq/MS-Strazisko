@@ -1,8 +1,9 @@
 // eslint-disable-next-line
 import classes from "../../styles/FotoDetail.module.scss";
 import { useRouter } from 'next/router';
+import Link from "next/link"
 
-const FotoDetail: React.FC<{}> = (props) => {
+const AlbumDetail: React.FC<{}> = (props) => {
     const router = useRouter();
     const { fotoID: albumID } = router.query;
 
@@ -37,13 +38,13 @@ const Gallery: React.FC<{ albumTitle: any }> = (props) => {
     return (
         <>
             <div className={" container-fluid"}>
-                    <div className="text-blue text-center h4 my-3">{album.title} {year}</div>
+                    <div className="text-blue text-center h2 my-3">{album.title} {year}</div>
                     <div className="album-images-preview row container-fluid justify-content-center">
                         <div className="col-8 row">
                             {album.photos.map((photo, index, array) => {
                                 return (
-                                    <div key={"photo-" + index + "-" + album.title + "-" + album.date} className={classes["overlay-container"]}>
-                                        <div className={classes["overlay"]}></div>
+                                    <div key={"photo-" + index + "-" + album.title + "-" + album.date} className={classes["overlay-container"] + " col-12 col-md-6 col-lg-3"}>
+                                        <Link href={"/api/photo?file=" + photo}><a target="_blank"><div className={classes["overlay"]}></div></a></Link>
                                         <div className={classes["img-container"]}>
                                             {// eslint-disable-next-line @next/next/no-img-element
                                                 photo && <img alt="TODO" src={"/api/photo?file=" + photo} />}
@@ -58,4 +59,4 @@ const Gallery: React.FC<{ albumTitle: any }> = (props) => {
     )
 }
 
-export default FotoDetail;
+export default AlbumDetail;

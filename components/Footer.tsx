@@ -2,11 +2,23 @@
 import classes from "../styles/Footer.module.scss";
 import Image from 'next/image'
 import Link from "next/link"
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/router";
 
 const Footer: React.FC<{}> = (props) => {
-
+  const footer = useRef<HTMLDivElement>();
+  const router = useRouter();
+  const [offsetClass, setOffsetClass] = useState("");
+  useEffect(() => {
+    if (document.body.clientHeight < document.documentElement.clientHeight) {
+      setOffsetClass("position-absolute bottom-0");
+    } else {
+      setOffsetClass("");
+    }
+  }, [router])
+  
   return (
-    <div className="container-fluid">
+    <div ref={footer} className={"container-fluid " + offsetClass}>
       <div className={classes["footer"] + " row mt-4 justify-content-center text-center text-white"}>
         <div className="col-10 p-4 d-flex flex-column justify-content-center">
           <div className="row"><h2>Kontakty</h2></div>
