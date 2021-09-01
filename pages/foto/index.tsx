@@ -5,7 +5,7 @@ import { GetServerSideProps } from "next";
 import { withIronSession } from "next-iron-session";
 import { useEffect, useState } from "react";
 import { useRef } from "react";
-import classes from "/styles/foto.module.scss"
+import classes from "./FotoPage.module.scss"
 import Image from "next/image";
 import Link from "next/link";
 
@@ -112,16 +112,17 @@ const Gallery = (props) => {
             <div  key={"album-" + index}>
                 {anotherYearComponent&& anotherYearComponent}
                     <div className="text-blue text-center h4 my-3">{album.title} {albumYear}</div>
-                        <Link href={"/foto/" + album.date}><a><div className={classes["overlay"]}>
+                        <Link href={"/foto/" + album.date}><a><div className={classes["overlay"] + " col-12"}>
                             <div>
                             Více &gt;&gt;
                             </div>
                         </div></a></Link>
-                    <div className="album-images-preview d-flex">
+                    <div className="album-images-preview row">
                         {album.photos.map((photo, index, array) => {
+                            let additionalClasses = ["col-6 col-md-3", "col-6 col-md-3", "d-none d-md-block col-md-3", "d-none d-md-block col-md-3"];
                             if (index < 4) {
                                 return (
-                                    <div key={"photo-" + index + "-" + album.title + "-" + album.date}>
+                                    <div key={"photo-" + index + "-" + album.title + "-" + album.date} className={additionalClasses[index] + " p-0"}>
                                         <div className={classes["img-container"]}>
                                             {// eslint-disable-next-line @next/next/no-img-element
                                             photo && <img alt="TODO" src={"/api/photo?file=" + photo} />}

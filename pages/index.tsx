@@ -163,8 +163,8 @@ export default function Home() {
             <div className="col-10 p-4 d-flex flex-column justify-content-center">
               <div className="row"><h2>Chcete svoje dítě přihlásit do naší MŠ?</h2></div>
               <div className="row mt-4 justify-content-center align-items-center">
-                <button>Informace k přihláškám</button>
-                <div className={classes["pen-image-container"] + " position-relative"}>
+                <Link href="/prihlasky"><a><button>Informace k přihláškám</button></a></Link>
+                <div className={classes["pen-image-container"] + " position-relative d-none d-sm-block"}>
                   <Image src="/img/pen.png" alt="Fotka školky" layout="fill" />
                 </div>
               </div>

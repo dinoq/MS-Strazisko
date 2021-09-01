@@ -65,16 +65,18 @@
 
 .enrollment {
     background-color: #e74040;
-
-    button {
-        padding: 15px 50px;
+    a {
         width: fit-content;
-        height: fit-content;
-        background-color: #22294d;
-        color: white;
-        border-radius: 10px;
-        border: none;
-        box-shadow: -2px 4px 4px #00000078;
+        button {
+            padding: 15px 50px;
+            width: fit-content;
+            height: fit-content;
+            background-color: #22294d;
+            color: white;
+            border-radius: 10px;
+            border: none;
+            box-shadow: -2px 4px 4px #00000078;
+        }
     }
 
     .pen-image-container {
@@ -118,8 +120,8 @@
 
         }
     }*/
-    
-    iframe{
+
+    iframe {
         max-width: 100%;
     }
 }

@@ -15,7 +15,7 @@ const Dokumenty = (props) => {
         <>
             <div className="container-fluid">
                 <div className="row justify-content-center">
-                    <div className="col-8">
+                    <div className="col-10">
                         <h1 className="text-center mb-4">Dokumenty</h1>
                         <Link href="/dokumenty/gdpr.pdf"><a target="_blank" className="fw-bold h5">Dokument 1 - Informace o zpracování osobních údajů</a></Link>
                     </div>

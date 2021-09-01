@@ -1,4 +1,4 @@
-@import "./custom.scss";
+@import "../../styles/custom.scss";
 
 .login {
     background-color: #83c3ff;
@@ -38,9 +38,15 @@
 $size: 250px;
 $transition-time: 0.5s;
 .overlay {
-    height: $size;
-    width: $size * 4;
-    background: linear-gradient(90deg, rgb(2 0 36 / 0%), rgb(255 255 255) 80%);
+    //height: $size;
+    aspect-ratio: 2;
+    //width: $size * 4;
+    width: (100% / 12) * 10;
+    @include media-breakpoint-up(md) {
+        //width: (100%);
+        aspect-ratio: 4;
+    }
+    background: linear-gradient(90deg, rgb(2 0 36 / 0%) 30%, rgb(255 255 255) 80%);
     opacity: 1;
     position: absolute;
     display: flex;
@@ -68,8 +74,8 @@ $transition-time: 0.5s;
     }
 }
 .img-container {
-    height: $size;
-    width: $size;
+    //height: $size;
+    aspect-ratio: 1;
 
     img {
         object-fit: cover;

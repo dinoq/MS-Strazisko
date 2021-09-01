@@ -36,8 +36,10 @@ $transition-time: 0.5s;
 
     }
     .img-container {
-        height: $size;
+        //height: $size;
         //width: $size;
+        
+        aspect-ratio: 1;
     
         img {
             object-fit: cover;

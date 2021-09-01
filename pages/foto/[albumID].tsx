@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-import classes from "../../styles/FotoDetail.module.scss";
+import classes from "./FotoDetail.module.scss";
 import { useRouter } from 'next/router';
 import Link from "next/link"
 
@@ -40,7 +40,7 @@ const Gallery: React.FC<{ albumTitle: any }> = (props) => {
             <div className={" container-fluid"}>
                     <div className="text-blue text-center h2 my-3">{album.title} {year}</div>
                     <div className="album-images-preview row container-fluid justify-content-center">
-                        <div className="col-8 row">
+                        <div className="col-12 col-md-10 row">
                             {album.photos.map((photo, index, array) => {
                                 return (
                                     <div key={"photo-" + index + "-" + album.title + "-" + album.date} className={classes["overlay-container"] + " col-12 col-md-6 col-lg-3"}>

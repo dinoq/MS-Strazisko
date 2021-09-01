@@ -149,7 +149,10 @@ $font-size: 1.2rem;
     /*background-size: 700px;*/
     background-repeat: repeat-x;
     width: 100%;
-    min-height: 400px;
+    min-height: 200px;
+    @include media-breakpoint-up(md) {
+        min-height: 300px;
+    }
 
     &.shifted {
         min-height: 200px;

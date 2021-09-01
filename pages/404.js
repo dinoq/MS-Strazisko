@@ -9,7 +9,7 @@ const Error404 = (props) => {
         <>
             <div className="container my-5">
                 <div className="row justify-content-center">
-                    <div className="col-8 position-relative">
+                    <div className="col-10 position-relative">
                         <div className="row justify-content-center">
                             <div className="col-3">
                                 <Image src={kid} layout="responsive" />
