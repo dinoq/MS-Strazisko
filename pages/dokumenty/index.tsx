@@ -25,26 +25,4 @@ const Dokumenty = (props) => {
     )
 }
 
-export const getServerSideProps = withIronSession(
-    async ({ req, res }) => {
-        const loggedIn = req.session.get("loggedIn");
-
-        if (!loggedIn) {
-            return {
-                props: { logged: false }
-            };
-        }
-
-        return {
-            props: { logged: true }
-        };
-    },
-    {
-        cookieName: "myapp_cookiename",
-        cookieOptions: {
-            secure: process.env.NODE_ENV === "production" ? true : false
-        },
-        password: "P5hBP4iHlvp6obqtWK0mNuMrZow5x6DQV61W3EUG",
-    }
-);
 export default Dokumenty;

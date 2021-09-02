@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from "next/link"
-import SchoolFeature from '../components/SchoolFeature'
+import SchoolFeature from '../components/school-feature/SchoolFeature'
 
 import classes from "/styles/index.module.scss"
 
@@ -10,8 +10,8 @@ import playIcon from "../public/img/play-icon-optimal.svg"
 import treeIcon from "../public/img/tree-icon-optimal.svg"
 import foodIcon from "../public/img/food-icon-optimal.svg"
 import smileIcon from "../public/img/smile-icon-optimal.svg"
-import Teacher from '../components/Teacher'
-import EventCard from '../components/EventCard'
+import Teacher from '../components/teacher/Teacher'
+import EventCard from '../components/event-card/EventCard'
 
 export default function Home() {
   const a = "/navrh/unused/camping.jpg";
@@ -113,13 +113,12 @@ export default function Home() {
 
             </div>
           </div>
-
           <div className={classes["teachers"] + " row my-4 mb-5 justify-content-center text-center"}>
             <div className="col-10 d-flex flex-column justify-content-center">
               <div className="row"><h2>Učitelé</h2></div>
-              <div className="row w-100 justify-content-between">
+              <div className="row w-100 justify-content-center justify-content-lg-between">
                 {teachers.map((teacher, index) =>
-                  <div key={"teacher-" + index} className="col-12 col-md-6 col-lg-3 mt-2 mb-5">
+                  <div key={"teacher-" + index} className="col-12 col-md-6 col-lg-3 mt-5 mt-lg-2 mb-5">
                     <Teacher imgSrc={teacher.imgSrc} name={teacher.name} description={teacher.description} />
                   </div>
                 )}

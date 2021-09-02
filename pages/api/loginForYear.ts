@@ -3,10 +3,10 @@ import { withIronSession } from "next-iron-session";
 async function handler(req, res) {
   const rigtPwd = "ASD";
 
-  const { pwd } = req.body;
-  if (req.method === "POST" && pwd === rigtPwd) {
-    console.log("QWRETZTRZ", req.session.get("loggedIn"));
-    req.session.set("loggedIn", true); 
+  const { pwd, year } = req.body;
+  if (req.method === "POST" && pwd === rigtPwd && year) {
+    console.log("QWRETZTRZ", req.session.get("loggedForYear"));
+    req.session.set("loggedForYear", year); 
     await req.session.save();
 
     return res.status(201).send("");

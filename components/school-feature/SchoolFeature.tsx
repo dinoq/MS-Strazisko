@@ -1,7 +1,6 @@
 // eslint-disable-next-line
-//import classes from "./SchoolFeature.module.css";
 import Image from "next/image"
-import styles from "../styles/SchoolFeature.module.scss"
+import styles from "./SchoolFeature.module.scss"
 
 
 const SchoolFeature: React.FC<{icon: any, title: string, description: string, alt: string, bgColor: string}> = (props) => {

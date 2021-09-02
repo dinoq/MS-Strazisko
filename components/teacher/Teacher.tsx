@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-import classes from "../styles/Teacher.module.scss";
+import classes from "./Teacher.module.scss";
 import Image from "next/image";
 
 const Teacher: React.FC<{ imgSrc: any, name: string, description: string }> = (props) => {

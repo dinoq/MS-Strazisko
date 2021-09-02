@@ -7,12 +7,11 @@ import Image from "next/image"
 import Link from "next/link";
 
 const Stravovani: React.FC<{ propname: any }> = (props) => {
-    console.log('allergens: ', allergens);
     return (
         <>
             <div className="container-fluid">
                 <div className="row justify-content-center">
-                    <div className="col-10">
+                    <div className="col-12 col-md-10">
                         <h1 className="text-center mb-4">Stravování</h1>
                         <div className={classes.allergens + " position-relative"}>
                             <Link href={allergens.src}><a target="_blank"><Image src={allergens} alt="Seznam alergenů" layout="fill" objectFit="contain" /></a></Link>

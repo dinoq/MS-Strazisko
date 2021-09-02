@@ -1,7 +1,6 @@
 // eslint-disable-next-line
 import Image from "next/image";
-import classes from "../styles/EventCard.module.scss";
-import Card from "./ui/Card/Card";
+import classes from "./EventCard.module.scss";
 
 const EventCard: React.FC<{ imgSrc: string, title: string, description: string, date: string }> = ({ imgSrc, title, description, date }) => {
 

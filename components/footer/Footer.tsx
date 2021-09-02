@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-import classes from "../styles/Footer.module.scss";
+import classes from "./Footer.module.scss";
 import Image from 'next/image'
 import Link from "next/link"
 import { useEffect, useRef, useState } from "react";

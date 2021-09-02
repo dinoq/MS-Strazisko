@@ -1,30 +1,35 @@
+import { NextApiResponse } from "next";
 import { withIronSession } from "next-iron-session";
 import sharp from "sharp";
 
 const albums = ["https://www.ms-strazisko.cz/img/skolka.jpeg"];
 
-async function handler(req, res, session) {
+async function handler(req, res: NextApiResponse, session) {
     const t1 = Date.now();
     let filename = req?.query?.file;
-    const loggedIn = await req.session.get("loggedIn");
-    res.setHeader('Content-Type', 'image/jpg');
-    let imageBuffer;
-    console.log('req?.query?.minify: ', req?.query?.minify);
-    if(req?.query?.minify == "true"){
-      imageBuffer = await (await fetch('https://ms-strazisko.cz/fileserver/getFile.php?file=' + req.query.file)).arrayBuffer();
-      imageBuffer = 
-      await sharp(Buffer.from(imageBuffer))
-      .resize({
-        fit: sharp.fit.contain,
-        width: 400
-      })
-      .webp()
-      .toBuffer();
+    let year = req?.query?.year;
+    const loggedForYear = await req.session.get("loggedForYear");
+    if(loggedForYear == year){
+      res.setHeader('Content-Type', 'image/jpg');
+      let imageBuffer;
+      if(req?.query?.minify == "true"){
+        imageBuffer = await (await fetch('https://ms-strazisko.cz/fileserver/getFile.php?file=' + req.query.file)).arrayBuffer();
+        imageBuffer = 
+        await sharp(Buffer.from(imageBuffer))
+        .resize({
+          fit: sharp.fit.contain,
+          width: 400
+        })
+        .webp()
+        .toBuffer();
+      }else{
+        imageBuffer = await (await fetch('https://ms-strazisko.cz/fileserver/getFile.php?file=' + req.query.file)).body;
+      }
+  
+      res.send(imageBuffer);
     }else{
-      imageBuffer = await (await fetch('https://ms-strazisko.cz/fileserver/getFile.php?file=' + req.query.file)).body;
+      res.status(401).send("Unauthorized!"+loggedForYear+","+year);
     }
-
-    res.send(imageBuffer);
     console.log("D:", (Date.now() - t1));
 }
 
