@@ -8,7 +8,6 @@ import { withIronSession } from "next-iron-session";
 const YearPage: React.FC<{ logged: boolean }> = (props) => {
   const router = useRouter();
   const { year } = router.query;
-  console.log("yearrrrrr: ", year);
 
   return (
     <>
@@ -138,7 +137,7 @@ const Gallery = (props) => {
                   <div className={classes["img-container"]}>
                     {
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img alt="TODO" src={"/api/photo?file=" + photo} />
+                      <img alt="TODO" src={"/api/getPhoto?file=" + photo} />
                     }
                   </div>
                 </div>
@@ -159,18 +158,19 @@ const Gallery = (props) => {
 
 export const getServerSideProps = withIronSession(
   async ({ req, res }) => {
-    const loggedForYear = req.session.get("loggedForYear");
-    console.log("loggedForYear: ", loggedForYear);
+    const fotoIndex = req.url.indexOf("foto/")+5;
+    const pageYear = req.url.substring(fotoIndex,fotoIndex+9);
+    const loggedForYears: Array<any> = req.session.get("loggedForYears");
 
-    if (!loggedForYear) {
+    if (loggedForYears && loggedForYears.length && loggedForYears.includes(pageYear)) {
+      return {
+        props: { logged: true },
+      };
+    }else{
       return {
         props: { logged: false },
-      };
+      };    
     }
-
-    return {
-      props: { logged: true },
-    };
   },
   {
     cookieName: "myapp_cookiename",

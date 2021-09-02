@@ -1,13 +1,21 @@
 import { withIronSession } from "next-iron-session";
 
 async function handler(req, res) {
-  const rigtPwd = "ASD";
-
+  //TODO získat heslo pro daný rok z DB
+  
   const { pwd, year } = req.body;
+  const rigtPwd = year.substring(0, 4);
+  console.log('rigtPwd: ', rigtPwd);
+
+  console.log('year: ', year);
   if (req.method === "POST" && pwd === rigtPwd && year) {
-    console.log("QWRETZTRZ", req.session.get("loggedForYear"));
-    req.session.set("loggedForYear", year); 
-    await req.session.save();
+    console.log("QWRETZTRZ", req.session.get("loggedForYears"));
+    let prevLoggedForYears = req.session.get("loggedForYears");
+    prevLoggedForYears ??= [];
+    if(!prevLoggedForYears.includes(year)){
+      req.session.set("loggedForYears", [...prevLoggedForYears, year]); 
+      await req.session.save();
+    }
 
     return res.status(201).send("");
   } else {

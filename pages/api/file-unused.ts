@@ -36,12 +36,6 @@ const saveFile = async (file, path) => {
 export default (req, res) => {
   req.method === "POST"
     ? post(req, res)
-    : req.method === "PUT"
-    ? console.log("PUT")
-    : req.method === "DELETE"
-    ? console.log("DELETE")
-    : req.method === "GET"
-    ? console.log("GET")
     : res.status(404).send("");
 };
 

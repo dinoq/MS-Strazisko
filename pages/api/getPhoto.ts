@@ -1,0 +1,55 @@
+import { NextApiResponse } from "next";
+import { withIronSession } from "next-iron-session";
+import sharp from "sharp";
+import Database from "better-sqlite3";
+
+const albums = ["https://www.ms-strazisko.cz/img/skolka.jpeg"];
+
+async function handler(req, res: NextApiResponse, session) {
+  let filename = req?.query?.file;
+  if (!filename) {
+    res.status(404).send("File not specified!");
+    return;
+  }
+  tady se vubec nemá tahat heslo! To je potřeba přenést do loginforyear
+  naopak se zde má kontrolovat školní rok dané fotky z databáze (pokud je v loggedForYears)
+  const db = new Database('database/database.db', { verbose: console.log });
+  const sql = "select photos.filename, albumPasswords.passwordHash from photos inner join albums on photos.id_album=albums.id_album inner join albumPasswords on albums.id_albumPasswords=albumPasswords.id_albumPasswords";
+  const stmt = db.prepare(sql);
+  const sqlResults: Array<any> = stmt.all();
+  if (sqlResults.length == 1) {
+    const yearPasswordHash = sqlResults[0].passwordHash;
+    const loggedForYears = await req.session.get("loggedForYears");
+    if (loggedForYears.includes(year)) {
+      res.setHeader('Content-Type', 'image/jpg');
+      let imageBuffer;
+      if (req?.query?.minify == "true") {
+        imageBuffer = await (await fetch('https://ms-strazisko.cz/fileserver/getFile.php?file=' + filename)).arrayBuffer();
+        imageBuffer =
+          await sharp(Buffer.from(imageBuffer))
+            .resize({
+              fit: sharp.fit.contain,
+              width: 400
+            })
+            .webp()
+            .toBuffer();
+      } else {
+        imageBuffer = await (await fetch('https://ms-strazisko.cz/fileserver/getFile.php?file=' + filename)).body;
+      }
+
+      res.send(imageBuffer);
+    } else {
+      res.status(401).send("Unauthorized!");
+    }
+  } else {
+    res.status(401).send("Unauthorized!");
+  }
+}
+
+export default withIronSession(handler, {
+  cookieName: "myapp_cookiename",
+  cookieOptions: {
+    secure: process.env.NODE_ENV === "production" ? true : false
+  },
+  password: "P5hBP4iHlvp6obqtWK0mNuMrZow5x6DQV61W3EUG",
+});

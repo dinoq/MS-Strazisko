@@ -4,16 +4,28 @@ import Database from "better-sqlite3";
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // TODO získat roky z databáze (porovnáním nejmenšího a největšího date u fotek) - není vyžadováno přihlášení
     // Pozor je potřeba porovnat co je před a co po září, aby šlo vytvořit rok ve formátu rok_rok+1
-    
+
     let years = [];
     const db = new Database('database/database.db', { verbose: console.log });
-    
-    const stmt = db.prepare("SELECT DISTINCT date FROM photos ORDER BY date")
-    const sqlResults = stmt.all();
-    for(const sqlResult of sqlResults){
-        console.log('date: ', sqlResult.date);
 
+    const stmt = db.prepare("SELECT date FROM albums INNER JOIN photos ON albums.id_album=photos.id_album ORDER BY date;")
+    const sqlResults = stmt.all();
+    
+    for (const sqlResult of sqlResults) {
+        let date = new Date(sqlResult.date);
+        let yearStr: string = "";
+        if ((date.getMonth() + 1) < 9) {
+            yearStr = (date.getFullYear() - 1) + "_" + date.getFullYear();
+        } else {
+            yearStr = date.getFullYear() + "_" + (date.getFullYear() + 1);
+        }
+
+
+        if (!years.includes(yearStr)) {
+            years.push(yearStr);
+        }
     }
+
 
     /*
     if(sqlMinMaxDates.length === 1){
@@ -46,7 +58,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     db.close();
     res.json({ years })
-  }
+}
 
 
-  export default  handler;
+export default handler;
