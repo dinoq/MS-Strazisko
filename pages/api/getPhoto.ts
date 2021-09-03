@@ -2,15 +2,40 @@ import { NextApiResponse } from "next";
 import { withIronSession } from "next-iron-session";
 import sharp from "sharp";
 import Database from "better-sqlite3";
+import fs from "fs";
 
 const albums = ["https://www.ms-strazisko.cz/img/skolka.jpeg"];
 
 async function handler(req, res: NextApiResponse, session) {
   let filename = req?.query?.file;
+  let sh = req?.query?.s;
   if (!filename) {
     res.status(404).send("File not specified!");
     return;
   }
+  
+  let imageBuffer: Buffer;
+  try {
+    imageBuffer = fs.readFileSync("public/img/albums/1/" + filename);
+    console.log('imageBuffer: ', imageBuffer.byteLength);
+    if(sh!==undefined){
+      imageBuffer =
+        await sharp(imageBuffer)
+          /*.resize({
+            fit: sharp.fit.inside,
+            width: 2880,
+            height: 2160,
+          })*/
+          .webp({quality: 70})
+          console.log('imageBuffer: ', imageBuffer);
+    }
+  } catch (error) {
+    res.status(404).send("Not found!");
+  }
+  
+  res.setHeader('Content-Type', 'image/jpg');
+  res.status(201).send(imageBuffer);
+  /*
   tady se vubec nemá tahat heslo! To je potřeba přenést do loginforyear
   naopak se zde má kontrolovat školní rok dané fotky z databáze (pokud je v loggedForYears)
   const db = new Database('database/database.db', { verbose: console.log });
@@ -43,7 +68,7 @@ async function handler(req, res: NextApiResponse, session) {
     }
   } else {
     res.status(401).send("Unauthorized!");
-  }
+  }*/
 }
 
 export default withIronSession(handler, {

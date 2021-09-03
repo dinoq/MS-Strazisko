@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { withIronSession } from "next-iron-session";
+import { getEnvDomain } from "../../utils";
 
 const YearPage: React.FC<{ logged: boolean }> = (props) => {
   const router = useRouter();
@@ -83,7 +84,7 @@ const Gallery = (props) => {
   const [photos, setPhotos] = useState([]);
 
   useEffect(() => {
-    let resp: any = fetch("http://localhost:3000/api/photos").then((value) => {
+    let resp: any = fetch(getEnvDomain()+"/api/photos").then((value) => {
       console.log("QWER");
       value.json().then((value) => {
         console.log("value: ", value);
