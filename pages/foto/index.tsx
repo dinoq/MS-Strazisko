@@ -30,6 +30,7 @@ const FotoPage: React.FC<{years: Array<any>}> = (props) => {
 }
 
 export async function getServerSideProps(context) {
+    console.log('getEnvDomain(): ', getEnvDomain()+"/api/getPhotosYears");
     let years = await(await fetch(getEnvDomain() + "/api/getPhotosYears")).json();
     return {
       props: { ...years},

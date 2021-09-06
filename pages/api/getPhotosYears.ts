@@ -1,10 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import Database from "better-sqlite3";
 
+    // Získání školních roků z databáze - není vyžadováno přihlášení
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-    // TODO získat roky z databáze (porovnáním nejmenšího a největšího date u fotek) - není vyžadováno přihlášení
-    // Pozor je potřeba porovnat co je před a co po září, aby šlo vytvořit rok ve formátu rok_rok+1
-
     let years = [];
     const db = new Database('database/database.db', { verbose: console.log });
 

@@ -8,7 +8,14 @@ const albums = ["https://www.ms-strazisko.cz/img/skolka.jpeg"];
 
 async function handler(req, res: NextApiResponse, session) {
   let filename = req?.query?.file;
-  let sh = req?.query?.s;
+  let minify = req?.query?.minify;
+  
+  const loggedForYears: Array<any> = await req.session.get("loggedForYears");
+  if(!loggedForYears || !loggedForYears.length){
+    res.status(401).send("Unauthorized!");
+    return;
+  }
+
   if (!filename) {
     res.status(404).send("File not specified!");
     return;
@@ -18,7 +25,7 @@ async function handler(req, res: NextApiResponse, session) {
   try {
     imageBuffer = fs.readFileSync("public/img/albums/1/" + filename);
     console.log('imageBuffer: ', imageBuffer.byteLength);
-    if(sh!==undefined){
+    if(minify!==undefined){
       imageBuffer =
         await sharp(imageBuffer)
           /*.resize({
@@ -31,6 +38,19 @@ async function handler(req, res: NextApiResponse, session) {
     }
   } catch (error) {
     res.status(404).send("Not found!");
+  }
+
+  try {
+    console.log('loggedForYears when getPhoto:: ', loggedForYears);
+    const db = new Database('database/database.db', { verbose: console.log });
+    /*const sql = "select photos.filename, albumPasswords.passwordHash from photos inner join albums on photos.id_album=albums.id_album inner join albumPasswords on albums.id_albumPasswords=albumPasswords.id_albumPasswords";
+    const stmt = db.prepare(sql);
+    const sqlResults: Array<any> = stmt.all();
+    if (sqlResults.length == 1) {
+    }*/
+  } catch (error) {
+    res.status(500).send("Internal Server Error! Error in database!");
+    return;    
   }
   
   res.setHeader('Content-Type', 'image/jpg');
