@@ -84,7 +84,7 @@ const Gallery = (props) => {
   const [photos, setPhotos] = useState([]);
 
   useEffect(() => {
-    let resp: any = fetch(getEnvDomain()+"/api/photos").then((value) => {
+    let resp: any = fetch(getEnvDomain() + "/api/photos").then((value) => {
       console.log("QWER");
       value.json().then((value) => {
         console.log("value: ", value);
@@ -159,18 +159,31 @@ const Gallery = (props) => {
 
 export const getServerSideProps = withIronSession(
   async ({ req, res }) => {
-    const fotoIndex = req.url.indexOf("foto/")+5;
-    const pageYear = req.url.substring(fotoIndex,fotoIndex+9);
-    const loggedForYears: Array<any> = req.session.get("loggedForYears");
+    const fotoIndex = req.url.indexOf("foto/") + 5;
+    const pageYear = req.url.substring(fotoIndex, fotoIndex + 9);
+    //const loggedForYears: Array<any> = req.session.get("loggedForYears");
+    //console.log('loggedForYears: ', loggedForYears);
 
-    if (loggedForYears && loggedForYears.length && loggedForYears.includes(pageYear)) {
+    if (
+      /*loggedForYears &&
+      loggedForYears.length &&
+      loggedForYears.includes(pageYear)*/true
+    ) {
+      let resp: any = await fetch(
+        getEnvDomain() + "/api/getAlbumPhotos?year=" + pageYear
+      )
+      if(resp.status == 201){
+        resp = await resp.json();
+        console.log('resp: ', resp);
+      }
+      
       return {
         props: { logged: true },
-      };
-    }else{
+      };  
+    }else {
       return {
         props: { logged: false },
-      };    
+      };
     }
   },
   {

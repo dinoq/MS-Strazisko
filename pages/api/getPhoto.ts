@@ -38,6 +38,7 @@ async function handler(req, res: NextApiResponse, session) {
     }
   } catch (error) {
     res.status(404).send("Not found!");
+    return;
   }
 
   try {

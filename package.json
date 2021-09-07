@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "set APP_PORT=3000&& next dev -p 3000",
+    "devDebug": "set APP_PORT=3000&&cross-env NODE_OPTIONS='--inspect' next dev -p 3000",
     "dev80": "set APP_PORT=80&& next dev -p 80",
     "dev80p": "set APP_PORT=80&&set URL_DESTROYER=asdf&& next dev -p 80",
     "build": "next build",
@@ -15,6 +16,7 @@
   "dependencies": {
     "better-sqlite3": "^7.4.3",
     "bootstrap": "^5.0.2",
+    "cross-env": "^7.0.3",
     "formidable": "^1.2.2",
     "google-map-react": "^2.1.10",
     "image-trace-loader": "^1.0.2",
