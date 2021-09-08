@@ -9,13 +9,14 @@ import { getEnvDomain } from "../../utils";
 const YearPage: React.FC<{ logged: boolean }> = (props) => {
   const router = useRouter();
   const { year } = router.query;
+  console.log('year: ', year);
 
   return (
     <>
       <div className="container-fluid">
         <div className={" row my-4 justify-content-center align-items-center"}>
           <div className="col-11 col-md-10">
-            {props.logged && <Gallery />}
+            {props.logged && <Gallery year={year} />}
             {!props.logged && <Login year={year} />}
           </div>
         </div>
@@ -84,12 +85,16 @@ const Gallery = (props) => {
   const [photos, setPhotos] = useState([]);
 
   useEffect(() => {
-    let resp: any = fetch(getEnvDomain() + "/api/photos").then((value) => {
-      console.log("QWER");
-      value.json().then((value) => {
-        console.log("value: ", value);
-        setPhotos(["q.jpg"]);
-      });
+    let resp: any = fetch(getEnvDomain() + "/api/getYearAlbumsInfo?year="+props.year).then((value) => {
+      if (resp.status == 201) {
+        value.json().then((value) => {
+          console.log("value: ", value);
+        });
+      }else{
+        value.text().then((value) => {
+          console.log("tvalue: ", value);
+        });
+      }
     });
   }, []);
   let alb = {
@@ -161,21 +166,21 @@ export const getServerSideProps = withIronSession(
   async ({ req, res }) => {
     const fotoIndex = req.url.indexOf("foto/") + 5;
     const pageYear = req.url.substring(fotoIndex, fotoIndex + 9);
-    //const loggedForYears: Array<any> = req.session.get("loggedForYears");
-    //console.log('loggedForYears: ', loggedForYears);
+    const loggedForYears: Array<any> = req.session.get("loggedForYears");
+    console.log('loggedForYears8: ', loggedForYears);
 
     if (
-      /*loggedForYears &&
+      loggedForYears &&
       loggedForYears.length &&
-      loggedForYears.includes(pageYear)*/true
+      loggedForYears.includes(pageYear)
     ) {
-      let resp: any = await fetch(
+      /*let resp: any = await fetch(
         getEnvDomain() + "/api/getAlbumPhotos?year=" + pageYear
       )
       if(resp.status == 201){
         resp = await resp.json();
         console.log('resp: ', resp);
-      }
+      }*/
       
       return {
         props: { logged: true },
