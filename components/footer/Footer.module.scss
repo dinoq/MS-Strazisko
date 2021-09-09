@@ -1,6 +1,9 @@
 .footer {
-    background-color: #2f375c;
+    margin-top: auto;
 
+    & > div {
+        background-color: #2f375c;
+    }
     a {
         color: #83c3ff;
     }

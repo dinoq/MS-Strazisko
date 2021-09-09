@@ -8,18 +8,25 @@ import { useRouter } from "next/router";
 const Footer: React.FC<{}> = (props) => {
   const footer = useRef<HTMLDivElement>();
   const router = useRouter();
-  const [offsetClass, setOffsetClass] = useState("");
-  useEffect(() => {
-    if (document.body.clientHeight < document.documentElement.clientHeight) {
-      setOffsetClass("position-absolute bottom-0");
+  //const [offsetClass, setOffsetClass] = useState("");
+
+  /*
+  const checkHeight = () => {
+    if (document && document?.body?.clientHeight < document?.documentElement?.clientHeight) {
+      //setOffsetClass("position-absolute bottom-0");
+      console.log("SET position-absolute bottom-0");
     } else {
       setOffsetClass("");
+      console.log("SET ' '");
     }
-  }, [router])
+    setTimeout(checkHeight, 100);
+  };
+  useEffect(checkHeight, [router])*/
+
   
   return (
-    <div ref={footer} className={"container-fluid " + offsetClass}>
-      <div className={classes["footer"] + " row mt-4 justify-content-center text-center text-white"}>
+    <div ref={footer} className={classes["footer"] + " pt-4 container-fluid "/* + offsetClass*/}>
+      <div className={" row justify-content-center text-center text-white"}>
         <div className="col-10 p-4 d-flex flex-column justify-content-center">
           <div className="row"><h2>Kontakty</h2></div>
           <div className="row d-flex flex-row justify-content-around align-items-center">

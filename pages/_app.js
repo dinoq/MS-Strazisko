@@ -11,20 +11,20 @@ function MyApp({ Component, pageProps }) {
   
   if(router.pathname === "/404"){ // not index
     return (
-      <>
+      <div className="layout">
         <Header noBackground={true}/>
         <Component {...pageProps} />
-      </>
+      </div>
     )
 
   }
 
   return (
-    <>
+    <div className="layout">
       <Header />
       <Component {...pageProps} />
       <Footer />
-    </>
+    </div>
   )
 }
 

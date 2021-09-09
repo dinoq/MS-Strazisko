@@ -9,7 +9,6 @@ import { getEnvDomain } from "../../utils";
 const YearPage: React.FC<{ logged: boolean }> = (props) => {
   const router = useRouter();
   const { year } = router.query;
-  console.log('year: ', year);
 
   return (
     <>
@@ -80,84 +79,74 @@ const Login: React.FC<{ year: any }> = (props) => {
 };
 
 const Gallery = (props) => {
-  let albums: Array<{ date: string; title: string; photos: Array<any> }> = [];
-
-  const [photos, setPhotos] = useState([]);
+  const [albums, setAlbums] = useState([]);
 
   useEffect(() => {
-    let resp: any = fetch(getEnvDomain() + "/api/getYearAlbumsInfo?year="+props.year).then((value) => {
+    fetch(getEnvDomain() + "/api/getYearAlbumsInfo?year=" + props.year).then((resp) => {
+
       if (resp.status == 201) {
-        value.json().then((value) => {
-          console.log("value: ", value);
+        resp.json().then((json) => {
+          console.log('json: ', json);
+          setAlbums(json.albums);
         });
-      }else{
-        value.text().then((value) => {
+      } else {
+        resp.text().then((value) => {
           console.log("tvalue: ", value);
         });
       }
     });
   }, []);
-  let alb = {
-    date: "2020-05-05",
-    title: "Výlet v přírodě 20. 5.",
-    photos: ["q.jpg", "a.jpg", "b.jpg", "q.jpg", "a.jpg", "b.jpg"],
-  };
-  albums.push(alb);
-  albums.push(alb);
-  alb = {
-    date: "2018-05-05",
-    title: "Výlet v přírodě 20. 5.",
-    photos: ["q.jpg", "a.jpg", "b.jpg", "q.jpg", "a.jpg", "b.jpg"],
-  };
-  albums.push(alb);
 
-  let year = new Date(albums[0].date).getFullYear();
-  let albumsComponents = albums.map((album, index, array) => {
-    const albumYear = new Date(album.date).getFullYear();
-    return (
-      <div key={"album-" + index}>
-        <div className="text-blue text-center h4 my-3">
-          {album.title} {albumYear}
-        </div>
-        <Link href={"/foto/" + album.date}>
-          <a>
-            <div className={classes["overlay"] + " col-12"}>
-              <div>Více &gt;&gt;</div>
-            </div>
-          </a>
-        </Link>
-        <div className="album-images-preview row">
-          {album.photos.map((photo, index, array) => {
-            let additionalClasses = [
-              "col-6 col-md-3",
-              "col-6 col-md-3",
-              "d-none d-md-block col-md-3",
-              "d-none d-md-block col-md-3",
-            ];
-            if (index < 4) {
-              return (
-                <div
-                  key={"photo-" + index + "-" + album.title + "-" + album.date}
-                  className={additionalClasses[index] + " p-0"}
-                >
-                  <div className={classes["img-container"]}>
-                    {
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img alt="TODO" src={"/api/getPhoto?file=" + photo} />
-                    }
-                  </div>
-                </div>
-              );
-            }
-          })}
-        </div>
-      </div>
-    );
-  });
+  const albumYear = new Date(albums[0]?.date).getFullYear();
 
   return (
     <>
-      <div>{albumsComponents}</div>
+      <div>{
+        albums.map((album, index, array) => {
+          return (
+            <div key={"album-" + index}>
+              <div className="text-blue text-center h4 my-3">
+                <Link href={"/foto/" + props.year + "/" + album.title}>
+                  <a>
+                    {album.name}
+                  </a>
+                </Link>
+              </div>
+              <Link href={"/foto/" + props.year + "/" + album.title}>
+                <a>
+                  <div className={classes["overlay"] + " col-12"}>
+                    <div>Více &gt;&gt;</div>
+                  </div>
+                </a>
+              </Link>
+              <div className="album-images-preview row">
+                {album.photos.map((photo, index, array) => {
+                  let additionalClasses = [
+                    "col-6 col-md-3",
+                    "col-6 col-md-3",
+                    "d-none d-md-block col-md-3",
+                    "d-none d-md-block col-md-3",
+                  ];
+                  return (
+                    <div
+                      key={"photo-" + index + "-" + album.name + "-" + album.date}
+                      className={additionalClasses[index] + " p-0"}
+                    >
+                      <div className={classes["img-container"]}>
+                        {
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img alt={"Fotografie z alba \"" + album.name + "\""} src={"/api/getPhoto?file=" + photo + "&minify"} />
+                        }
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })
+
+      }</div>
     </>
   );
 };
@@ -181,11 +170,11 @@ export const getServerSideProps = withIronSession(
         resp = await resp.json();
         console.log('resp: ', resp);
       }*/
-      
+
       return {
         props: { logged: true },
-      };  
-    }else {
+      };
+    } else {
       return {
         props: { logged: false },
       };

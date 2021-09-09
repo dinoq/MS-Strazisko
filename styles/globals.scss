@@ -44,3 +44,9 @@ h1 {
 h3{
   font-size: 1.4rem !important;
 }
+
+.layout{
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
