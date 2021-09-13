@@ -51,7 +51,7 @@ const Footer: React.FC<{}> = (props) => {
             </div>
             <div className="w-fit-content my-2">
               <ul className={classes["right-items"]}>
-                <li><Link href="/"><a>Informace o přístupnosti</a></Link></li>
+                <li><Link href="/pristupnost"><a>Informace o přístupnosti</a></Link></li>
                 <li><Link href="/"><a>Informace o zpracování osobních údajů</a></Link></li>
                 <li><Link href="/"><a>Levné webové stránky</a></Link></li>
               </ul>

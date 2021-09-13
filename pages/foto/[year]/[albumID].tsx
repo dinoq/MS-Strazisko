@@ -13,7 +13,7 @@ const AlbumDetail: React.FC<{ logged: boolean }> = (props) => {
     <>
       <div className="container-fluid">
         <div className={" row my-4 justify-content-center align-items-center"}>
-          <div className="col-11 col-md-10">Ověřit přihlášení. Pokud logged out => login form...
+          <div className="col-11 col-md-10">Ověřit přihlášení. Pokud logged out =&gth; login form...
           </div>
         </div>
       </div>
