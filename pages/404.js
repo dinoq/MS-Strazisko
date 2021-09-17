@@ -12,7 +12,7 @@ const Error404 = (props) => {
                     <div className="col-10 position-relative">
                         <div className="row justify-content-center">
                             <div className="col-3">
-                                <Image src={kid} layout="responsive" />
+                                <Image src={kid} alt="Stránka nenalezena" layout="responsive" />
                             </div>
                         </div>
                         <div className="row my-3">

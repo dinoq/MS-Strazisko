@@ -17,6 +17,7 @@ const columns = [
     title: "Akce",
     key: "action",
     sorter: true,
+    // eslint-disable-next-line react/display-name
     render: () => (
       <Space size="middle">
         <a>

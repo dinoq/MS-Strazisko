@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import AppTable from '../components/Table/Table'
+import AppTable from '../../components/Table/Table'
 import styles from './pages.module.scss'
 
 const Pages: NextPage = () => {

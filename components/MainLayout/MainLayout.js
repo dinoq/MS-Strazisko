@@ -1,4 +1,4 @@
-import { Layout, Menu, Breadcrumb, Image, Switch, Grid, Col, Row } from "antd";
+import { Layout, Menu, Col, Row } from "antd";
 import {
   HomeOutlined,
   DatabaseOutlined,
@@ -6,8 +6,6 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import React, { useState } from "react";
-//import Appanel from '../projects/Appanel/Appanel';
-import MenuItem from "antd/lib/menu/MenuItem";
 import Link from "next/link";
 import "antd/dist/antd.dark.css";
 
@@ -28,10 +26,10 @@ const MainLayout = (props) => {
         <div className="logo" />
         <Menu theme="dark" defaultSelectedKeys={["0"]} mode="inline">
           <Menu.Item key="home" icon={<HomeOutlined />}>
-            <Link href="/">Domů</Link>
+            <Link href="/admin">Domů</Link>
           </Menu.Item>
           <Menu.Item key="pages" icon={<DatabaseOutlined />}>
-            <Link href="/pages">Stránky</Link>
+            <Link href="/admin/pages">Stránky</Link>
           </Menu.Item>
           <Menu.Item key="users" icon={<UserOutlined />}>
             <Link href="/users">Uživatelé</Link>

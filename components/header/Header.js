@@ -64,7 +64,7 @@ const Header = (props) => {
         root?.style.setProperty(
             "--navbar-items-count", links.length
         );
-    }, []);
+    }, [links.length]);
 
     return (
         <>

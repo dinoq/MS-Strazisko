@@ -95,7 +95,7 @@ const Gallery = (props) => {
         });
       }
     });
-  }, []);
+  }, [props.year]);
 
   const albumYear = new Date(albums[0]?.date).getFullYear();
 
