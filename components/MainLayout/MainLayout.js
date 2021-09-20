@@ -1,16 +1,7 @@
-import { Layout, Menu, Col, Row } from "antd";
-import {
-  HomeOutlined,
-  DatabaseOutlined,
-  SettingOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+
 import React, { useState } from "react";
 import Link from "next/link";
-import "antd/dist/antd.dark.css";
-
-const { Header, Content, Footer, Sider } = Layout;
-const { SubMenu } = Menu;
+import classes from "./MainLayout.module.scss";
 
 const MainLayout = (props) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -21,6 +12,30 @@ const MainLayout = (props) => {
   };
 
   return (
+    <div className={classes.layout + ""}>
+      <div className="">
+        <div className={classes.header + ""}>
+
+        </div></div>
+      <div className="d-flex">
+
+        <div className={classes.sider + " "}>
+          f
+        </div>
+        <div className={classes.content + " "}>
+          {props.children}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default MainLayout;
+
+
+/**
+ *
+ *
     <Layout style={{ minHeight: "100vh" }}>
       <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
         <div className="logo" />
@@ -68,7 +83,4 @@ const MainLayout = (props) => {
         </Footer>
       </Layout>
     </Layout>
-  );
-};
-
-export default MainLayout;
+ */

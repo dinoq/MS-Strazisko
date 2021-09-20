@@ -1,8 +1,5 @@
 import React, { useState } from "react";
-import "antd/dist/antd.dark.css";
-import { Table, Typography, Space } from "antd";
-import { DownOutlined } from "@ant-design/icons";
-const { Text } = Typography;
+/* 
 const columns = [
   {
     title: "Název",
@@ -29,7 +26,7 @@ const columns = [
       </Space>
     ),
   },
-];
+]; */
 
 const data: any = [];
 for (let i = 1; i <= 3; i++) {
@@ -43,12 +40,22 @@ for (let i = 1; i <= 3; i++) {
 }
 
 const AppTable = () => {
-  const tableColumns = columns.map((item) => ({
+ /*  const tableColumns = columns.map((item) => ({
     ...item,
-  }));
+  })); */
 
   return (
     <>
+    </>
+  );
+};
+
+export default AppTable;
+
+
+/**
+ * 
+ * 
       <Table
         {...{
           bordered: true,
@@ -64,8 +71,4 @@ const AppTable = () => {
         columns={tableColumns}
         dataSource={data}
       />
-    </>
-  );
-};
-
-export default AppTable;
+ */
