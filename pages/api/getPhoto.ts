@@ -30,8 +30,8 @@ async function handler(req, res: NextApiResponse, session) {
         await sharp(imageBuffer)
           .resize({
             fit: sharp.fit.inside,
-            width: 288,
-            height: 216,
+            width: 1920,
+            height: 1080,
           })
           .webp({ quality: 70 });
     }
