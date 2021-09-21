@@ -20,13 +20,17 @@ function MyApp({ Component, pageProps }) {
   }
 
   if (router.pathname.includes("admin")) {
-    return (
-      <>
-        <MainLayout>
-          <Component {...pageProps} />
-        </MainLayout>
-      </>
-    )
+    if(router.pathname.includes("login")){
+      return <Component {...pageProps} />
+    }else{
+      return (
+        <>
+          <MainLayout>
+            <Component {...pageProps} />
+          </MainLayout>
+        </>
+      )
+    }
   }
 
   return (

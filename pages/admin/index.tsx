@@ -1,4 +1,5 @@
 import type { NextPage } from 'next'
+import { withIronSession } from 'next-iron-session';
 import Head from 'next/head'
 //import styles from '../styles/Home.module.css'
 const styles:any = {};
@@ -19,3 +20,33 @@ const Home: NextPage = () => {
 }
 
 export default Home
+
+
+export const getServerSideProps = withIronSession(
+  async ({ req, res }) => {
+    const adminLogged: Array<any> = req.session.get("adminLogged");
+    console.log('adminLogged: ', adminLogged);
+
+    if (adminLogged
+    ) {
+      return {
+        props: { logged: true },
+      };
+    } else {
+      return {
+        redirect: {
+          destination: '/admin/login',
+          permanent: false,
+        }
+      };
+    }
+  },
+  {
+    cookieName: "myapp_cookiename",
+    cookieOptions: {
+      secure: process.env.NODE_ENV === "production" ? true : false,
+    },
+    password: "P5hBP4iHlvp6obqtWK0mNuMrZow5x6DQV61W3EUG",
+  }
+);
+

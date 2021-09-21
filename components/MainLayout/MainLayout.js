@@ -11,13 +11,30 @@ const MainLayout = (props) => {
     setCollapsed((collapsedPrev) => !collapsedPrev);
   };
 
+  const logout = async () => {
+    const result = await fetch("/api/logoutAdmin",
+    {
+      method: "POST",
+      mode: "same-origin"
+    })
+    if(result.status === 200){
+      window.location.replace("/admin");
+    }
+  }
+
   return (
     <div className={classes.layout + ""}>
       <div className="">
         <div className={classes.header + ""}>
-
-        </div></div>
-      <div className="d-flex">
+          <div className={classes.leftSide}>
+          </div>
+          <div className={classes.rightSide}>
+            <span className={classes.span}>Admin</span>
+            <span className={classes.span} onClick={logout}>Odhlásit se</span>
+          </div>
+        </div>
+      </div>
+      <div className={classes.main}>
 
         <div className={classes.sider + " "}>
           f
