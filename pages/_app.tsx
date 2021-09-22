@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from '../components/header/Header';
 import Footer from "../components/footer/Footer";
 import MainLayout from "../components/MainLayout/MainLayout"
+import "../styles/adminStyles.scss"
 import { useRouter } from 'next/router';
 
 function MyApp({ Component, pageProps }) {
@@ -21,14 +22,18 @@ function MyApp({ Component, pageProps }) {
 
   if (router.pathname.includes("admin")) {
     if(router.pathname.includes("login")){
-      return <Component {...pageProps} />
+      return (
+        <div className="admin">
+          <Component {...pageProps} />
+        </div>
+      )
     }else{
       return (
-        <>
+        <div className="admin">
           <MainLayout>
             <Component {...pageProps} />
           </MainLayout>
-        </>
+        </div>
       )
     }
   }

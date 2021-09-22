@@ -40,20 +40,15 @@
         margin-left: 10px;      
         margin-top: 20px;       
 
-        .link{
-          color:white;
+        a{
           font-size: 1.25rem;
         }
       }
     }
 
     .content {
-      background-color: rgb(41, 41, 41);
+      background-color: #1b1b1b;
       flex: 1;
     }
   }
-}
-
-.clickable{
-  cursor: pointer;
 }

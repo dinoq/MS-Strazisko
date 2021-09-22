@@ -36,9 +36,9 @@ const AdminLoginPage: NextPage = (props: any)  => {
         <div className={styles.formWrapper}>
           <div className={styles.title}>Přihlášení do administrace</div>
           <form className={styles.form} onSubmit={loginFormSubmitted}>
-            <input className={styles.input} type="text" name="username" id="username" value={username} onChange={e => setUsername(e.target.value)} required />
-            <input className={styles.input} type="password" name="password" id="password" onChange={e => setPassword(e.target.value)} required />
-            <input className={styles.input + " " + styles.button} type="submit" value="Přihlásit!" />
+            <input type="text" name="username" id="username" value={username} onChange={e => setUsername(e.target.value)} required />
+            <input type="password" name="password" id="password" onChange={e => setPassword(e.target.value)} required />
+            <input className={"button"} type="submit" value="Přihlásit!" />
           </form>
         </div>
       </main>

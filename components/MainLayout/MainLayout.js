@@ -27,7 +27,7 @@ const MainLayout = (props) => {
           <div className={classes.leftSide}></div>
           <div className={classes.rightSide}>
             <span className={classes.span}>Admin</span>
-            <span className={classes.span+" "+classes.clickable} onClick={logout}>
+            <span className={classes.span+" link cursor-pointer"} onClick={logout}>
               Odhlásit se
             </span>
           </div>
@@ -37,16 +37,16 @@ const MainLayout = (props) => {
         <div className={classes.sider}>
           <div className={classes.menuItemsWrapper}>
             <Link href="/admin/">
-              <a className={classes.link}>Úvodní strana</a>
+              <a className={"link"}>Úvodní strana</a>
             </Link>
             <Link href="/admin/foto">
-              <a className={classes.link}>Fotoalbum</a>
+              <a className={"link"}>Fotoalbum</a>
             </Link>
             <Link href="/admin/dokumenty">
-              <a className={classes.link}>Dokumenty</a>
+              <a className={"link"}>Dokumenty</a>
             </Link>
             <Link href="/admin/kontakt">
-              <a className={classes.link}>Kontakt</a>
+              <a className={"link"}>Kontakt</a>
             </Link>
           </div>
         </div>
