@@ -55,7 +55,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }*/
 
     db.close();
-    res.json({ years })
+    res.json(years);
 }
 
 

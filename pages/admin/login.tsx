@@ -4,7 +4,7 @@ import Head from 'next/head'
 import { useState } from 'react';
 import styles from './login.module.scss'
 
-const AdminLoginPage: NextPage = () => {
+const AdminLoginPage: NextPage = (props: any)  => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 

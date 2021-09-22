@@ -1,9 +1,8 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import AppTable from '../../components/Table/Table'
 import styles from './pages.module.scss'
 
-const Pages: NextPage = () => {
+const AdminPhotosPage: NextPage = (props: any)  => {
   return (
     <div className={styles.container}>
       <Head>
@@ -13,10 +12,10 @@ const Pages: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <AppTable />
+        foto
       </main>
     </div>
   )
 }
 
-export default Pages
+export default AdminPhotosPage

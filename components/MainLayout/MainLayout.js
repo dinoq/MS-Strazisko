@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import Link from "next/link";
 import classes from "./MainLayout.module.scss";
@@ -12,43 +11,52 @@ const MainLayout = (props) => {
   };
 
   const logout = async () => {
-    const result = await fetch("/api/logoutAdmin",
-    {
+    const result = await fetch("/api/logoutAdmin", {
       method: "POST",
-      mode: "same-origin"
-    })
-    if(result.status === 200){
+      mode: "same-origin",
+    });
+    if (result.status === 200) {
       window.location.replace("/admin");
     }
-  }
+  };
 
   return (
     <div className={classes.layout + ""}>
       <div className="">
         <div className={classes.header + ""}>
-          <div className={classes.leftSide}>
-          </div>
+          <div className={classes.leftSide}></div>
           <div className={classes.rightSide}>
             <span className={classes.span}>Admin</span>
-            <span className={classes.span} onClick={logout}>Odhlásit se</span>
+            <span className={classes.span+" "+classes.clickable} onClick={logout}>
+              Odhlásit se
+            </span>
           </div>
         </div>
       </div>
       <div className={classes.main}>
-
-        <div className={classes.sider + " "}>
-          f
+        <div className={classes.sider}>
+          <div className={classes.menuItemsWrapper}>
+            <Link href="/admin/">
+              <a className={classes.link}>Úvodní strana</a>
+            </Link>
+            <Link href="/admin/foto">
+              <a className={classes.link}>Fotoalbum</a>
+            </Link>
+            <Link href="/admin/dokumenty">
+              <a className={classes.link}>Dokumenty</a>
+            </Link>
+            <Link href="/admin/kontakt">
+              <a className={classes.link}>Kontakt</a>
+            </Link>
+          </div>
         </div>
-        <div className={classes.content + " "}>
-          {props.children}
-        </div>
+        <div className={classes.content + " "}>{props.children}</div>
       </div>
     </div>
   );
 };
 
 export default MainLayout;
-
 
 /**
  *

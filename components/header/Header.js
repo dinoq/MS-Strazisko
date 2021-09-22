@@ -24,10 +24,8 @@ const Header = (props) => {
     const links = navigation.map((link, index) => {
         let className = "";
         if(router.asPath === link[0] || router.asPath.includes(link[0] + "/")){
-            //console.log("yeah:",router.asPath, link[0]);
             className = classes.active;
         }
-        // =  ? classes.active : JSON.stringify(router.asPath);
         return <Link key={"menu-link-" + index} href={link[0]}><a><li onClick={toggleHamburgerMenu} className={className}>{link[1]}</li></a></Link>
     }
     );

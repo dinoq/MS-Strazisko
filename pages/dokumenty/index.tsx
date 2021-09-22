@@ -1,23 +1,23 @@
 // eslint-disable-next-line
 //import classes from "./foto.module.css";
 
-import { GetServerSideProps } from "next";
-import { withIronSession } from "next-iron-session";
-import { useEffect, useState } from "react";
-import { useRef } from "react";
-import classes from "/styles/foto.module.scss"
-import Image from "next/image";
 import Link from "next/link";
+import { getApiURL } from "../../utils";
 
 const Dokumenty = (props) => {
-    
+    const documents: Array<any> = (props.docs)? props.docs : [];    
     return (
         <>
             <div className="container-fluid">
                 <div className="row justify-content-center">
                     <div className="col-12 col-md-10">
                         <h1 className="text-center mb-4">Dokumenty</h1>
-                        <Link href="/dokumenty/gdpr.pdf"><a target="_blank" className="fw-bold h5">Dokument 1 - Informace o zpracování osobních údajů</a></Link>
+                        {documents.map((doc, index) => {
+                            console.log('doc: ', doc);
+                            const url = (doc?.url?.startsWith("/"))? doc.url.substring(1) : doc.url;
+                            return <div key={"doc-" + index}><Link href= {"/dokumenty/" + url}><a target="_blank" className="fw-bold h5">{doc.name}</a></Link></div>
+                        })}
+                        
                     </div>
                 </div>
             </div>
@@ -26,3 +26,11 @@ const Dokumenty = (props) => {
 }
 
 export default Dokumenty;
+
+export const getServerSideProps = async (req, res) =>{
+    let docs = await(await fetch(getApiURL("getDocuments"))).json();
+
+    return {
+        props: { docs },
+      };
+}

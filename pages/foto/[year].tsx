@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { withIronSession } from "next-iron-session";
-import { getEnvDomain } from "../../utils";
+import { getApiURL } from "../../utils";
 
 const YearPage: React.FC<{ logged: boolean }> = (props) => {
   const router = useRouter();
@@ -82,7 +82,7 @@ const Gallery = (props) => {
   const [albums, setAlbums] = useState([]);
 
   useEffect(() => {
-    fetch(getEnvDomain() + "/api/getYearAlbumsInfo?year=" + props.year).then((resp) => {
+    fetch(getApiURL("getYearAlbumsInfo?year=") + props.year).then((resp) => {
 
       if (resp.status == 201) {
         resp.json().then((json) => {
@@ -156,20 +156,12 @@ export const getServerSideProps = withIronSession(
     const fotoIndex = req.url.indexOf("foto/") + 5;
     const pageYear = req.url.substring(fotoIndex, fotoIndex + 9);
     const loggedForYears: Array<any> = req.session.get("loggedForYears");
-    console.log('loggedForYears8: ', loggedForYears);
 
     if (
       loggedForYears &&
       loggedForYears.length &&
       loggedForYears.includes(pageYear)
     ) {
-      /*let resp: any = await fetch(
-        getEnvDomain() + "/api/getAlbumPhotos?year=" + pageYear
-      )
-      if(resp.status == 201){
-        resp = await resp.json();
-        console.log('resp: ', resp);
-      }*/
 
       return {
         props: { logged: true },

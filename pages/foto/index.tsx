@@ -8,9 +8,10 @@ import { useRef } from "react";
 import classes from "./FotoPage.module.scss"
 import Image from "next/image";
 import Link from "next/link";
-import { getEnvDomain } from "../../utils";
+import { getApiURL } from "../../utils";
 
 const FotoPage: React.FC<{years: Array<any>}> = (props) => {
+    console.log('props.years: ', props.years);
     
     return (
         <>
@@ -30,10 +31,9 @@ const FotoPage: React.FC<{years: Array<any>}> = (props) => {
 }
 
 export async function getServerSideProps(context) {
-    console.log('getEnvDomain(): ', getEnvDomain()+"/api/getPhotosYears");
-    let years = await(await fetch(getEnvDomain() + "/api/getPhotosYears")).json();
+    let yearsArray = await(await fetch(getApiURL("getPhotosYears"))).json();
     return {
-      props: { ...years},
+      props: { years: yearsArray},
     }
   }
 

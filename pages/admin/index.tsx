@@ -3,7 +3,7 @@ import { withIronSession } from 'next-iron-session';
 import Head from 'next/head'
 //import styles from '../styles/Home.module.css'
 const styles:any = {};
-const Home: NextPage = () => {
+const AdminHomePage: NextPage = (props: any)  => {
   return (
     <div className={styles.container}>
       <Head>
@@ -13,13 +13,13 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        adsdc
+        adsdc uvod
       </main>
     </div>
   )
 }
 
-export default Home
+export default AdminHomePage
 
 
 export const getServerSideProps = withIronSession(
