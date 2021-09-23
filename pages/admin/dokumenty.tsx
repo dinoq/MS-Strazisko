@@ -3,10 +3,26 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { useState } from 'react'
 import { getApiURL } from '../../utils'
+import classes from "./dokumenty.module.scss"
+
 
 const AdminDocumentsPage: NextPage = (props: any) => {
   const documents: Array<any> = (props.docs) ? props.docs : [];
-  const [showFileManager, setShowFileManager] = useState(true);
+  const [fileManagerVisible, setFileManagerVisible] = useState(true);
+  const [modalVisible, setModalVisible] = useState(true);
+  const [deletedDocument, setDeletedDocument] = useState("")
+
+  const showFileManager = () => {
+    setFileManagerVisible(true)
+  }
+
+  const hideFileManager = () => {
+    setFileManagerVisible(false)
+  }
+
+  const deleteDocument = (name, url) => {
+    setDeletedDocument("\"" + name + "\"");
+  }
 
   return (
     <div className={""}>
@@ -29,24 +45,24 @@ const AdminDocumentsPage: NextPage = (props: any) => {
             </thead>
             <tbody>
               {documents.map((doc, index) => {
-                console.log('doc: ', doc);
                 const url = (doc?.url?.startsWith("/")) ? doc.url.substring(1) : doc.url;
                 return (
                   <tr key={"doc-" + index} className={""}>
                     <td className={""}>{doc.name}</td>
                     <td className={""}><Link href={"/dokumenty/" + url}><a target="_blank" className={"link"}>{"/dokumenty/" + url}</a></Link></td>
-                    <td className={"actions"}><span className={"link-danger"}>Smazat</span><span className={"link"}>Přejmenovat</span></td>
+                    <td className={"actions"}><span className={"link-danger"} onClick={deleteDocument.bind(this, doc.name, url)}>Smazat</span><span className={"link"}>Přejmenovat</span></td>
                   </tr>
                 )
               })}
               <tr>
                 <th colSpan={4} className={"text-center"}>
-                  <span className={"link " + "add-document-btn"}>Přidat nový dokument</span>
-                  {showFileManager && <FileManager />}
+                  <span className={"link " + "add-document-btn"} onClick={showFileManager}>Přidat nový dokument</span>
+                  {fileManagerVisible && <FileManager hideFileManager={hideFileManager} />}
                 </th>
               </tr>
             </tbody>
           </table>
+          {modalVisible && <Modal deletedDocument={deletedDocument} />}
         </div>
       </main>
     </div>
@@ -55,26 +71,77 @@ const AdminDocumentsPage: NextPage = (props: any) => {
 
 const FileManager = (props) => {
   const [fileLabel, setFileLabel] = useState("Vyberte soubor")
+  const [file, setFile] = useState(null);
+  const initFileName = "Název souboru";
+  const [fileName, setFileName] = useState(initFileName);
 
-  const fileChange = (event)=>{
-    if(event?.target?.files[0]?.name?.length){
-      	setFileLabel("Vybráno: " + event.target.files[0].name);
+  const fileChange = (event) => {
+    if (event?.target?.files[0]?.name?.length) {
+      const f = event.target.files[0];
+      setFile(f);
+      setFileLabel("Vybráno: " + f.name);
+      if (fileName === initFileName || fileName === "") {
+        setFileName(f.name);
+      }
     }
-
   }
 
+
+  const uploadToServer = async (event) => {
+    const body = new FormData();
+    body.append("file", file);
+    body.append("path", "/img/albums/1");
+    const response = await fetch("/api/file", {
+      method: "POST",
+      body
+    });
+  };
+
+  const fileNameChanged = (e) => {
+    setFileName(e.target.value);
+  }
+
+  const clearFileName = (e) => {
+    if (fileName === initFileName) {
+      setFileName("");
+    }
+  }
   return (
     <div>
-      <form className="d-flex flex-column">
+      <form className="d-flex flex-column" onSubmit={uploadToServer}>
         <input type="file" onChange={fileChange} name="file" id="file" className={"hidden-file-input"} />
         <div className="d-flex justify-content-center">
           <label htmlFor="file" className="hidden-file-input-label">{fileLabel}</label>
         </div>
         <div className="d-flex justify-content-center">
+          <input type="text" onChange={fileNameChanged} onClick={clearFileName} name="file-name" id="file-name" className={classes.fileName} value={fileName} placeholder={initFileName} />
+        </div>
+        <div className="d-flex justify-content-center">
           <input className="button" type="submit" value="Uložit" />
-          <input className="button button-danger" type="button" value="Zrušit" />
+          <input className="button button-danger" onClick={props.hideFileManager} type="button" value="Zrušit" />
         </div>
       </form>
+    </div>
+  )
+}
+
+const Modal = (props) => {
+
+
+  return (
+    <div className="modal-window">
+      <div className="overlay">
+
+      </div>
+      <div className="content">
+        <div className="text">
+        Jste si jistí, že chcete dokument {props.deletedDocument} odstranit?
+        </div>
+        <div className="btns-container">
+          <button className="btn btn-danger">Odstranit</button>
+        </div>
+
+      </div>
     </div>
   )
 }
