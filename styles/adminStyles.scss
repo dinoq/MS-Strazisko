@@ -47,12 +47,12 @@
       padding: 5px 20px;
       color: rgb(255, 255, 255);
 
-      &.button-danger{
+      &.button-danger {
         background-color: #aa1414;
       }
     }
 
-    &.hidden-file-input{
+    &.hidden-file-input {
       width: 0.1px;
       height: 0.1px;
       opacity: 0;
@@ -60,26 +60,23 @@
       position: absolute;
       z-index: -1;
 
-      &:focus + label{
+      &:focus + label {
         outline: 1px dotted #000;
         outline: -webkit-focus-ring-color auto 5px;
       }
     }
   }
 
-  
-  .hidden-file-input-label{
+  .hidden-file-input-label {
     background-color: rgb(0, 125, 163);
-    cursor: pointer; 
+    cursor: pointer;
     padding: 5px 25px;
     margin: 10px 0;
     width: fit-content;
-
   }
 
-  .modal-window{
-
-    .overlay{
+  .modal-window {
+    .overlay {
       background-color: rgba(0, 0, 0, 0.5);
       position: absolute;
       top: 0;
@@ -87,7 +84,7 @@
       right: 0;
       bottom: 0;
     }
-    .content{
+    .content {
       position: fixed;
       background-color: #fff7f7;
       color: #007da3;
@@ -96,45 +93,21 @@
       top: 25%;
       left: calc(25% + 100px);
       border-radius: 20px;
+
+      .text {
+        display: flex;
+        justify-content: center;
+        font-size: 1.5rem;
+      }
+      .btns-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 15px;
+
+        .btn:not(:last-child){
+          margin-right: 15px;
+        }
+      }
     }
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

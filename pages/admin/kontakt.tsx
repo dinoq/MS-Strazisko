@@ -1,4 +1,5 @@
 import type { NextPage } from 'next'
+import { withIronSession } from 'next-iron-session'
 import Head from 'next/head'
 import styles from './pages.module.scss'
 
@@ -17,5 +18,32 @@ const AdminContactsPage: NextPage = (props: any)  => {
     </div>
   )
 }
+
+export const getServerSideProps = withIronSession(
+  async ({ req, res }) => {
+    const adminLogged: Array<any> = req.session.get("adminLogged");
+
+    if (adminLogged
+    ) {
+      return {
+        props: {},
+      };
+    } else {
+      return {
+        redirect: {
+          destination: '/admin/login',
+          permanent: false,
+        }
+      };
+    }
+  },
+  {
+    cookieName: "myapp_cookiename",
+    cookieOptions: {
+      secure: process.env.NODE_ENV === "production" ? true : false,
+    },
+    password: "P5hBP4iHlvp6obqtWK0mNuMrZow5x6DQV61W3EUG",
+  }
+);
 
 export default AdminContactsPage

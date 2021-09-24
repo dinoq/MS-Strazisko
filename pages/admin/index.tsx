@@ -19,18 +19,14 @@ const AdminHomePage: NextPage = (props: any)  => {
   )
 }
 
-export default AdminHomePage
-
-
 export const getServerSideProps = withIronSession(
   async ({ req, res }) => {
     const adminLogged: Array<any> = req.session.get("adminLogged");
-    console.log('adminLogged: ', adminLogged);
 
     if (adminLogged
     ) {
       return {
-        props: { logged: true },
+        props: {},
       };
     } else {
       return {
@@ -50,3 +46,4 @@ export const getServerSideProps = withIronSession(
   }
 );
 
+export default AdminHomePage
