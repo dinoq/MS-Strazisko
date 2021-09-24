@@ -11,7 +11,6 @@ import Link from "next/link";
 import { getApiURL } from "../../utils";
 
 const FotoPage: React.FC<{years: Array<any>}> = (props) => {
-    console.log('props.years: ', props.years);
     
     return (
         <>
@@ -31,7 +30,10 @@ const FotoPage: React.FC<{years: Array<any>}> = (props) => {
 }
 
 export async function getServerSideProps(context) {
+    console.log("H1");
     let yearsArray = await(await fetch(getApiURL("getPhotosYears"))).json();
+    console.log("H12");
+    console.log("H1 yearsArray", yearsArray);
     return {
       props: { years: yearsArray},
     }

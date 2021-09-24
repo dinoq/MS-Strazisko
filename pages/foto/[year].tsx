@@ -82,7 +82,7 @@ const Gallery = (props) => {
   const [albums, setAlbums] = useState([]);
 
   useEffect(() => {
-    fetch(getApiURL("getYearAlbumsInfo?year=") + props.year).then((resp) => {
+    fetch(getApiURL("getYearAlbumsInfo?year=") + props.year + "&limit="+4).then((resp) => {
 
       if (resp.status == 201) {
         resp.json().then((json) => {
@@ -101,14 +101,23 @@ const Gallery = (props) => {
 
   return (
     <>
-      <div>{
+      <div>
+        
+      <div className="text-blue fw-bold text-center h1 my-3">{"Školní rok " + albumYear + "/" + (albumYear+1)}</div>
+        {
         albums.map((album, index, array) => {
+          let date: any = new Date(album.date);
+          let day = date.getDate()+1;
+          day = (day < 10)? "0"+day: day;
+          let month = date.getMonth()+1;
+          month = (month < 10)? "0"+month: month;
+          date = day+"."+month+".";
           return (
             <div key={"album-" + index}>
               <div className="text-blue text-center h4 my-3">
                 <Link href={"/foto/" + props.year + "/" + album.title}>
                   <a>
-                    {album.name}
+                    {date + " - " + album.name}
                   </a>
                 </Link>
               </div>

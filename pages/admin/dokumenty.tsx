@@ -9,30 +9,47 @@ import classes from "./dokumenty.module.scss"
 
 const AdminDocumentsPage: NextPage = (props: any) => {
   const documents: Array<any> = (props.docs) ? props.docs : [];
-  const [fileManagerVisible, setFileManagerVisible] = useState(true);
+  const [fileManagerVisible, setFileManagerVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [deletedDocument, setDeletedDocument] = useState("")
+  const [deletedDocumentName, setDeletedDocumentName] = useState("")
+  const [deletedDocumentID, setDeletedDocumentID] = useState(-1)
 
   const showFileManager = () => {
-    setFileManagerVisible(true)
+    setFileManagerVisible(true);
   }
 
   const hideFileManager = () => {
     setFileManagerVisible(false)
   }
 
-  const deleteDocumentConfirmation = (name, url) => {
-    setDeletedDocument("\"" + name + "\"");
+  const deleteDocumentConfirmation = (name, id_documents) => {
+    setDeletedDocumentID(id_documents);
+    setDeletedDocumentName("\"" + name + "\"");
     setModalVisible(true);
   }
 
   const cancelDeletion = () => {
-    setDeletedDocument("");
+    setDeletedDocumentName("");
+    setDeletedDocumentID(-1);
     setModalVisible(false);
   }
 
-  const deleteDocument = () => {
-    //getApiURL("");
+  const deleteDocument = async (event) => {
+    // event.preventDefault();
+    setDeletedDocumentName("");
+    setDeletedDocumentID(-1);
+    setModalVisible(false);
+    const body = JSON.stringify({ id: deletedDocumentID });
+    const result = await fetch("/api/admin/deleteDocument",
+    {
+      method: "POST",
+      mode: "same-origin",
+      headers: { "Content-Type": "application/json" },
+      body
+    })
+    if(result.status == 201){
+      window.location.reload();
+    }
   }
 
 
@@ -60,28 +77,28 @@ const AdminDocumentsPage: NextPage = (props: any) => {
                 const url = (doc?.url?.startsWith("/")) ? doc.url.substring(1) : doc.url;
                 return (
                   <tr key={"doc-" + index} className={""}>
-                    <td className={""}>{doc.name}</td>
-                    <td className={""}><Link href={"/dokumenty/" + url}><a target="_blank" className={"link"}>{"/dokumenty/" + url}</a></Link></td>
-                    <td className={"actions"}><span className={"link-danger"} onClick={deleteDocumentConfirmation.bind(this, doc.name, url)}>Smazat</span><span className={"link"}>Přejmenovat</span></td>
+                    <td className={classes.nameTableField}>{doc.name}</td>
+                    <td className={classes.urlTableField}><Link href={"/dokumenty/" + url}><a target="_blank" className={"link"}>{"/dokumenty/" + url}</a></Link></td>
+                    <td className={"actions"}><span className={"link-danger"} onClick={deleteDocumentConfirmation.bind(this, doc.name, doc.id_documents)}>Smazat</span><span className={"link"}>Přejmenovat</span></td>
                   </tr>
                 )
               })}
               <tr>
                 <th colSpan={4} className={"text-center"}>
-                  <span className={"link " + "add-document-btn"} onClick={showFileManager}>Přidat nový dokument</span>
-                  {fileManagerVisible && <FileManager hideFileManager={hideFileManager} />}
+                  {!fileManagerVisible && <span className={"link " + "add-document-btn"} onClick={showFileManager}>Přidat nový dokument</span>}                  
+                  {fileManagerVisible && <NewDocumentManager hideFileManager={hideFileManager} />}
                 </th>
               </tr>
             </tbody>
           </table>
-          {modalVisible && <Modal deletedDocument={deletedDocument} cancelDeletion={cancelDeletion} />}
+          {modalVisible && <Modal deletedDocumentName={deletedDocumentName} cancelDeletion={cancelDeletion} deleteDocument={deleteDocument} />}
         </div>
       </main>
     </div>
   )
 }
 
-const FileManager = (props) => {
+const NewDocumentManager = (props) => {
   const [fileLabel, setFileLabel] = useState("Vyberte soubor")
   const [file, setFile] = useState(null);
   const initFileName = "Název souboru";
@@ -102,17 +119,19 @@ const FileManager = (props) => {
 
 
   const uploadToServer = async (event) => {
-    //event.preventDefault();
+    event.preventDefault();
     const body = new FormData();
-    // //body.append("file", file);
-    // body.append("url", urlName);
+    body.append("document", file);
+    body.append("url", urlName);
     body.append("name", fileName);
-    console.log('fileName: ', fileName);
-    const response = await fetch("/api/addDocument", {
+    const response = await fetch("/api/admin/addDocument", {
       method: "POST",
       body
     });
-    console.log('response: ', response);
+
+    if(response.status == 201){
+      window.location.reload();
+    }
   };
 
   const fileNameChanged = (e) => {
@@ -136,13 +155,6 @@ const FileManager = (props) => {
         </div>
         <div className="d-flex justify-content-center">
           <input className="button" type="submit" value="Uložit" />
-        <button
-          className="btn btn-primary"
-          type="submit"
-          onClick={uploadToServer}
-        >
-          Send to server
-        </button>
           <input className="button button-danger" onClick={props.hideFileManager} type="button" value="Zrušit" />
         </div>
       </form>
@@ -155,12 +167,12 @@ const Modal = (props) => {
 
   return (
     <div className="modal-window">
-      <div className="overlay">
+      <div className="overlay" onClick={props.cancelDeletion}>
 
       </div>
       <div className="content">
         <div className="text">
-          Jste si jistí, že chcete dokument {props.deletedDocument} odstranit?
+          Jste si jistí, že chcete dokument {props.deletedDocumentName} odstranit?
         </div>
         <div className="btns-container">
           <button className="btn btn-lg btn-danger" onClick={props.deleteDocument}>Odstranit</button>

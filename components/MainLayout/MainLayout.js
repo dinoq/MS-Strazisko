@@ -3,13 +3,6 @@ import Link from "next/link";
 import classes from "./MainLayout.module.scss";
 
 const MainLayout = (props) => {
-  const [collapsed, setCollapsed] = useState(false);
-
-  const onCollapse = (collapsed) => {
-    console.log("collapsed: ", collapsed);
-    setCollapsed((collapsedPrev) => !collapsedPrev);
-  };
-
   const logout = async () => {
     const result = await fetch("/api/logoutAdmin", {
       method: "POST",

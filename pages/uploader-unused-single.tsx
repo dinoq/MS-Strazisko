@@ -12,33 +12,10 @@ const PrivatePage = (props) => {
   const [createObjectURL, setCreateObjectURL] = useState("/");
   const preview = useRef<HTMLDivElement>();
 
-
-  const [images, setImages] = useState([]);
-
   const uploadToClient = (event) => {
-    console.log('event.target.files: ', event.target.files);
     if (event.target.files) {      
-      if( Array.from(event.target.files).length === 1){
-        const i = event.target.files[0];
-        console.log('i: ', i);
-        console.log('URL.createObjectURL(i): ', URL.createObjectURL(i));
-  
-        setImage(i);
-        //setCreateObjectURL("/"+i.name);
-        let img = (preview?.current?.children[0] as HTMLImageElement)
-        img.src = URL.createObjectURL(i);
-      }else 
-      if( Array.from(event.target.files).length > 1){
-        console.log("multiple: ", event.target.files.lenght);
-        setImages([]);
-  
-        let imgs = new Array();
-        for (let i = 0; i < event.target.files.length; i++) {
-          const file = event.target.files[i];
-          imgs.push(file);
-        }
-        setImages(imgs);
-      }
+      const i = event.target.files[0];
+      setImage(i);
     }
     
   };
@@ -46,12 +23,8 @@ const PrivatePage = (props) => {
   const uploadToServer = async (event) => {
     const body = new FormData();
     body.append("file", image);
-    for (let i = 0; i < images.length; i++) {
-      const img = images[i];
-      body.append("file-" + i, img);
-    }
     body.append("path", "/");
-    const response = await fetch("/api/file-unused", {
+    const response = await fetch("/api/file-unused-single", {
       method: "POST",
       body
     });

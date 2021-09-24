@@ -27,10 +27,9 @@ for (const file of result) {
 
     let imageBuffer = fs.readFileSync(file);
     console.log('file: ', file);
-    const fname ="public/img/albums/compressed90/"+Math.random()+".webp";
+    const fname = "public/img/albums/compressed90/" + Math.random() + ".webp";
     console.log('fname: ', fname);
-    imageBuffer =
-        await sharp(imageBuffer)
+    imageBuffer = sharp(imageBuffer)
             .resize({
                 fit: sharp.fit.inside,
                 width: 1920,

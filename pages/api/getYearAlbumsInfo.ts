@@ -4,7 +4,7 @@ import Database from "better-sqlite3";
 
 const handler = async (req, res) => {
   const pageYear = req.query["year"];
-  console.log('pageYear: ', pageYear);
+  const limit = req.query["limit"];
 
   const loggedForYears: Array<any> = await req.session.get("loggedForYears");
   if (!loggedForYears || !loggedForYears.length || !loggedForYears.includes(pageYear)) {
@@ -20,12 +20,11 @@ const handler = async (req, res) => {
   if (sqlResultsAlbums.length > 0) {
     for (const resAlbum of sqlResultsAlbums) {
       let albumPhotos = [];
-      console.log('resAlbum: ', resAlbum);
-      const sql = "SELECT  albums.title||'/'||photos.filename AS URL FROM photos INNER JOIN albums ON photos.id_album=albums.id_album WHERE albums.id_album=" + resAlbum.id_album + " LIMIT 4";
+      const limitQuery = (limit && limit.length)? " LIMIT " + limit : "";
+      const sql = "SELECT albums.title||'/'||photos.filename AS URL FROM photos INNER JOIN albums ON photos.id_album=albums.id_album WHERE albums.id_album=" + resAlbum.id_album + limitQuery;
       const stmt = db.prepare(sql);
       const sqlResults: Array<any> = stmt.all();
       for (const res of sqlResults) {
-        console.log('res: ', res);
         albumPhotos.push(res.URL);
       }
 

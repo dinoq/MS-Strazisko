@@ -11,7 +11,6 @@ const AdminLoginPage: NextPage = (props: any)  => {
   const loginFormSubmitted = async (event) => {
     event.preventDefault();
     const body = JSON.stringify({ username, password });
-    console.log('body: ', body);
     const result = await fetch("/api/loginAdmin",
     {
       method: "POST",
@@ -52,7 +51,6 @@ export const getServerSideProps = withIronSession(
   async ({ req, res }) => {
 
     const adminLogged: Array<any> = req.session.get("adminLogged");
-    console.log('adminLogged: ', adminLogged);
 
     if (!adminLogged
     ) {

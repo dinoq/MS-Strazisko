@@ -1,6 +1,10 @@
 ############################################################################################
 TODO:
-Úprava hlavičky na všech stránkách!
+- cookieOptions-secure... na produkci...
+- https na produkci
+- Learning - zapat i Linuxové příkazy (velikost paměti, nginx...)
+- Úprava hlavičky na všech stránkách!
+- Zkontrolovat prepared statements - není někde přiřazováno přímo??
 ############################################################################################
 
 

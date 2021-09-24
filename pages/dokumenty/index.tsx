@@ -13,7 +13,6 @@ const Dokumenty = (props) => {
                     <div className="col-12 col-md-10">
                         <h1 className="text-center mb-4">Dokumenty</h1>
                         {documents.map((doc, index) => {
-                            console.log('doc: ', doc);
                             const url = (doc?.url?.startsWith("/"))? doc.url.substring(1) : doc.url;
                             return <div key={"doc-" + index}><Link href= {"/dokumenty/" + url}><a target="_blank" className="fw-bold h5">{doc.name}</a></Link></div>
                         })}

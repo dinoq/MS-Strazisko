@@ -1,44 +1,47 @@
 import { withIronSession } from "next-iron-session";
 import Database from "better-sqlite3";
+import fs from "fs";
 
 
 const handler = async (req, res) => {
-  const pageYear = req.query["year"];
-  console.log('pageYear: ', pageYear);
+  const id = req?.body?.id;
+  const url = req?.body?.url;
+  
+  if(id == undefined){
+    res.status(404).send("ID of deleted document not specified!");
+    return;
+  }
 
-  const loggedForYears: Array<any> = await req.session.get("loggedForYears");
-  if (!loggedForYears || !loggedForYears.length || !loggedForYears.includes(pageYear)) {
+  const adminLogged: Array<any> = await req.session.get("adminLogged");
+  if (!adminLogged) {
     res.status(401).send("Unauthorized!");
     return;
   }
 
-  let albums = [];
-  const db = new Database('database/database.db', { verbose: console.log });
-  const sqlAlbums = "SELECT id_album, name, title, date FROM albums WHERE id_albumPasswords='" + pageYear + "'";
-  const stmtAlbums = db.prepare(sqlAlbums);
-  const sqlResultsAlbums: Array<any> = stmtAlbums.all();
-  if (sqlResultsAlbums.length > 0) {
-    for (const resAlbum of sqlResultsAlbums) {
-      let albumPhotos = [];
-      console.log('resAlbum: ', resAlbum);
-      const sql = "SELECT  albums.title||'/'||photos.filename AS URL FROM photos INNER JOIN albums ON photos.id_album=albums.id_album WHERE albums.id_album=" + resAlbum.id_album + " LIMIT 4";
-      const stmt = db.prepare(sql);
-      const sqlResults: Array<any> = stmt.all();
-      for (const res of sqlResults) {
-        console.log('res: ', res);
-        albumPhotos.push(res.URL);
-      }
-
-      while(albumPhotos.length < 4){
-        albumPhotos.push("other/no-photo.jpg");
-      }
-      
-      albums.push({name: resAlbum.name, title: resAlbum.title, date: resAlbum.date, photos: albumPhotos});
+  try {
+    const db = new Database('database/database.db', { verbose: console.log });
+    let stmt = db.prepare("SELECT url from documents where id_documents=" + id)
+    const sqlResults = stmt.all();
+    const url = sqlResults[0]?.url;
+    if(url == undefined){
+      res.status(404).send("Document doesn't exist in database!");
+      return;
     }
+
+    const sql = "DELETE FROM documents WHERE id_documents=?";
+    stmt = db.prepare(sql);
+    stmt.run(parseInt(id));
+    
+    const fullPath = "./public/dokumenty" + (url.startsWith("/") ? "" : "/") + url;
+    await fs.unlinkSync(fullPath); // remove file
+
+    res.status(201).send("Success");
+    return;
+  } catch (error) {
+    console.log('error: ', error);
+    res.status(500).send("Error during document deletion!");
+    return;
   }
-  res.status(201).send({
-    albums
-  })
 }
 
 export default withIronSession(handler, {
