@@ -7,6 +7,8 @@ TODO:
 - Learning - zapat i Linuxové příkazy (velikost paměti, nginx...)
 - Úprava hlavičky na všech stránkách!
 - Zkontrolovat prepared statements - není někde přiřazováno přímo??
+- admin - akruální záložka zvýraznit
+- přidat odkaz na admin do patičky
 ############################################################################################
 
 

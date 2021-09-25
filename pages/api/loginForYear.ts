@@ -4,8 +4,7 @@ async function handler(req, res) {
   //TODO získat heslo pro daný rok z DB
   
   const { pwd, year } = req.body;
-  console.log('req.body: ', req.body);
-  const rigtPwd = year.substring(0, 4);
+  const rigtPwd = "skolka" + year.substring(0, 4);
   
   if (req.method === "POST" && pwd === rigtPwd && year) {
     let prevLoggedForYears = req.session.get("loggedForYears");

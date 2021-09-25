@@ -13,7 +13,7 @@ const YearPage: React.FC<{ logged: boolean }> = (props) => {
     <>
       <div className="container-fluid">
         <div className={" row my-4 justify-content-center align-items-center"}>
-          <div className="col-11 col-md-10">
+          <div className="col-10">
             {props.logged && <Gallery year={year} />}
             {!props.logged && <Login year={year} />}
           </div>
@@ -69,6 +69,7 @@ const Login: React.FC<{ year: any }> = (props) => {
           <div className={classes.message}>
             Pro přístup ke fotogalerii musíte zadat heslo:
           </div>
+          <input value={props.year} type="text" readOnly/>
           <input ref={pwdRef} type="password" />
           <input type="submit" value="Odeslat" />
         </form>

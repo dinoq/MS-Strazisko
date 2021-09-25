@@ -4,8 +4,6 @@ import sharp from "sharp";
 import Database from "better-sqlite3";
 import fs from "fs";
 
-const albums = ["https://www.ms-strazisko.cz/img/skolka.jpeg"];
-
 async function handler(req, res: NextApiResponse, session) {
   let filename = req?.query?.file;
   let minify = req?.query?.minify;
@@ -25,7 +23,7 @@ async function handler(req, res: NextApiResponse, session) {
   let imageBuffer: Buffer;
   try {
     imageBuffer = fs.readFileSync("public/img/albums/" + filename);
-    if (minify !== undefined) {
+    if (minify !== undefined && false) {
       imageBuffer =
         await sharp(imageBuffer)
           .resize({
