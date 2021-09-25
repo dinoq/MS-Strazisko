@@ -3,6 +3,7 @@ import Database from "better-sqlite3";
 
 
 const handler = async (req, res) => {
+  console.log("process.env.NODE_ENV:", process.env.NODE_ENV );
   const pageYear = req.query["year"];
   const limit = req.query["limit"];
 
@@ -28,7 +29,7 @@ const handler = async (req, res) => {
         albumPhotos.push(res.URL);
       }
 
-      while(albumPhotos.length < 4){
+      while(limitQuery.length && albumPhotos.length < parseInt(limit)){
         albumPhotos.push("other/no-photo.jpg");
       }
       

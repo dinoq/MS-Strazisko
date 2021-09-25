@@ -8,6 +8,14 @@ module.exports = {
       {
         domain: 'http://localhost:3000/',
         defaultLocale: 'cs',
+      },
+      {
+        domain: 'https://www.ms-strazisko.cz',
+        defaultLocale: 'cs',
+      },
+      {
+        domain: 'https://admin.ms-strazisko.cz',
+        defaultLocale: 'cs',
       }
     ],
   },

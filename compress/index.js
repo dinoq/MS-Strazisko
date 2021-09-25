@@ -1,7 +1,7 @@
 
-import sharp from "sharp";
-import fs from "fs";
 const path = require("path");
+const fs = require("fs");
+const sharp = require("sharp");
 
 
 const getAllFiles = function (dirPath, arrayOfFiles) {
@@ -21,20 +21,20 @@ const getAllFiles = function (dirPath, arrayOfFiles) {
     return arrayOfFiles
 }
 
-
-const result = getAllFiles("public/img/albums/all");
+console.log("PATHHH", path.join(__dirname, "../public/img/albums/all"));
+const result = getAllFiles(path.join(__dirname, "../public/img/albums/all"));
 for (const file of result) {
 
     let imageBuffer = fs.readFileSync(file);
     console.log('file: ', file);
     const fname = "public/img/albums/compressed90/" + Math.random() + ".webp";
     console.log('fname: ', fname);
-    imageBuffer = sharp(imageBuffer)
+    /*imageBuffer = sharp(imageBuffer)
             .resize({
                 fit: sharp.fit.inside,
                 width: 1920,
                 height: 1080,
             })
             .webp({ quality: 90 })
-            .toFile(fname);
+            .toFile(fname);*/
 }

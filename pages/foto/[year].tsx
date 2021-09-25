@@ -1,10 +1,9 @@
 // eslint-disable-next-line
-import classes from "./YearPage.module.scss";
+import classes from "./year.module.scss";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { withIronSession } from "next-iron-session";
-import { getApiURL } from "../../utils";
 
 const YearPage: React.FC<{ logged: boolean }> = (props) => {
   const router = useRouter();
@@ -82,7 +81,7 @@ const Gallery = (props) => {
   const [albums, setAlbums] = useState([]);
 
   useEffect(() => {
-    fetch(getApiURL("getYearAlbumsInfo?year=") + props.year + "&limit="+4).then((resp) => {
+    fetch("/api/getYearAlbumsInfo?year=" + props.year + "&limit=" + 6).then((resp) => {
 
       if (resp.status == 201) {
         resp.json().then((json) => {
@@ -102,60 +101,61 @@ const Gallery = (props) => {
   return (
     <>
       <div>
-        
-      <div className="text-blue fw-bold text-center h1 my-3">{"Školní rok " + albumYear + "/" + (albumYear+1)}</div>
+        {!isNaN(albumYear) && <div className="text-blue fw-bold text-center h1 my-3">{"Školní rok " + albumYear + "/" + (albumYear + 1)}</div>}
         {
-        albums.map((album, index, array) => {
-          let date: any = new Date(album.date);
-          let day = date.getDate()+1;
-          day = (day < 10)? "0"+day: day;
-          let month = date.getMonth()+1;
-          month = (month < 10)? "0"+month: month;
-          date = day+"."+month+".";
-          return (
-            <div key={"album-" + index}>
-              <div className="text-blue text-center h4 my-3">
+          albums.map((album, index, array) => {
+            let date: any = new Date(album.date);
+            let day = date.getDate() + 1;
+            day = (day < 10) ? "0" + day : day;
+            let month = date.getMonth() + 1;
+            month = (month < 10) ? "0" + month : month;
+            date = day + "." + month + ".";
+            return (
+              <div key={"album-" + index}>
+                <div className="text-blue text-center h4 my-3">
+                  <Link href={"/foto/" + props.year + "/" + album.title}>
+                    <a>
+                      {date + " - " + album.name}
+                    </a>
+                  </Link>
+                </div>
                 <Link href={"/foto/" + props.year + "/" + album.title}>
                   <a>
-                    {date + " - " + album.name}
+                    <div className={classes["overlay"] + " col-12"}>
+                      <div>Více &gt;&gt;</div>
+                    </div>
                   </a>
                 </Link>
-              </div>
-              <Link href={"/foto/" + props.year + "/" + album.title}>
-                <a>
-                  <div className={classes["overlay"] + " col-12"}>
-                    <div>Více &gt;&gt;</div>
-                  </div>
-                </a>
-              </Link>
-              <div className="album-images-preview row">
-                {album.photos.map((photo, index, array) => {
-                  let additionalClasses = [
-                    "col-6 col-md-3",
-                    "col-6 col-md-3",
-                    "d-none d-md-block col-md-3",
-                    "d-none d-md-block col-md-3",
-                  ];
-                  return (
-                    <div
-                      key={"photo-" + index + "-" + album.name + "-" + album.date}
-                      className={additionalClasses[index] + " p-0"}
-                    >
-                      <div className={classes["img-container"]}>
-                        {
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img alt={"Fotografie z alba \"" + album.name + "\""} src={"/api/getPhoto?file=" + photo + "&minify"} />
-                        }
+                <div className="album-images-preview row">
+                  {album.photos.map((photo, index, array) => {
+                    let additionalClasses = [
+                      "col-6 col-md-3 col-lg-2",
+                      "col-6 col-md-3 col-lg-2",
+                      "d-none d-md-block col-md-3 col-lg-2",
+                      "d-none d-md-block col-md-3 col-lg-2",
+                      "d-none d-lg-block col-lg-2",
+                      "d-none d-lg-block col-lg-2",
+                    ];
+                    return (
+                      <div
+                        key={"photo-" + index + "-" + album.name + "-" + album.date}
+                        className={additionalClasses[index] + " p-0"}
+                      >
+                        <div className={classes["img-container"]}>
+                          {
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img alt={"Fotografie z alba \"" + album.name + "\""} src={"/api/getPhoto?file=" + photo + "&minify"} />
+                          }
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          );
-        })
+            );
+          })
 
-      }</div>
+        }</div>
     </>
   );
 };

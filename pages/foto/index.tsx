@@ -5,7 +5,6 @@ import { GetServerSideProps } from "next";
 import { withIronSession } from "next-iron-session";
 import { useEffect, useState } from "react";
 import { useRef } from "react";
-import classes from "./FotoPage.module.scss"
 import Image from "next/image";
 import Link from "next/link";
 import { getApiURL } from "../../utils";
@@ -30,10 +29,7 @@ const FotoPage: React.FC<{years: Array<any>}> = (props) => {
 }
 
 export async function getServerSideProps(context) {
-    console.log("H1");
     let yearsArray = await(await fetch(getApiURL("getPhotosYears"))).json();
-    console.log("H12");
-    console.log("H1 yearsArray", yearsArray);
     return {
       props: { years: yearsArray},
     }

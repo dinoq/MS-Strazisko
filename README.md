@@ -1,7 +1,9 @@
 ############################################################################################
 TODO:
 - cookieOptions-secure... na produkci...
+- https://admin.ms-strazisko.cz/api/getYearAlbumsInfo?year=undefined ???
 - https na produkci
+- rel="noreferrer" - je potřeba? a co to je? (ám to v odkazu v galerii)
 - Learning - zapat i Linuxové příkazy (velikost paměti, nginx...)
 - Úprava hlavičky na všech stránkách!
 - Zkontrolovat prepared statements - není někde přiřazováno přímo??

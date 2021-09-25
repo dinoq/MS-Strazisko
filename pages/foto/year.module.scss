@@ -47,6 +47,9 @@ $transition-time: 0.5s;
         //width: (100%);
         aspect-ratio: 4;
     }
+    @include media-breakpoint-up(lg) {
+        aspect-ratio: 6;
+    }
     background: linear-gradient(90deg, rgb(2 0 36 / 0%) 30%, rgb(255 255 255) 80%);
     opacity: 1;
     position: absolute;
