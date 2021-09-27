@@ -63,15 +63,16 @@ export default function Home() {
   ]
 
   teachers = [
-    { imgSrc: "/img/photo.jpg", name: "Mgr. Iveta Marková", description: "Ředitelka školky" },
-    { imgSrc: "/img/photo.jpg", name: "Bc. Iveta Nováková", description: "Učitelka" },
-    { imgSrc: "/img/photo.jpg", name: "Iveta Marková", description: "Učitelka" },
+    { imgSrc: "/img/photo.jpg", name: "Mgr. Eva Výmolová", description: "Ředitelka školky" },
+    { imgSrc: "/img/photo.jpg", name: "Iveta Nováková", description: "Zastupující ředitelka za MD" },
+    { imgSrc: "/img/photo.jpg", name: "Andrea Dedková", description: "Učitelka" },
+    { imgSrc: "/img/photo.jpg", name: "Petra Kozáková", description: "Výdej stravy" },
   ]
-
+/*
   events = [
     { imgSrc: "/navrh/unused/camping.jpg", title: "Schůzky", date: "19. 8. 2020", description: "<span style='color: red'>Ve čtvrtek 24.6</span> v 16:00 hodin se budou konat schůzky rodičů s pracovnicemi MŠ a se zřizovatelem MŠ. Prosím o aktivní účast VŠECH rodičů bez dětí." },
     { imgSrc: "/navrh/unused/camping.jpg", title: "Schůzky", date: "19. 8. 2020", description: "<span style='color: red'>Ve čtvrtek 24.6</span> v 16:00 hodin se budou konat schůzky rodičů s pracovnicemi MŠ a se zřizovatelem MŠ. Prosím o aktivní účast VŠECH rodičů bez dětí." },
-  ]
+  ]*/
   return (
     <>
       <Head>
@@ -95,7 +96,7 @@ export default function Home() {
             <div className="col-10 col-lg-4">
               <h1 className="fw-bold">O naší mateřské školce</h1>
               <p>
-                Mateřská školka se nachází v malé vesničce Stražisko na Konicku uprostřed malebné přírody, obklopené lesy. Mateřská školka se nachází v malé vesničce Stražisko na Konicku uprostřed malebné přírody, obklopená lesy. Mateřská školka se nachází v malé vesničce Stražisko na Konicku uprostřed malebné přírody, obklopená lesy.
+                Mateřská školka se nachází v malé vesničce Stražisko na Konicku uprostřed malebné přírody, obklopené lesy.
               </p>
             </div>
           </div>
@@ -115,7 +116,7 @@ export default function Home() {
           </div>
           <div className={classes["teachers"] + " row my-4 mb-5 justify-content-center text-center"}>
             <div className="col-10 d-flex flex-column justify-content-center">
-              <div className="row"><h2>Učitelé</h2></div>
+              <div className="row"><h2>Personál MŠ</h2></div>
               <div className="row w-100 justify-content-center justify-content-lg-between">
                 {teachers.map((teacher, index) =>
                   <div key={"teacher-" + index} className="col-12 col-md-6 col-lg-3 mt-5 mt-lg-2 mb-5">
@@ -136,7 +137,7 @@ export default function Home() {
                   </div>
                 )}
                 {!events &&
-                  <div>Je nám líto, ale žádné nadcházející události nebyly nalezeny!</div>
+                  <div className="my-3">Je nám líto, ale žádné nadcházející události nebyly nalezeny!</div>
                 }
               </div>
             </div>

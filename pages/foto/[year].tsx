@@ -86,7 +86,6 @@ const Gallery = (props) => {
 
       if (resp.status == 201) {
         resp.json().then((json) => {
-          console.log('json: ', json);
           setAlbums(json.albums);
         });
       } else {

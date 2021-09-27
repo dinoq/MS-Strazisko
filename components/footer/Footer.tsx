@@ -44,16 +44,18 @@ const Footer: React.FC<{}> = (props) => {
           <div className="row d-flex flex-row justify-content-between align-items-center">
             <div className="w-fit-content my-2">
               <ul className={classes["left-items"]}>
-                <li>Mateřská školka Stražisko</li>
+                <li>Mateřská školka Stražisko,</li>
                 <li>příspěvková organizace,</li>
+                <li>Stažisko 25,</li>
                 <li>798 44 Stražisko</li>
               </ul>
             </div>
             <div className="w-fit-content my-2">
               <ul className={classes["right-items"]}>
+                <li><Link href="/admin"><a>Administrace</a></Link></li>
                 <li><Link href="/pristupnost"><a>Informace o přístupnosti</a></Link></li>
                 <li><Link href="/"><a>Informace o zpracování osobních údajů</a></Link></li>
-                <li><Link href="/"><a>Levné webové stránky</a></Link></li>
+                {/* <li><Link href="/"><a>Tvorba webových stránek</a></Link></li> */}
               </ul>
             </div>
           </div>

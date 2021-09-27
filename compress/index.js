@@ -42,7 +42,7 @@ for (const file of result) {
     if (!sqlPhotos.includes(filename)) {
         sqlPhotos += "insert into photos (filename, id_album) values (\"" + filename + "\", " + (album_id + 3) + ");\n";
     }
-    const fname = outDir + directory + "/" + filename;
+    let fname = outDir + directory + "/" + filename;
 
     if ((100 * result.indexOf(file)) / result.length > (progress + 10)) {
         progress += 10;
@@ -57,15 +57,27 @@ for (const file of result) {
     // console.log(parseInt((100*result.indexOf(file))/result.length) + "%, " + directory + "/" + filename);
 
 
-    imageBuffer = sharp(imageBuffer)
+    sharp(imageBuffer)
         .resize({
             fit: sharp.fit.inside,
-            width: 240,
-            height: 240,
+            width: 1920,
+            height: 1920,
         })
         .webp({ quality: 70 })
         //.jpeg({ quality: 80 })
         .toFile(fname);
+
+        fname = outDir + directory + "/compressed/" + filename;
+        imageBuffer = fs.readFileSync(file);
+     sharp(imageBuffer)
+            .resize({
+                fit: sharp.fit.inside,
+                width: 240,
+                height: 240,
+            })
+            .webp({ quality: 70 })
+            //.jpeg({ quality: 80 })
+            .toFile(fname);
 
 }
 

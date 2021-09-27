@@ -74,7 +74,8 @@ const Header = (props) => {
                             width={234}
                             height={119}
                             layout={"responsive"} /> */}
-                        <span id="logo">MŠ Stražisko</span>
+                        <span id="logo" className="d-none d-sm-block d-lg-none d-xxl-block">Mateřská škola Stražisko</span>
+                        <span id="logo" className="d-sm-none d-lg-block d-xxl-none">MŠ Stražisko</span>
                     </div>
                     <div className={classes["hamburger-menu-container"] + " d-flex flex-column justify-content-evenly d-lg-none"} onClick={toggleHamburgerMenu}>
                         <div></div>

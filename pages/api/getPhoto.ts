@@ -5,7 +5,7 @@ import Database from "better-sqlite3";
 import fs from "fs";
 
 async function handler(req, res: NextApiResponse, session) {
-  let filename = req?.query?.file;
+  let filename: string = req?.query?.file;
   let minify = req?.query?.minify;
 
   const loggedForYears: Array<any> = await req.session.get("loggedForYears");
@@ -22,17 +22,25 @@ async function handler(req, res: NextApiResponse, session) {
   filename = (filename.startsWith("/")) ? filename.substring(1) : filename; // ošetření počátečního lomítka
   let imageBuffer: Buffer;
   try {
-    imageBuffer = fs.readFileSync("public/img/albums/" + filename);
-    if (minify !== undefined && false) {
-      imageBuffer =
+    let dirPath = "public/img/albums/";
+    if (minify !== undefined) {
+      const slashPos = filename.indexOf("/");
+      const album = filename.substring(0, slashPos);
+      const file = filename.substring(slashPos, filename.length);
+      dirPath += album + "/thumbnails" + file;
+      
+      /*imageBuffer =
         await sharp(imageBuffer)
           .resize({
             fit: sharp.fit.inside,
             width: 1920,
             height: 1080,
           })
-          .webp({ quality: 70 });
+          .webp({ quality: 70 });*/
+    }else{
+      dirPath += filename;
     }
+    imageBuffer = fs.readFileSync(dirPath);
   } catch (error) {
     console.log('error: ', error);
     res.status(404).send("Not found!");

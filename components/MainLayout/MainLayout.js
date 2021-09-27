@@ -41,6 +41,9 @@ const MainLayout = (props) => {
             <Link href="/admin/kontakt">
               <a className={"link"}>Kontakt</a>
             </Link>
+            <Link href="/">
+              <a className={"link"}>&lt; Zpět na web</a>
+            </Link>
           </div>
         </div>
         <div className={classes.content + " "}>{props.children}</div>

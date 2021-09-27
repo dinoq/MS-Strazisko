@@ -1,4 +1,80 @@
-.contextMenu{
+.imgContainer {
+    //height: $size;
+    //width: $size;
+    margin-top: calc(var(--bs-gutter-x) * 0.5);
+    margin-bottom: calc(var(--bs-gutter-x) * 0.5);
+
+    aspect-ratio: 1;
+
+    img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+    }
+
+    img {
+        cursor: pointer;
+    }
+}
+
+.photoViewer {
+    z-index: 1000;
+    .overlay {
+        background-color: rgba(0, 0, 0, 0.7);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        cursor: pointer;
+    }
+    .viewerWrapper {
+        position: fixed;
+        top: 10%;
+        left: 10%;
+        right: 10%;
+        bottom: 10%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .photoWrapper {
+            height: fit-content;
+
+            .closeBtnWrapper {
+                position: absolute;
+                right: 0;
+
+                .closeBtn {
+                    position: relative;
+                    $closeBtnSize: 48px;
+                    width: $closeBtnSize;
+                    height: $closeBtnSize;
+                    background-color: red;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    cursor: pointer;
+
+                    &::after {
+                        content: "X";
+                        color: white;
+                        font-size: 1.5rem;
+                        font-weight: bold;
+                    }
+                }
+            }
+
+            img {
+                object-fit: contain;
+                width: 100%;
+                height: 100%;
+            }
+        }
+    }
+}
+
+.contextMenu {
     position: absolute;
     background-color: #009c8e;
     color: white;
@@ -8,19 +84,4 @@
     cursor: pointer;
     font-weight: bold;
     font-size: 1.2rem;
-}
-
-.img-container {
-    //height: $size;
-    //width: $size;
-    margin-top: calc(var(--bs-gutter-x) * .5);
-    margin-bottom: calc(var(--bs-gutter-x) * .5);
-    
-    aspect-ratio: 1;
-
-    img {
-        object-fit: cover;
-        width: 100%;
-        height: 100%;
-    }
 }

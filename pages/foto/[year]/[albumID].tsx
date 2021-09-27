@@ -25,6 +25,8 @@ const AlbumDetail: React.FC<{ logged: boolean }> = (props) => {
   }
 
   const [contextMenuVisible, setContextMenuVisible] = useState(false);
+  const [photoViewerVisible, setPhotoViewerVisible] = useState(false);
+  const [viewedPhoto, setViewedPhoto] = useState({});
   const [contextMenuProp, setContextMenuProps] = useState({ top: 0, left: 0 });
 
   const showContextMenu = (e) => {
@@ -64,8 +66,21 @@ const AlbumDetail: React.FC<{ logged: boolean }> = (props) => {
         });
       }
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [albumID]);
+
+  useEffect(() => {
+
+    if (album && album.photos) {
+      album.photos.forEach(async (photoURL, index, array) => {
+        console.log('photoURL: ', photoURL);
+        let i = document.createElement("img");
+        i.setAttribute("src", "/api/getPhoto?file=" + photoURL);
+        //await fetch("/api/getPhoto?file=" + photoURL);
+        console.log('photoURL2: ', photoURL);
+      })
+    }
+  }, [album])
 
   let date: any = new Date(album.date);
   let day = date.getDate() + 1;
@@ -74,6 +89,14 @@ const AlbumDetail: React.FC<{ logged: boolean }> = (props) => {
   month = (month < 10) ? "0" + month : month;
   date = day + "." + month + "." + date.getFullYear();
 
+  const hidePhotoOverlay = () => {
+    setPhotoViewerVisible(false);
+  }
+
+  const showPhotoViewer = (photoURL) => {
+    setViewedPhoto({ album: album.name, photoURL });
+    setPhotoViewerVisible(true);
+  }
   return (
     <>
       <div className="container-fluid">
@@ -88,10 +111,14 @@ const AlbumDetail: React.FC<{ logged: boolean }> = (props) => {
                 album && album.photos && album.photos.map((photoURL, index, array) => {
                   return (
                     <div key={"photo-" + index} className="col-12 col-sm-6 col-md-3 col-lg-2">
-                      <div className={classes["img-container"]}>
+                      <div className={classes.imgContainer}>
                         {
                           // eslint-disable-next-line @next/next/no-img-element
-                          <a href={"/api/getPhoto?file=" + photoURL} target="_blank" rel="noreferrer"><img alt={"Fotografie z alba \"" + album.name + "\""} src={"/api/getPhoto?file=" + photoURL + "&minify"}  onContextMenu={showContextMenu}/></a>
+                          //<a href={"/api/getPhoto?file=" + photoURL} target="_blank" rel="noreferrer"><img alt={"Fotografie z alba \"" + album.name + "\""} src={"/api/getPhoto?file=" + photoURL + "&minify"} onContextMenu={showContextMenu} /></a>
+                        }
+                        {
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img alt={"Fotografie z alba \"" + album.name + "\""} src={"/api/getPhoto?file=" + photoURL + "&minify"} onContextMenu={showContextMenu} onClick={showPhotoViewer.bind(this, photoURL)} />
                         }
                       </div>
                     </div>
@@ -102,6 +129,7 @@ const AlbumDetail: React.FC<{ logged: boolean }> = (props) => {
           </div>
         </div>
       </div>
+      {photoViewerVisible && <PhotoViewer hide={hidePhotoOverlay} viewedPhoto={viewedPhoto} />}
       {contextMenuVisible && <ContextMenu styles={contextMenuProp} />}
     </>
   );
@@ -112,6 +140,30 @@ const ContextMenu = (props) => {
   return (
     <div className={classes.contextMenu} style={{ ...props.styles }}>
       <span>Uložit jako</span>
+    </div>
+  )
+}
+
+const PhotoViewer = (props) => {
+  return (
+    <div className={classes.photoViewer}>
+      <div className={classes.overlay} onClick={props.hide}>
+
+      </div>
+      <div className={classes.viewerWrapper}>
+
+        <div className={classes.leftArrow}></div>
+          <div className={classes.photoWrapper}>
+          <div className={classes.closeBtnWrapper} onClick={props.hide}>
+            <div className={classes.closeBtn}></div>
+          </div>
+            {// eslint-disable-next-line @next/next/no-img-element
+              <img src={"/api/getPhoto?file=" + props.viewedPhoto.photoURL} alt={"Fotografie z alba \"" + props.viewedPhoto.album + "\""} />}
+          </div>
+      </div><div className={classes.rightArrow}>
+
+      </div>
+
     </div>
   )
 }

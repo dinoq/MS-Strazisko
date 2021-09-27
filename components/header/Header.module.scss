@@ -25,6 +25,7 @@ $font-size: 1.2rem;
 
         :global(#logo) {
             font-weight: 900 !important;
+            z-index: 50;
             color: $primary;
             font-size: 1.5rem;
             user-select: none;
@@ -69,6 +70,7 @@ $font-size: 1.2rem;
         }
 
         @include media-breakpoint-up(lg) {
+            border-bottom: none;
             display: flex;
             position: static;
             width: auto;
@@ -129,16 +131,19 @@ $font-size: 1.2rem;
     @include media-breakpoint-up(lg) {
         &.header-expanded {
             height: $header-expanded-height;
+            .nav {
+                font-size: 1.4rem;
+                top: $header-expanded-height;
+            }
+        }
+    }
 
+    @include media-breakpoint-up(xl) {
+        &.header-expanded {
             .logo-container {
                 :global(#logo) {
                     font-size: 2rem;
                 }
-            }
-
-            .nav {
-                font-size: 1.4rem;
-                top: $header-expanded-height;
             }
         }
     }

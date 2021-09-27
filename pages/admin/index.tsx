@@ -13,7 +13,7 @@ const AdminHomePage: NextPage = (props: any)  => {
       </Head>
 
       <main className={styles.main}>
-        adsdc uvod
+        Uvod
       </main>
     </div>
   )
