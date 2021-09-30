@@ -7,7 +7,18 @@
 
     .breadcrumbItem{
         cursor: pointer;
+
+        &:last-of-type{
+            font-weight: bold;
+        }
         
     } 
     
+}
+
+.imgPreview{
+    $size: 250px;
+    width: $size;
+    height: $size;
+    object-fit: contain;
 }

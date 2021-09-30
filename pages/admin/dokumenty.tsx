@@ -54,23 +54,34 @@ const AdminDocumentsPage: NextPage = (props: any) => {
     }
 
     const headerItems = [
-        { title: "Název dokumentu" },
-        { title: "URL" },
-        { title: "Akce" },
+        { content: "Název dokumentu" },
+        { content: "URL" },
+        { content: "Akce" },
     ]
-    console.log('documents: ', documents);
 
-    const rows =
+    const bodyRows: Array<any> =
         documents.map((doc, index) => {
             const url = (doc?.url?.startsWith("/")) ? doc.url.substring(1) : doc.url;
             return ({
-                items: [{ title: doc.name }, { title: "/dokumenty/" + url }, { title: "Smazat" }]
+                items: [
+                    { content: doc.name, className: "word-break-all" },
+                    { content: (<Link href={"/dokumenty/" + url}><a target="_blank" className={"link"}>{"/dokumenty/" + url}</a></Link>), className: "word-break-all" },
+                    { className: "actions", content: (<><span className={"link-danger"} onClick={deleteDocumentConfirmation.bind(this, doc.name, doc.id_documents)}>Smazat</span><span className={"link"}>Přejmenovat</span></>) }
+                ]
             })
 
         })
-    const bodyRows = [
-        rows
-    ];
+
+    bodyRows.unshift({
+        items: [{
+            colspan: 4,
+            content: (<>
+                {!fileManagerVisible && <span className={"link " + "add-document-btn"} onClick={showFileManager}>Přidat nový dokument</span>}
+                {fileManagerVisible && <NewDocumentManager hideFileManager={hideFileManager} />}
+            </>),
+            className: "text-center"
+        }]
+    })
 
     console.log('bodyRows: ', bodyRows);
     return (
@@ -84,33 +95,6 @@ const AdminDocumentsPage: NextPage = (props: any) => {
             <main className={""}>
                 <h1 className="text-center mb-4">Dokumenty</h1>
                 <div className={"form-wrapper"}>
-                    <table className={""}>
-                        <thead>
-                            <tr className={""}>
-                                <th className={""}>Název dokumentu</th>
-                                <th className={""}>URL</th>
-                                <th className={""}>Akce</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {documents.map((doc, index) => {
-                                const url = (doc?.url?.startsWith("/")) ? doc.url.substring(1) : doc.url;
-                                return (
-                                    <tr key={"doc-" + index} className={""}>
-                                        <td className={classes.nameTableField}>{doc.name}</td>
-                                        <td className={classes.urlTableField}><Link href={"/dokumenty/" + url}><a target="_blank" className={"link"}>{"/dokumenty/" + url}</a></Link></td>
-                                        <td className={"actions"}><span className={"link-danger"} onClick={deleteDocumentConfirmation.bind(this, doc.name, doc.id_documents)}>Smazat</span><span className={"link"}>Přejmenovat</span></td>
-                                    </tr>
-                                )
-                            })}
-                            <tr>
-                                <th colSpan={4} className={"text-center"}>
-                                    {!fileManagerVisible && <span className={"link " + "add-document-btn"} onClick={showFileManager}>Přidat nový dokument</span>}
-                                    {fileManagerVisible && <NewDocumentManager hideFileManager={hideFileManager} />}
-                                </th>
-                            </tr>
-                        </tbody>
-                    </table>
                     <AppTable headerItems={headerItems} bodyRows={bodyRows} />
                     {modalVisible && <Modal deletedDocumentName={deletedDocumentName} cancelDeletion={cancelDeletion} deleteDocument={deleteDocument} />}
                 </div>

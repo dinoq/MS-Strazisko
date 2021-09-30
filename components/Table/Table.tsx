@@ -1,21 +1,23 @@
 import React, { useState } from "react";
 
 const AppTable = (props) => {
-    console.log("ASDF", props.headerItems);
+  let headerItems = (props.headerItems)? props.headerItems : [];
+  let rows = (props.bodyRows)? props.bodyRows : [];
+  //return (<div></div>)
   return (
-    <>asd
+    <>
     <table className={""}>
       <thead>
         <tr className={""}>
-            {props.headerItems.map((item, index, array) => {
-                return <th key={"thtrtd-"+index} className={""}>{item.title}</th>
+            {headerItems.map((item, index, array) => {
+                return <th key={"thtrtd-"+index} className={""}>{item.content}</th>
             })}
         </tr>
       </thead>
       <tbody>
-            {props.bodyRows.map((row, index, array) => {
+            {rows.map((row, index, array) => {
                 return <tr key={"tbtr-"+index} className={row.classes}>{row.items.map((item, index, array) => {
-                    return <td key={"tbtrtd-"+index} className={""}>{item.title}</td>
+                    return <td colSpan={item.colspan? item.colspan : 1} key={"tbtrtd-"+index} className={item.className? item.className : ""}>{item.content}</td>
                 })}
                 </tr>
             })}

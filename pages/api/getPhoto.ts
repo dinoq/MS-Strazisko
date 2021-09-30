@@ -9,7 +9,8 @@ async function handler(req, res: NextApiResponse, session) {
   let minify = req?.query?.minify;
 
   const loggedForYears: Array<any> = await req.session.get("loggedForYears");
-  if (!loggedForYears || !loggedForYears.length) {
+  const adminLogged: Array<any> = await req.session.get("adminLogged");
+  if ((!loggedForYears || !loggedForYears.length) && (!adminLogged)) {
     res.status(401).send("Unauthorized!");
     return;
   }

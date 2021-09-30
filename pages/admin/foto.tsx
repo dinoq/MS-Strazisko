@@ -1,7 +1,8 @@
 import type { NextPage } from 'next'
 import { withIronSession } from 'next-iron-session'
 import Head from 'next/head'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import AppTable from '../../components/Table/Table'
 import classes from './foto.module.scss'
 
 const AdminPhotosPage: NextPage = (props: any) => {
@@ -9,9 +10,14 @@ const AdminPhotosPage: NextPage = (props: any) => {
   const [yearEntries, setYearEntries] = useState([]);
   const [albumEntries, setAlbumEntries] = useState([]);
   const [photoEntries, setPhotoEntries] = useState([]);
+  const [currentAlbum, setCurrentAlbum] = useState("")
+
+  let showYears = breadcrumbItems.length == 0;
+  let showAlbums = breadcrumbItems.length == 1;
+  let showPhotos = breadcrumbItems.length == 2;
 
   useEffect(() => {
-    fetch("/api/admin/getYears").then((resp) => {
+    fetch("/api/admin/years").then((resp) => {
       if (resp.status == 200) {
         resp.json().then((json) => {
           setYearEntries(json);
@@ -25,8 +31,8 @@ const AdminPhotosPage: NextPage = (props: any) => {
     });
   }, []);
 
-  const yearClicked = (year) => {    
-    fetch("/api/admin/getAlbums?year="+year).then((resp) => {
+  const yearClicked = (year) => {
+    fetch("/api/admin/getAlbums?year=" + year).then((resp) => {
       if (resp.status == 200) {
         resp.json().then((json) => {
           setAlbumEntries(json);
@@ -41,12 +47,13 @@ const AdminPhotosPage: NextPage = (props: any) => {
     });
   }
 
-  const albumClicked = (album, albumID) => {    
-    fetch("/api/admin/getPhotos?albumID=" + albumID).then((resp) => {
+  const albumClicked = (album) => {
+    setCurrentAlbum(album.title);
+    fetch("/api/admin/getPhotos?albumID=" + album.id).then((resp) => {
       if (resp.status == 200) {
         resp.json().then((json) => {
           setPhotoEntries(json);
-          setBreadcrumbItems(prevState => [...prevState, album]);
+          setBreadcrumbItems(prevState => [...prevState, album.name]);
         });
       } else {
         resp.text().then((value) => {
@@ -55,6 +62,34 @@ const AdminPhotosPage: NextPage = (props: any) => {
       }
     });
   }
+
+
+  const headerItems: Array<any> = getTableHeaderItems(breadcrumbItems.length);
+
+  const bodyRows: Array<any> = getTableRows(breadcrumbItems.length, yearEntries, albumEntries, photoEntries, yearClicked, albumClicked, currentAlbum);
+
+  const [newObjectManagerVisible, setNewObjectManagerVisible] = useState(false)
+
+  const showNewObjectManager = ()=>{
+    setNewObjectManagerVisible(true)
+  }
+  const hideNewObjectManager = ()=>{
+    setNewObjectManagerVisible(false)    
+  }
+
+  let title = (showYears)? "Přidat nový školní rok" : (showAlbums)? "Přidat nové album" : "Přidat fotky";
+  let colspan = (headerItems.length)? headerItems.length : 1;
+  
+  bodyRows.unshift({
+    items: [{
+        colspan,
+        content: (<>
+            {!newObjectManagerVisible && <span className={"link " + "add-document-btn"} onClick={showNewObjectManager}>{title}</span>}
+            {newObjectManagerVisible && <NewObjectManager hideFileManager={hideNewObjectManager} />}
+        </>),
+        className: "text-center"
+    }]
+})
 
   return (
     <div className={""}>
@@ -66,50 +101,97 @@ const AdminPhotosPage: NextPage = (props: any) => {
 
       <main className={""}>
         <Breadcrumb items={breadcrumbItems} setItems={setBreadcrumbItems} />
-        {
-          (breadcrumbItems.length == 0) && yearEntries.map((entry) => {
-            return (
-              <div key={"year-" + entry.year} onClick={yearClicked.bind(this, entry.year)}>
-                {entry.year}, {entry.password}
-              </div>
-            )
-          })
-        }
-        {
-          (breadcrumbItems.length == 1) && albumEntries.map((entry, index) => {
-            return (
-              <div key={"album-" + index} onClick={albumClicked.bind(this, entry.name, entry.id)}>
-                {entry.id},{entry.date}, {entry.title}, {entry.name}
-              </div>
-            )
-          })
-        }
-        {
-          (breadcrumbItems.length == 2) && photoEntries.map((entry, index) => {
-            return (
-              <div key={"photo-" + index}>
-                {entry.id},{entry.filename}
-              </div>
-            )
-          })
-        }
+
+        <div className={"form-wrapper"}>
+          <AppTable headerItems={headerItems} bodyRows={bodyRows} />
+        </div>
       </main>
     </div>
   )
+}
+
+
+const getTableHeaderItems = (index) => {
+  if (index == 0) { // Years...
+    return [
+      { content: "Školní rok" },
+      { content: "Heslo" },
+      { content: "Akce" },
+    ]
+  } else if (index == 1) { // Albums
+    return [
+      { content: "ID" },
+      { content: "Datum" },
+      { content: "URL" },
+      { content: "Název" },
+      { content: "Akce" },
+    ]
+  } else if (index == 2) { // Photos
+    return [
+      { content: "ID" },
+      { content: "URL" },
+      { content: "Náhled" },
+      { content: "Akce" },
+    ]
+  }
+}
+
+
+const getTableRows = (index, yearEntries, albumEntries, photoEntries, yearClicked, albumClicked, album) => {
+  if (index == 0) { // Years...
+    return yearEntries.map((entry, index) => {
+      return ({
+        items: [
+          { content: <span onClick={yearClicked.bind(this, entry.year)}> {entry.year.replace("_", "/")} </span>, className: "link" },
+          { content: entry.password },
+          { className: "actions", content: (<><span className={"link-danger"} onClick={null}>Smazat</span><span className={"link"}>Přejmenovat</span></>) }
+        ]
+      })
+    })
+
+  } else if (index == 1) { // Albums
+    return albumEntries.map((entry, index) => {
+      let date = new Date(entry.date);
+
+      return ({
+        items: [
+          { content: entry.id },
+          { content: date.getDate()+". "+(date.getMonth()+1)+". " + date.getFullYear() },
+          { content: entry.title },
+          { content: <span onClick={albumClicked.bind(this, entry)}> {entry.name} </span>, className: "link" },
+          { className: "actions", content: (<><span className={"link-danger"} onClick={null}>Smazat</span><span className={"link"}>Přejmenovat</span></>) }
+        ]
+      })
+    })
+
+  } else if (index == 2) { // Photos
+    return photoEntries.map((entry, index) => {
+      console.log("ASD", entry.filename);
+      return ({
+        items: [
+          { content: entry.id },
+          { content: (<a href={"/api/getPhoto?file="+album+"/"+entry.filename} target="_blank">{entry.filename}</a>), className: "link" },
+          { content: <a href={"/api/getPhoto?file="+album+"/"+entry.filename} target="_blank"><img className={classes.imgPreview} src={"/api/getPhoto?file="+album+"/"+entry.filename+"&minify"} alt="Náhled obrázku"/></a>},
+          { className: "actions", content: (<><span className={"link-danger"} onClick={null}>Smazat</span><span className={"link"}>Přejmenovat</span></>) }
+        ]
+      })
+    })
+
+  }
 }
 
 const Breadcrumb = (props) => {
 
   let items: [] = props.items ? props.items : [];
 
-  const resetNav = () =>{
+  const resetNav = () => {
     props.setItems([]);
   }
 
-  const itemClicked = (index) =>{
+  const itemClicked = (index) => {
     props.setItems(prevState => {
-        return prevState.slice(0, index+1);
-      });
+      return prevState.slice(0, index + 1);
+    });
   }
   return (
     <div className={classes.breadcrumb}>
@@ -127,6 +209,71 @@ const Breadcrumb = (props) => {
         )
       })}
     </div>
+  )
+}
+
+
+const NewObjectManager = (props) => {
+  const [fileLabel, setFileLabel] = useState("Vyberte soubor")
+  const [file, setFile] = useState(null);
+  const initFileName = "Název souboru";
+  const [fileName, setFileName] = useState(initFileName);
+  const [urlName, setUrlName] = useState("");
+
+  const fileChange = (event) => {
+      if (event?.target?.files[0]?.name?.length) {
+          const f = event.target.files[0];
+          setFile(f);
+          setUrlName(f.name);
+          setFileLabel("Vybráno: " + f.name);
+          if (fileName === initFileName || fileName === "") {
+              setFileName(f.name);
+          }
+      }
+  }
+
+
+  const uploadToServer = async (event) => {
+      event.preventDefault();
+      const body = new FormData();
+      body.append("document", file);
+      body.append("url", urlName);
+      body.append("name", fileName);
+      const response = await fetch("/api/admin/addDocument", {
+          method: "POST",
+          body
+      });
+
+      if (response.status == 200) {
+          window.location.reload();
+      }
+  };
+
+  const fileNameChanged = (e) => {
+      setFileName(e.target.value);
+  }
+
+  const clearFileName = (e) => {
+      if (fileName === initFileName) {
+          setFileName("");
+      }
+  }
+  return (
+      <div>
+          <form className="d-flex flex-column" onSubmit={uploadToServer}>
+              <input type="file" onChange={fileChange} name="file" id="file" className={"hidden-file-input"} />
+              <div className="d-flex justify-content-center">
+                  <label htmlFor="file" className="hidden-file-input-label">{fileLabel}</label>
+              </div>
+              <div className="d-flex justify-content-center">
+                  <input type="text" onChange={fileNameChanged} onClick={clearFileName} name="file-name" id="file-name" className={classes.fileName} value={fileName} placeholder={initFileName} />
+              </div>
+              <div className="d-flex justify-content-center">
+                  <input className="button" type="submit" value="Uložit" />
+                  <input className="button button-danger" onClick={props.hideFileManager} type="button" value="Zrušit" />
+              </div>
+          </form>
+      </div>
   )
 }
 

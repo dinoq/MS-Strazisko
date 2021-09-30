@@ -29,8 +29,14 @@
     user-select: none;
   }
 
-  .link {
+  .link, .link>* {
     color: #a7caff;
+    cursor: pointer;
+
+    &:hover, &:focus{
+      color: #7BBFF1;
+      //-2886414
+    }
   }
 
   main {
