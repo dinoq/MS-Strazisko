@@ -12,7 +12,7 @@ const AdminContactsPage: NextPage = (props: any)  => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
+      <main className={""}>
         kontakt
       </main>
     </div>

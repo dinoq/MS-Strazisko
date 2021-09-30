@@ -4,7 +4,7 @@ import classes from "./MainLayout.module.scss";
 
 const MainLayout = (props) => {
   const logout = async () => {
-    const result = await fetch("/api/logoutAdmin", {
+    const result = await fetch("/api/admin/logoutAdmin", {
       method: "POST",
       mode: "same-origin",
     });

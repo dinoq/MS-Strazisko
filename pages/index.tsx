@@ -13,7 +13,7 @@ import smileIcon from "../public/img/smile-icon-optimal.svg"
 import Teacher from '../components/teacher/Teacher'
 import EventCard from '../components/event-card/EventCard'
 
-export default function Home() {
+export default function Home(props) {
   const a = "/navrh/unused/camping.jpg";
   const images = [
     {
@@ -100,7 +100,7 @@ export default function Home() {
               </p>
             </div>
           </div>
-
+          
           <div className={classes["school-features"] + " row my-4 text-white text-center justify-content-center"}>
             <div className="col-10 p-4 d-flex flex-column justify-content-center">
               <div className="row"><h2>Zázemí</h2></div>
@@ -191,3 +191,23 @@ export default function Home() {
     </>
   )
 }
+/*
+export async function getStaticProps(context) {
+    let data;
+    console.log("start");
+    await(
+         new Promise((res, rej) =>{
+            setTimeout(() => {
+                data=new Date().toLocaleString();
+                res(data);
+            }, 5000);
+        })
+    )
+    console.log('data: ', data);
+  
+  
+    return {
+      props: { data }, // will be passed to the page component as props
+      revalidate: 10, // In seconds
+    }
+  }*/

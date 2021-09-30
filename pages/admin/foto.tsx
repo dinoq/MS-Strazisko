@@ -12,7 +12,7 @@ const AdminPhotosPage: NextPage = (props: any)  => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
+      <main className="">
         foto
       </main>
     </div>

@@ -11,7 +11,7 @@ const AdminLoginPage: NextPage = (props: any)  => {
   const loginFormSubmitted = async (event) => {
     event.preventDefault();
     const body = JSON.stringify({ username, password });
-    const result = await fetch("/api/loginAdmin",
+    const result = await fetch("/api/admin/loginAdmin",
     {
       method: "POST",
       mode: "same-origin",
