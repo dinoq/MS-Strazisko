@@ -36,7 +36,9 @@ const handler = async (req, res) => {
       albums.push({name: resAlbum.name, title: resAlbum.title, date: resAlbum.date, photos: albumPhotos});
     }
   }
-  res.status(201).send({
+
+  db.close();
+  res.status(200).send({
     albums
   })
 }

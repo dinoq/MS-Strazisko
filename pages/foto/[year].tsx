@@ -41,7 +41,7 @@ const Login: React.FC<{ year: any }> = (props) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ pwd, year }),
     });
-    if (resp.status == 201) {
+    if (resp.status == 200) {
       window.location.reload();
     } else if (resp.status == 401) {
       // Špatné heslo
@@ -84,7 +84,7 @@ const Gallery = (props) => {
   useEffect(() => {
     fetch("/api/getYearAlbumsInfo?year=" + props.year + "&limit=" + 6).then((resp) => {
 
-      if (resp.status == 201) {
+      if (resp.status == 200) {
         resp.json().then((json) => {
           setAlbums(json.albums);
         });

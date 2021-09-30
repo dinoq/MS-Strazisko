@@ -1,6 +1,8 @@
 ############################################################################################
 TODO:
 - cookieOptions-secure... na produkci...
+- práci s databází a doubory do try-catch
+- db.close!!!
 - https://admin.ms-strazisko.cz/api/getYearAlbumsInfo?year=undefined ???
 - https na produkci
 - rel="noreferrer" - je potřeba? a co to je? (ám to v odkazu v galerii)

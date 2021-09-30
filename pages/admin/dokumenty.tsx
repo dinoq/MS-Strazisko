@@ -48,7 +48,7 @@ const AdminDocumentsPage: NextPage = (props: any) => {
                 headers: { "Content-Type": "application/json" },
                 body
             })
-        if (result.status == 201) {
+        if (result.status == 200) {
             window.location.reload();
         }
     }
@@ -150,7 +150,7 @@ const NewDocumentManager = (props) => {
             body
         });
 
-        if (response.status == 201) {
+        if (response.status == 200) {
             window.location.reload();
         }
     };

@@ -28,7 +28,7 @@ async function handler(req, res: NextApiResponse, session) {
       const album = filename.substring(0, slashPos);
       const file = filename.substring(slashPos, filename.length);
       dirPath += album + "/thumbnails" + file;
-      
+
       /*imageBuffer =
         await sharp(imageBuffer)
           .resize({
@@ -37,7 +37,7 @@ async function handler(req, res: NextApiResponse, session) {
             height: 1080,
           })
           .webp({ quality: 70 });*/
-    }else{
+    } else {
       dirPath += filename;
     }
     imageBuffer = fs.readFileSync(dirPath);
@@ -47,8 +47,9 @@ async function handler(req, res: NextApiResponse, session) {
     return;
   }
 
+  let db;
   try {
-    const db = new Database('database/database.db', { verbose: console.log });
+    db = new Database('database/database.db', { verbose: console.log });
     /*const sql = "select photos.filename, albumPasswords.passwordHash from photos inner join albums on photos.id_album=albums.id_album inner join albumPasswords on albums.id_albumPasswords=albumPasswords.id_albumPasswords";
     const stmt = db.prepare(sql);
     const sqlResults: Array<any> = stmt.all();
@@ -57,44 +58,13 @@ async function handler(req, res: NextApiResponse, session) {
   } catch (error) {
     res.status(500).send("Internal Server Error! Error in database!");
     return;
+  } finally {
+    db.close();
   }
 
   res.setHeader('Content-Type', 'image/jpg');
-  res.status(201).send(imageBuffer);
-  /*
-  tady se vubec nemá tahat heslo! To je potřeba přenést do loginforyear
-  naopak se zde má kontrolovat školní rok dané fotky z databáze (pokud je v loggedForYears)
-  const db = new Database('database/database.db', { verbose: console.log });
-  const sql = "select photos.filename, albumPasswords.passwordHash from photos inner join albums on photos.id_album=albums.id_album inner join albumPasswords on albums.id_albumPasswords=albumPasswords.id_albumPasswords";
-  const stmt = db.prepare(sql);
-  const sqlResults: Array<any> = stmt.all();
-  if (sqlResults.length == 1) {
-    const yearPasswordHash = sqlResults[0].passwordHash;
-    const loggedForYears = await req.session.get("loggedForYears");
-    if (loggedForYears.includes(year)) {
-      res.setHeader('Content-Type', 'image/jpg');
-      let imageBuffer;
-      if (req?.query?.minify == "true") {
-        imageBuffer = await (await fetch('https://ms-strazisko.cz/fileserver/getFile.php?file=' + filename)).arrayBuffer();
-        imageBuffer =
-          await sharp(Buffer.from(imageBuffer))
-            .resize({
-              fit: sharp.fit.contain,
-              width: 400
-            })
-            .webp()
-            .toBuffer();
-      } else {
-        imageBuffer = await (await fetch('https://ms-strazisko.cz/fileserver/getFile.php?file=' + filename)).body;
-      }
+  res.status(200).send(imageBuffer);
 
-      res.send(imageBuffer);
-    } else {
-      res.status(401).send("Unauthorized!");
-    }
-  } else {
-    res.status(401).send("Unauthorized!");
-  }*/
 }
 
 export default withIronSession(handler, {

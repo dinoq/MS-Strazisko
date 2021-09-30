@@ -53,7 +53,7 @@ const AlbumDetail: React.FC<{ logged: boolean }> = (props) => {
       return;
     fetch("/api/getYearAlbumsInfo?year=" + year).then((resp) => {
 
-      if (resp.status == 201) {
+      if (resp.status == 200) {
         console.log("JES");
         resp.json().then((json) => {
           console.log('json: ', json);

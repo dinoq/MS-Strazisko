@@ -18,8 +18,9 @@ const handler = async (req, res) => {
     return;
   }
 
+  let db;
   try {
-    const db = new Database('database/database.db', { verbose: console.log });
+    db = new Database('database/database.db', { verbose: console.log });
     let stmt = db.prepare("SELECT url from documents where id_documents=" + id)
     const sqlResults = stmt.all();
     const url = sqlResults[0]?.url;
@@ -35,12 +36,14 @@ const handler = async (req, res) => {
     const fullPath = "./public/dokumenty" + (url.startsWith("/") ? "" : "/") + url;
     await fs.unlinkSync(fullPath); // remove file
 
-    res.status(201).send("Success");
+    res.status(200).send("Success");
     return;
   } catch (error) {
     console.log('error: ', error);
     res.status(500).send("Error during document deletion!");
     return;
+  } finally {
+    db.close();
   }
 }
 

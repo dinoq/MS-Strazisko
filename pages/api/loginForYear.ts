@@ -14,7 +14,7 @@ async function handler(req, res) {
       await req.session.save();
     }
 
-    return res.status(201).send("");
+    return res.status(200).send("");
   } else {
     return res.status(401).send("");
   }

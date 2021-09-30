@@ -19,6 +19,6 @@ export default async (req, res) => {
       //await saveFile(files[key], fields.path);
       
     }
-    return res.status(201).send("");
+    return res.status(200).send("");
   });
 };

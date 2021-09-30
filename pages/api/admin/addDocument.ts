@@ -25,7 +25,7 @@ const handler = async (req, res) => {
     form.parse(req, async function (err, fields, files) {
       await saveFile(files.document, "dokumenty/" + fields.url);
       saveToDB(fields.name, fields.url);
-      res.status(201).send("Saved");
+      res.status(200).send("Saved");
     });
   } catch (error) {
     res.status(500).send("Error during document saving!");
