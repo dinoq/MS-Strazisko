@@ -29,17 +29,47 @@
         cursor: pointer;
     }
     .viewerWrapper {
+        $padding: 3%;
         position: fixed;
-        top: 10%;
-        left: 10%;
-        right: 10%;
-        bottom: 10%;
+        top: $padding;
+        left: $padding;
+        right: $padding;
+        bottom: $padding;
         display: flex;
         align-items: center;
         justify-content: center;
 
+        .arrowWrapper {
+            position: absolute;
+            height: 100%;
+            padding: 30px;
+            transition: all 0.5s;
+            cursor: pointer;
+            background: #0000001f;
+
+            &:hover{
+                background: #000000a1;
+            }
+
+            &.rightArrow{
+                right: 0;
+            }
+
+            .arrow {
+                position: relative;
+                top: 40%;
+                font-size: 4rem;
+                font-weight: bold;
+                color: white;
+                text-shadow: 3px 1px 5px black;
+
+            }
+        }
+
         .photoWrapper {
-            height: fit-content;
+            height: 100%;
+            width: fit-content;
+            position: relative;
 
             .closeBtnWrapper {
                 position: absolute;
@@ -50,12 +80,15 @@
                     $closeBtnSize: 48px;
                     width: $closeBtnSize;
                     height: $closeBtnSize;
-                    background-color: red;
+                    background-color: #ff0000b8;
                     display: flex;
                     justify-content: center;
                     align-items: center;
                     cursor: pointer;
 
+                    &:hover{
+                        background-color: red;
+                    }
                     &::after {
                         content: "X";
                         color: white;

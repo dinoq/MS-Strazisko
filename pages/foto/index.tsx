@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-//import classes from "./foto.module.css";
+//import classes from "./FotoPage.module.css";
 
 import { GetServerSideProps } from "next";
 import { withIronSession } from "next-iron-session";

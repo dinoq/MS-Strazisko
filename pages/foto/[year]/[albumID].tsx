@@ -26,7 +26,7 @@ const AlbumDetail: React.FC<{ logged: boolean }> = (props) => {
 
   const [contextMenuVisible, setContextMenuVisible] = useState(false);
   const [photoViewerVisible, setPhotoViewerVisible] = useState(false);
-  const [viewedPhoto, setViewedPhoto] = useState({});
+  const [viewedPhoto, setViewedPhoto] = useState({ album: "", photoURL: "" });
   const [contextMenuProp, setContextMenuProps] = useState({ top: 0, left: 0 });
 
   const showContextMenu = (e) => {
@@ -54,9 +54,7 @@ const AlbumDetail: React.FC<{ logged: boolean }> = (props) => {
     fetch("/api/getYearAlbumsInfo?year=" + year).then((resp) => {
 
       if (resp.status == 200) {
-        console.log("JES");
         resp.json().then((json) => {
-          console.log('json: ', json);
           let a = json.albums.find((album) => { return album.title === albumID });
           setAlbum(a);
         });
@@ -70,14 +68,10 @@ const AlbumDetail: React.FC<{ logged: boolean }> = (props) => {
   }, [albumID]);
 
   useEffect(() => {
-
     if (album && album.photos) {
       album.photos.forEach(async (photoURL, index, array) => {
-        console.log('photoURL: ', photoURL);
         let i = document.createElement("img");
         i.setAttribute("src", "/api/getPhoto?file=" + photoURL);
-        //await fetch("/api/getPhoto?file=" + photoURL);
-        console.log('photoURL2: ', photoURL);
       })
     }
   }, [album])
@@ -96,6 +90,28 @@ const AlbumDetail: React.FC<{ logged: boolean }> = (props) => {
   const showPhotoViewer = (photoURL) => {
     setViewedPhoto({ album: album.name, photoURL });
     setPhotoViewerVisible(true);
+  }
+
+  const nextPhoto = () => {
+    const actualPhotoIndex = album.photos.findIndex(photo => photo == viewedPhoto.photoURL);
+    let nextPhotoIndex;
+    if (actualPhotoIndex < album.photos.length - 1) {
+      nextPhotoIndex = actualPhotoIndex + 1;
+    } else {
+      nextPhotoIndex = 0;
+    }
+    setViewedPhoto({ album: album.name, photoURL: album.photos[nextPhotoIndex] });
+  }
+
+  const prevPhoto = () => {
+    const actualPhotoIndex = album.photos.findIndex(photo => photo == viewedPhoto.photoURL);
+    let prevPhotoIndex;
+    if (actualPhotoIndex > 0) {
+      prevPhotoIndex = actualPhotoIndex - 1;
+    } else {
+      prevPhotoIndex = album.photos.length - 1;
+    }
+    setViewedPhoto({ album: album.name, photoURL: album.photos[prevPhotoIndex] });
   }
   return (
     <>
@@ -129,7 +145,7 @@ const AlbumDetail: React.FC<{ logged: boolean }> = (props) => {
           </div>
         </div>
       </div>
-      {photoViewerVisible && <PhotoViewer hide={hidePhotoOverlay} viewedPhoto={viewedPhoto} />}
+      {photoViewerVisible && <PhotoViewer hide={hidePhotoOverlay} viewedPhoto={viewedPhoto} nextPhoto={nextPhoto} prevPhoto={prevPhoto} />}
       {contextMenuVisible && <ContextMenu styles={contextMenuProp} />}
     </>
   );
@@ -145,6 +161,15 @@ const ContextMenu = (props) => {
 }
 
 const PhotoViewer = (props) => {
+  document.body.addEventListener('keydown', e => {
+    var key = e.key || e.key || 0;
+    if (e.key === "ArrowRight" || e.code === "ArrowRight") {
+      props.nextPhoto();
+    } else if (e.key === "ArrowLeft" || e.code === "ArrowLeft") {
+      props.prevPhoto();
+    }
+  });
+
   return (
     <div className={classes.photoViewer}>
       <div className={classes.overlay} onClick={props.hide}>
@@ -152,16 +177,23 @@ const PhotoViewer = (props) => {
       </div>
       <div className={classes.viewerWrapper}>
 
-        <div className={classes.leftArrow}></div>
-          <div className={classes.photoWrapper}>
+        <div className={classes.photoWrapper}>
+
+          <div className={classes.arrowWrapper + " " + classes.leftArrow} onClick={props.prevPhoto}>
+            <div className={classes.arrow}>&lt;</div>
+          </div>
+          <div className={classes.arrowWrapper + " " + classes.rightArrow} onClick={props.nextPhoto}>
+            <div className={classes.arrow}>&gt;</div>
+          </div>
+
           <div className={classes.closeBtnWrapper} onClick={props.hide}>
             <div className={classes.closeBtn}></div>
           </div>
-            {// eslint-disable-next-line @next/next/no-img-element
-              <img src={"/api/getPhoto?file=" + props.viewedPhoto.photoURL} alt={"Fotografie z alba \"" + props.viewedPhoto.album + "\""} />}
-          </div>
-      </div><div className={classes.rightArrow}>
+          {// eslint-disable-next-line @next/next/no-img-element
+            <img src={"/api/getPhoto?file=" + props.viewedPhoto.photoURL} alt={"Fotografie z alba \"" + props.viewedPhoto.album + "\""} />}
 
+
+        </div>
       </div>
 
     </div>

@@ -64,9 +64,9 @@ export default function Home(props) {
 
   teachers = [
     { imgSrc: "/img/photo.jpg", name: "Mgr. Eva Výmolová", description: "Ředitelka školky" },
-    { imgSrc: "/img/photo.jpg", name: "Iveta Nováková", description: "Zastupující ředitelka za MD" },
+    { imgSrc: "/img/photo.jpg", name: "Iveta Marková", description: "Zastupující ředitelka za MD" },
     { imgSrc: "/img/photo.jpg", name: "Andrea Dedková", description: "Učitelka" },
-    { imgSrc: "/img/photo.jpg", name: "Petra Kozáková", description: "Výdej stravy" },
+    { imgSrc: "/img/photo.jpg", name: "Petra Kozáková", description: "Školnice, Výdej stravy" },
   ]
 /*
   events = [
