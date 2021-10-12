@@ -71,17 +71,17 @@ const AdminDocumentsPage: NextPage = (props: any) => {
             })
 
         })
-
+/*
     bodyRows.unshift({
         items: [{
             colspan: 4,
             content: (<>
-                {!fileManagerVisible && <span className={"link " + "add-document-btn"} onClick={showFileManager}>Přidat nový dokument</span>}
+                {!fileManagerVisible && <span className={"link " + "add-document-btn mb-3"} onClick={showFileManager}>Přidat nový dokument</span>}
                 {fileManagerVisible && <NewDocumentManager hideFileManager={hideFileManager} />}
             </>),
             className: "text-center"
         }]
-    })
+    })*/
 
     console.log('bodyRows: ', bodyRows);
     return (
@@ -95,6 +95,8 @@ const AdminDocumentsPage: NextPage = (props: any) => {
             <main className={""}>
                 <h1 className="text-center mb-4">Dokumenty</h1>
                 <div className={"form-wrapper"}>
+                    {!fileManagerVisible && <span className={"link " + "add-document-btn mb-3"} onClick={showFileManager}>Přidat nový dokument</span>}
+                    {fileManagerVisible && <NewDocumentManager hideFileManager={hideFileManager} />}
                     <AppTable headerItems={headerItems} bodyRows={bodyRows} />
                     {modalVisible && <Modal deletedDocumentName={deletedDocumentName} cancelDeletion={cancelDeletion} deleteDocument={deleteDocument} />}
                 </div>
@@ -149,7 +151,7 @@ const NewDocumentManager = (props) => {
         }
     }
     return (
-        <div>
+        <div className="bordered mb-3">
             <form className="d-flex flex-column" onSubmit={uploadToServer}>
                 <input type="file" onChange={fileChange} name="file" id="file" className={"hidden-file-input"} />
                 <div className="d-flex justify-content-center">

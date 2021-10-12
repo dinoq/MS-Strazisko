@@ -5,6 +5,18 @@ import React, { useEffect, useState } from 'react'
 import AppTable from '../../components/Table/Table'
 import classes from './foto.module.scss'
 
+
+enum ComponentTypes {
+  INPUT,
+  SELECTBOX
+}
+
+enum ShownLevel {
+  YEARS,
+  ALBUMS,
+  PHOTOS
+}
+
 const AdminPhotosPage: NextPage = (props: any) => {
   const [breadcrumbItems, setBreadcrumbItems] = useState([]);
   const [yearEntries, setYearEntries] = useState([]);
@@ -12,9 +24,7 @@ const AdminPhotosPage: NextPage = (props: any) => {
   const [photoEntries, setPhotoEntries] = useState([]);
   const [currentAlbum, setCurrentAlbum] = useState("")
 
-  let showYears = breadcrumbItems.length == 0;
-  let showAlbums = breadcrumbItems.length == 1;
-  let showPhotos = breadcrumbItems.length == 2;
+  let shownLevel = (breadcrumbItems.length == 0) ? ShownLevel.YEARS : (breadcrumbItems.length == 1) ? ShownLevel.ALBUMS : ShownLevel.PHOTOS;
 
   useEffect(() => {
     fetch("/api/admin/years").then((resp) => {
@@ -49,7 +59,9 @@ const AdminPhotosPage: NextPage = (props: any) => {
 
   const albumClicked = (album) => {
     setCurrentAlbum(album.title);
-    fetch("/api/admin/getPhotos?albumID=" + album.id).then((resp) => {
+    fetch(
+      "/api/admin/getPhotos?albumID=" + album.id,
+      {method: "GET"}).then((resp) => {
       if (resp.status == 200) {
         resp.json().then((json) => {
           setPhotoEntries(json);
@@ -70,27 +82,27 @@ const AdminPhotosPage: NextPage = (props: any) => {
 
   const [newObjectManagerVisible, setNewObjectManagerVisible] = useState(false)
 
-  const showNewObjectManager = ()=>{
+  const showNewObjectManager = () => {
     setNewObjectManagerVisible(true)
   }
-  const hideNewObjectManager = ()=>{
-    setNewObjectManagerVisible(false)    
+  const hideNewObjectManager = () => {
+    setNewObjectManagerVisible(false)
   }
 
-  let title = (showYears)? "Přidat nový školní rok" : (showAlbums)? "Přidat nové album" : "Přidat fotky";
-  let colspan = (headerItems.length)? headerItems.length : 1;
-  
+  let title = (shownLevel == ShownLevel.YEARS) ? "Přidat nový školní rok" : (shownLevel == ShownLevel.ALBUMS) ? "Přidat nové album" : "Přidat fotky";
+  let colspan = (headerItems.length) ? headerItems.length : 1;
+  /*
   bodyRows.unshift({
     items: [{
         colspan,
         content: (<>
-            {!newObjectManagerVisible && <span className={"link " + "add-document-btn"} onClick={showNewObjectManager}>{title}</span>}
+            {!newObjectManagerVisible && <span className={"link " + "add-document-btn mb-3"} onClick={showNewObjectManager}>{title}</span>}
             {newObjectManagerVisible && <NewObjectManager hideFileManager={hideNewObjectManager} />}
         </>),
         className: "text-center"
     }]
 })
-
+*/
   return (
     <div className={""}>
       <Head>
@@ -103,6 +115,8 @@ const AdminPhotosPage: NextPage = (props: any) => {
         <Breadcrumb items={breadcrumbItems} setItems={setBreadcrumbItems} />
 
         <div className={"form-wrapper"}>
+          {!newObjectManagerVisible && <span className={"link " + "add-document-btn mb-3"} onClick={showNewObjectManager}>{title}</span>}
+          {newObjectManagerVisible && <NewObjectManager hideFileManager={hideNewObjectManager} headerItems={headerItems} shownLevel={shownLevel} />}
           <AppTable headerItems={headerItems} bodyRows={bodyRows} />
         </div>
       </main>
@@ -112,24 +126,32 @@ const AdminPhotosPage: NextPage = (props: any) => {
 
 
 const getTableHeaderItems = (index) => {
+  const getYears = () => {
+    let years = [];
+    let actualYear = new Date().getFullYear();
+    for (let i = 0; i < 10; i++) {
+      years.push((actualYear - i) + "/" + (actualYear + 1 - i));
+    }
+    return years;
+  }
   if (index == 0) { // Years...
     return [
-      { content: "Školní rok" },
-      { content: "Heslo" },
+      { content: "Školní rok", editable: true, type: ComponentTypes.SELECTBOX, values: getYears() },
+      { content: "Heslo", editable: true, type: ComponentTypes.INPUT, inputType: "password" },
       { content: "Akce" },
     ]
   } else if (index == 1) { // Albums
     return [
       { content: "ID" },
-      { content: "Datum" },
-      { content: "URL" },
-      { content: "Název" },
+      { content: "Datum", editable: true, type: ComponentTypes.INPUT, inputType: "date" },
+      { content: "URL", editable: true, type: ComponentTypes.INPUT, inputType: "text" },
+      { content: "Název", editable: true, type: ComponentTypes.INPUT, inputType: "text" },
       { content: "Akce" },
     ]
   } else if (index == 2) { // Photos
     return [
       { content: "ID" },
-      { content: "URL" },
+      { content: "URL", editable: true, type: ComponentTypes.INPUT, inputType: "text" },
       { content: "Náhled" },
       { content: "Akce" },
     ]
@@ -156,7 +178,7 @@ const getTableRows = (index, yearEntries, albumEntries, photoEntries, yearClicke
       return ({
         items: [
           { content: entry.id },
-          { content: date.getDate()+". "+(date.getMonth()+1)+". " + date.getFullYear() },
+          { content: date.getDate() + ". " + (date.getMonth() + 1) + ". " + date.getFullYear() },
           { content: entry.title },
           { content: <span onClick={albumClicked.bind(this, entry)}> {entry.name} </span>, className: "link" },
           { className: "actions", content: (<><span className={"link-danger"} onClick={null}>Smazat</span><span className={"link"}>Přejmenovat</span></>) }
@@ -170,8 +192,8 @@ const getTableRows = (index, yearEntries, albumEntries, photoEntries, yearClicke
       return ({
         items: [
           { content: entry.id },
-          { content: (<a href={"/api/getPhoto?file="+album+"/"+entry.filename} target="_blank">{entry.filename}</a>), className: "link" },
-          { content: <a href={"/api/getPhoto?file="+album+"/"+entry.filename} target="_blank"><img className={classes.imgPreview} src={"/api/getPhoto?file="+album+"/"+entry.filename+"&minify"} alt="Náhled obrázku"/></a>},
+          { content: (<a href={"/api/getPhoto?file=" + album + "/" + entry.filename} target="_blank">{entry.filename}</a>), className: "link" },
+          { content: <a href={"/api/getPhoto?file=" + album + "/" + entry.filename} target="_blank"><img className={classes.imgPreview} src={"/api/getPhoto?file=" + album + "/" + entry.filename + "&minify"} alt="Náhled obrázku" /></a> },
           { className: "actions", content: (<><span className={"link-danger"} onClick={null}>Smazat</span><span className={"link"}>Přejmenovat</span></>) }
         ]
       })
@@ -221,59 +243,97 @@ const NewObjectManager = (props) => {
   const [urlName, setUrlName] = useState("");
 
   const fileChange = (event) => {
-      if (event?.target?.files[0]?.name?.length) {
-          const f = event.target.files[0];
-          setFile(f);
-          setUrlName(f.name);
-          setFileLabel("Vybráno: " + f.name);
-          if (fileName === initFileName || fileName === "") {
-              setFileName(f.name);
-          }
+    if (event?.target?.files[0]?.name?.length) {
+      const f = event.target.files[0];
+      setFile(f);
+      setUrlName(f.name);
+      setFileLabel("Vybráno: " + f.name);
+      if (fileName === initFileName || fileName === "") {
+        setFileName(f.name);
       }
+    }
   }
 
 
-  const uploadToServer = async (event) => {
-      event.preventDefault();
-      const body = new FormData();
-      body.append("document", file);
-      body.append("url", urlName);
-      body.append("name", fileName);
-      const response = await fetch("/api/admin/addDocument", {
-          method: "POST",
-          body
-      });
+  const formSubmitted = async (event) => {
+    event.preventDefault();
+    let level = props.shownLevel;
+    console.log('level: ', level);
+    let url = "";
+    if (level == ShownLevel.YEARS) {
+      url = "years";
+    } else if (level == ShownLevel.ALBUMS) {
+      url = "albums";
+    } else if (level == ShownLevel.PHOTOS) {
+      url = "photos";
+    } else {
+      return;
+    }
 
-      if (response.status == 200) {
-          window.location.reload();
-      }
+    
+    const body = new FormData();
+    /*body.append("document", file);
+    body.append("url", urlName);
+    body.append("name", fileName);*/
+    const response = await fetch("/api/admin/" + url, {
+      method: "POST",
+      body
+    });
+
+    if (response.status == 200) {
+      window.location.reload();
+    }
   };
 
   const fileNameChanged = (e) => {
-      setFileName(e.target.value);
+    setFileName(e.target.value);
   }
 
   const clearFileName = (e) => {
-      if (fileName === initFileName) {
-          setFileName("");
-      }
+    if (fileName === initFileName) {
+      setFileName("");
+    }
   }
+
+  console.log("props.headerItems", props.headerItems);
   return (
-      <div>
-          <form className="d-flex flex-column" onSubmit={uploadToServer}>
-              <input type="file" onChange={fileChange} name="file" id="file" className={"hidden-file-input"} />
-              <div className="d-flex justify-content-center">
-                  <label htmlFor="file" className="hidden-file-input-label">{fileLabel}</label>
-              </div>
-              <div className="d-flex justify-content-center">
-                  <input type="text" onChange={fileNameChanged} onClick={clearFileName} name="file-name" id="file-name" className={classes.fileName} value={fileName} placeholder={initFileName} />
-              </div>
-              <div className="d-flex justify-content-center">
-                  <input className="button" type="submit" value="Uložit" />
-                  <input className="button button-danger" onClick={props.hideFileManager} type="button" value="Zrušit" />
-              </div>
-          </form>
-      </div>
+    <div>
+      <form className="d-flex flex-column bordered p-2 mb-3" onSubmit={formSubmitted}>
+
+        {props.headerItems.map(((item, i) => {
+          if (item.editable) {
+            if (item.type == ComponentTypes.INPUT) {
+              return (
+                <div key={"input-" + i}>
+                  <div className="d-flex justify-content-center">
+                    <input type={item.inputType ? item.inputType : "text"} name="file-name" id="file-name" className={classes.fileName} placeholder={item.content} />
+                  </div>
+                </div>
+              );
+            } else if (item.type == ComponentTypes.SELECTBOX) {
+              return (
+                <select key={"selectbox-" + i} name="cars" id="cars">
+                  {item.values.map((val, j) => {
+                    return <option key={"selectbox-" + i + "-option-" + j} value={val}>{val}</option>
+                  })}
+                </select>
+              );
+            } else {
+              return (
+                <div key={"component-" + i}>
+
+                </div>
+              );
+            }
+          }
+        }))}
+
+        <div className="d-flex justify-content-center">
+          <input className="button" type="submit" value="Uložit" />
+          <input className="button button-danger" onClick={props.hideFileManager} type="button" value="Zrušit" />
+        </div>
+      </form>
+    </div>
   )
 }
 

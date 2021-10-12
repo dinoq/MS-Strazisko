@@ -12,8 +12,14 @@
   .form-wrapper {
     display: flex;
     justify-content: center;
+    align-items: center;
     padding: 20px;
+    flex-direction: column;
 
+    & > div,
+    & > table {
+      width: fit-content;
+    }
     .actions {
       span {
         cursor: pointer;
@@ -29,12 +35,14 @@
     user-select: none;
   }
 
-  .link, .link>* {
+  .link,
+  .link > * {
     color: #a7caff;
     cursor: pointer;
 
-    &:hover, &:focus{
-      color: #7BBFF1;
+    &:hover,
+    &:focus {
+      color: #7bbff1;
       //-2886414
     }
   }
@@ -113,10 +121,14 @@
         justify-content: center;
         margin-top: 15px;
 
-        .btn:not(:last-child){
+        .btn:not(:last-child) {
           margin-right: 15px;
         }
       }
     }
+  }
+
+  .bordered {
+    border: 1px solid #777777;
   }
 }
