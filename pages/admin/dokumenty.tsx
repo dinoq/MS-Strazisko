@@ -131,6 +131,7 @@ const NewDocumentManager = (props) => {
         body.append("document", file);
         body.append("url", urlName);
         body.append("name", fileName);
+        body.append("file-name", "fileNameeeeeeeee");
         const response = await fetch("/api/admin/addDocument", {
             method: "POST",
             body

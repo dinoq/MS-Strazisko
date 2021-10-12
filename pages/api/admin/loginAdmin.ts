@@ -4,6 +4,7 @@ async function handler(req, res) {
   //TODO získat heslo pro daný rok z DB
   
   const { username, password } = req.body;
+  console.log('req.body: ', req.body);
   if (req.method === "POST" && password === "skolkaAdmin1" && username && username === "admin") {
     req.session.set("adminLogged", true); 
     await req.session.save();

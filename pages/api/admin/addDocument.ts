@@ -10,9 +10,6 @@ export const config = {
 };
 
 const handler = async (req, res) => {
-  const fileName = req.query["name"];
-  const fileURL = req.query["url"];
-
   const adminLogged: Array<any> = await req.session.get("adminLogged");
   if (!adminLogged) {
     res.status(401).send("Unauthorized!");
