@@ -16,7 +16,7 @@ const AppTable = (props) => {
       </thead>
       <tbody>
             {rows.map((row, index, array) => {
-                return <tr key={"tbtr-"+index} className={row.classes}>{row.items.map((item, index, array) => {
+                return <tr key={"tbtr-"+index} className={row.selected? "selected-row" : ""}>{row.items.map((item, index, array) => {
                     return <td colSpan={item.colspan? item.colspan : 1} key={"tbtrtd-"+index} className={item.className? item.className : ""}>{item.content}</td>
                 })}
                 </tr>

@@ -2,6 +2,7 @@ import type { NextPage } from 'next'
 import { withIronSession } from 'next-iron-session'
 import Head from 'next/head'
 import React, { useEffect, useState } from 'react'
+import SaveDialog from '../../components/admin/SaveDialog'
 import AppTable from '../../components/Table/Table'
 import classes from './foto.module.scss'
 
@@ -18,12 +19,11 @@ enum ShownLevel {
 }
 
 const AdminPhotosPage: NextPage = (props: any) => {
-  const [breadcrumbItems, setBreadcrumbItems] = useState([]);
+  const [breadcrumbItems, setBreadcrumbItemsState] = useState([]);
   const [yearEntries, setYearEntries] = useState([]);
   const [albumEntries, setAlbumEntries] = useState([]);
   const [photoEntries, setPhotoEntries] = useState([]);
-  const [currentAlbum, setCurrentAlbum] = useState("")
-  const [currentObject, setCurrentObject] = useState(null)
+  const [DBObject, setDBObject] = useState({ actual: null, toSet: null, edited: null })
 
   let shownLevel = (breadcrumbItems.length == 0) ? ShownLevel.YEARS : (breadcrumbItems.length == 1) ? ShownLevel.ALBUMS : ShownLevel.PHOTOS;
 
@@ -41,7 +41,13 @@ const AdminPhotosPage: NextPage = (props: any) => {
     });
   }, []);
 
+  const setBreadcrumbItems = (items) => {
+    hideObjectManager();
+    setBreadcrumbItemsState(items);
+  }
+
   const itemClickedHandler = async (item) => {
+    console.log('item: ', item);
     let url = "";
     if (shownLevel == ShownLevel.YEARS) {
       url = "getAlbums?year=" + item.year;
@@ -56,12 +62,13 @@ const AdminPhotosPage: NextPage = (props: any) => {
 
     if (resp.status == 200) {
       let json = await resp.json();
+      console.log('json: ', json);
       if (shownLevel == ShownLevel.YEARS) {
         setAlbumEntries(json);
-        setBreadcrumbItems(prevState => [...prevState, item.year]);
+        setBreadcrumbItemsState(prevState => [...prevState, item.year]);
       } else if (shownLevel == ShownLevel.ALBUMS) {
         setPhotoEntries(json);
-        setBreadcrumbItems(prevState => [...prevState, item.name]);
+        setBreadcrumbItemsState(prevState => [...prevState, item.name]);
       }
     } else {
       let text = await resp.text();
@@ -70,7 +77,6 @@ const AdminPhotosPage: NextPage = (props: any) => {
   }
 
   const deleteItemHandler = async (item) => {
-    console.log('item: ', item);
     let url = "";
     let body = {};
     if (shownLevel == ShownLevel.YEARS) {
@@ -101,24 +107,45 @@ const AdminPhotosPage: NextPage = (props: any) => {
     }
   }
 
-  const changeItemHandler = (item)=>{
-    setCurrentObject(item);
-    showObjectManager();
+
+  const [saveDialogVisible, setSaveDailogVisible] = useState(false);
+
+  const changeItemHandler = (item) => {
+    if (!DBObject.actual || DBObject.actual == DBObject.edited) {
+      setDBObject(prevState => {
+        return { ...prevState, actual: item, edited: item }
+      });
+      showObjectManager();
+    } else {
+      setSaveDailogVisible(true);
+      setDBObject(prevState => {
+        return { ...prevState, toSet: item };
+      });
+    }
+  }
+
+  const setNextDBObject = () => {
+    setDBObject(prevState => {
+      return { ...prevState, actual: prevState.toSet, edited: prevState.toSet, toSet: null };
+    });
+    setSaveDailogVisible(false);
   }
 
   const headerItems: Array<any> = getTableHeaderItems(breadcrumbItems.length);
-  const bodyRows: Array<any> = getTableRows(breadcrumbItems.length, yearEntries, albumEntries, photoEntries, itemClickedHandler, deleteItemHandler, changeItemHandler, currentAlbum);
+  const bodyRows: Array<any> = getTableRows(breadcrumbItems.length, yearEntries, albumEntries, photoEntries, itemClickedHandler, deleteItemHandler, changeItemHandler, DBObject);
 
   const [objectManagerVisible, setObjectManagerVisible] = useState(false)
 
   const showObjectManager = () => {
     setObjectManagerVisible(true)
   }
+
   const hideObjectManager = () => {
     setObjectManagerVisible(false);
-    setCurrentObject(null);
+    setDBObject(prevState => {
+      return { ...prevState, actual: null }
+    });
   }
-
   let title = (shownLevel == ShownLevel.YEARS) ? "Přidat nový školní rok" : (shownLevel == ShownLevel.ALBUMS) ? "Přidat nové album" : "Přidat fotky";
 
   return (
@@ -134,8 +161,9 @@ const AdminPhotosPage: NextPage = (props: any) => {
 
         <div className={"form-wrapper"}>
           {!objectManagerVisible && <span className={"link " + "add-document-btn mb-3"} onClick={showObjectManager}>{title}</span>}
-          {objectManagerVisible && <ObjectManager hideObjectManager={hideObjectManager} headerItems={headerItems} shownLevel={shownLevel} currentObject={currentObject}/>}
+          {objectManagerVisible && <ObjectManager hideObjectManager={hideObjectManager} headerItems={headerItems} shownLevel={shownLevel} DBObject={DBObject} setDBObject={setDBObject} />}
           <AppTable headerItems={headerItems} bodyRows={bodyRows} />
+          {saveDialogVisible && <SaveDialog onSave={null} onDontSave={setNextDBObject} onCancel={() => { setSaveDailogVisible(false) }} />}
         </div>
       </main>
     </div>
@@ -177,7 +205,7 @@ const getTableHeaderItems = (index) => {
 }
 
 
-const getTableRows = (index, yearEntries, albumEntries, photoEntries, itemClickedHandler, deleteItemHandler, changeItemHandler, album) => {
+const getTableRows = (index, yearEntries, albumEntries, photoEntries, itemClickedHandler, deleteItemHandler, changeItemHandler, DBObject) => {
   if (index == 0) { // Years...
     return yearEntries.map((entry, index) => {
       return ({
@@ -185,7 +213,8 @@ const getTableRows = (index, yearEntries, albumEntries, photoEntries, itemClicke
           { content: <span onClick={itemClickedHandler.bind(this, entry)}> {entry.year} </span>, className: "link" },
           { content: entry.password },
           { className: "actions", content: (<><span className={"link-danger"} onClick={deleteItemHandler.bind(this, entry)}>Smazat</span><span className={"link"} onClick={changeItemHandler.bind(this, entry)}>Změnit heslo</span></>) }
-        ]
+        ],
+        selected: JSON.stringify(DBObject.actual) == JSON.stringify(entry)
       })
     })
 
@@ -200,20 +229,23 @@ const getTableRows = (index, yearEntries, albumEntries, photoEntries, itemClicke
           { content: entry.title },
           { content: <span onClick={itemClickedHandler.bind(this, entry)}> {entry.name} </span>, className: "link" },
           { className: "actions", content: (<><span className={"link-danger"} onClick={deleteItemHandler.bind(this, entry)}>Smazat</span><span className={"link"} onClick={changeItemHandler.bind(this, entry)}>Přejmenovat</span></>) }
-        ]
+        ],
+        selected: JSON.stringify(DBObject.actual) == JSON.stringify(entry)
       })
     })
 
   } else if (index == 2) { // Photos
     return photoEntries.map((entry, index) => {
+      console.log('entryentry: ', albumEntries[0]);
       return ({
         items: [
           { content: entry.id },
-          { content: (<a href={"/api/getPhoto?file=" + album + "/" + entry.filename} target="_blank" rel="noreferrer">{entry.filename}</a>), className: "link" },
+          { content: (<a href={"/api/getPhoto?file=" + albumEntries[0].title + "/" + entry.filename} target="_blank" rel="noreferrer">{entry.filename}</a>), className: "link" },
           // eslint-disable-next-line @next/next/no-img-element
-          { content: <a href={"/api/getPhoto?file=" + album + "/" + entry.filename} target="_blank" rel="noreferrer"><img className={classes.imgPreview} src={"/api/getPhoto?file=" + album + "/" + entry.filename + "&minify"} alt="Náhled obrázku" /></a> },
+          { content: <a href={"/api/getPhoto?file=" + albumEntries[0].title + "/" + entry.filename} target="_blank" rel="noreferrer"><img className={classes.imgPreview} src={"/api/getPhoto?file=" + albumEntries[0].title + "/" + entry.filename + "&minify"} alt="Náhled obrázku" /></a> },
           { className: "actions", content: (<><span className={"link-danger"} onClick={deleteItemHandler.bind(this, entry)}>Smazat</span><span className={"link"} onClick={changeItemHandler.bind(this, entry)}>Přejmenovat</span></>) }
-        ]
+        ],
+        selected: JSON.stringify(DBObject.actual) == JSON.stringify(entry)
       })
     })
 
@@ -229,9 +261,7 @@ const Breadcrumb = (props) => {
   }
 
   const itemClicked = (index) => {
-    props.setItems(prevState => {
-      return prevState.slice(0, index + 1);
-    });
+    props.setItems(items.slice(0, index + 1));
   }
   return (
     <div className={classes.breadcrumb}>
@@ -254,35 +284,35 @@ const Breadcrumb = (props) => {
 
 
 const ObjectManager = (props) => {
-/*
-  const initFileName = "Název souboru";
-  const [fileName, setFileName] = useState(initFileName);
-  const [urlName, setUrlName] = useState("");
-  const [fileLabel, setFileLabel] = useState("Vyberte soubor")
-  const [file, setFile] = useState(null);
-
-  const fileChange = (event) => {
-    if (event?.target?.files[0]?.name?.length) {
-      const f = event.target.files[0];
-      setFile(f);
-      setUrlName(f.name);
-      setFileLabel("Vybráno: " + f.name);
-      if (fileName === initFileName || fileName === "") {
-        setFileName(f.name);
+  /*
+    const initFileName = "Název souboru";
+    const [fileName, setFileName] = useState(initFileName);
+    const [urlName, setUrlName] = useState("");
+    const [fileLabel, setFileLabel] = useState("Vyberte soubor")
+    const [file, setFile] = useState(null);
+  
+    const fileChange = (event) => {
+      if (event?.target?.files[0]?.name?.length) {
+        const f = event.target.files[0];
+        setFile(f);
+        setUrlName(f.name);
+        setFileLabel("Vybráno: " + f.name);
+        if (fileName === initFileName || fileName === "") {
+          setFileName(f.name);
+        }
       }
     }
-  }
-  
-  const fileNameChanged = (e) => {
-    setFileName(e.target.value);
-  }
-
-  const clearFileName = (e) => {
-    if (fileName === initFileName) {
-      setFileName("");
+    
+    const fileNameChanged = (e) => {
+      setFileName(e.target.value);
     }
-  }
-  */
+  
+    const clearFileName = (e) => {
+      if (fileName === initFileName) {
+        setFileName("");
+      }
+    }
+    */
 
 
   const formSubmitted = async (event) => {
@@ -293,7 +323,6 @@ const ObjectManager = (props) => {
     let body = {};
     if (level == ShownLevel.YEARS) {
       url = "years";
-      console.log("QWEWRTEZTSERD", document.getElementById("school-year"));
       body["year"] = (document.getElementById("school-year") as HTMLInputElement).value;
       body["pwd"] = (document.getElementById("school-year-pwd") as HTMLSelectElement).value;
     } else if (level == ShownLevel.ALBUMS) {
@@ -303,12 +332,12 @@ const ObjectManager = (props) => {
     } else {
       return;
     }
-    if(props.currentObject){ // In edit mode
+    if (props.DBObject.actual) { // In edit mode
 
-    }else{
+    } else {
 
     }
-    const method = (props.currentObject)? "PATCH" : "POST";
+    const method = (props.DBObject.actual) ? "PATCH" : "POST";
     const response = await fetch("/api/admin/" + url,
       {
         method,
@@ -322,26 +351,62 @@ const ObjectManager = (props) => {
     }
   };
 
+  const updateEditedDBObject = (e) => {
+    console.log('e.target.value: ', e.target.value);
+    props.setDBObject(prevState => {
+      return { ...prevState, edited: { ...prevState.edited, password: e.target.value } };
+    })
+  }
 
-  console.log("currentObject", props.currentObject);
+  let level = props.shownLevel;
+  let formContent;
+  if (level == ShownLevel.YEARS) {
+
+    const getYears = () => {
+      let years = [];
+      let actualYear = new Date().getFullYear();
+      for (let i = 0; i < 10; i++) {
+        years.push((actualYear - i) + "/" + (actualYear + 1 - i));
+      }
+      return years;
+    }
+    let years = getYears();
+    formContent = (
+      <>
+        <select id="school-year">
+          {years.map((val, i) => {
+            return <option key={"selectbox-option-" + i} value={val}>{val}</option>
+          })}
+        </select>
+        <div className="d-flex justify-content-center">
+          <input type="password" id="school-year-pwd" className={classes.fileName} placeholder={"Heslo"} value={props.DBObject.edited.password} onChange={updateEditedDBObject} />
+        </div>
+      </>
+    )
+
+  } else if (level == ShownLevel.ALBUMS) {
+  } else if (level == ShownLevel.PHOTOS) {
+  }
+
+  console.log('props.DBObject.actual: ', props.DBObject.actual);
   return (
     <div>
       <form className="d-flex flex-column bordered p-2 mb-3" onSubmit={formSubmitted}>
-
-        {props.headerItems.map(((item, i) => {
+        {formContent}
+        {/*props.headerItems.map(((item, i) => {
           if (item.editable) {
             if (item.type == ComponentTypes.INPUT) {
               return (
                 <div key={"input-" + i}>
                   <div className="d-flex justify-content-center">
-                    <input type={item.inputType ? item.inputType : "text"} id={item.id ? item.id : ""} className={classes.fileName} placeholder={item.content} defaultValue={(props.currentObject && item.objectParamName)? props.currentObject[item.objectParamName] : ""}/>
+                    <input type={item.inputType ? item.inputType : "text"} id={item.id ? item.id : ""} className={classes.fileName} placeholder={item.content} defaultValue={(props.DBObject.actual && item.objectParamName)? props.DBObject.actual[item.objectParamName] : ""}/>
                   </div>
                 </div>
               );
             } else if (item.type == ComponentTypes.SELECTBOX) {
-              if(props.currentObject){
+              if(props.DBObject.actual){
                 return (
-                  <select key={"selectbox-" + i} id={item.id ? item.id : ""} value={(item.objectParamName)? props.currentObject[item.objectParamName] : item.values[0]} disabled={!item.editableInEditMode}>
+                  <select key={"selectbox-" + i} id={item.id ? item.id : ""} value={(item.objectParamName)? props.DBObject.actual[item.objectParamName] : item.values[0]} disabled={!item.editableInEditMode}>
                     {item.values.map((val, j) => {
                       return <option key={"selectbox-" + i + "-option-" + j} value={val}>{val}</option>
                     })}
@@ -364,7 +429,7 @@ const ObjectManager = (props) => {
               );
             }
           }
-        }))}
+        }))*/}
 
         <div className="d-flex justify-content-center">
           <input className="button" type="submit" value="Uložit" />
@@ -374,6 +439,8 @@ const ObjectManager = (props) => {
     </div>
   )
 }
+//"řetězec".normalize("NFD").replace(/[\u0300-\u036f]/g, "").replaceAll(" ", "-").toLowerCase() diakritika...
+
 
 export const getServerSideProps = withIronSession(
   async ({ req, res }) => {

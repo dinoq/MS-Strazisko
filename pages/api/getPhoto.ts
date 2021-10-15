@@ -43,7 +43,7 @@ async function handler(req, res: NextApiResponse, session) {
     }
     imageBuffer = fs.readFileSync(dirPath);
   } catch (error) {
-    console.log('error: ', error);
+    //console.log('error: ', error);
     res.status(404).send("Not found!");
     return;
   }

@@ -7,7 +7,7 @@ import { withIronSession } from "next-iron-session";
 
 const YearPage: React.FC<{ logged: boolean }> = (props) => {
   const router = useRouter();
-  const { year } = router.query;
+  let year  = (router.query.year as string).replace("_", "/");
 
   return (
     <>
@@ -163,7 +163,7 @@ const Gallery = (props) => {
 export const getServerSideProps = withIronSession(
   async ({ req, res }) => {
     const fotoIndex = req.url.indexOf("foto/") + 5;
-    const pageYear = req.url.substring(fotoIndex, fotoIndex + 9);
+    const pageYear = req.url.substring(fotoIndex, fotoIndex + 9).replace("_", "/");
     const loggedForYears: Array<any> = req.session.get("loggedForYears");
 
     if (

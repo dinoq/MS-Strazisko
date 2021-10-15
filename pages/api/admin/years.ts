@@ -24,7 +24,7 @@ const handler = async (req, res) => {
 
     for (const sqlResult of sqlResults) {
       let entry: any = {};
-      entry["year"] = sqlResult.id_albumPasswords.replace("_", "/");
+      entry["year"] = sqlResult.id_albumPasswords;
       entry["password"] = sqlResult.passwordHash;
 
       years.push(entry);
@@ -37,7 +37,7 @@ const handler = async (req, res) => {
     const pwd = req.body["pwd"];
     try {
       const stmt = db.prepare('INSERT INTO albumPasswords (id_albumPasswords, passwordHash) VALUES (?, ?)');
-      const info = stmt.run(year.replace('/', '_'), pwd);
+      const info = stmt.run(year, pwd);
     } catch (error) {
       db.close();
       return res.status(500).send("ERROR! " + (process.env.NODE_ENV === "production" ? "" : error));
@@ -52,7 +52,7 @@ const handler = async (req, res) => {
 
     try {
       const stmt = db.prepare('UPDATE albumPasswords SET passwordHash = ? WHERE id_albumPasswords = ?');
-      const info = stmt.run(pwd, year.replace('/', '_'));
+      const info = stmt.run(pwd, year);
     } catch (error) {
       db.close();
       return res.status(500).send("ERROR! " + (process.env.NODE_ENV === "production" ? "" : error));
@@ -66,7 +66,7 @@ const handler = async (req, res) => {
     try {
       const sql = "DELETE FROM albumPasswords WHERE id_albumPasswords=?";
       const stmt = db.prepare(sql);
-      stmt.run(year.replace('/', '_'));
+      stmt.run(year);
     } catch (error) {
       db.close();
       return res.status(500).send("ERROR! " + (process.env.NODE_ENV === "production" ? "" : error));
