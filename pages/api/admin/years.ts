@@ -47,8 +47,6 @@ const handler = async (req, res) => {
   } else if (req.method == "PATCH") {
     const year = req.body["year"]; // In format XXXX/YYYY
     const pwd = req.body["pwd"];
-    console.log('pwd: ', pwd);
-    console.log('year: ', year);
 
     try {
       const stmt = db.prepare('UPDATE albumPasswords SET passwordHash = ? WHERE id_albumPasswords = ?');
@@ -61,7 +59,6 @@ const handler = async (req, res) => {
     return res.status(200).send("Success!");
   } else if (req.method == "DELETE") {
     const year = req.body["year"]; // In format XXXX/YYYY
-    console.log('year: ', year);
 
     try {
       const sql = "DELETE FROM albumPasswords WHERE id_albumPasswords=?";

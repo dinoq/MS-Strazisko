@@ -21,6 +21,11 @@ const AppTable = (props) => {
                 })}
                 </tr>
             })}
+            {(!rows || !rows.length) &&
+            <tr>
+              <td colSpan={headerItems.length} className="text-center">Nenalezena žádná data!</td>
+            </tr>            
+            }
       </tbody>
     </table>
     </>

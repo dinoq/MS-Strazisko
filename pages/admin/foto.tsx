@@ -18,12 +18,19 @@ enum ShownLevel {
   PHOTOS
 }
 
+enum ObjectManagerMode {
+  NEW_ENTRY,
+  EDITING_ENTRY
+}
+
 const AdminPhotosPage: NextPage = (props: any) => {
   const [breadcrumbItems, setBreadcrumbItemsState] = useState([]);
   const [yearEntries, setYearEntries] = useState([]);
   const [albumEntries, setAlbumEntries] = useState([]);
   const [photoEntries, setPhotoEntries] = useState([]);
   const [DBObject, setDBObject] = useState({ actual: null, toSet: null, edited: null })
+  const [objectManagerMode, setObjectManagerMode] = useState(ObjectManagerMode.NEW_ENTRY);
+
 
   let shownLevel = (breadcrumbItems.length == 0) ? ShownLevel.YEARS : (breadcrumbItems.length == 1) ? ShownLevel.ALBUMS : ShownLevel.PHOTOS;
 
@@ -47,7 +54,6 @@ const AdminPhotosPage: NextPage = (props: any) => {
   }
 
   const itemClickedHandler = async (item) => {
-    console.log('item: ', item);
     let url = "";
     if (shownLevel == ShownLevel.YEARS) {
       url = "getAlbums?year=" + item.year;
@@ -107,20 +113,21 @@ const AdminPhotosPage: NextPage = (props: any) => {
     }
   }
 
-
-  const [saveDialogVisible, setSaveDailogVisible] = useState(false);
+  const [saveDialogVisible, setSaveDialogVisible] = useState(false);
 
   const changeItemHandler = (item) => {
-    if (!DBObject.actual || DBObject.actual == DBObject.edited) {
+    if(isEmptyObject(DBObject.actual, shownLevel) || DBObject.actual == DBObject.edited){
       setDBObject(prevState => {
         return { ...prevState, actual: item, edited: item }
       });
+      setObjectManagerMode(ObjectManagerMode.EDITING_ENTRY);
       showObjectManager();
     } else {
-      setSaveDailogVisible(true);
+      setSaveDialogVisible(true);
       setDBObject(prevState => {
         return { ...prevState, toSet: item };
       });
+      setObjectManagerMode(ObjectManagerMode.NEW_ENTRY);
     }
   }
 
@@ -128,7 +135,7 @@ const AdminPhotosPage: NextPage = (props: any) => {
     setDBObject(prevState => {
       return { ...prevState, actual: prevState.toSet, edited: prevState.toSet, toSet: null };
     });
-    setSaveDailogVisible(false);
+    setSaveDialogVisible(false);
   }
 
   const headerItems: Array<any> = getTableHeaderItems(breadcrumbItems.length);
@@ -136,7 +143,13 @@ const AdminPhotosPage: NextPage = (props: any) => {
 
   const [objectManagerVisible, setObjectManagerVisible] = useState(false)
 
-  const showObjectManager = () => {
+  const showObjectManager = (setEmptyObject?) => {
+    if(setEmptyObject){
+      setDBObject(prevState => {
+        return { ...prevState, actual: getEmptyDBObject(shownLevel), edited: getEmptyDBObject(shownLevel) }
+      });
+    }
+    console.log('DBObject: ', DBObject);
     setObjectManagerVisible(true)
   }
 
@@ -160,10 +173,10 @@ const AdminPhotosPage: NextPage = (props: any) => {
         <Breadcrumb items={breadcrumbItems} setItems={setBreadcrumbItems} />
 
         <div className={"form-wrapper"}>
-          {!objectManagerVisible && <span className={"link " + "add-document-btn mb-3"} onClick={showObjectManager}>{title}</span>}
-          {objectManagerVisible && <ObjectManager hideObjectManager={hideObjectManager} headerItems={headerItems} shownLevel={shownLevel} DBObject={DBObject} setDBObject={setDBObject} />}
+          {!objectManagerVisible && <span className={"link " + "add-document-btn mb-3"} onClick={showObjectManager.bind(this, true)}>{title}</span>}
+          {objectManagerVisible && <ObjectManager mode={objectManagerMode} hideObjectManager={hideObjectManager} headerItems={headerItems} shownLevel={shownLevel} DBObject={DBObject} setDBObject={setDBObject} />}
           <AppTable headerItems={headerItems} bodyRows={bodyRows} />
-          {saveDialogVisible && <SaveDialog onSave={null} onDontSave={setNextDBObject} onCancel={() => { setSaveDailogVisible(false) }} />}
+          {saveDialogVisible && <SaveDialog onSave={null} onDontSave={setNextDBObject} onCancel={() => { setSaveDialogVisible(false) }} />}
         </div>
       </main>
     </div>
@@ -250,6 +263,19 @@ const getTableRows = (index, yearEntries, albumEntries, photoEntries, itemClicke
     })
 
   }
+}
+
+const getEmptyDBObject = (level: ShownLevel) =>{
+  switch (level) {
+    case ShownLevel.YEARS:
+      return {year: "", password: ""}
+    default:
+      break;
+  }
+}
+
+const isEmptyObject = (dbObject: any, level: ShownLevel) =>{
+  return (dbObject == null || JSON.stringify(dbObject) == JSON.stringify(getEmptyDBObject(level)));
 }
 
 const Breadcrumb = (props) => {
@@ -351,10 +377,14 @@ const ObjectManager = (props) => {
     }
   };
 
-  const updateEditedDBObject = (e) => {
+  const updateDBObject = (objectType, objectParamName, e) => {
+    console.log('objectType: ', objectType);
+    console.log('e: ', e);
+    console.log('objectParamName: ', objectParamName);
     console.log('e.target.value: ', e.target.value);
     props.setDBObject(prevState => {
-      return { ...prevState, edited: { ...prevState.edited, password: e.target.value } };
+      let nextState = { ...prevState, edited: { ...prevState.edited, password: e.target.value } };
+      return nextState;
     })
   }
 
@@ -371,15 +401,16 @@ const ObjectManager = (props) => {
       return years;
     }
     let years = getYears();
+    console.log('props.DBObject.edited: ', props.DBObject.edited);
     formContent = (
       <>
-        <select id="school-year">
+        <select id="school-year" value={props.DBObject.edited.year}>
           {years.map((val, i) => {
             return <option key={"selectbox-option-" + i} value={val}>{val}</option>
           })}
         </select>
         <div className="d-flex justify-content-center">
-          <input type="password" id="school-year-pwd" className={classes.fileName} placeholder={"Heslo"} value={props.DBObject.edited.password} onChange={updateEditedDBObject} />
+          <input type="password" id="school-year-pwd" className={classes.fileName} placeholder={"Heslo"} value={props.DBObject.edited.password} onChange={updateDBObject.bind(this, "edited","password")} />
         </div>
       </>
     )
@@ -392,21 +423,23 @@ const ObjectManager = (props) => {
   return (
     <div>
       <form className="d-flex flex-column bordered p-2 mb-3" onSubmit={formSubmitted}>
-        {formContent}
-        {/*props.headerItems.map(((item, i) => {
+        {/* {formContent} */}
+        {props.headerItems.map(((item, i) => {
+          console.log('itemmmm: ', item);
           if (item.editable) {
             if (item.type == ComponentTypes.INPUT) {
+              let onChangeFnc = (!isEmptyObject(props.DBObject.edited, level))? updateDBObject.bind(this, "actual", item.objectParamName) : updateDBObject.bind(this, "edited", item.objectParamName);
               return (
                 <div key={"input-" + i}>
                   <div className="d-flex justify-content-center">
-                    <input type={item.inputType ? item.inputType : "text"} id={item.id ? item.id : ""} className={classes.fileName} placeholder={item.content} defaultValue={(props.DBObject.actual && item.objectParamName)? props.DBObject.actual[item.objectParamName] : ""}/>
+                    <input type={item.inputType ? item.inputType : "text"} id={item.id ? item.id : ""} className={classes.fileName} placeholder={item.content} value={(props.DBObject.actual && item.objectParamName)? props.DBObject.actual[item.objectParamName] : ""} onChange={onChangeFnc}/>
                   </div>
                 </div>
               );
             } else if (item.type == ComponentTypes.SELECTBOX) {
-              if(props.DBObject.actual){
+              if(!isEmptyObject(props.DBObject.edited, level)){
                 return (
-                  <select key={"selectbox-" + i} id={item.id ? item.id : ""} value={(item.objectParamName)? props.DBObject.actual[item.objectParamName] : item.values[0]} disabled={!item.editableInEditMode}>
+                  <select key={"selectbox-" + i} id={item.id ? item.id : ""} value={(item.objectParamName)? props.DBObject.actual[item.objectParamName] : item.values[0]} disabled={!item.editableInEditMode} onChange={updateDBObject.bind(this, "edited", item.objectParamName)}>
                     {item.values.map((val, j) => {
                       return <option key={"selectbox-" + i + "-option-" + j} value={val}>{val}</option>
                     })}
@@ -429,7 +462,7 @@ const ObjectManager = (props) => {
               );
             }
           }
-        }))*/}
+        }))}
 
         <div className="d-flex justify-content-center">
           <input className="button" type="submit" value="Uložit" />
