@@ -34,26 +34,27 @@ const handler = async (req, res) => {
     return res.json(years);
   } else if (req.method == "POST") {
     const year = req.body["year"]; // In format XXXX/YYYY
-    const pwd = req.body["pwd"];
+    const password = req.body["password"];
     try {
       const stmt = db.prepare('INSERT INTO albumPasswords (id_albumPasswords, passwordHash) VALUES (?, ?)');
-      const info = stmt.run(year, pwd);
+      const info = stmt.run(year, password);
     } catch (error) {
       db.close();
       if(error.message.includes("UNIQUE constraint failed")){
-        return res.status(500).send("ERROR! " + (process.env.NODE_ENV === "production" ? "UNIQUE constraint failed" : error));
+        return res.status(500).send("Chyba! Daný rok již existuje!");
+      }else{
+        return res.status(500).send((process.env.NODE_ENV === "production" ? "Došlo k neznámé chybě!" : ("ERROR! " + error)));
       }
-      return res.status(500).send("ERROR! " + (process.env.NODE_ENV === "production" ? "" : error));
     } 
     db.close();
     return res.status(200).send("Success!");
   } else if (req.method == "PATCH") {
     const year = req.body["year"]; // In format XXXX/YYYY
-    const pwd = req.body["pwd"];
+    const password = req.body["password"];
 
     try {
       const stmt = db.prepare('UPDATE albumPasswords SET passwordHash = ? WHERE id_albumPasswords = ?');
-      const info = stmt.run(pwd, year);
+      const info = stmt.run(password, year);
     } catch (error) {
       db.close();
       return res.status(500).send("ERROR! " + (process.env.NODE_ENV === "production" ? "" : error));
@@ -62,14 +63,21 @@ const handler = async (req, res) => {
     return res.status(200).send("Success!");
   } else if (req.method == "DELETE") {
     const year = req.body["year"]; // In format XXXX/YYYY
-
     try {
+      const sqlAlbums = "SELECT * FROM albums WHERE id_albumPasswords=?";
+      const stmtAlbums = db.prepare(sqlAlbums);
+      const sqlResults = stmtAlbums.all(year);
+      if(sqlResults.length){// Nemuze se smazat rok, pokud obsahuje alba
+        db.close();
+        return res.status(500).send("Chyba! Daný rok obsahuje nějaká alba. Nejprve muíte smazat je a až potom samotný školní rok!");
+      }
+      
       const sql = "DELETE FROM albumPasswords WHERE id_albumPasswords=?";
       const stmt = db.prepare(sql);
       stmt.run(year);
     } catch (error) {
       db.close();
-      return res.status(500).send("ERROR! " + (process.env.NODE_ENV === "production" ? "" : error));
+      return res.status(500).send((process.env.NODE_ENV === "production" ? "Došlo k neznámé chybě!" : ("ERROR! " + error)));
     }
     db.close();
     return res.status(200).send("Success!");

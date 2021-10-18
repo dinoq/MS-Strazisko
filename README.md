@@ -10,7 +10,7 @@ TODO:
 - Úprava hlavičky na všech stránkách!
 - Zkontrolovat prepared statements - není někde přiřazováno přímo??
 - admin - akruální záložka zvýraznit
-- přidat odkaz na admin do patičky
+- Upravit albumPaswords v databázi tak, aby mělo id (číslo)
 ############################################################################################
 
 
