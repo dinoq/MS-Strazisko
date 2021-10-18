@@ -4,9 +4,9 @@
 const SaveDialog = (props) => {
     
     return (
-        <div className={`save-dialog`}>
+        <div className="dialog">
             <div className="overlay" onClick={props.onCancel}></div>
-            <div className="dialog">
+            <div className="dialog-body">
                 <div className="msg mb-3">Chcete změny uložit?</div>
                 <div className="btns-group">
                     <div className="save-btn btn btn-secondary" onClick={props.onCancel}>Zrušit</div>

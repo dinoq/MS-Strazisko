@@ -40,6 +40,9 @@ const handler = async (req, res) => {
       const info = stmt.run(year, pwd);
     } catch (error) {
       db.close();
+      if(error.message.includes("UNIQUE constraint failed")){
+        return res.status(500).send("ERROR! " + (process.env.NODE_ENV === "production" ? "UNIQUE constraint failed" : error));
+      }
       return res.status(500).send("ERROR! " + (process.env.NODE_ENV === "production" ? "" : error));
     } 
     db.close();

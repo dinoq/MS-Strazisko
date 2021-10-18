@@ -2,6 +2,7 @@ import type { NextPage } from 'next'
 import { withIronSession } from 'next-iron-session'
 import Head from 'next/head'
 import React, { useEffect, useState } from 'react'
+import ErrorDialog from '../../components/admin/ErrorDialog'
 import SaveDialog from '../../components/admin/SaveDialog'
 import AppTable from '../../components/Table/Table'
 import classes from './foto.module.scss'
@@ -26,16 +27,18 @@ enum ObjectManagerMode {
 const AdminPhotosPage: NextPage = (props: any) => {
   const [breadcrumbItems, setBreadcrumbItemsState] = useState([]);
   const [yearEntries, setYearEntries] = useState([]);
+  console.log('yearEntries: ', yearEntries);
   const [albumEntries, setAlbumEntries] = useState([]);
   const [photoEntries, setPhotoEntries] = useState([]);
   const [DBObject, setDBObject] = useState({ actual: null, toSet: null, edited: null })
   const [objectManagerMode, setObjectManagerMode] = useState(ObjectManagerMode.NEW_ENTRY);
-
+  const [errorMsg, setErrorMsg] = useState("")
 
   let shownLevel = (breadcrumbItems.length == 0) ? ShownLevel.YEARS : (breadcrumbItems.length == 1) ? ShownLevel.ALBUMS : ShownLevel.PHOTOS;
 
   useEffect(() => {
     fetch("/api/admin/years").then((resp) => {
+      console.log('respffffffffffff: ', resp);
       if (resp.status == 200) {
         resp.json().then((json) => {
           setYearEntries(json);
@@ -116,7 +119,9 @@ const AdminPhotosPage: NextPage = (props: any) => {
   const [saveDialogVisible, setSaveDialogVisible] = useState(false);
 
   const changeItemHandler = (item) => {
+    console.log('changeItemHandler: ', item);
     if(isEmptyObject(DBObject.actual, shownLevel) || DBObject.actual == DBObject.edited){
+      console.log("EROOOOOOOOOOOR");
       setDBObject(prevState => {
         return { ...prevState, actual: item, edited: item }
       });
@@ -132,6 +137,7 @@ const AdminPhotosPage: NextPage = (props: any) => {
   }
 
   const setNextDBObject = () => {
+    console.log("EROOOOOOOOOOOR");
     setDBObject(prevState => {
       return { ...prevState, actual: prevState.toSet, edited: prevState.toSet, toSet: null };
     });
@@ -145,6 +151,7 @@ const AdminPhotosPage: NextPage = (props: any) => {
 
   const showObjectManager = (setEmptyObject?) => {
     if(setEmptyObject){
+      console.log("EROOOOOOOOOOOR");
       setDBObject(prevState => {
         return { ...prevState, actual: getEmptyDBObject(shownLevel), edited: getEmptyDBObject(shownLevel) }
       });
@@ -154,6 +161,7 @@ const AdminPhotosPage: NextPage = (props: any) => {
   }
 
   const hideObjectManager = () => {
+    console.log("EROOOOOOOOOOOR");
     setObjectManagerVisible(false);
     setDBObject(prevState => {
       return { ...prevState, actual: null }
@@ -174,9 +182,12 @@ const AdminPhotosPage: NextPage = (props: any) => {
 
         <div className={"form-wrapper"}>
           {!objectManagerVisible && <span className={"link " + "add-document-btn mb-3"} onClick={showObjectManager.bind(this, true)}>{title}</span>}
-          {objectManagerVisible && <ObjectManager mode={objectManagerMode} hideObjectManager={hideObjectManager} headerItems={headerItems} shownLevel={shownLevel} DBObject={DBObject} setDBObject={setDBObject} />}
+          {objectManagerVisible && 
+          <ObjectManager setErrorMsg={setErrorMsg} mode={objectManagerMode} hideObjectManager={hideObjectManager} headerItems={headerItems} shownLevel={shownLevel} DBObject={DBObject} setDBObject={setDBObject} />}
           <AppTable headerItems={headerItems} bodyRows={bodyRows} />
-          {saveDialogVisible && <SaveDialog onSave={null} onDontSave={setNextDBObject} onCancel={() => { setSaveDialogVisible(false) }} />}
+          {saveDialogVisible && 
+          <SaveDialog onSave={null} onDontSave={setNextDBObject} onCancel={() => { setSaveDialogVisible(false) }} />}
+          {(errorMsg && errorMsg.length) && <ErrorDialog msg={errorMsg} onOk={() => { setErrorMsg("") }} />}
         </div>
       </main>
     </div>
@@ -358,12 +369,8 @@ const ObjectManager = (props) => {
     } else {
       return;
     }
-    if (props.DBObject.actual) { // In edit mode
-
-    } else {
-
-    }
-    const method = (props.DBObject.actual) ? "PATCH" : "POST";
+    
+    const method = (props.mode == ObjectManagerMode.EDITING_ENTRY) ? "PATCH" : "POST";
     const response = await fetch("/api/admin/" + url,
       {
         method,
@@ -374,72 +381,53 @@ const ObjectManager = (props) => {
 
     if (response.status == 200) {
       window.location.reload();
+    }else{
+      let text = "";
+      try {
+        text = await response.text();
+        if(text.includes("UNIQUE constraint failed")){
+          props.setErrorMsg("Daný rok již existuje!")
+        }
+      } catch (error) {
+        
+      }
     }
   };
 
-  const updateDBObject = (objectType, objectParamName, e) => {
-    console.log('objectType: ', objectType);
-    console.log('e: ', e);
-    console.log('objectParamName: ', objectParamName);
-    console.log('e.target.value: ', e.target.value);
+  const updateDBObject = (objectParamName, e) => {
     props.setDBObject(prevState => {
-      let nextState = { ...prevState, edited: { ...prevState.edited, password: e.target.value } };
+      console.log('prevState: ', prevState.actual);
+      let nextState = { ...prevState };
+      console.log('nextState10: ', nextState.actual);
+      let objectType = "edited";
+      if(props.mode == ObjectManagerMode.EDITING_ENTRY){
+        objectType = "edited";
+      }
+      console.log('nextState1: ', nextState.actual);
+      nextState["edited"][objectParamName] = e.target.value;
+      console.log('nextState: ', nextState.actual);
       return nextState;
     })
   }
 
   let level = props.shownLevel;
-  let formContent;
-  if (level == ShownLevel.YEARS) {
-
-    const getYears = () => {
-      let years = [];
-      let actualYear = new Date().getFullYear();
-      for (let i = 0; i < 10; i++) {
-        years.push((actualYear - i) + "/" + (actualYear + 1 - i));
-      }
-      return years;
-    }
-    let years = getYears();
-    console.log('props.DBObject.edited: ', props.DBObject.edited);
-    formContent = (
-      <>
-        <select id="school-year" value={props.DBObject.edited.year}>
-          {years.map((val, i) => {
-            return <option key={"selectbox-option-" + i} value={val}>{val}</option>
-          })}
-        </select>
-        <div className="d-flex justify-content-center">
-          <input type="password" id="school-year-pwd" className={classes.fileName} placeholder={"Heslo"} value={props.DBObject.edited.password} onChange={updateDBObject.bind(this, "edited","password")} />
-        </div>
-      </>
-    )
-
-  } else if (level == ShownLevel.ALBUMS) {
-  } else if (level == ShownLevel.PHOTOS) {
-  }
-
-  console.log('props.DBObject.actual: ', props.DBObject.actual);
   return (
     <div>
       <form className="d-flex flex-column bordered p-2 mb-3" onSubmit={formSubmitted}>
-        {/* {formContent} */}
         {props.headerItems.map(((item, i) => {
-          console.log('itemmmm: ', item);
           if (item.editable) {
             if (item.type == ComponentTypes.INPUT) {
-              let onChangeFnc = (!isEmptyObject(props.DBObject.edited, level))? updateDBObject.bind(this, "actual", item.objectParamName) : updateDBObject.bind(this, "edited", item.objectParamName);
               return (
                 <div key={"input-" + i}>
                   <div className="d-flex justify-content-center">
-                    <input type={item.inputType ? item.inputType : "text"} id={item.id ? item.id : ""} className={classes.fileName} placeholder={item.content} value={(props.DBObject.actual && item.objectParamName)? props.DBObject.actual[item.objectParamName] : ""} onChange={onChangeFnc}/>
+                    <input type={item.inputType ? item.inputType : "text"} id={item.id ? item.id : ""} className={classes.fileName} placeholder={item.content} value={(props.DBObject.actual && item.objectParamName)? props.DBObject.actual[item.objectParamName] : ""} onChange={updateDBObject.bind(this, item.objectParamName) }/>
                   </div>
                 </div>
               );
             } else if (item.type == ComponentTypes.SELECTBOX) {
-              if(!isEmptyObject(props.DBObject.edited, level)){
+              if(props.mode == ObjectManagerMode.EDITING_ENTRY){
                 return (
-                  <select key={"selectbox-" + i} id={item.id ? item.id : ""} value={(item.objectParamName)? props.DBObject.actual[item.objectParamName] : item.values[0]} disabled={!item.editableInEditMode} onChange={updateDBObject.bind(this, "edited", item.objectParamName)}>
+                  <select key={"selectbox-" + i} id={item.id ? item.id : ""} value={(item.objectParamName)? props.DBObject.actual[item.objectParamName] : item.values[0]} disabled={!item.editableInEditMode} onChange={updateDBObject.bind(this, item.objectParamName)}>
                     {item.values.map((val, j) => {
                       return <option key={"selectbox-" + i + "-option-" + j} value={val}>{val}</option>
                     })}

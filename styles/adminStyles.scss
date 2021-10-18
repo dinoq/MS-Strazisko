@@ -136,7 +136,7 @@
     border: 1px solid #777777;
   }
 
-  .save-dialog{
+  .dialog{
 
     .overlay{
       position: fixed;
@@ -147,7 +147,7 @@
       left: 0;
     }
 
-    .dialog{
+    .dialog-body{
       display: flex;
       flex-direction: column;
       justify-content: center;
