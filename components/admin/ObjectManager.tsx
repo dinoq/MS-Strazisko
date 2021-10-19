@@ -42,6 +42,7 @@ const ObjectManager = (props) => {
       }
       */
 
+      console.log("props.DBObject1", props.DBObject);
     const [errorMsg, setErrorMsg] = useState("");
 
 
@@ -118,6 +119,7 @@ const ObjectManager = (props) => {
         })
     }
 
+    console.log("props.DBObject2", props.DBObject);
     useEffect(() => {
         props.headerItems.map(((item, i) => {            
             if (item.type == ComponentTypes.SELECTBOX) {
@@ -130,6 +132,7 @@ const ObjectManager = (props) => {
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.headerItems])
+    console.log("props.DBObject3", props.DBObject);
     return (
         <div>
             <form className="d-flex flex-column bordered p-2 mb-3" onSubmit={formSubmitted}>
@@ -139,7 +142,7 @@ const ObjectManager = (props) => {
                             return (
                                 <div key={"input-" + i}>
                                     <div className="d-flex justify-content-center">
-                                        <input type={item.inputType ? item.inputType : "text"} id={item.id ? item.id : ""} placeholder={item.content} value={props.DBObject.edited[item.objectParamName]} onChange={updateDBObject.bind(this, item.objectParamName)} />
+                                        <input type={item.inputType ? item.inputType : "text"} id={item.id ? item.id : ""} placeholder={item.content} value={props.DBObject.edited[item.objectParamName]} onChange={updateDBObject.bind(this, item.objectParamName)} required/>
                                     </div>
                                 </div>
                             );

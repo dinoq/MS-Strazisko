@@ -1,57 +1,53 @@
 import { withIronSession } from "next-iron-session";
 import Database from "better-sqlite3";
 
-
 const handler = async (req, res) => {
+  const year = req.query["year"];
+  console.log('req.query: ', req.query);
+  console.log('req.body: ', req.body);
+  
   const adminLogged: Array<any> = await req.session.get("adminLogged");
   if (!adminLogged) {
     res.status(401).send("Unauthorized!");
     return;
   }
 
-  if (!req || !req.method) {
-    res.status(500).send("Server error");
-    return;
-  }
-
   const db = new Database('database/database.db', { verbose: console.log });
   if (req.method == "GET") {
-    let years = [];
-    const stmt = db.prepare("SELECT id_albumPasswords, passwordHash FROM albumPasswords ORDER BY id_albumPasswords DESC;")
+    let albums = [];
+    const stmt = db.prepare("SELECT id_album AS id, date, title, name FROM albums where id_albumPasswords='" + year + "'");
     const sqlResults = stmt.all();
-
+    
     for (const sqlResult of sqlResults) {
-      let entry: any = {};
-      entry["year"] = sqlResult.id_albumPasswords;
-      entry["password"] = sqlResult.passwordHash;
-      years.push(entry);
+        albums.push(sqlResult);
     }
-
+  
     db.close();
-    return res.json(years);
+    return res.json(albums);
   } else if (req.method == "POST") {
-    const year = req.body["year"]; // In format XXXX/YYYY
-    const password = req.body["password"];
+    const date = req.body["date"]; // In format YYYY-MM-DD
+    const title = req.body["title"]; 
+    const pwd = req.body["pwd"]; 
+    const name = req.body["name"]; 
     try {
-      const stmt = db.prepare('INSERT INTO albumPasswords (id_albumPasswords, passwordHash) VALUES (?, ?)');
-      const info = stmt.run(year, password);
+      const stmt = db.prepare('INSERT INTO albums (date, title, id_albumPasswords, name) VALUES (?, ?, ?, ?)');
+      const info = stmt.run(date, title, pwd, name);
     } catch (error) {
       db.close();
-      if(error.message.includes("UNIQUE constraint failed")){
-        return res.status(500).send("Chyba! Daný rok již existuje!");
-      }else{
-        return res.status(500).send((process.env.NODE_ENV === "production" ? "Došlo k neznámé chybě!" : ("ERROR! " + error)));
-      }
+      return res.status(500).send((process.env.NODE_ENV === "production" ? "Došlo k neznámé chybě!" : ("ERROR! " + error)));
     } 
     db.close();
     return res.status(200).send("Success!");
   } else if (req.method == "PATCH") {
-    const year = req.body["year"]; // In format XXXX/YYYY
-    const password = req.body["password"];
+    const id = req.body["id"]; 
+    const date = req.body["date"]; // In format YYYY-MM-DD
+    const title = req.body["title"]; 
+    const pwd = req.body["pwd"]; 
+    const name = req.body["name"]; 
 
     try {
-      const stmt = db.prepare('UPDATE albumPasswords SET passwordHash = ? WHERE id_albumPasswords = ?');
-      const info = stmt.run(password, year);
+      const stmt = db.prepare('UPDATE albums SET date = ?, title = ?, id_albumPasswords = ?, name = ? WHERE id_album = ?');
+      const info = stmt.run(date, title, pwd, name, id);
     } catch (error) {
       db.close();
       return res.status(500).send("ERROR! " + (process.env.NODE_ENV === "production" ? "" : error));
@@ -59,14 +55,15 @@ const handler = async (req, res) => {
     db.close();
     return res.status(200).send("Success!");
   } else if (req.method == "DELETE") {
-    const year = req.body["year"]; // In format XXXX/YYYY
+    const id = req.body["id"]; 
+
     try {
-      const sqlAlbums = "SELECT * FROM albums WHERE id_albumPasswords=?";
-      const stmtAlbums = db.prepare(sqlAlbums);
-      const sqlResults = stmtAlbums.all(year);
+      const sqlPhotos = "SELECT * FROM photos WHERE id_album=?";
+      const stmtPhotos = db.prepare(sqlPhotos);
+      const sqlResults = stmtPhotos.all(year);
       if(sqlResults.length){// Nemuze se smazat rok, pokud obsahuje alba
         db.close();
-        return res.status(500).send("Chyba! Daný rok obsahuje nějaká alba. Nejprve muíte smazat je a až potom samotný školní rok!");
+        return res.status(500).send("Chyba! Dané album obsahuje nějaké fotografie. Nejprve muíte smazat je a až potom samotné album!");
       }
       
       const sql = "DELETE FROM albumPasswords WHERE id_albumPasswords=?";
