@@ -3,11 +3,14 @@ import { withIronSession } from 'next-iron-session'
 import Head from 'next/head'
 import React, { useEffect, useState } from 'react'
 import ErrorDialog from '../../components/admin/ErrorDialog'
-import ObjectManager, { ComponentTypes, ObjectManagerMode } from '../../components/admin/ObjectManager'
+import ListFrame from '../../components/admin/ListFrame'
+import ObjectManager from '../../components/admin/ObjectManager'
 import TreeChoiceDialog from '../../components/admin/TreeChoiceDialog'
 import AppTable from '../../components/Table/Table'
+import { ComponentType, ObjectManagerMode } from '../../constants/constants'
+import { FormDefinitions } from '../../constants/form-definitions'
+import { FormDefinition } from '../../constants/types'
 import classes from './foto.module.scss'
-
 
 enum ShownLevel {
   YEARS,
@@ -25,7 +28,7 @@ const AdminPhotosPage: NextPage = (props: any) => {
   const [url, setUrl] = useState("");
   let shownLevel = (breadcrumbItems.length == 0) ? ShownLevel.YEARS : (breadcrumbItems.length == 1) ? ShownLevel.ALBUMS : ShownLevel.PHOTOS;
   const [DBObject, setDBObject] = useState({ actual: getEmptyDBObject(shownLevel), edited: getEmptyDBObject(shownLevel), toSet: getEmptyDBObject(shownLevel) })
-
+  const [formClassName, setFormClassName] = useState(["albumPasswords"]);
 
   useEffect(() => {
     setUrl("years");
@@ -43,11 +46,26 @@ const AdminPhotosPage: NextPage = (props: any) => {
   }, []);
 
   const setBreadcrumbItems = (items) => {
+    console.log('items: ', items);
     hideObjectManager();
     setBreadcrumbItemsState(items);
+    setFormClassName(prevClassNames => {
+      console.log("SL", items.length);
+      console.log("SL", prevClassNames);
+      console.log("SL", prevClassNames.slice(0, items.length+1));
+      return prevClassNames.slice(0, items.length+1);
+    });
   }
 
-  const itemClickedHandler = async (item) => {
+  /**
+   * Bylo kliknuto na položku, změní se úroveň
+   */
+  const detailClickedHandler = async (item) => {    //JSON.parse(JSON.stringify("asd"))
+    setFormClassName(prevClassNames => {
+      return [...prevClassNames, FormDefinitions[prevClassNames[prevClassNames.length - 1]].config.detailClass];
+    });
+    setBreadcrumbItemsState(prevState => [...prevState, item[FormDefinitions[formClassName[formClassName.length - 1]].items.find(item => item.breadcrumb).objectParamName]]);
+
     let url = "";
     if (shownLevel == ShownLevel.YEARS) {
       url = "albums?year=" + item.year;
@@ -55,31 +73,30 @@ const AdminPhotosPage: NextPage = (props: any) => {
       url = "photos?albumID=" + item.id;
     }
 
+    /*
     let resp = await fetch(
       "/api/admin/" + url,
       { method: "GET" }
     );
-
-    if (resp.status == 200) {
-      let json = await resp.json();
-      if (shownLevel == ShownLevel.YEARS) {
-        setAlbumEntries(json);
-        setBreadcrumbItemsState(prevState => [...prevState, item.year]);
-        setUrl("albums");
-      } else if (shownLevel == ShownLevel.ALBUMS) {
-        setPhotoEntries(json);
-        setBreadcrumbItemsState(prevState => [...prevState, item.name]);
-        setUrl("photos");
-      }
-    } else {
-      let text = await resp.text();
-      console.log("tvalue: ", text);
-    }
+        if (resp.status == 200) {
+          let json = await resp.json();
+          if (shownLevel == ShownLevel.YEARS) {
+            setAlbumEntries(json);
+            setBreadcrumbItemsState(prevState => [...prevState, item.year]);
+            setUrl("albums");
+          } else if (shownLevel == ShownLevel.ALBUMS) {
+            setPhotoEntries(json);
+            setBreadcrumbItemsState(prevState => [...prevState, item.name]);
+            setUrl("photos");
+          }
+        } else {
+          let text = await resp.text();
+          console.log("tvalue: ", text);
+        }*/
   }
 
   const deleteItemHandler = async (item) => {
-    if(!isEqualObjects(DBObject.actual, DBObject.edited)){
-      console.log('DBObject.actual != DBObject.edited: ', DBObject.actual, DBObject.edited);
+    if (!isEqualObjects(DBObject.actual, DBObject.edited)) {
       setErrorMsg("Nejprve zrušte editaci položky!");
       return;
     }
@@ -87,11 +104,10 @@ const AdminPhotosPage: NextPage = (props: any) => {
     let body = {};
     if (shownLevel == ShownLevel.YEARS) {
       url = "years";
-      body["year"] = item.year;
+      body = item;
     } else if (shownLevel == ShownLevel.ALBUMS) {
       url = "albums";
     }
-
 
     let resp = await fetch(
       "/api/admin/" + url,
@@ -112,7 +128,7 @@ const AdminPhotosPage: NextPage = (props: any) => {
         let text = await resp.text();
         setErrorMsg(text);
       } catch (error) {
-        
+
       }
     }
   }
@@ -120,7 +136,7 @@ const AdminPhotosPage: NextPage = (props: any) => {
   const [saveDialogVisible, setSaveDialogVisible] = useState(false);
 
   const changeItemHandler = (item) => {
-    if(isEmptyObject(DBObject.actual, shownLevel) || DBObject.actual == DBObject.edited){
+    if (isEmptyObject(DBObject.actual, shownLevel) || DBObject.actual == DBObject.edited) {
       setDBObject(prevState => {
         return { ...prevState, actual: item, edited: item }
       });
@@ -142,17 +158,16 @@ const AdminPhotosPage: NextPage = (props: any) => {
   }
 
   const headerItems: Array<any> = getTableHeaderItems(breadcrumbItems.length);
-  const bodyRows: Array<any> = getTableRows(breadcrumbItems.length, yearEntries, albumEntries, photoEntries, itemClickedHandler, deleteItemHandler, changeItemHandler, DBObject);
+  const bodyRows: Array<any> = getTableRows(breadcrumbItems.length, yearEntries, albumEntries, photoEntries, detailClickedHandler, deleteItemHandler, changeItemHandler, DBObject);
 
   const [objectManagerVisible, setObjectManagerVisible] = useState(false)
 
   const showObjectManager = (setEmptyObject?) => {
-    if(setEmptyObject){
+    if (setEmptyObject) {
       setDBObject(prevState => {
         return { ...prevState, actual: getEmptyDBObject(shownLevel), edited: getEmptyDBObject(shownLevel) }
       });
     }
-    console.log("props.DBObjectttttttttt", DBObject);
     setObjectManagerVisible(true)
   }
 
@@ -178,11 +193,11 @@ const AdminPhotosPage: NextPage = (props: any) => {
 
         <div className={"form-wrapper"}>
           {!objectManagerVisible && <span className={"link " + "add-document-btn mb-3"} onClick={showObjectManager.bind(this, true)}>{title}</span>}
-          {objectManagerVisible && 
-          <ObjectManager url={url} setErrorMsg={setErrorMsg} mode={objectManagerMode} hideObjectManager={hideObjectManager} headerItems={headerItems} DBObject={DBObject} setDBObject={setDBObject} />}
-          <AppTable headerItems={headerItems} bodyRows={bodyRows} />
-          {saveDialogVisible && 
-          <TreeChoiceDialog dialogText="Chcete změny uložit?" overlayCancels={true} onYes={null} yesText="Uložit" onNo={setNextDBObject} noText="Neukládat" onCancel={() => { setSaveDialogVisible(false) }} cancelText="Zrušit" />}
+          {objectManagerVisible &&
+            <ObjectManager url={url} setErrorMsg={setErrorMsg} mode={objectManagerMode} hideObjectManager={hideObjectManager} headerItems={headerItems} DBObject={DBObject} setDBObject={setDBObject} />}
+          <ListFrame formClassName={formClassName[formClassName.length - 1]} DBObject={DBObject.actual} detailClickedHandler={detailClickedHandler} deleteItemHandler={deleteItemHandler} editItemHandler={changeItemHandler} />
+          {saveDialogVisible &&
+            <TreeChoiceDialog dialogText="Chcete změny uložit?" overlayCancels={true} onYes={null} yesText="Uložit" onNo={setNextDBObject} noText="Neukládat" onCancel={() => { setSaveDialogVisible(false) }} cancelText="Zrušit" />}
           {(errorMsg && errorMsg.length) && <ErrorDialog msg={errorMsg} onOk={() => { setErrorMsg("") }} />}
         </div>
       </main>
@@ -190,46 +205,47 @@ const AdminPhotosPage: NextPage = (props: any) => {
   )
 }
 
+const getYears = () => {
+  let years = [];
+  let actualYear = new Date().getFullYear();
+  for (let i = 0; i < 10; i++) {
+    years.push((actualYear - i) + "/" + (actualYear + 1 - i));
+  }
+  return years;
+}
 
 const getTableHeaderItems = (index) => {
-  const getYears = () => {
-    let years = [];
-    let actualYear = new Date().getFullYear();
-    for (let i = 0; i < 10; i++) {
-      years.push((actualYear - i) + "/" + (actualYear + 1 - i));
-    }
-    return years;
-  }
   if (index == 0) { // Years...
     return [
-      { content: "Školní rok", editable: true, type: ComponentTypes.SELECTBOX, values: getYears(), objectParamName: "year", constraints: [{condition: "$['#'].length", errorIfFail: "Musí být zvolen školní rok"}] },
-      { content: "Heslo", editable: true, editableInEditMode: true, type: ComponentTypes.INPUT, inputType: "text", objectParamName: "password", constraints: [{condition: "$['#'].length", errorIfFail: "Heslo nesmí být prázdné!"}, {condition: "$['#'].length > 5", errorIfFail: "Heslo nesmí být kratší než 6 znaků!"}] },
+      { content: "Detail" },
+      { content: "Školní rok", editable: true, type: ComponentType.SELECTBOX, values: getYears(), objectParamName: "year", constraints: [{ condition: "$['#'].length", errorIfFail: "Musí být zvolen školní rok" }] },
+      { content: "Heslo", editable: true, editableInEditMode: true, type: ComponentType.INPUT, inputType: "text", objectParamName: "password", constraints: [{ condition: "$['#'].length", errorIfFail: "Heslo nesmí být prázdné!" }, { condition: "$['#'].length > 5", errorIfFail: "Heslo nesmí být kratší než 6 znaků!" }] },
       { content: "Akce" },
     ]
   } else if (index == 1) { // Albums
     return [
       { content: "ID" },
-      { content: "Datum", editable: true, type: ComponentTypes.INPUT, inputType: "date", objectParamName: "date" },
-      { content: "URL", editable: true, type: ComponentTypes.INPUT, inputType: "text", objectParamName: "title" },
-      { content: "Název", editable: true, type: ComponentTypes.INPUT, inputType: "text", objectParamName: "name" },
+      { content: "Datum", editable: true, type: ComponentType.INPUT, inputType: "date", objectParamName: "date" },
+      { content: "URL", editable: true, type: ComponentType.INPUT, inputType: "text", objectParamName: "title" },
+      { content: "Název", editable: true, type: ComponentType.INPUT, inputType: "text", objectParamName: "name" },
       { content: "Akce" },
     ]
   } else if (index == 2) { // Photos
     return [
       { content: "ID" },
-      { content: "URL"},
+      { content: "URL" },
       { content: "Náhled" },
       { content: "Akce" },
     ]
   }
 }
 
-
 const getTableRows = (index, yearEntries, albumEntries, photoEntries, itemClickedHandler, deleteItemHandler, changeItemHandler, DBObject) => {
   if (index == 0) { // Years...
     return yearEntries.map((entry, index) => {
       return ({
         items: [
+          { content: <span onClick={itemClickedHandler.bind(this, entry)}> Detail </span>, className: "link" },
           { content: <span onClick={itemClickedHandler.bind(this, entry)}> {entry.year} </span>, className: "link" },
           { content: entry.password },
           { className: "actions", content: (<><span className={"link-danger"} onClick={deleteItemHandler.bind(this, entry)}>Smazat</span><span className={"link"} onClick={changeItemHandler.bind(this, entry)}>Změnit heslo</span></>) }
@@ -256,7 +272,6 @@ const getTableRows = (index, yearEntries, albumEntries, photoEntries, itemClicke
 
   } else if (index == 2) { // Photos
     return photoEntries.map((entry, index) => {
-      console.log('entryentry: ', albumEntries[0]);
       return ({
         items: [
           { content: entry.id },
@@ -271,22 +286,22 @@ const getTableRows = (index, yearEntries, albumEntries, photoEntries, itemClicke
   }
 }
 
-const getEmptyDBObject = (level: ShownLevel) =>{
+const getEmptyDBObject = (level: ShownLevel) => {
   let headers = getTableHeaderItems(level);
-  let fields = {};
+  let fields = { id: -1 };
   headers.forEach(header => {
-    if(header.objectParamName)
+    if (header.objectParamName)
       fields[header.objectParamName] = "";
   });
   return fields;
 }
 
-const isEmptyObject = (dbObject: any, level: ShownLevel) =>{
+const isEmptyObject = (dbObject: any, level: ShownLevel) => {
   return (dbObject == null || JSON.stringify(dbObject) == JSON.stringify(getEmptyDBObject(level)));
 }
 
 
-const isEqualObjects = (dbObject1: any, dbObject2: any) =>{
+const isEqualObjects = (dbObject1: any, dbObject2: any) => {
   return ((dbObject1 == null && dbObject2 == null) || (JSON.stringify(dbObject1) == JSON.stringify(dbObject2)));
 }
 

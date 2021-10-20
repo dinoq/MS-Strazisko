@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { ComponentType, ObjectManagerMode } from "../../constants/constants";
 import ErrorDialog from "./ErrorDialog";
 
-export enum ComponentTypes {
-    INPUT,
-    SELECTBOX
-}
-
-export enum ObjectManagerMode {
-    NEW_ENTRY,
-    EDITING_ENTRY
-}
 
 const ObjectManager = (props) => {
     /*
@@ -122,7 +114,7 @@ const ObjectManager = (props) => {
     console.log("props.DBObject2", props.DBObject);
     useEffect(() => {
         props.headerItems.map(((item, i) => {            
-            if (item.type == ComponentTypes.SELECTBOX) {
+            if (item.type == ComponentType.SELECTBOX) {
                 if(!props.DBObject.edited[item.objectParamName]){
                     updateDBObject(item.objectParamName, {target:{value: item.values[0]}});
                 }
@@ -138,7 +130,7 @@ const ObjectManager = (props) => {
             <form className="d-flex flex-column bordered p-2 mb-3" onSubmit={formSubmitted}>
                 {props.headerItems.map(((item, i) => {
                     if (item.editable) {
-                        if (item.type == ComponentTypes.INPUT) {
+                        if (item.type == ComponentType.INPUT) {
                             return (
                                 <div key={"input-" + i}>
                                     <div className="d-flex justify-content-center">
@@ -146,7 +138,7 @@ const ObjectManager = (props) => {
                                     </div>
                                 </div>
                             );
-                        } else if (item.type == ComponentTypes.SELECTBOX) {
+                        } else if (item.type == ComponentType.SELECTBOX) {
                             if (props.mode == ObjectManagerMode.EDITING_ENTRY) {
                                 return (
                                     <select key={"selectbox-" + i} id={item.id ? item.id : ""} value={(props.DBObject.edited[item.objectParamName])} onChange={updateDBObject.bind(this, item.objectParamName)} disabled={!item.editableInEditMode}>

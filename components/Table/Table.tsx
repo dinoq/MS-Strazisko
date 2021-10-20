@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 
-const AppTable = (props) => {
+const AppTable: FC<{headerItems: Array<any>, bodyRows: Array<any>}> = (props) => {
   let headerItems = (props.headerItems)? props.headerItems : [];
   let rows = (props.bodyRows)? props.bodyRows : [];
   //return (<div></div>)

@@ -49,7 +49,18 @@
       color: #7bbff1;
       //-2886414
     }
+
+    &.link-danger{
+      color: #dc3545;
+
+      &:hover,
+      &:focus {
+        color: #b02a37;
+        //-2886414
+      }
+    }
   }
+  
 
   main {
     margin: 20px 0px;
