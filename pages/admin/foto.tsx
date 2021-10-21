@@ -46,13 +46,9 @@ const AdminPhotosPage: NextPage = (props: any) => {
   }, []);
 
   const setBreadcrumbItems = (items) => {
-    console.log('items: ', items);
     hideObjectManager();
     setBreadcrumbItemsState(items);
     setFormClassName(prevClassNames => {
-      console.log("SL", items.length);
-      console.log("SL", prevClassNames);
-      console.log("SL", prevClassNames.slice(0, items.length+1));
       return prevClassNames.slice(0, items.length+1);
     });
   }
