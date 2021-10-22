@@ -1,67 +1,102 @@
 import { ComponentType } from "./constants";
-import { FormDefinition } from "./types";
+import { FormDef } from "./types";
 
-interface FormDefinitions {
-  [key: string]: FormDefinition;
+interface FormDefs {
+  [key: string]: FormDef;
 }
 
-export const FormDefinitions: FormDefinitions = {
-  albumPasswords:{
-      config: {
-        detailClass: "albums",
-        actions: {
-          delete: true,
-          edit: true
+export const FormDefinitions: FormDefs = {
+  albumPasswords: {
+    config: {
+      detailClass: "albums",
+      actions: {
+        delete: true,
+        edit: true
+      }
+    },
+    attributes: [
+      {
+        name: "id_albumPasswords",
+        props: {
+          content: "Školní rok", breadcrumb: true, inDetail: true, inList: true, type: ComponentType.SELECTBOX, values: "getYears()", constraints: [{ condition: "$['#'].length", errorIfFail: "Musí být zvolen školní rok" }]
         }
       },
-      items:[
-        { content: "Školní rok", objectParamName: "id_albumPasswords",                    breadcrumb: true, editable: true, type: ComponentType.SELECTBOX, values: "getYears()", constraints: [{condition: "$['#'].length", errorIfFail: "Musí být zvolen školní rok"}] },
-        { content: "Heslo", objectParamName: "passwordHash",                              editable: true, editableInEditMode: true, type: ComponentType.INPUT, inputType: "text", constraints: [{condition: "$['#'].length", errorIfFail: "Heslo nesmí být prázdné!"}, {condition: "$['#'].length > 5", errorIfFail: "Heslo nesmí být kratší než 6 znaků!"}] },
-      ]
+      {
+        name: "passwordHash",
+        props: {
+          content: "Heslo", inDetail: true, inList: true, type: ComponentType.INPUT, inputType: "text", constraints: [{ condition: "$['#'].length", errorIfFail: "Heslo nesmí být prázdné!" }, { condition: "$['#'].length > 5", errorIfFail: "Heslo nesmí být kratší než 6 znaků!" }]
+        }
+      },
+    ]
   },
 
-  albums:{
-      config: {
-        detailClass: "photos",
-        actions: {
-          delete: true,
-          edit: true
+  albums: {
+    config: {
+      detailClass: "photos",
+      actions: {
+        delete: true,
+        edit: true
+      }
+    },
+    attributes: [
+      {
+        name: "id_album",
+        props: {
+          content: "id_album", inDetail: true, type: ComponentType.INPUT, inputType: "text", constraints: [{ condition: "$['#'].length", errorIfFail: "Heslo nesmí být prázdné!" }, { condition: "$['#'].length > 5", errorIfFail: "Heslo nesmí být kratší než 6 znaků!" }]
         }
       },
-      items:[
-        { content: "id_album", objectParamName: "id_album",                               editable: true, editableInEditMode: true, type: ComponentType.INPUT, inputType: "text", constraints: [{condition: "$['#'].length", errorIfFail: "Heslo nesmí být prázdné!"}, {condition: "$['#'].length > 5", errorIfFail: "Heslo nesmí být kratší než 6 znaků!"}] },
-        { content: "date", objectParamName: "date",                                       editable: true, editableInEditMode: true, type: ComponentType.INPUT, inputType: "text", constraints: [{condition: "$['#'].length", errorIfFail: "Heslo nesmí být prázdné!"}, {condition: "$['#'].length > 5", errorIfFail: "Heslo nesmí být kratší než 6 znaků!"}] },
-        { content: "title", objectParamName: "title",                                     editable: true, editableInEditMode: true, type: ComponentType.INPUT, inputType: "text", constraints: [{condition: "$['#'].length", errorIfFail: "Heslo nesmí být prázdné!"}, {condition: "$['#'].length > 5", errorIfFail: "Heslo nesmí být kratší než 6 znaků!"}] },
-        { content: "id_albumPasswords", objectParamName: "id_albumPasswords",             editable: true, editableInEditMode: true, type: ComponentType.INPUT, inputType: "text", constraints: [{condition: "$['#'].length", errorIfFail: "Heslo nesmí být prázdné!"}, {condition: "$['#'].length > 5", errorIfFail: "Heslo nesmí být kratší než 6 znaků!"}] },
-        { content: "name", objectParamName: "name",                                       breadcrumb: true, editable: true, editableInEditMode: true, type: ComponentType.INPUT, inputType: "text", constraints: [{condition: "$['#'].length", errorIfFail: "Heslo nesmí být prázdné!"}, {condition: "$['#'].length > 5", errorIfFail: "Heslo nesmí být kratší než 6 znaků!"}] },
-      ]
+      {
+        name: "date",
+        props: {
+          content: "date", inDetail: true, type: ComponentType.INPUT, inputType: "text", constraints: [{ condition: "$['#'].length", errorIfFail: "Heslo nesmí být prázdné!" }, { condition: "$['#'].length > 5", errorIfFail: "Heslo nesmí být kratší než 6 znaků!" }]
+        }
+      },
+      {
+        name: "title",
+        props: {
+          content: "title", inDetail: true, type: ComponentType.INPUT, inputType: "text", constraints: [{ condition: "$['#'].length", errorIfFail: "Heslo nesmí být prázdné!" }, { condition: "$['#'].length > 5", errorIfFail: "Heslo nesmí být kratší než 6 znaků!" }]
+        }
+      },
+      {
+        name: "id_albumPasswords",
+        props: {
+          content: "id_albumPasswords", inDetail: true, parentBinding: true, type: ComponentType.INPUT, inputType: "text", constraints: [{ condition: "$['#'].length", errorIfFail: "Heslo nesmí být prázdné!" }, { condition: "$['#'].length > 5", errorIfFail: "Heslo nesmí být kratší než 6 znaků!" }]
+        }
+      },
+      {
+        name: "name",
+        props: {
+          content: "name", breadcrumb: true, inDetail: true, type: ComponentType.INPUT, inputType: "text", constraints: [{ condition: "$['#'].length", errorIfFail: "Heslo nesmí být prázdné!" }, { condition: "$['#'].length > 5", errorIfFail: "Heslo nesmí být kratší než 6 znaků!" }]
+        }
+      },
+    ]
   },
 
-  photos:{
-      config: {
-        actions: {
-          delete: true,
-          edit: true
+  photos: {
+    config: {
+      actions: {
+        delete: true,
+        edit: true
+      }
+    },
+    attributes: [
+      {
+        name: "id_photo",
+        props: {
+          content: "id_photo", inDetail: true, type: ComponentType.INPUT, inputType: "text", constraints: [{ condition: "$['#'].length", errorIfFail: "Heslo nesmí být prázdné!" }, { condition: "$['#'].length > 5", errorIfFail: "Heslo nesmí být kratší než 6 znaků!" }]
         }
       },
-      items:[
-        { content: "id_photo", objectParamName: "id_photo",                               editable: true, editableInEditMode: true, type: ComponentType.INPUT, inputType: "text", constraints: [{condition: "$['#'].length", errorIfFail: "Heslo nesmí být prázdné!"}, {condition: "$['#'].length > 5", errorIfFail: "Heslo nesmí být kratší než 6 znaků!"}] },
-        { content: "filename", objectParamName: "filename",                                       editable: true, editableInEditMode: true, type: ComponentType.INPUT, inputType: "text", constraints: [{condition: "$['#'].length", errorIfFail: "Heslo nesmí být prázdné!"}, {condition: "$['#'].length > 5", errorIfFail: "Heslo nesmí být kratší než 6 znaků!"}] },
-        { content: "id_album", objectParamName: "id_album",                                     editable: true, editableInEditMode: true, type: ComponentType.INPUT, inputType: "text", constraints: [{condition: "$['#'].length", errorIfFail: "Heslo nesmí být prázdné!"}, {condition: "$['#'].length > 5", errorIfFail: "Heslo nesmí být kratší než 6 znaků!"}] },
-      ]
+      {
+        name: "filename",
+        props: {
+          content: "filename", inDetail: true, type: ComponentType.INPUT, inputType: "text", constraints: [{ condition: "$['#'].length", errorIfFail: "Heslo nesmí být prázdné!" }, { condition: "$['#'].length > 5", errorIfFail: "Heslo nesmí být kratší než 6 znaků!" }]
+        }
+      },
+      {
+        name: "id_album",
+        props: { content: "id_album", inDetail: true, type: ComponentType.INPUT, inputType: "text", constraints: [{ condition: "$['#'].length", errorIfFail: "Heslo nesmí být prázdné!" }, { condition: "$['#'].length > 5", errorIfFail: "Heslo nesmí být kratší než 6 znaků!" }] }
+      },
+    ]
   },
 
-  documents:{
-      config: {
-        actions: {
-          delete: true,
-          edit: true
-        }
-      },
-      items:[
-        { content: "id_documents", objectParamName: "id_documents",                               editable: true, editableInEditMode: true, type: ComponentType.INPUT, inputType: "text", constraints: [{condition: "$['#'].length", errorIfFail: "Heslo nesmí být prázdné!"}, {condition: "$['#'].length > 5", errorIfFail: "Heslo nesmí být kratší než 6 znaků!"}] },
-        { content: "name", objectParamName: "name",                                       editable: true, editableInEditMode: true, type: ComponentType.INPUT, inputType: "text", constraints: [{condition: "$['#'].length", errorIfFail: "Heslo nesmí být prázdné!"}, {condition: "$['#'].length > 5", errorIfFail: "Heslo nesmí být kratší než 6 znaků!"}] },
-        { content: "url", objectParamName: "url",                                     editable: true, editableInEditMode: true, type: ComponentType.INPUT, inputType: "text", constraints: [{condition: "$['#'].length", errorIfFail: "Heslo nesmí být prázdné!"}, {condition: "$['#'].length > 5", errorIfFail: "Heslo nesmí být kratší než 6 znaků!"}] },
-      ]
-  }
 }

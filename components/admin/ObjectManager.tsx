@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { FC, MouseEventHandler, useEffect, useState } from "react";
 import { ComponentType, ObjectManagerMode } from "../../constants/constants";
+import { DBObject } from "../../constants/types";
 import ErrorDialog from "./ErrorDialog";
 
-
-const ObjectManager = (props) => {
+const ObjectManager: FC<{DBObject: DBObject, setDBObject: Function, url: string, setErrorMsg: Function, mode:ObjectManagerMode, hideObjectManager: MouseEventHandler<HTMLInputElement>}>= (props) => {
     /*
       const initFileName = "Název souboru";
       const [fileName, setFileName] = useState(initFileName);
@@ -40,9 +40,8 @@ const ObjectManager = (props) => {
 
     const formSubmitted = async (event) => {
         event.preventDefault();
-        console.log('props.DBObject: ', props.DBObject, props.headerItems);
         let conditionError = false;
-        props.headerItems.forEach((item, index, array) => {
+       /* props.headerItems.forEach((item, index, array) => {
             if(item.constraints){
                 console.log('item.constraints: ', item.constraints);
                 item.constraints.forEach((constraint, index, array) => {
@@ -61,24 +60,6 @@ const ObjectManager = (props) => {
         let body: any = {};
         body = props.DBObject.edited;
 
-        /*if (level == ShownLevel.YEARS) {
-            url = "years";
-            body["year"] = (document.getElementById("school-year") as HTMLInputElement).value;
-            body["pwd"] = (document.getElementById("school-year-pwd") as HTMLSelectElement).value;
-            if (!body.pwd) {
-                props.setErrorMsg("Heslo nesmí být prázdné!");
-                return;
-            } else if (body.pwd.length < 6) {
-                props.setErrorMsg("Heslo musí mít alespoň 6 znaků!");
-                return;
-            }
-        } else if (level == ShownLevel.ALBUMS) {
-            url = "albums";
-        } else if (level == ShownLevel.PHOTOS) {
-            url = "photos";
-        } else {
-            return;
-        }*/
 
         const method = (props.mode == ObjectManagerMode.EDITING_ENTRY) ? "PATCH" : "POST";
         console.log('method: ', method);
@@ -100,7 +81,7 @@ const ObjectManager = (props) => {
             } catch (error) {
 
             }
-        }
+        }*/
     };
 
     const updateDBObject = (objectParamName, e) => {
@@ -134,14 +115,14 @@ const ObjectManager = (props) => {
                             return (
                                 <div key={"input-" + i}>
                                     <div className="d-flex justify-content-center">
-                                        <input type={item.inputType ? item.inputType : "text"} id={item.id ? item.id : ""} placeholder={item.content} value={props.DBObject.edited[item.objectParamName]} onChange={updateDBObject.bind(this, item.objectParamName)} required/>
+                                        <input type={item.inputType ? item.inputType : "text"} id={item.id ? item.id : ""} placeholder={item.content} value={(props.DBObject.editedAttrs[item.objectParamName])?props.DBObject.editedAttrs[item.objectParamName]:props.DBObject.attrs[item.objectParamName]} onChange={updateDBObject.bind(this, item.objectParamName)} required/>
                                     </div>
                                 </div>
                             );
                         } else if (item.type == ComponentType.SELECTBOX) {
                             if (props.mode == ObjectManagerMode.EDITING_ENTRY) {
                                 return (
-                                    <select key={"selectbox-" + i} id={item.id ? item.id : ""} value={(props.DBObject.edited[item.objectParamName])} onChange={updateDBObject.bind(this, item.objectParamName)} disabled={!item.editableInEditMode}>
+                                    <select key={"selectbox-" + i} id={item.id ? item.id : ""} value={(props.DBObject.editedAttrs[item.objectParamName])?props.DBObject.editedAttrs[item.objectParamName]:props.DBObject.attrs[item.objectParamName]} onChange={updateDBObject.bind(this, item.objectParamName)} disabled={!item.editableInEditMode}>
                                         {item.values.map((val, j) => {
                                             return <option key={"selectbox-" + i + "-option-" + j} value={val}>{val}</option>
                                         })}
@@ -149,7 +130,7 @@ const ObjectManager = (props) => {
                                 );
                             } else {
                                 return (
-                                    <select key={"selectbox-" + i} id={item.id ? item.id : ""} value={props.DBObject.edited[item.objectParamName]} onChange={updateDBObject.bind(this, item.objectParamName)}>
+                                    <select key={"selectbox-" + i} id={item.id ? item.id : ""} value={(props.DBObject.editedAttrs[item.objectParamName])?props.DBObject.editedAttrs[item.objectParamName]:props.DBObject.attrs[item.objectParamName]} onChange={updateDBObject.bind(this, item.objectParamName)}>
                                         {item.values.map((val, j) => {
                                             return <option key={"selectbox-" + i + "-option-" + j} value={val}>{val}</option>
                                         })}

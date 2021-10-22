@@ -3,13 +3,13 @@
 
 import { FC, useEffect, useState } from "react";
 import { FormDefinitions } from "../../constants/form-definitions";
-import { DBObject, FormDefinition } from "../../constants/types";
+import { DBObject, FormDef } from "../../constants/types";
 import AppTable from "../Table/Table";
 
 const ListFrame: FC<{ formClassName: string, DBObject: DBObject, detailClickedHandler: Function, deleteItemHandler: Function, editItemHandler: Function }> = (props) => {
     let formDefinition = FormDefinitions[props.formClassName];
     console.log('formDefinitionnn: ', formDefinition);
-    let headerItems = (formDefinition && formDefinition.items) ? formDefinition.items : [];
+    let headerItems = (formDefinition && formDefinition.attributes) ? formDefinition.attributes : [];
     const [entries, setEntries] = useState([])
     /*
         if (props.formClass?.config?.detail) {
@@ -39,7 +39,7 @@ const ListFrame: FC<{ formClassName: string, DBObject: DBObject, detailClickedHa
                     <tr className={""}>
                         {formDefinition?.config?.detailClass && <th className={""}>Detail</th>}
                         {headerItems.map((item, index, array) => {
-                            return <th key={"thtrtd-" + index} className={""}>{item.content}</th>
+                            return <th key={"thtrtd-" + index} className={""}>{item.props.content}</th>
                         })}
                         {formDefinition?.config?.actions && <th className={""}>Akce</th>}
                     </tr>
@@ -49,8 +49,8 @@ const ListFrame: FC<{ formClassName: string, DBObject: DBObject, detailClickedHa
                         return <tr key={"tbtr-" + index} className={(JSON.stringify(props.DBObject) == JSON.stringify(entry)) ? "selected-row" : ""}>
                             {formDefinition?.config?.detailClass && <td className={""}><span className="link" onClick={props.detailClickedHandler.bind(this, entry)}> Detail </span></td>}
                             {
-                                formDefinition.items.map((item, index, array) => {
-                                    return <td key={"tbtrtd-" + index}>{entry[item.objectParamName]}</td>;
+                                formDefinition.attributes.map((item, index, array) => {
+                                    return <td key={"tbtrtd-" + index}>{entry[item.name]}</td>;
                                 })}
                             {formDefinition?.config?.actions && <td className={"actions"}>
                                 {formDefinition?.config?.actions.delete && <span className={"link link-danger"} onClick={props.deleteItemHandler.bind(this, entry)}>Smazat</span>}

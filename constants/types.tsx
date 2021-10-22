@@ -1,6 +1,14 @@
 import { ComponentType } from "./constants"
 
-export type FormDefinition = {
+
+
+export type DBObject = {
+  id: number, 
+  attrs: Array<any>, 
+  editedAttrs: Array<any> 
+}
+
+export type FormDef = {
   config: {
     detailClass?: string,
     actions?: {
@@ -8,28 +16,29 @@ export type FormDefinition = {
       edit: boolean
     }
   },
-  items: Array<FormDefinitionItem>
-
+  attributes: Array<FormAttrDef>
 }
 
 
-export type FormDefinitionItem = {
+export type FormAttrDef = {
+  name: string,
+  props: FormAttrPropsDef
+}
+
+export type FormAttrPropsDef = {
     content: any,
     breadcrumb?: boolean,
-    editable?: boolean,
-    editableInEditMode?: boolean,
+    inDetail?: boolean,
+    inList?: boolean,
     type?: ComponentType,
+    parentBinding?: boolean,
     inputType?: string,
     values?: Array<any> | string,
-    objectParamName?: string,
-    constraints?: Array<FormDefinitionItemConstraint>
+    constraints?: Array<FormAttrConstraintDef>
 }
 
-export type FormDefinitionItemConstraint = {
+export type FormAttrConstraintDef = {
     condition: string,
     errorIfFail: string    
 }
 
-export type DBObject = {
-    id: number,  
-}
