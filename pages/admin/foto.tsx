@@ -3,10 +3,10 @@ import { withIronSession } from 'next-iron-session'
 import Head from 'next/head'
 import React, { useState } from 'react'
 import ErrorDialog from '../../components/admin/ErrorDialog'
-import ListFrame from '../../components/admin/ListFrame'
-import ObjectManager from '../../components/admin/ObjectManager'
+import ListFrame from '../../components/admin/ListFrame/ListFrame'
+import DetailFrameContainer from '../../components/admin/DetailFrame/DetailFrameContainer'
 import TreeChoiceDialog from '../../components/admin/TreeChoiceDialog'
-import { ObjectManagerMode } from '../../constants/constants'
+import { DetailFrameMode } from '../../constants/constants'
 import { FormDefinitions } from '../../constants/form-definitions'
 import { DBObject } from '../../constants/types'
 import classes from './foto.module.scss'
@@ -19,7 +19,7 @@ enum ShownLevel {
 
 const AdminPhotosPage: NextPage = (props: any) => {
   const [breadcrumbItems, setBreadcrumbItemsState] = useState([]);
-  const [objectManagerMode, setObjectManagerMode] = useState(ObjectManagerMode.NEW_ENTRY);
+  const [objectManagerMode, setObjectManagerMode] = useState(DetailFrameMode.NEW_ENTRY);
   const [errorMsg, setErrorMsg] = useState("")
   const [url, setUrl] = useState("");
   const [formClassName, setFormClassName] = useState(["albumPasswords"]);
@@ -39,7 +39,7 @@ const AdminPhotosPage: NextPage = (props: any) => {
   const detailClickedHandler = async (item) => {    //JSON.parse(JSON.stringify("asd"))
     console.log('item: ', item);
     console.log();
-    const newDetailClass = FormDefinitions[formClassName[formClassName.length - 1]].config.detailClass;
+    const newDetailClass = FormDefinitions[formClassName[formClassName.length - 1]].formDefinition.DBObjectClass;
     console.log('newDetailClass: ', newDetailClass);
     console.log('formClassName: ', formClassName);
 
@@ -47,7 +47,7 @@ const AdminPhotosPage: NextPage = (props: any) => {
       return [...prevClassNames, newDetailClass];
     });
     console.log('formClassName: ', formClassName);
-    setBreadcrumbItemsState(prevState => [...prevState, item[FormDefinitions[formClassName[formClassName.length - 1]].attributes.find(item => item.props.breadcrumb).name]]);
+    setBreadcrumbItemsState(prevState => [...prevState, item[FormDefinitions[formClassName[formClassName.length - 1]].attributes.find(item => item.props.breadcrumbKey).name]]);
   }
 
   const deleteItemHandler = async (item) => {
@@ -118,7 +118,7 @@ const AdminPhotosPage: NextPage = (props: any) => {
   const hideObjectManager = () => {
     setObjectManagerVisible(false);
     setDBObject(getEmptyDBObject(formClassName[formClassName.length - 1]));
-    setObjectManagerMode(ObjectManagerMode.NEW_ENTRY);
+    setObjectManagerMode(DetailFrameMode.NEW_ENTRY);
   }
   let title = "Přidat nový školní rok";//(shownLevel == ShownLevel.YEARS) ? "Přidat nový školní rok" : (shownLevel == ShownLevel.ALBUMS) ? "Přidat nové album" : "Přidat fotky";
 
@@ -131,13 +131,12 @@ const AdminPhotosPage: NextPage = (props: any) => {
       </Head>
 
       <main className={""}>
-        <Breadcrumb items={breadcrumbItems} setItems={setBreadcrumbItems} />
 
         <div className={"form-wrapper"}>
           {!objectManagerVisible && <span className={"link " + "add-document-btn mb-3"} onClick={showObjectManager.bind(this, true)}>{title}</span>}
           {objectManagerVisible &&
-            <ObjectManager url={url} setErrorMsg={setErrorMsg} mode={objectManagerMode} hideObjectManager={hideObjectManager} DBObject={DBObject} setDBObject={setDBObject} />}
-          <ListFrame formClassName={formClassName[formClassName.length - 1]} DBObject={DBObject} detailClickedHandler={detailClickedHandler} deleteItemHandler={deleteItemHandler} editItemHandler={editItemHandler} />
+            <DetailFrameContainer url={url} setErrorMsg={setErrorMsg} mode={objectManagerMode} hideObjectManager={hideObjectManager} DBObject={DBObject} setDBObject={setDBObject} />}
+          <ListFrame DBObjectClass={formClassName[formClassName.length - 1]} DBObject={DBObject} detailClickedHandler={detailClickedHandler} deleteItemHandler={deleteItemHandler} editItemHandler={editItemHandler} />
           {saveDialogVisible &&
             <TreeChoiceDialog dialogText="Chcete změny uložit?" overlayCancels={true} onYes={null} yesText="Uložit" onNo={null} noText="Neukládat" onCancel={() => { setSaveDialogVisible(false) }} cancelText="Zrušit" />}
           {(errorMsg && errorMsg.length) && <ErrorDialog msg={errorMsg} onOk={() => { setErrorMsg("") }} />}
@@ -164,36 +163,6 @@ const getEmptyDBObject = (DBObjectClass: string): DBObject => {
   });
   console.log('fields: ', fields);
   return fields;
-}
-
-const Breadcrumb = (props) => {
-
-  let items: [] = props.items ? props.items : [];
-
-  const resetNav = () => {
-    props.setItems([]);
-  }
-
-  const itemClicked = (index) => {
-    props.setItems(items.slice(0, index + 1));
-  }
-  return (
-    <div className={classes.breadcrumb}>
-      <span className={classes.breadcrumbItem + " link"} onClick={resetNav}>
-        Foto
-      </span>&nbsp;&gt;&nbsp;
-      {items.map((item, index) => {
-        return (
-          <span key={"breadcrumb-item-" + index} className={""}>
-            {index != 0 && " > "}
-            <span className={classes.breadcrumbItem + " link"} onClick={itemClicked.bind(this, index)}>
-              {item}
-            </span>
-          </span>
-        )
-      })}
-    </div>
-  )
 }
 
 export const getServerSideProps = withIronSession(
@@ -223,4 +192,4 @@ export const getServerSideProps = withIronSession(
   }
 );
 
-export default AdminPhotosPage
+export default AdminPhotosPage;

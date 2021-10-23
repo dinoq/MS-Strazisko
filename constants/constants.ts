@@ -4,7 +4,7 @@ export enum ComponentType {
     SELECTBOX
 }
 
-export enum ObjectManagerMode {
+export enum DetailFrameMode {
     NEW_ENTRY,
     EDITING_ENTRY
 }

@@ -2,12 +2,11 @@
 //import styles from "./ListFrame.module.css";
 
 import { FC, useEffect, useState } from "react";
-import { FormDefinitions } from "../../constants/form-definitions";
-import { DBObject, FormDef } from "../../constants/types";
-import AppTable from "../Table/Table";
+import { FormDefinitions } from "../../../constants/form-definitions";
+import { DBObject, FormDef } from "../../../constants/types";
 
-const ListFrame: FC<{ formClassName: string, DBObject: DBObject, detailClickedHandler: Function, deleteItemHandler: Function, editItemHandler: Function }> = (props) => {
-    let formDefinition = FormDefinitions[props.formClassName];
+const ListFrame: FC<{ DBObjectClass: string, DBObject: DBObject, detailClickedHandler: Function, deleteItemHandler: Function, editItemHandler: Function }> = (props) => {
+    let formDefinition = FormDefinitions[props.DBObjectClass];
     console.log('formDefinitionnn: ', formDefinition);
     let headerItems = (formDefinition && formDefinition.attributes) ? formDefinition.attributes : [];
     const [entries, setEntries] = useState([])
@@ -18,8 +17,8 @@ const ListFrame: FC<{ formClassName: string, DBObject: DBObject, detailClickedHa
     */
 
     useEffect(() => {
-        console.log('props.formClassName: ', props.formClassName);
-        fetch("/api/admin/data?className=" + props.formClassName).then((resp) => {
+        console.log('props.formClassName: ', props.DBObjectClass);
+        fetch("/api/admin/data?className=" + props.DBObjectClass).then((resp) => {
             if (resp.status == 200) {
                 resp.json().then((json) => {
                     setEntries(json);
@@ -30,31 +29,31 @@ const ListFrame: FC<{ formClassName: string, DBObject: DBObject, detailClickedHa
                 });
             }
         });
-    }, [props.formClassName]);
+    }, [props.DBObjectClass]);
 
     return (
         <>
             <table className={""}>
                 <thead>
                     <tr className={""}>
-                        {formDefinition?.config?.detailClass && <th className={""}>Detail</th>}
+                        {formDefinition?.formDefinition?.DBObjectClass && <th className={""}>Detail</th>}
                         {headerItems.map((item, index, array) => {
                             return <th key={"thtrtd-" + index} className={""}>{item.props.content}</th>
                         })}
-                        {formDefinition?.config?.actions && <th className={""}>Akce</th>}
+                        {formDefinition?.formDefinition?.actions && <th className={""}>Akce</th>}
                     </tr>
                 </thead>
                 <tbody>
                     {entries.map((entry, index, array) => {
                         return <tr key={"tbtr-" + index} className={(JSON.stringify(props.DBObject) == JSON.stringify(entry)) ? "selected-row" : ""}>
-                            {formDefinition?.config?.detailClass && <td className={""}><span className="link" onClick={props.detailClickedHandler.bind(this, entry)}> Detail </span></td>}
+                            {formDefinition?.formDefinition?.DBObjectClass && <td className={""}><span className="link" onClick={props.detailClickedHandler.bind(this, entry)}> Detail </span></td>}
                             {
                                 formDefinition.attributes.map((item, index, array) => {
                                     return <td key={"tbtrtd-" + index}>{entry[item.name]}</td>;
                                 })}
-                            {formDefinition?.config?.actions && <td className={"actions"}>
-                                {formDefinition?.config?.actions.delete && <span className={"link link-danger"} onClick={props.deleteItemHandler.bind(this, entry)}>Smazat</span>}
-                                {formDefinition?.config?.actions.delete && <span className={"link"} onClick={props.editItemHandler.bind(this, entry)}>Editovat</span>}
+                            {formDefinition?.formDefinition?.actions && <td className={"actions"}>
+                                {formDefinition?.formDefinition?.actions.delete && <span className={"link link-danger"} onClick={props.deleteItemHandler.bind(this, entry)}>Smazat</span>}
+                                {formDefinition?.formDefinition?.actions.delete && <span className={"link"} onClick={props.editItemHandler.bind(this, entry)}>Editovat</span>}
                             </td>}
 
                         </tr>

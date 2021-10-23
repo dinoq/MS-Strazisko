@@ -22,7 +22,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "components/admin/TreeChoiceDialog.tsx", "components/admin/ListFrame.tsx"  ],
+  ],
   "exclude": [
     "node_modules"
   ]
