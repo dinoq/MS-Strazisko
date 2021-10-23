@@ -5,7 +5,7 @@ interface FormDefs {
   [key: string]: FormDef;
 }
 
-export const FormDefinitions: FormDefs = {
+const FormDefinitions: FormDefs = {
   albumPasswords: {
     hasBreadcrumb: true,
     detailFrame: {
@@ -41,4 +41,13 @@ export const FormDefinitions: FormDefs = {
       ]
     }
   },
+};
+
+
+export const getFormDefinition = (DBObjectClass: string): FormDef => {
+  let def = FormDefinitions[DBObjectClass];
+  
+  return def;
+
 }
+

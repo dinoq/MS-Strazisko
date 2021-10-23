@@ -9,9 +9,9 @@ export type DBObject = {
 }
 
 export type FormDef = {
-	hasBreadcrumb: boolean | false,
-	detailFrame: DetailFrameDef | false,
-	listFrame: ListFrameDef | false,
+	hasBreadcrumb?: boolean,
+	detailFrame: DetailFrameDef,
+	listFrame: ListFrameDef,
 	//DBOClass: string,???? - bude bez toho vedet co "tahat"??
 }
 
@@ -31,7 +31,8 @@ export type LFComponentDef = {
 }
 
 export type DetailFrameDef = {
-	components: Array<DFComponentDef>
+	components: Array<DFComponentDef>,
+	createNewEntryText?: string //
 }
 
 export type DFComponentDef = {
@@ -39,7 +40,8 @@ export type DFComponentDef = {
 	componentType?: ComponentType,
 	inputType?: string,
 	values?: Array<any> | string,
-	constraints?: Array<FormAttrConstraintDef>
+	constraints?: Array<FormAttrConstraintDef>,
+	editable?: boolean
 }
 
 

@@ -1,4 +1,4 @@
-import classes from "../styles/Breadcrumb.module.scss";
+import classes from "./Breadcrumb.module.scss";
 
 const Breadcrumb = (props) => {
 

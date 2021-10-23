@@ -2,14 +2,7 @@ import type { NextPage } from 'next'
 import { withIronSession } from 'next-iron-session'
 import Head from 'next/head'
 import React, { useState } from 'react'
-import ErrorDialog from '../../components/admin/ErrorDialog'
-import ListFrame from '../../components/admin/ListFrame/ListFrame'
-import DetailFrameContainer from '../../components/admin/DetailFrame/DetailFrameContainer'
-import TreeChoiceDialog from '../../components/admin/TreeChoiceDialog'
-import { DetailFrameMode } from '../../constants/constants'
-import { FormDefinitions } from '../../constants/form-definitions'
-import { DBObject } from '../../constants/types'
-import classes from './foto.module.scss'
+import FormFrame from '../../components/admin/FormFrame'
 
 enum ShownLevel {
   YEARS,
@@ -18,110 +11,6 @@ enum ShownLevel {
 }
 
 const AdminPhotosPage: NextPage = (props: any) => {
-  const [breadcrumbItems, setBreadcrumbItemsState] = useState([]);
-  const [objectManagerMode, setObjectManagerMode] = useState(DetailFrameMode.NEW_ENTRY);
-  const [errorMsg, setErrorMsg] = useState("")
-  const [url, setUrl] = useState("");
-  const [formClassName, setFormClassName] = useState(["albumPasswords"]);
-  const [DBObject, setDBObject]: [DBObject, any] = useState(getEmptyDBObject(formClassName[formClassName.length - 1]));
-
-  const setBreadcrumbItems = (items) => {
-    hideObjectManager();
-    setBreadcrumbItemsState(items);
-    setFormClassName(prevClassNames => {
-      return prevClassNames.slice(0, items.length + 1);
-    });
-  }
-
-  /**
-   * Bylo kliknuto na položku, změní se úroveň
-   */
-  const detailClickedHandler = async (item) => {    //JSON.parse(JSON.stringify("asd"))
-    console.log('item: ', item);
-    console.log();
-    const newDetailClass = FormDefinitions[formClassName[formClassName.length - 1]].formDefinition.DBObjectClass;
-    console.log('newDetailClass: ', newDetailClass);
-    console.log('formClassName: ', formClassName);
-
-    setFormClassName(prevClassNames => {
-      return [...prevClassNames, newDetailClass];
-    });
-    console.log('formClassName: ', formClassName);
-    setBreadcrumbItemsState(prevState => [...prevState, item[FormDefinitions[formClassName[formClassName.length - 1]].attributes.find(item => item.props.breadcrumbKey).name]]);
-  }
-
-  const deleteItemHandler = async (item) => {
-    /*if (!isEqualObjects(DBObject.actual, DBObject.edited)) {
-      setErrorMsg("Nejprve zrušte editaci položky!");
-      return;
-    }
-    let url = "";
-    let body = {};
-    if (shownLevel == ShownLevel.YEARS) {
-      url = "years";
-      body = item;
-    } else if (shownLevel == ShownLevel.ALBUMS) {
-      url = "albums";
-    }
-
-    let resp = await fetch(
-      "/api/admin/" + url,
-      {
-        method: "DELETE",
-        mode: "same-origin",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
-      }
-    );
-
-    if (resp.status == 200) {
-      if (resp.status == 200) {
-        window.location.reload();
-      }
-    } else {
-      try {
-        let text = await resp.text();
-        setErrorMsg(text);
-      } catch (error) {
-
-      }
-    }*/
-  }
-
-  const [saveDialogVisible, setSaveDialogVisible] = useState(false);
-
-  const editItemHandler = (item) => {
-    console.log('editItemHandler item: ', item);
-    /*if (isEmptyObject(DBObject.actual, shownLevel) || DBObject.actual == DBObject.edited) {
-      setDBObject(prevState => {
-        return { ...prevState, actual: item, edited: item }
-      });
-      setObjectManagerMode(ObjectManagerMode.EDITING_ENTRY);
-      showObjectManager();
-    } else {
-      setSaveDialogVisible(true);
-      setDBObject(prevState => {
-        return { ...prevState, toSet: item };
-      });
-    }*/
-  }
-
-  const [objectManagerVisible, setObjectManagerVisible] = useState(false)
-
-  const showObjectManager = (setEmptyObject?) => {
-    if (setEmptyObject) {
-      setDBObject(getEmptyDBObject(formClassName[formClassName.length - 1]));
-    }
-    setObjectManagerVisible(true)
-  }
-
-  const hideObjectManager = () => {
-    setObjectManagerVisible(false);
-    setDBObject(getEmptyDBObject(formClassName[formClassName.length - 1]));
-    setObjectManagerMode(DetailFrameMode.NEW_ENTRY);
-  }
-  let title = "Přidat nový školní rok";//(shownLevel == ShownLevel.YEARS) ? "Přidat nový školní rok" : (shownLevel == ShownLevel.ALBUMS) ? "Přidat nové album" : "Přidat fotky";
-
   return (
     <div className={""}>
       <Head>
@@ -131,16 +20,7 @@ const AdminPhotosPage: NextPage = (props: any) => {
       </Head>
 
       <main className={""}>
-
-        <div className={"form-wrapper"}>
-          {!objectManagerVisible && <span className={"link " + "add-document-btn mb-3"} onClick={showObjectManager.bind(this, true)}>{title}</span>}
-          {objectManagerVisible &&
-            <DetailFrameContainer url={url} setErrorMsg={setErrorMsg} mode={objectManagerMode} hideObjectManager={hideObjectManager} DBObject={DBObject} setDBObject={setDBObject} />}
-          <ListFrame DBObjectClass={formClassName[formClassName.length - 1]} DBObject={DBObject} detailClickedHandler={detailClickedHandler} deleteItemHandler={deleteItemHandler} editItemHandler={editItemHandler} />
-          {saveDialogVisible &&
-            <TreeChoiceDialog dialogText="Chcete změny uložit?" overlayCancels={true} onYes={null} yesText="Uložit" onNo={null} noText="Neukládat" onCancel={() => { setSaveDialogVisible(false) }} cancelText="Zrušit" />}
-          {(errorMsg && errorMsg.length) && <ErrorDialog msg={errorMsg} onOk={() => { setErrorMsg("") }} />}
-        </div>
+        <FormFrame DBObjectClass="albumPasswords" />
       </main>
     </div>
   )
@@ -153,16 +33,6 @@ const getYears = () => {
     years.push((actualYear - i) + "/" + (actualYear + 1 - i));
   }
   return years;
-}
-
-const getEmptyDBObject = (DBObjectClass: string): DBObject => {
-  let attrs = FormDefinitions[DBObjectClass].attributes;
-  let fields = { id: -1, attrs: [], editedAttrs: [] };
-  attrs.forEach(attr => {
-    fields.attrs[attr.name] = "";
-  });
-  console.log('fields: ', fields);
-  return fields;
 }
 
 export const getServerSideProps = withIronSession(

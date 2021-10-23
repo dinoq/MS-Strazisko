@@ -2,11 +2,10 @@
 //import styles from "./ListFrame.module.css";
 
 import { FC, useEffect, useState } from "react";
-import { FormDefinitions } from "../../../constants/form-definitions";
 import { DBObject, FormDef, LFComponentDef, ListFrameDef } from "../../../constants/types";
 
-const ListFrame: FC<{ definition: ListFrameDef, DBObjectClass: string, DBObject: DBObject, detailClickedHandler: Function, deleteItemHandler: Function, editItemHandler: Function }> = (props) => {
-    const [entries, setEntries] = useState([])
+const ListFrame: FC<{ definition: ListFrameDef, DBObjectClass: string, DBObject: DBObject, detailClickedHandler: Function, deleteItemHandler: Function, editItemHandler: Function, entries: Array<any>, colspanNoData: number }> = (props) => {
+
     
     
     return (
@@ -22,7 +21,7 @@ const ListFrame: FC<{ definition: ListFrameDef, DBObjectClass: string, DBObject:
                     </tr>
                 </thead>
                 <tbody>
-                    {entries.map((entry, index, array) => {
+                    {props.entries.map((entry, index, array) => {
                         return <tr key={"tbtr-" + index} className={(JSON.stringify(props.DBObject) == JSON.stringify(entry)) ? "selected-row" : ""}>
                             {props.definition?.detailDBOClass && <td className={""}><span className="link" onClick={props.detailClickedHandler.bind(this, entry)}> Detail </span></td>}
                             {
@@ -36,9 +35,9 @@ const ListFrame: FC<{ definition: ListFrameDef, DBObjectClass: string, DBObject:
 
                         </tr>
                     })}
-                    {(!entries || !entries.length) &&
+                    {(props.colspanNoData != -1) &&
                         <tr>
-                            <td colSpan={props.definition?.components.length} className="text-center">Nenalezena žádná data!</td>
+                            <td colSpan={props.colspanNoData} className="text-center">Nenalezena žádná data!</td>
                         </tr>
                     }
                 </tbody>

@@ -9,18 +9,18 @@ const DetailFrame: FC<{definition: DetailFrameDef, DBObjectClass: string, DBObje
             <form className="d-flex flex-column bordered p-2 mb-3" onSubmit={props.formSubmitted}>
                 {props.definition.components.map(((item, i) => {
                     if (item.editable) {
-                        if (item.componentType == ComponentType.INPUT) {
+                        if (item.type == ComponentType.INPUT) {
                             return (
                                 <div key={"input-" + i}>
                                     <div className="d-flex justify-content-center">
-                                        <input type={item.inputType ? item.inputType : "text"} id={item.id ? item.id : ""} placeholder={item.content} value={(props.DBObject.editedAttrs[item.attributeKey])?props.DBObject.editedAttrs[item.attributeKey]:props.DBObject.attributes[item.attributeKey]} onChange={updateDBObject.bind(this, item.attributeKey)} required/>
+                                        <input type={item.inputType ? item.inputType : "text"} id={item.id ? item.id : ""} placeholder={item.content} value={(props.DBObject.editedAttrs[item.objectParamName])?props.DBObject.editedAttrs[item.objectParamName]:props.DBObject.attributes[item.objectParamName]} onChange={updateDBObject.bind(this, item.objectParamName)} required/>
                                     </div>
                                 </div>
                             );
-                        } else if (item.componentType == ComponentType.SELECTBOX) {
+                        } else if (item.type == ComponentType.SELECTBOX) {
                             if (props.mode == DetailFrameMode.EDITING_ENTRY) {
                                 return (
-                                    <select key={"selectbox-" + i} id={item.id ? item.id : ""} value={(props.DBObject.editedAttrs[item.attributeKey])?props.DBObject.editedAttrs[item.attributeKey]:props.DBObject.attributes[item.attributeKey]} onChange={updateDBObject.bind(this, item.attributeKey)} disabled={!item.editableInEditMode}>
+                                    <select key={"selectbox-" + i} id={item.id ? item.id : ""} value={(props.DBObject.editedAttrs[item.objectParamName])?props.DBObject.editedAttrs[item.objectParamName]:props.DBObject.attributes[item.objectParamName]} onChange={updateDBObject.bind(this, item.objectParamName)} disabled={!item.editableInEditMode}>
                                         {item.values.map((val, j) => {
                                             return <option key={"selectbox-" + i + "-option-" + j} value={val}>{val}</option>
                                         })}
@@ -28,7 +28,7 @@ const DetailFrame: FC<{definition: DetailFrameDef, DBObjectClass: string, DBObje
                                 );
                             } else {
                                 return (
-                                    <select key={"selectbox-" + i} id={item.id ? item.id : ""} value={(props.DBObject.editedAttrs[item.attributeKey])?props.DBObject.editedAttrs[item.attributeKey]:props.DBObject.attributes[item.attributeKey]} onChange={updateDBObject.bind(this, item.attributeKey)}>
+                                    <select key={"selectbox-" + i} id={item.id ? item.id : ""} value={(props.DBObject.editedAttrs[item.objectParamName])?props.DBObject.editedAttrs[item.objectParamName]:props.DBObject.attributes[item.objectParamName]} onChange={updateDBObject.bind(this, item.objectParamName)}>
                                         {item.values.map((val, j) => {
                                             return <option key={"selectbox-" + i + "-option-" + j} value={val}>{val}</option>
                                         })}
