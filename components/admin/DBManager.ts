@@ -8,7 +8,6 @@ export class DBManager{
         /*attrs.forEach(attr => {
           object.attrs[attr.attributeKey] = "";
         });*/
-        console.log('object: ', object);
         return object;
       }
 }

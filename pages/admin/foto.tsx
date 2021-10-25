@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import { withIronSession } from 'next-iron-session'
 import Head from 'next/head'
 import React, { useState } from 'react'
-import FormFrame from '../../components/admin/FormFrame'
+import FormFrameContainer from '../../components/admin/FormFrame/FormFrameContainer'
 
 enum ShownLevel {
   YEARS,
@@ -20,7 +20,7 @@ const AdminPhotosPage: NextPage = (props: any) => {
       </Head>
 
       <main className={""}>
-        <FormFrame DBObjectClass="albumPasswords" />
+        <FormFrameContainer DBObjectClass="albumPasswords" />
       </main>
     </div>
   )

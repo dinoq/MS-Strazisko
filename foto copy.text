@@ -9,8 +9,8 @@ import TreeChoiceDialog from '../../components/admin/TreeChoiceDialog'
 import { DetailFrameMode } from '../../constants/constants'
 import { DBObject } from '../../constants/types'
 import classes from './foto.module.scss'
-import FormFrame from '../../components/admin/FormFrame'
-import { getFormDefinition } from '../../constants/form-definitions'
+import FormFrame from '../../components/admin/FormFrame/FormFrame'
+import { getFormDefinition } from '../../constants/form-definition-functions'
 
 enum ShownLevel {
   YEARS,

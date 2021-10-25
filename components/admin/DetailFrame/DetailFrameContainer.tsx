@@ -1,14 +1,15 @@
 import React, { FC, MouseEventHandler, useEffect, useState } from "react";
 import { ComponentType, DetailFrameMode } from "../../../constants/constants";
+import { getFormDefinition } from "../../../constants/form-definition-functions";
 import { DBObject } from "../../../constants/types";
 import ErrorDialog from "../ErrorDialog";
 import DetailFrame from "./DetailFrame";
 
-const DetailFrameContainer: FC<{DBObject: DBObject, setDBObject: Function, url: string, setErrorMsg: Function, mode:DetailFrameMode, hideObjectManager: MouseEventHandler<HTMLInputElement>}>= (props) => {
+const DetailFrameContainer: FC<{ DBObjectClass: string, DBObject: DBObject, mode: DetailFrameMode, hideDetailFrame: MouseEventHandler<HTMLInputElement>, setDBObject: Function, setErrorMsg: Function, updateDBObject: Function }> = (props) => {
+    let formDefinition = getFormDefinition(props.DBObjectClass);
+    
     const formSubmitted = async (event) => {
         event.preventDefault();
-        let conditionError = false;
-       
     };
 
     const updateDBObject = (objectParamName, e) => {
@@ -19,8 +20,7 @@ const DetailFrameContainer: FC<{DBObject: DBObject, setDBObject: Function, url: 
         })
     }
 
-    console.log("props.DBObject2", props.DBObject);
-    useEffect(() => {
+    /*useEffect(() => {
         props.headerItems.map(((item, i) => {            
             if (item.type == ComponentType.SELECTBOX) {
                 if(!props.DBObject.edited[item.objectParamName]){
@@ -31,10 +31,10 @@ const DetailFrameContainer: FC<{DBObject: DBObject, setDBObject: Function, url: 
         return () => {
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props.headerItems])
-    console.log("props.DBObject3", props.DBObject);
+    }, [props.headerItems])*/
+
     return (
-        <DetailFrame />
+        <DetailFrame DBObjectClass={props.DBObjectClass} DBObject={props.DBObject} definition={formDefinition} mode={props.mode} hideDetailFrame={props.hideDetailFrame} formSubmitted={formSubmitted} setErrorMsg={props.setErrorMsg} updateDBObject={updateDBObject}/>
     )
 }
 

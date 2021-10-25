@@ -4,7 +4,7 @@
 import { FC, useEffect, useState } from "react";
 import { DBObject, FormDef, LFComponentDef, ListFrameDef } from "../../../constants/types";
 
-const ListFrame: FC<{ definition: ListFrameDef, DBObjectClass: string, DBObject: DBObject, detailClickedHandler: Function, deleteItemHandler: Function, editItemHandler: Function, entries: Array<any>, colspanNoData: number }> = (props) => {
+const ListFrame: FC<{ definition: ListFrameDef, DBObjectClass: string, DBObject: DBObject, detailClickedHandler: Function, deleteItemHandler: Function, editItemHandler: Function, entries: Array<DBObject>, colspanNoData: number }> = (props) => {
 
     
     
@@ -22,11 +22,13 @@ const ListFrame: FC<{ definition: ListFrameDef, DBObjectClass: string, DBObject:
                 </thead>
                 <tbody>
                     {props.entries.map((entry, index, array) => {
-                        return <tr key={"tbtr-" + index} className={(JSON.stringify(props.DBObject) == JSON.stringify(entry)) ? "selected-row" : ""}>
+                        return <tr key={"tbtr-" + index} className={(props.DBObject.id == entry.id) ? "selected-row" : ""}>
                             {props.definition?.detailDBOClass && <td className={""}><span className="link" onClick={props.detailClickedHandler.bind(this, entry)}> Detail </span></td>}
                             {
                                 props.definition?.components.map((item, index, array) => {
-                                    return <td key={"tbtrtd-" + index}>{entry[item.attributeKey]}</td>;
+                                    console.log("???", entry.attributes, item.attributeKey, entry.attributes[item.attributeKey]);
+                                    //entry.attributes[entry.attributes.findIndex(attr=>attr.key==item.attributeKey)].value
+                                    return <td key={"tbtrtd-" + index}>{entry.attributes[entry.attributes.findIndex(attr=>attr.key==item.attributeKey)].value}</td>;
                                 })}
                             {props.definition?.actions && <td className={"actions"}>
                                 {props.definition?.actions.delete && <span className={"link link-danger"} onClick={props.deleteItemHandler.bind(this, entry)}>Smazat</span>}

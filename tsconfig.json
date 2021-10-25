@@ -22,7 +22,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "foto copy.text"  ],
   "exclude": [
     "node_modules"
   ]

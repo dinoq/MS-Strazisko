@@ -1,5 +1,6 @@
-import { ComponentType } from "./constants";
-import { FormDef } from "./types";
+import { ComponentType } from "../../constants/constants";
+import { FormDef } from "../../constants/types";
+import { getYears } from "./values-definitions";
 
 interface FormDefs {
   [key: string]: FormDef;
@@ -7,27 +8,22 @@ interface FormDefs {
 
 const FormDefinitions: FormDefs = {
   albumPasswords: {
-    hasBreadcrumb: true,
     detailFrame: {
       components: [
         {
           attributeKey: "id_albumPasswords",
           componentType: ComponentType.SELECTBOX,
-          values: "getYears()"
+          values: getYears()
         },
         {
           attributeKey: "passwordHash",
-          componentType: ComponentType.INPUT,
           constraints: [{ condition: "$['#'].length", errorIfFail: "Musí být zvolen školní rok" }]
         }
-      ]
+      ],
+      createNewEntryText: "Přidat školní rok"
     },
     listFrame: {
       detailDBOClass: "albums",
-      actions:{
-        delete: true,
-        edit: true
-      },
       components: [
         {
           attributeKey: "id_albumPasswords",
@@ -43,11 +39,6 @@ const FormDefinitions: FormDefs = {
   },
 };
 
-
-export const getFormDefinition = (DBObjectClass: string): FormDef => {
-  let def = FormDefinitions[DBObjectClass];
-  
-  return def;
-
+export const getRawFormDefinition = (DBObjectClass: string): FormDef => {
+  return FormDefinitions[DBObjectClass];
 }
-
