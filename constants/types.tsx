@@ -38,7 +38,7 @@ export type DFComponentDef = {
 
 export type FormAttrConstraintDef = {
 	condition: string,
-	errorIfFail: string
+	errMsgIfFail: string
 }
 
 export type ListFrameDef = {

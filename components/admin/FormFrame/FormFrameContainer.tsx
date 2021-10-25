@@ -11,13 +11,12 @@ import TreeChoiceDialog from "../TreeChoiceDialog";
 import { DetailFrameMode } from "../../../constants/constants";
 import { DBObject } from "../../../constants/types";
 import DetailFrameContainer from "../DetailFrame/DetailFrameContainer";
-import { DBManager } from "../DBManager";
 import ListFrameContainer from "../ListFrame/ListFrameContainer";
 import FormFrame from "./FormFrame";
-import { getAllDBObjectEntries, getFormDefinition } from "../../../constants/form-definition-functions";
+import { DBManager } from "../../../constants/DBManager";
 
 const FormFrameContainer: React.FC<{ DBObjectClass: string }> = (props) => {
-  const definition = getFormDefinition(props.DBObjectClass);
+  const definition = DBManager.getFormDefinition(props.DBObjectClass);
 
   const [breadcrumbItems, setBreadcrumbItemsState] = useState([]);
   const [errorMsg, setErrorMsg] = useState("")
@@ -31,30 +30,19 @@ const FormFrameContainer: React.FC<{ DBObjectClass: string }> = (props) => {
 
 
   useEffect(() => {
-    if(!entries.length){
+    if (!entries.length) {
 
-    }else{
+    } else {
 
     }
 
-    getAllDBObjectEntries(props.DBObjectClass).then(entries=>{
+    DBManager.getAllDBObjectEntries(props.DBObjectClass).then(entries => {
       setEntries(entries);
-      console.log('entries: ', entries);
-    });
-/*
-    fetch("/api/admin/data?className=" + props.DBObjectClass).then((resp) => {
-      if (resp.status == 200) {
-        resp.json().then((json) => {
-          setEntries(json);
-          console.log('json: ', json);
-        });
-      } else {
-        resp.text().then((value) => {
-          console.log("tvalue: ", value);
-        });
-      }
-    });*/
-  }, [props.DBObjectClass]);
+    })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[props.DBObjectClass]);
+
+
 
   const setBreadcrumbItems = (items) => {
     setBreadcrumbItemsState(items);
@@ -89,9 +77,9 @@ const FormFrameContainer: React.FC<{ DBObjectClass: string }> = (props) => {
    * Položka byla přepnuta do editace
    */
   const editItemHandler = (item) => {
-    if(DBObject.isEdited){
+    if (DBObject.isEdited) {
       setSaveDialogVisible(true);
-    }else{
+    } else {
       setDBObject();
     }
     /*if (isEmptyObject(DBObject.actual, shownLevel) || DBObject.actual == DBObject.edited) {
@@ -110,10 +98,10 @@ const FormFrameContainer: React.FC<{ DBObjectClass: string }> = (props) => {
 
   const updateDBObject = (item) => {
   }
-  
+
   return (
     <>
-      <FormFrame DBObjectClass={props.DBObjectClass} errorMsg={errorMsg} detailFrameVisible={detailFrameVisible} saveDialogVisible={saveDialogVisible} breadcrumbItems={breadcrumbItems} entries={entries} detailFrameMode={detailFrameMode} definition={definition} DBObject={DBObject} hideDetailFrame={hideDetailFrame} setDBObject={setDBObject} setBreadcrumbItems={setBreadcrumbItems} detailClickedHandler={detailClickedHandler} deleteItemHandler={detailClickedHandler} editItemHandler={editItemHandler} showDetailFrame={showDetailFrame} setSaveDialogVisible={setSaveDialogVisible} setErrorMsg={setErrorMsg} updateDBObject={updateDBObject}/>
+      <FormFrame DBObjectClass={props.DBObjectClass} errorMsg={errorMsg} detailFrameVisible={detailFrameVisible} saveDialogVisible={saveDialogVisible} breadcrumbItems={breadcrumbItems} entries={entries} detailFrameMode={detailFrameMode} definition={definition} DBObject={DBObject} hideDetailFrame={hideDetailFrame} setDBObject={setDBObject} setBreadcrumbItems={setBreadcrumbItems} detailClickedHandler={detailClickedHandler} deleteItemHandler={detailClickedHandler} editItemHandler={editItemHandler} showDetailFrame={showDetailFrame} setSaveDialogVisible={setSaveDialogVisible} setErrorMsg={setErrorMsg} updateDBObject={updateDBObject} />
     </>
   )
 }

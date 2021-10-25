@@ -17,7 +17,7 @@ const FormDefinitions: FormDefs = {
         },
         {
           attributeKey: "passwordHash",
-          constraints: [{ condition: "$['#'].length", errorIfFail: "Musí být zvolen školní rok" }]
+          constraints: [{ condition: "$.length >= 6", errMsgIfFail: "Heslo musí obsahovat alespoň 6 znaků!" }]
         }
       ],
       createNewEntryText: "Přidat školní rok"

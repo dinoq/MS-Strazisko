@@ -10,11 +10,12 @@ import TreeChoiceDialog from "../TreeChoiceDialog";
 import { DetailFrameMode } from "../../../constants/constants";
 import { DBObject, FormDef } from "../../../constants/types";
 import DetailFrameContainer from "../DetailFrame/DetailFrameContainer";
-import { DBManager } from "../DBManager";
 import ListFrameContainer from "../ListFrame/ListFrameContainer";
 import BreadcrumbContainer from "../Breadcrumb/BreadcrumbContainer";
+import { DBManager } from "../../../constants/DBManager";
 
 const FormFrame: React.FC<{ DBObjectClass: string, errorMsg: string, detailFrameVisible: boolean, saveDialogVisible: boolean, breadcrumbItems: Array<any>, entries: Array<DBObject>, detailFrameMode: DetailFrameMode, definition: FormDef, DBObject: DBObject, hideDetailFrame: EventHandler<any>, setDBObject: Function, setBreadcrumbItems: Function, detailClickedHandler: Function, deleteItemHandler: Function, editItemHandler: Function, showDetailFrame: Function, setSaveDialogVisible: Function, setErrorMsg: Function, updateDBObject: Function }> = (props) => {
+  
   return (
     <>
       <BreadcrumbContainer items={props.breadcrumbItems} setItems={props.setBreadcrumbItems} />

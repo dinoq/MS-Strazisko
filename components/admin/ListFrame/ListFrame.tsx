@@ -26,8 +26,6 @@ const ListFrame: FC<{ definition: ListFrameDef, DBObjectClass: string, DBObject:
                             {props.definition?.detailDBOClass && <td className={""}><span className="link" onClick={props.detailClickedHandler.bind(this, entry)}> Detail </span></td>}
                             {
                                 props.definition?.components.map((item, index, array) => {
-                                    console.log("???", entry.attributes, item.attributeKey, entry.attributes[item.attributeKey]);
-                                    //entry.attributes[entry.attributes.findIndex(attr=>attr.key==item.attributeKey)].value
                                     return <td key={"tbtrtd-" + index}>{entry.attributes[entry.attributes.findIndex(attr=>attr.key==item.attributeKey)].value}</td>;
                                 })}
                             {props.definition?.actions && <td className={"actions"}>

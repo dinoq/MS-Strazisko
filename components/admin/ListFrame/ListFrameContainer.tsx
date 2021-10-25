@@ -2,12 +2,12 @@
 //import styles from "./ListFrame.module.css";
 
 import { FC, useState, } from "react";
-import { getFormDefinition } from "../../../constants/form-definition-functions";
+import { DBManager } from "../../../constants/DBManager";
 import { DBObject } from "../../../constants/types";
 import ListFrame from "./ListFrame";
 
 const ListFrameContainer: FC<{ DBObjectClass: string, DBObject: DBObject, detailClickedHandler: Function, deleteItemHandler: Function, editItemHandler: Function, entries: Array<DBObject> }> = (props) => {
-    let formDefinition = getFormDefinition(props.DBObjectClass);
+    let formDefinition = DBManager.getFormDefinition(props.DBObjectClass);
     let colspanNoData = -1;
     if (!props.entries || !props.entries.length) {
         colspanNoData = formDefinition.listFrame.components.length;
