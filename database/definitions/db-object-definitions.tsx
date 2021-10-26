@@ -42,6 +42,23 @@ const DBObjectDefinitions: RecursivePartial<DBOBjectDefs> = {
                 name: "Název"
             }
         ]
+    }, 
+    ContactTexts: {
+        DBObjectClass: "ContactTexts",
+        attributes: [
+            {
+                key: "contact_text_id",
+                name: "ID textu"
+            },
+            {
+                key: "title",
+                name: "Typ textu"
+            },
+            {
+                key: "content",
+                name: "Obsah"
+            }
+        ]
     }
 }
 

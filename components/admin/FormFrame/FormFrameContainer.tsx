@@ -26,23 +26,12 @@ const FormFrameContainer: React.FC<{ DBObjectClass: string }> = (props) => {
     const [entries, setEntries] = useState([]);
 
     let DBObjectClass = breadcrumbItems[breadcrumbItems.length - 1].DBObjectClass;
-    console.log('DBObjectClass: ', DBObjectClass);
 
     const [DBObject, setDBObject]: [DBObject, any] = useState(DBManager.getEmptyDBObject(DBObjectClass));
-    console.log('DBObjectrrrrrr: ', DBObject);
-
     
     const definition = DBManager.getFormDefinition(DBObjectClass);
 
-    console.log('breadcrumbItems: ', breadcrumbItems);
     useEffect(() => {
-        if (!entries.length) {
-
-        } else {
-
-        }
-
-        console.log('DBObjectClass:eff ', DBObjectClass);
         setDBObject(DBManager.getEmptyDBObject(DBObjectClass));
         DBManager.getAllDBObjectEntries(DBObjectClass, definition.DB.orderBy).then(entries => {
             setEntries(entries);
@@ -73,7 +62,7 @@ const FormFrameContainer: React.FC<{ DBObjectClass: string }> = (props) => {
         let item: DBObject = itm as DBObject;
         console.log('item: ', item);
         let breadcrumbAttr = DBManager.getBreadcrumbAttr(DBObject);
-        let objBreadcrumbAttr = DBManager.getAttrOrComponentFromArrByKey(item.attributes, breadcrumbAttr.key);
+        let objBreadcrumbAttr = DBManager.getAttrFromArrByKey(item.attributes, breadcrumbAttr.key);
         setBreadcrumbItems(prevState =>{
             return [...prevState, {DBObjectClass: definition.listFrame.detailDBOClass, text:objBreadcrumbAttr.value}]
         })

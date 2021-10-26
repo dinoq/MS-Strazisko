@@ -27,15 +27,17 @@ const ListFrame: FC<{ definition: ListFrameDef, DBObjectClass: string, DBObject:
                                 props.definition?.components.map((item, index, array) => {
                                     let attr =DBManager.getAttrFromArrByKey(entry.attributes, item.attributeKey); // get object attr
                                     let defAttr = DBManager.getLFComponentFromArrByKey(props.definition.components, item.attributeKey); // get def attr
+                                    let value = attr.value;
                                     if(defAttr.transformation){
-                                        
+                                        console.log('defAttr.transformation: ', defAttr.transformation);
+                                        let command = defAttr.transformation.replaceAll("$", attr.value);
+                                        value = eval(command);
                                     }
-                                    console.log('defAttr.transformation: ', defAttr);
-                                    return <td key={"tbtrtd-" + index}>{attr.value}</td>;
+                                    return <td key={"tbtrtd-" + index}>{value}</td>;
                                 })}
                             {props.definition?.actions && <td className={"actions"}>
                                 {props.definition?.actions.delete && <span className={"link link-danger"} onClick={props.deleteItemHandler.bind(this, entry)}>Smazat</span>}
-                                {props.definition?.actions.delete && <span className={"link"} onClick={props.editItemHandler.bind(this, entry)}>Editovat</span>}
+                                {props.definition?.actions.edit && <span className={"link"} onClick={props.editItemHandler.bind(this, entry)}>Editovat</span>}
                             </td>}
 
                         </tr>

@@ -20,7 +20,6 @@ export type DBObjectEditedAttr = {
 }
 
 export type FormDef = {
-    hasBreadcrumb?: boolean,
     detailFrame: DetailFrameDef,
     listFrame: ListFrameDef,
     DB?: {
@@ -54,8 +53,8 @@ export type ListFrameDef = {
     components: Array<LFComponentDef>,
     detailDBOClass?: string,
     actions?: {
-        delete: boolean,
-        edit: boolean
+        delete?: boolean,
+        edit?: boolean
     },
     cantDeleteItemMsg?: string
 }

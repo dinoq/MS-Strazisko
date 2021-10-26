@@ -6,7 +6,6 @@ import { getYears } from "./values-definitions";
 interface FormDefs {
     [key: string]: FormDef;
 }
-
 const FormDefinitions: FormDefs = {
     albumPasswords: {
         detailFrame: {
@@ -92,6 +91,52 @@ const FormDefinitions: FormDefs = {
             orderBy: {
                 attr: "id_albumPasswords",
                 descending: true
+            }
+        }
+    },
+
+
+
+
+
+    ContactTexts: {
+        detailFrame: {
+            components: [
+                {
+                    attributeKey: "contact_text_id",
+                    componentType: ComponentType.INPUT,
+                    inputType: "number",
+                    editable: false
+                },
+                {
+                    attributeKey: "title",
+                    editable: false
+                },
+                {
+                    attributeKey: "content"
+                }
+            ],
+
+        },
+        listFrame: {
+            components: [
+                {
+                    attributeKey: "contact_text_id",
+                },
+                {
+                    attributeKey: "title",
+                },
+                {
+                    attributeKey: "content",
+                }
+            ],
+            actions:{
+                delete: false
+            }
+        },
+        DB: {
+            orderBy: {
+                attr: "contact_text_id"
             }
         }
     },

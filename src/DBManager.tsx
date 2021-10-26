@@ -10,7 +10,6 @@ export class DBManager {
 
 
     protected static _defaultDefinition: RecursivePartial<FormDef> = {
-        hasBreadcrumb: false,
         detailFrame: {
             components: [
                 {
@@ -145,7 +144,6 @@ export class DBManager {
             }
         });
         
-        console.log('attr: ', attr, arr, key);
         if(type == "LFComponentDef"){
             return (attr as LFComponentDef) || {attributeKey: "", transformation: "", isBreadcrumbKey: false};
         } else if(type == "DFComponentDef"){

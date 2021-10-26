@@ -1,6 +1,7 @@
 import type { NextPage } from 'next'
 import { withIronSession } from 'next-iron-session'
 import Head from 'next/head'
+import FormFrameContainer from '../../components/admin/FormFrame/FormFrameContainer'
 import styles from './pages.module.scss'
 
 const AdminContactsPage: NextPage = (props: any)  => {
@@ -13,7 +14,7 @@ const AdminContactsPage: NextPage = (props: any)  => {
       </Head>
 
       <main className={""}>
-        kontakt
+        <FormFrameContainer DBObjectClass="ContactTexts" />
       </main>
     </div>
   )
