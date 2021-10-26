@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { withIronSession } from "next-iron-session";
-import { getApiURL } from "../../../utils";
+import { getApiURL } from "../../../src/utils";
 
 const AlbumDetail: React.FC<{ logged: boolean }> = (props) => {
   const router = useRouter();

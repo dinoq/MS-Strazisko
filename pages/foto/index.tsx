@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { getApiURL } from "../../utils";
+import { getApiURL } from "../../src/utils";
 
 const FotoPage: React.FC<{years: Array<any>}> = (props) => {
     

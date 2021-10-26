@@ -1,7 +1,8 @@
 import { withIronSession } from "next-iron-session";
 import Database from "better-sqlite3";
-import { DBManager } from "../../../constants/DBManager";
-import { DBObjectAttr } from "../../../constants/types";
+import { DBManager } from "../../../src/DBManager";
+import { DBObjectAttr } from "../../../src/types";
+import { checkIfLettersSlashUnderscore, checkIfNotDangerSQL } from "../../../src/utils";
 
 
 const handler = async (req, res) => {
@@ -18,46 +19,53 @@ const handler = async (req, res) => {
 
 	const db = new Database('database/database.db', { verbose: console.log });
 	if (req.method == "GET") {
-		const className = req.query["className"];
-		const condition = req.query["condition"] || "";
-		if (!className || className.includes(" ") || className.includes(";") || condition.includes(";")) { // bezpečnostní pojistka
+		const className: string = req.query["className"];
+		const condition: string = req.query["condition"] || "";
+		const order: string = req.query["order"] || "";
+        
+		if (!checkIfLettersSlashUnderscore(className) || !checkIfNotDangerSQL([condition, order])) { // bezpečnostní pojistka
 			db.close();
-			return res.status(500).send("ERROR - wrong data className or condition!");
+			return res.status(500).send("ERROR - wrong data className, condition or order!");
 		}
-		console.log('className: ', className);
-		const stmt = db.prepare("SELECT * FROM " + className + ";")
+        if(!className.length){
+            return res.status(500).send("ERROR - className not received!");
+        }
+        let orderBy = (order.length)? " ORDER BY " + order.split("|")[0] + " " + order.split("|")[1]: "";
+		const stmt = db.prepare("SELECT * FROM " + className + orderBy + ";")
 		const sqlResults = stmt.all();
-		console.log('sqlResults: ', sqlResults);
-
 		db.close();
 		return res.json(sqlResults);
 	} else if (req.method == "POST") {
 		const className = req.body["className"];
 		const attrs = req.body["attributes"];
-		if (!className || className.includes(" ") || className.includes(";") || !attrs || Array.isArray(attrs) || typeof attrs != "object") { // bezpečnostní pojistka
+		if (!checkIfLettersSlashUnderscore(className) || !attrs || Array.isArray(attrs) || typeof attrs != "object") { // bezpečnostní pojistka
 			db.close();
 			return res.status(500).send("ERROR - wrong data className or attribute!");
 		}
+        if(!className.length){
+            return res.status(500).send("ERROR - className not received!");
+        }
 
 		try {
 			// check class...
-			const DBObjectDefinitionAttrs: Array<DBObjectAttr> = DBManager.getDBObjectDefinition(className).attributes;
+			/*const DBObjectDefinitionAttrs: Array<DBObjectAttr> = DBManager.getDBObjectDefinition(className).attributes;
 			for (const attrKey in attrs) {
 				if (!DBObjectDefinitionAttrs.find(definitionAttr => definitionAttr.key == attrKey)) {
 					return res.status(500).send("ERROR - wrong attribute key! Attribute '" + attrKey + "' is not in class '" + className + "'");
 				}
-			};
-            if (Object.keys(attrs).length != DBObjectDefinitionAttrs.length) { // bezpečnostní pojistka
+			};*/
+            let checkClass = DBManager.checkClassAttrs(attrs, className);
+            if(!checkClass.success){
                 db.close();
-                return res.status(500).send("ERROR - Wrong attribute count!");
+                return res.status(500).send(checkClass.errorMsg);
             }
+
             let attrsStr = "(" + Object.keys(attrs).join(", ") + ")";
             let questionsStr = "(" + Object.keys(attrs).map(attr=> "?").join(", ") + ")";
             if (attrsStr.includes(";") || questionsStr.includes(";")) { // bezpečnostní pojistka
                 db.close();
                 return res.status(500).send("ERROR - error with attributes!");
             }
-            console.log("s:", 'INSERT INTO ' + className + ' ' + attrsStr + ' VALUES ' + questionsStr);
 			const stmt = db.prepare('INSERT INTO ' + className + ' ' + attrsStr + ' VALUES ' + questionsStr);
 			const info = stmt.run(Object.values(attrs));
 		} catch (error) {
@@ -66,21 +74,60 @@ const handler = async (req, res) => {
 		}
 		db.close();
 		return res.status(200).send("Success!");
-	} else if (req.method == "DELETE") {
+	} else if (req.method == "PATCH") {
+		const className = req.body["className"];
+		const attrs = req.body["attributes"];
+        const updateId = req.body["updateId"]; 
+		const primaryKey: string = req.body["primaryKey"];
     
+        if(!checkIfLettersSlashUnderscore([className, updateId, primaryKey]) || !attrs || Array.isArray(attrs) || typeof attrs != "object"){ // bezpečnostní pojistka
+			db.close();
+			return res.status(500).send("ERROR - wrong data className, updateId, primaryKey or attrs!");
+        }
+        if(!className.length || !updateId.length || !primaryKey.length){
+			db.close();
+            return res.status(500).send("ERROR - className, primary key or updateId not received!");
+        }
+        try {
+            let attrsStr = Object.keys(attrs).slice(1).join(" = ?, ") + " = ?";
+            if (attrsStr.includes(";")) { // bezpečnostní pojistka
+                db.close();
+                return res.status(500).send("ERROR - error with attributes!");
+            }
+          const stmt = db.prepare('UPDATE ' + className + ' SET ' + attrsStr + ' WHERE ' + primaryKey + ' = ?');
+          const info = stmt.run([...Object.values(attrs).slice(1), updateId]);
+        } catch (error) {
+          db.close();
+          return res.status(500).send("ERROR! " + (process.env.NODE_ENV === "production" ? "" : error));
+        }
+        db.close();
+        return res.status(200).send("Success!");
+      } else if (req.method == "DELETE") {
+		const className: string = req.body["className"];
+		const detailClass: string = req.body["detailClass"];
+		const primaryKey: string = req.body["primaryKey"];
+		const deleteId: string = req.body["deleteId"];
+		const cantDeleteItemMsg: string = req.body["cantDeleteItemMsg"];
+        if(!checkIfLettersSlashUnderscore([className, detailClass, primaryKey, deleteId])){ // bezpečnostní pojistka
+			return res.status(500).send("ERROR - wrong data className, detailClass, primaryKey or deleteId!");
+        }
+        if(!className.length || !primaryKey.length || !deleteId.length){
+            return res.status(500).send("ERROR - className, primary key or deleteID not received!");
+        }
         
         try {
-         /* const sqlPhotos = "SELECT * FROM photos WHERE id_album=?";
-          const stmtPhotos = db.prepare(sqlPhotos);
-          const sqlResults = stmtPhotos.all(year);
-          if(sqlResults.length){// Nemuze se smazat rok, pokud obsahuje alba
-            db.close();
-            return res.status(500).send("Chyba! Dané album obsahuje nějaké fotografie. Nejprve muíte smazat je a až potom samotné album!");
-          }
+            if(detailClass){
+                const stmtChildren = db.prepare("SELECT * FROM " + detailClass + " WHERE " + primaryKey + "=?");
+                const sqlChildrenResults = stmtChildren.all(deleteId);
+                if(sqlChildrenResults.length){// Nemuze se smazat zatnam, pokud obsahuje nejaka podrizena data (v podrizene tabulce)
+                    db.close();
+                    let msg = (typeof cantDeleteItemMsg == "string" && cantDeleteItemMsg.length)? cantDeleteItemMsg : "Chyba! Daný záznam zřejmě obsahuje nějaká podřízená data.<br>Nejprve musíte smazat je a až potom tento záznam!";
+                    return res.status(500).send(msg);
+                }
+            }
           
-          const sql = "DELETE FROM albumPasswords WHERE id_albumPasswords=?";
-          const stmt = db.prepare(sql);
-          stmt.run(year);*/
+            const stmt = db.prepare("DELETE FROM " + className + " WHERE " + primaryKey + "=?");
+            stmt.run(deleteId);
         } catch (error) {
           db.close();
           return res.status(500).send((process.env.NODE_ENV === "production" ? "Došlo k neznámé chybě!" : ("ERROR! " + error)));

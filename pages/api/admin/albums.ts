@@ -63,7 +63,7 @@ const handler = async (req, res) => {
       const sqlResults = stmtPhotos.all(year);
       if(sqlResults.length){// Nemuze se smazat rok, pokud obsahuje alba
         db.close();
-        return res.status(500).send("Chyba! Dané album obsahuje nějaké fotografie. Nejprve muíte smazat je a až potom samotné album!");
+        return res.status(500).send("Chyba! Dané album obsahuje nějaké fotografie. Nejprve musíte smazat je a až potom samotné album!");
       }
       
       const sql = "DELETE FROM albumPasswords WHERE id_albumPasswords=?";

@@ -1,7 +1,7 @@
 import React, { FC, MouseEventHandler, useEffect, useState } from "react";
-import { ComponentType, DetailFrameMode } from "../../../constants/constants";
-import { DBManager } from "../../../constants/DBManager";
-import { DBObject, DBObjectAttr } from "../../../constants/types";
+import { ComponentType, DetailFrameMode } from "../../../src/constants";
+import { DBManager } from "../../../src/DBManager";
+import { DBObject, DBObjectAttr } from "../../../src/types";
 import ErrorDialog from "../ErrorDialog";
 import DetailFrame from "./DetailFrame";
 
@@ -33,18 +33,30 @@ const DetailFrameContainer: FC<{ DBObjectClass: string, DBObject: DBObject, mode
         props.DBObject.editedAttrs.forEach((attr, index, array) => {
             body.attributes[attr.key] = attr.value;
         })
+        if(props.mode == DetailFrameMode.NEW_ENTRY){ // set default values for selectboxes...
+            formDefinition.detailFrame.components.forEach(component =>{
+                if(component.componentType == ComponentType.SELECTBOX && body.attributes[component.attributeKey] == undefined){
+                    body.attributes[component.attributeKey] = component.values[0]; // set only body, not DBObject.editedAttrs!
+                }
+            })    
+        }
 
         let resultErr = "";
         if(props.mode == DetailFrameMode.EDITING_ENTRY){
-            resultErr = await DBManager.updateDB(body);
+            body["updateId"] = props.DBObject.id;
+            body["primaryKey"] = props.DBObject.attributes[0].key;;
+            resultErr = await DBManager.updateInDB(body);
         }else {
-            resultErr = await DBManager.insertDB(body);
+            resultErr = await DBManager.insertToDB(body);
         }
 
         if (resultErr && typeof resultErr == "string" && resultErr.length) {
-            props.setErrorMsg(resultErr);
+            if(resultErr.includes("UNIQUE constraint failed")){
+                props.setErrorMsg(formDefinition.detailFrame.uniqueConstraintFailed);
+            }else{
+                props.setErrorMsg(resultErr);
+            }
         }
-
     };
 
     const updateDBObject = (attrKey, e) => {

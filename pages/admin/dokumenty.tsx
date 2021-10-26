@@ -4,7 +4,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { useState } from 'react'
 import AppTable from '../../components/Table/Table'
-import { getApiURL } from '../../utils'
+import { getApiURL } from '../../src/utils'
 import classes from "./dokumenty.module.scss"
 
 

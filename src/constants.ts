@@ -1,7 +1,8 @@
 
 export enum ComponentType {
     INPUT,
-    SELECTBOX
+    SELECTBOX,
+    UNKNOWN
 }
 
 export enum DetailFrameMode {

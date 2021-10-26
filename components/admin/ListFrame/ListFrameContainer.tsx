@@ -2,8 +2,8 @@
 //import styles from "./ListFrame.module.css";
 
 import { FC, useState, } from "react";
-import { DBManager } from "../../../constants/DBManager";
-import { DBObject } from "../../../constants/types";
+import { DBManager } from "../../../src/DBManager";
+import { DBObject } from "../../../src/types";
 import ListFrame from "./ListFrame";
 
 const ListFrameContainer: FC<{ DBObjectClass: string, DBObject: DBObject, detailClickedHandler: Function, deleteItemHandler: Function, editItemHandler: Function, entries: Array<DBObject> }> = (props) => {

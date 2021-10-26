@@ -7,14 +7,14 @@ import React, { EventHandler, useEffect, useState } from "react";
 import ErrorDialog from "../ErrorDialog";
 import ListFrame from "../ListFrame/ListFrame";
 import TreeChoiceDialog from "../TreeChoiceDialog";
-import { DetailFrameMode } from "../../../constants/constants";
-import { DBObject, FormDef } from "../../../constants/types";
+import { DetailFrameMode } from "../../../src/constants";
+import { BreadcrumbItemDef, DBObject, FormDef } from "../../../src/types";
 import DetailFrameContainer from "../DetailFrame/DetailFrameContainer";
 import ListFrameContainer from "../ListFrame/ListFrameContainer";
 import BreadcrumbContainer from "../Breadcrumb/BreadcrumbContainer";
-import { DBManager } from "../../../constants/DBManager";
+import { DBManager } from "../../../src/DBManager";
 
-const FormFrame: React.FC<{ DBObjectClass: string, errorMsg: string, detailFrameVisible: boolean, saveDialogVisible: boolean, breadcrumbItems: Array<any>, entries: Array<DBObject>, detailFrameMode: DetailFrameMode, definition: FormDef, DBObject: DBObject, hideDetailFrame: EventHandler<any>, setDBObject: Function, setBreadcrumbItems: Function, detailClickedHandler: Function, deleteItemHandler: Function, editItemHandler: Function, showDetailFrame: Function, setSaveDialogVisible: Function, setErrorMsg: Function, updateDBObject: Function }> = (props) => {
+const FormFrame: React.FC<{ DBObjectClass: string, errorMsg: string, detailFrameVisible: boolean, saveDialogVisible: boolean, breadcrumbItems: Array<BreadcrumbItemDef>, entries: Array<DBObject>, detailFrameMode: DetailFrameMode, definition: FormDef, DBObject: DBObject, hideDetailFrame: EventHandler<any>, setDBObject: Function, setBreadcrumbItems: Function, detailClickedHandler: Function, deleteItemHandler: Function, editItemHandler: Function, showDetailFrame: Function, setSaveDialogVisible: Function, setErrorMsg: Function, updateDBObject: Function }> = (props) => {
   
   return (
     <>
