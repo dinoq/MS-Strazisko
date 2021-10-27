@@ -28,6 +28,9 @@ const FormFrameContainer: React.FC<{ DBObjectClass: string }> = (props) => {
     let DBObjectClass = breadcrumbItems[breadcrumbItems.length - 1].DBObjectClass;
 
     const [DBObject, setDBObject]: [DBObject, any] = useState(DBManager.getEmptyDBObject(DBObjectClass));
+
+    console.log('DBObject¨11: ', DBObject);
+
     
     const definition = DBManager.getFormDefinition(DBObjectClass);
 
@@ -38,6 +41,11 @@ const FormFrameContainer: React.FC<{ DBObjectClass: string }> = (props) => {
         })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [DBObjectClass]);
+
+    useEffect(() => {
+        console.log('DBObject22: ', DBObject);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [DBObject]);
 
 
 

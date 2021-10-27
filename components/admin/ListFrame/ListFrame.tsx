@@ -22,14 +22,16 @@ const ListFrame: FC<{ definition: ListFrameDef, DBObjectClass: string, DBObject:
                 <tbody>
                     {props.entries.map((entry, index, array) => {
                         return <tr key={"tbtr-" + index} className={(props.DBObject.id == entry.id) ? "selected-row" : ""}>
-                            {props.definition?.detailDBOClass && <td className={""}><span className="link" onClick={props.detailClickedHandler.bind(this, entry)}> Detail </span></td>}
+                            {props.definition?.detailDBOClass && 
+                            <td className={""}>
+                                <span className="link" onClick={props.detailClickedHandler.bind(this, entry)}>Detail</span>
+                            </td>}
                             {
                                 props.definition?.components.map((item, index, array) => {
                                     let attr =DBManager.getAttrFromArrByKey(entry.attributes, item.attributeKey); // get object attr
                                     let defAttr = DBManager.getLFComponentFromArrByKey(props.definition.components, item.attributeKey); // get def attr
                                     let value = attr.value;
                                     if(defAttr.transformation){
-                                        console.log('defAttr.transformation: ', defAttr.transformation);
                                         let command = defAttr.transformation.replaceAll("$", attr.value);
                                         value = eval(command);
                                     }

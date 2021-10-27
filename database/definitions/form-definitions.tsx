@@ -131,7 +131,7 @@ const FormDefinitions: FormDefs = {
                 }
             ],
             actions:{
-                delete: false
+                //delete: false
             }
         },
         DB: {

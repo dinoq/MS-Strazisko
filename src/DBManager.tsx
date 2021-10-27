@@ -78,6 +78,7 @@ export class DBManager {
                 throw new Error("Error: Form attribute '" + def.DB.orderBy.attr + "' (from orderBy definition) is not member of object class '" + DBObjectClass + "'!");
             }
         }
+        console.log('clone(def): ', clone(def));
         return clone(def);
     }
 
@@ -250,7 +251,7 @@ export class DBManager {
     }
 
     public static getBreadcrumbAttr = (DBObject: DBObject): DBObjectAttr =>{
-        let key: string = this.getFormDefinition(DBObject.DBObjectClass).listFrame.components.find(component=>component.isBreadcrumbKey).attributeKey;
-        return (this.getAttrOrComponentFromArrByKey(DBObject.attributes, key) as DBObjectAttr);
+        let key: string = DBManager.getFormDefinition(DBObject.DBObjectClass).listFrame.components.find(component=>component.isBreadcrumbKey).attributeKey;
+        return (DBManager.getAttrOrComponentFromArrByKey(DBObject.attributes, key) as DBObjectAttr);
     }
 }
