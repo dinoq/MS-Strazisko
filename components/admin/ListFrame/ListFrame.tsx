@@ -32,7 +32,10 @@ const ListFrame: FC<{ definition: ListFrameDef, DBObjectClass: string, DBObject:
                                     let defAttr = DBManager.getLFComponentFromArrByKey(props.definition.components, item.attributeKey); // get def attr
                                     let value = attr.value;
                                     if(defAttr.transformation){
-                                        let command = defAttr.transformation.replaceAll("$", attr.value);
+                                        let command = defAttr.transformation.replaceAll("$", attr.value); // remove $ (=> attr Val)
+
+                                        let getAttrVal = (key)=>DBManager.getAttrFromArrByKey(entry.attributes, key).value;
+                                        command = command.replaceAll(/@\[(.*)\]/g, "getAttrVal('$1')"); // remove @[attrKey] (=> val of attr of attrKey)
                                         value = eval(command);
                                     }
                                     return <td key={"tbtrtd-" + index}>{value}</td>;

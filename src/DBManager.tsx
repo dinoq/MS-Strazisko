@@ -78,7 +78,7 @@ export class DBManager {
                 throw new Error("Error: Form attribute '" + def.DB.orderBy.attr + "' (from orderBy definition) is not member of object class '" + DBObjectClass + "'!");
             }
         }
-        console.log('clone(def): ', clone(def));
+        
         return clone(def);
     }
 
@@ -121,6 +121,7 @@ export class DBManager {
                 attr.value = "";
             }
         });
+        
         return clone(obj);
     }
 

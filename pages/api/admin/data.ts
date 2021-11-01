@@ -20,7 +20,8 @@ const handler = async (req, res) => {
 	const db = new Database('database/database.db', { verbose: console.log });
 	if (req.method == "GET") {
 		const className: string = req.query["className"];
-		const condition: string = req.query["condition"] || "";
+		let condition: string = req.query["condition"] || "";
+        condition = condition.length? (" " + condition.trim()) : "";
 		const order: string = req.query["order"] || "";
         
 		if (!checkIfLettersSlashUnderscore(className) || !checkIfNotDangerSQL([condition, order])) { // bezpečnostní pojistka
@@ -31,7 +32,7 @@ const handler = async (req, res) => {
             return res.status(500).send("ERROR - className not received!");
         }
         let orderBy = (order.length)? " ORDER BY " + order.split("|")[0] + " " + order.split("|")[1]: "";
-		const stmt = db.prepare("SELECT * FROM " + className + orderBy + ";")
+		const stmt = db.prepare("SELECT * FROM " + className + condition + orderBy + ";")
 		const sqlResults = stmt.all();
 		db.close();
 		return res.json(sqlResults);

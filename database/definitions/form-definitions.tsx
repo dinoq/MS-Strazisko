@@ -6,6 +6,15 @@ import { getYears } from "./values-definitions";
 interface FormDefs {
     [key: string]: FormDef;
 }
+
+
+/**
+ * SUBSTITUTION:
+ * $ - value of attribute
+ * @[attributeKey] - value of attribute of attributeKey
+ */
+
+
 const FormDefinitions: FormDefs = {
     albumPasswords: {
         detailFrame: {
@@ -89,7 +98,47 @@ const FormDefinitions: FormDefs = {
         },
         DB: {
             orderBy: {
-                attr: "id_albumPasswords",
+                attr: "id_album",
+                descending: true
+            }
+        }
+    },
+    photos: {
+        detailFrame: {
+            components: [
+                {
+                    attributeKey: "id_photo",
+                    componentType: ComponentType.INPUT,
+                    inputType: "number",
+                    editable: false
+                },
+                {
+                    attributeKey: "filename",
+                },
+                {
+                    attributeKey: "id_album",
+                }
+            ],
+            createNewEntryText: "Přidat školní rok",
+        },
+        listFrame: {
+            components: [
+                {
+                    attributeKey: "id_photo",
+                },
+                {
+                    attributeKey: "filename",
+                    transformation: "@[albums.name]"
+                },
+                {
+                    attributeKey: "id_album",
+                }
+            ],
+            cantDeleteItemMsg: "Dané album obsahuje nějaké fotografie.<br>Nejprve musíte smazat je a až potom samotné album!"
+        },
+        DB: {
+            orderBy: {
+                attr: "id_photo",
                 descending: true
             }
         }

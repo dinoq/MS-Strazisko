@@ -29,25 +29,26 @@ const FormFrameContainer: React.FC<{ DBObjectClass: string }> = (props) => {
 
     const [DBObject, setDBObject]: [DBObject, any] = useState(DBManager.getEmptyDBObject(DBObjectClass));
 
-    console.log('DBObject¨11: ', DBObject);
-
+    const [detailItemCondition, setDetailItemCondition] = useState("");
     
     const definition = DBManager.getFormDefinition(DBObjectClass);
 
     useEffect(() => {
         setDBObject(DBManager.getEmptyDBObject(DBObjectClass));
-        DBManager.getAllDBObjectEntries(DBObjectClass, definition.DB.orderBy).then(entries => {
+        DBManager.getAllDBObjectEntries(DBObjectClass, definition.DB.orderBy, detailItemCondition).then(entries => {
             setEntries(entries);
-        })
+        }) 
+        setDetailItemCondition("");
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [DBObjectClass]);
 
     useEffect(() => {
-        console.log('DBObject22: ', DBObject);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [DBObject]);
 
-
+    // const setBCItems = (val) =>{       
+    //     setBreadcrumbItems(val);
+    // }
 
     const showDetailFrame = () => {
         /*if (setEmptyObject) {
@@ -68,7 +69,10 @@ const FormFrameContainer: React.FC<{ DBObjectClass: string }> = (props) => {
      */
     const detailClickedHandler = async (itm) => {
         let item: DBObject = itm as DBObject;
-        console.log('item: ', item);
+        
+        let prevPrimaryKey = item.attributes[0].key;
+        let prevPrimaryKeyValue = item.attributes[0].value;
+        setDetailItemCondition("WHERE " + prevPrimaryKey + "='" + prevPrimaryKeyValue + "'");
         let breadcrumbAttr = DBManager.getBreadcrumbAttr(DBObject);
         let objBreadcrumbAttr = DBManager.getAttrFromArrByKey(item.attributes, breadcrumbAttr.key);
         setBreadcrumbItems(prevState =>{

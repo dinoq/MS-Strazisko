@@ -43,6 +43,30 @@ const DBObjectDefinitions: RecursivePartial<DBOBjectDefs> = {
             }
         ]
     }, 
+    photos: {
+        DBObjectClass: "photos",
+        attributes: [
+            {
+                key: "id_photo",
+                name: "ID"
+            },
+            {
+                key: "filename",
+                name: "URL"
+            },
+            {
+                key: "id_album",
+                name: "..."
+            },
+            {
+                key: "albums.name",
+                name: "nameee"
+            },
+        ]
+    }, 
+
+
+
     ContactTexts: {
         DBObjectClass: "ContactTexts",
         attributes: [
