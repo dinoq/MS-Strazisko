@@ -72,6 +72,7 @@ export type OrderByDef = {
 
 export type BreadcrumbItemDef = {
     DBObjectClass: string, 
+    DBObject: DBObject,
     text: string
 }
 

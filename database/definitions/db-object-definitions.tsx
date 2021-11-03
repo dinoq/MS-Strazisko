@@ -59,7 +59,7 @@ const DBObjectDefinitions: RecursivePartial<DBOBjectDefs> = {
                 name: "..."
             },
             {
-                key: "albums.name",
+                key: "*albums.title|albums.id_album=id_album",
                 name: "nameee"
             },
         ]

@@ -34,6 +34,37 @@ const handler = async (req, res) => {
         let orderBy = (order.length)? " ORDER BY " + order.split("|")[0] + " " + order.split("|")[1]: "";
 		const stmt = db.prepare("SELECT * FROM " + className + condition + orderBy + ";")
 		const sqlResults = stmt.all();
+        const DBObjectDefinitionAttrs: Array<DBObjectAttr> = DBManager.getDBObjectDefinition(className).attributes;
+        if(sqlResults?.length > 0){
+            for (const attr of DBObjectDefinitionAttrs) {
+                let firstDotIndex = attr.key.indexOf(".");
+                let verticalIndex = attr.key.indexOf("|");
+                let equalIndex = attr.key.indexOf("=");
+                if(firstDotIndex != -1 && verticalIndex != -1){
+                    let foreignClassName;
+                    if(attr.key.startsWith("*")){ // Daný atribut je pro všechny položky dané třídy stejný
+                        foreignClassName = attr.key.substring(1, firstDotIndex);
+                        let foreignAttrName = attr.key.substring(firstDotIndex+1, verticalIndex);
+                        let foreignConditionAttrName = attr.key.substring(verticalIndex+1, equalIndex);
+                        let conditionAttrName = attr.key.substring(equalIndex+1);
+                        let sql = `SELECT ${foreignAttrName} FROM ${foreignClassName} WHERE ${foreignConditionAttrName}=${sqlResults[0][conditionAttrName]};`;
+                        const stmtBindedAttrs = db.prepare(sql);
+                        const sqlResultsBindedAttrs = stmtBindedAttrs.all();
+                        if(sqlResultsBindedAttrs?.length > 0){
+                            for (const sqlResult of sqlResults) {
+                                sqlResult[`${foreignClassName}.${foreignAttrName}`] = sqlResultsBindedAttrs[0][foreignAttrName];
+                            }
+                        }
+                    }else{ // Daný atribut může pro každou položku nabývat jiné hodnoty
+                        foreignClassName = attr.key.substring(0, firstDotIndex);
+                        return res.status(500).send("ERROR - not implemented binding without *!");
+                    }
+                }
+                // if (!DBObjectDefinitionAttrs.find(definitionAttr => definitionAttr.key == attrKey)) {
+                // 	return res.status(500).send("ERROR - wrong attribute key! Attribute '" + attrKey + "' is not in class '" + className + "'");
+                // }
+            };
+        }
 		db.close();
 		return res.json(sqlResults);
 	} else if (req.method == "POST") {

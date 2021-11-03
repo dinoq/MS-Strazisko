@@ -1,23 +1,17 @@
 // eslint-disable-next-line
 //import classes from "../styles/FormFrame.module.scss";
 
-import { url } from "inspector";
-import { title } from "process";
 import React, { useEffect, useState } from "react";
-import Breadcrumb from "../Breadcrumb/Breadcrumb";
-import ErrorDialog from "../ErrorDialog";
-import ListFrame from "../ListFrame/ListFrame";
-import TreeChoiceDialog from "../TreeChoiceDialog";
 import { DetailFrameMode } from "../../../src/constants";
 import { BreadcrumbItemDef, DBObject } from "../../../src/types";
-import DetailFrameContainer from "../DetailFrame/DetailFrameContainer";
-import ListFrameContainer from "../ListFrame/ListFrameContainer";
 import FormFrame from "./FormFrame";
 import { DBManager } from "../../../src/DBManager";
+import { useDispatch } from "react-redux";
+import { addItemToBreadcrumb } from "../Breadcrumb/BreadcrumbSlice";
 
 const FormFrameContainer: React.FC<{ DBObjectClass: string }> = (props) => {
-    //const [DBObjectClass, setDBObjectClass] = useState(props.DBObjectClass);
-    const [breadcrumbItems, setBreadcrumbItems]: [Array<BreadcrumbItemDef>, Function] = useState([{DBObjectClass: props.DBObjectClass, text: ""}]);
+    const dispatch = useDispatch();
+    const [breadcrumbItems, setBreadcrumbItems]: [Array<BreadcrumbItemDef>, Function] = useState([{DBObjectClass: props.DBObjectClass, DBObject: DBManager.getEmptyDBObject(props.DBObjectClass), text: ""}]);
     const [errorMsg, setErrorMsg] = useState("")
 
     const [saveDialogVisible, setSaveDialogVisible] = useState(false);
@@ -45,6 +39,11 @@ const FormFrameContainer: React.FC<{ DBObjectClass: string }> = (props) => {
     useEffect(() => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [DBObject]);
+
+    useEffect(() => {
+        dispatch(addItemToBreadcrumb({DBObjectClass: props.DBObjectClass, DBObject: DBManager.getEmptyDBObject(props.DBObjectClass), text: ""}));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     // const setBCItems = (val) =>{       
     //     setBreadcrumbItems(val);

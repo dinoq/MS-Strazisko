@@ -17,7 +17,6 @@ function MyApp({ Component, pageProps }) {
         <Component {...pageProps} />
       </div>
     )
-
   }
 
   if (router.pathname.includes("admin")) {

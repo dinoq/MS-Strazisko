@@ -12,7 +12,7 @@ const ListFrame: FC<{ definition: ListFrameDef, DBObjectClass: string, DBObject:
             <table className={""}>
                 <thead>
                     <tr className={""}>
-                        {props.definition?.detailDBOClass && <th className={""}>Detail</th>}
+                        {props.definition?.detailDBOClass.length > 0 && <th className={""}>Detail</th>}
                         {props.definition?.components.map((item, index, array) => {
                             return <th key={"thtrtd-" + index} className={""}>{(DBManager.getAttrFromArrByKey(props.DBObject.attributes, item.attributeKey) as DBObjectAttr).name}</th>
                         })}
@@ -22,7 +22,7 @@ const ListFrame: FC<{ definition: ListFrameDef, DBObjectClass: string, DBObject:
                 <tbody>
                     {props.entries.map((entry, index, array) => {
                         return <tr key={"tbtr-" + index} className={(props.DBObject.id == entry.id) ? "selected-row" : ""}>
-                            {props.definition?.detailDBOClass && 
+                            {props.definition?.detailDBOClass.length > 0 && 
                             <td className={""}>
                                 <span className="link" onClick={props.detailClickedHandler.bind(this, entry)}>Detail</span>
                             </td>}
@@ -36,6 +36,7 @@ const ListFrame: FC<{ definition: ListFrameDef, DBObjectClass: string, DBObject:
 
                                         let getAttrVal = (key)=>DBManager.getAttrFromArrByKey(entry.attributes, key).value;
                                         command = command.replaceAll(/@\[(.*)\]/g, "getAttrVal('$1')"); // remove @[attrKey] (=> val of attr of attrKey)
+                                        console.log('command: ', command);
                                         value = eval(command);
                                     }
                                     return <td key={"tbtrtd-" + index}>{value}</td>;

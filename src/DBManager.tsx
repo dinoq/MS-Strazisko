@@ -136,13 +136,21 @@ export class DBManager {
 
         return clone(obj);
     }
-
-    protected static getAttrOrComponentFromArrByKey(arr: Array<DBObjectAttr | DBObjectEditedAttr | DFComponentDef | LFComponentDef>, key: string, type?: string): DBObjectAttr | LFComponentDef | DFComponentDef {
+    public static clearBinding = (key: string): string => {
+        let newKey = key.replace("*", "");
+        let verticalIndex = newKey.indexOf("|");
+        if(verticalIndex != -1)
+            newKey = newKey.substring(0, verticalIndex);
+        console.log('newKey: ', newKey);
+        return newKey;
+    }
+    protected static getAttrOrComponentFromArrByKey(arr: Array<DBObjectAttr | DBObjectEditedAttr | DFComponentDef | LFComponentDef>, key: string, type?: string): DBObjectAttr | LFComponentDef | DFComponentDef {        
         let attr =  arr.find(a => {
             if(Object.keys(a).includes("key")){
-                return a["key"] == key;
+                console.log('a["key"]: ', a["key"]);
+                return DBManager.clearBinding(a["key"]) == DBManager.clearBinding(key);
             }else{
-                return a["attributeKey"] == key;
+                return DBManager.clearBinding(a["attributeKey"]) == DBManager.clearBinding(key);
             }
         });
         
@@ -182,6 +190,7 @@ export class DBManager {
                 entry.id = attributes[Object.keys(attributes)[0]];
                 for (const attrName in attributes) {
                     entry.attributes[Object.keys(attributes).indexOf(attrName)].value = attributes[attrName];
+                    console.log('attributes[attrName]: ',attrName, attributes[attrName]);
                 }
                 entries.push(entry);
             }

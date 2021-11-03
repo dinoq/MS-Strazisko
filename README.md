@@ -1,6 +1,7 @@
 ############################################################################################
 TODO:
 - cookieOptions-secure... na produkci...
+- komentář "// check class..." v data.ts v POST 
 - ošetřit padavku, když se zadá neplatné jméno třídy jako detail LF
 - DBObjectClass - je potřeba ji posílat z FormFrame do potomků? Není možné ji vždy získat s aktuálního objeku?
 - primaryKey není potřeba posílat do data, může se vzít z definice objektu (první atribut)

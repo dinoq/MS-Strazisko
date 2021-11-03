@@ -128,7 +128,7 @@ const FormDefinitions: FormDefs = {
                 },
                 {
                     attributeKey: "filename",
-                    transformation: "@[albums.name]"
+                    transformation: "@[albums.title]"
                 },
                 {
                     attributeKey: "id_album",
