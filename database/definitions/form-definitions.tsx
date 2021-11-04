@@ -191,6 +191,7 @@ const FormDefinitions: FormDefs = {
     },
 };
 
+
 export const getRawFormDefinition = (DBObjectClass: string): FormDef => {
     return FormDefinitions[DBObjectClass];
 }

@@ -14,11 +14,11 @@ import ListFrameContainer from "../ListFrame/ListFrameContainer";
 import BreadcrumbContainer from "../Breadcrumb/BreadcrumbContainer";
 import { DBManager } from "../../../src/DBManager";
 
-const FormFrame: React.FC<{ DBObjectClass: string, errorMsg: string, detailFrameVisible: boolean, saveDialogVisible: boolean, breadcrumbItems: Array<BreadcrumbItemDef>, entries: Array<DBObject>, detailFrameMode: DetailFrameMode, definition: FormDef, DBObject: DBObject, hideDetailFrame: EventHandler<any>, setDBObject: Function, setBreadcrumbItems: Function, detailClickedHandler: Function, deleteItemHandler: Function, editItemHandler: Function, showDetailFrame: Function, setSaveDialogVisible: Function, setErrorMsg: Function, updateDBObject: Function }> = (props) => {
+const FormFrame: React.FC<{ DBObjectClass: string, errorMsg: string, detailFrameVisible: boolean, saveDialogVisible: boolean, entries: Array<DBObject>, detailFrameMode: DetailFrameMode, definition: FormDef, DBObject: DBObject, hideDetailFrame: EventHandler<any>, setDBObject: Function,  detailClickedHandler: Function, deleteItemHandler: Function, editItemHandler: Function, showDetailFrame: Function, setSaveDialogVisible: Function, setErrorMsg: Function, updateDBObject: Function }> = (props) => {
   
   return (
     <>
-      <BreadcrumbContainer items={props.breadcrumbItems} setItems={props.setBreadcrumbItems} />
+      <BreadcrumbContainer />
 
       <div className={"form-wrapper"}>
         {(props.definition.detailFrame.createNewEntryText.length != 0 && !props.detailFrameVisible) && <span className={"link " + "add-document-btn mb-3"} onClick={props.showDetailFrame.bind(this, true)}>{props.definition.detailFrame.createNewEntryText}</span>}

@@ -6,12 +6,16 @@ import { DetailFrameMode } from "../../../src/constants";
 import { BreadcrumbItemDef, DBObject } from "../../../src/types";
 import FormFrame from "./FormFrame";
 import { DBManager } from "../../../src/DBManager";
-import { useDispatch } from "react-redux";
-import { addItemToBreadcrumb } from "../Breadcrumb/BreadcrumbSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addItemToBreadcrumb } from "../Breadcrumb/BreadcrumbReducer";
+import { ReducerStates } from "../../../pages/_app";
 
 const FormFrameContainer: React.FC<{ DBObjectClass: string }> = (props) => {
     const dispatch = useDispatch();
-    const [breadcrumbItems, setBreadcrumbItems]: [Array<BreadcrumbItemDef>, Function] = useState([{DBObjectClass: props.DBObjectClass, DBObject: DBManager.getEmptyDBObject(props.DBObjectClass), text: ""}]);
+    const breadcrumbItems = useSelector((state: ReducerStates) => state.breadcrumb.items)
+    const definition = useSelector((state: ReducerStates) => state.def);
+    console.log('definitioxxxxxxxxxn: ', definition);
+    //const [breadcrumbItems, setBreadcrumbItems]: [Array<BreadcrumbItemDef>, Function] = useState([{ DBObjectClass: props.DBObjectClass, DBObject: DBManager.getEmptyDBObject(props.DBObjectClass), text: "" }]);
     const [errorMsg, setErrorMsg] = useState("")
 
     const [saveDialogVisible, setSaveDialogVisible] = useState(false);
@@ -24,14 +28,14 @@ const FormFrameContainer: React.FC<{ DBObjectClass: string }> = (props) => {
     const [DBObject, setDBObject]: [DBObject, any] = useState(DBManager.getEmptyDBObject(DBObjectClass));
 
     const [detailItemCondition, setDetailItemCondition] = useState("");
-    
-    const definition = DBManager.getFormDefinition(DBObjectClass);
+
+    //const definition = DBManager.getFormDefinition(DBObjectClass);
 
     useEffect(() => {
         setDBObject(DBManager.getEmptyDBObject(DBObjectClass));
-        DBManager.getAllDBObjectEntries(DBObjectClass, definition.DB.orderBy, detailItemCondition).then(entries => {
+        DBManager.getAllDBObjectEntries(DBObjectClass, /*definition.DB.orderBy, */detailItemCondition).then(entries => {
             setEntries(entries);
-        }) 
+        })
         setDetailItemCondition("");
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [DBObjectClass]);
@@ -41,13 +45,14 @@ const FormFrameContainer: React.FC<{ DBObjectClass: string }> = (props) => {
     }, [DBObject]);
 
     useEffect(() => {
-        dispatch(addItemToBreadcrumb({DBObjectClass: props.DBObjectClass, DBObject: DBManager.getEmptyDBObject(props.DBObjectClass), text: ""}));
+        console.log("definitiondefinitiondefinition", definition);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [definition]);
+
+    useEffect(() => {
+        //dispatch(addItemToBreadcrumb({ DBObjectClass: props.DBObjectClass, DBObject: DBManager.getEmptyDBObject(props.DBObjectClass), text: "" }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    // const setBCItems = (val) =>{       
-    //     setBreadcrumbItems(val);
-    // }
 
     const showDetailFrame = () => {
         /*if (setEmptyObject) {
@@ -68,20 +73,20 @@ const FormFrameContainer: React.FC<{ DBObjectClass: string }> = (props) => {
      */
     const detailClickedHandler = async (itm) => {
         let item: DBObject = itm as DBObject;
-        
+
         let prevPrimaryKey = item.attributes[0].key;
         let prevPrimaryKeyValue = item.attributes[0].value;
         setDetailItemCondition("WHERE " + prevPrimaryKey + "='" + prevPrimaryKeyValue + "'");
         let breadcrumbAttr = DBManager.getBreadcrumbAttr(DBObject);
-        let objBreadcrumbAttr = DBManager.getAttrFromArrByKey(item.attributes, breadcrumbAttr.key);
-        setBreadcrumbItems(prevState =>{
-            return [...prevState, {DBObjectClass: definition.listFrame.detailDBOClass, text:objBreadcrumbAttr.value}]
-        })
+        let objBreadcrumbAttr = DBManager.getAttrFromArrByKey(item.attributes, (await breadcrumbAttr).key);
+        dispatch(addItemToBreadcrumb(objBreadcrumbAttr.value))
+        /*setBreadcrumbItems(prevState => {
+            return [...prevState, { DBObjectClass: (await definition).listFrame.detailDBOClass, text: objBreadcrumbAttr.value }]
+        })*/
     }
 
     const deleteItemHandler = async (item: DBObject) => {
         console.log('item: ', item);
-
         let body = {
             deleteId: item.id,
             className: item.DBObjectClass
@@ -133,7 +138,7 @@ const FormFrameContainer: React.FC<{ DBObjectClass: string }> = (props) => {
 
     return (
         <>
-            <FormFrame DBObjectClass={DBObjectClass} errorMsg={errorMsg} detailFrameVisible={detailFrameVisible} saveDialogVisible={saveDialogVisible} breadcrumbItems={breadcrumbItems} entries={entries} detailFrameMode={detailFrameMode} definition={definition} DBObject={DBObject} hideDetailFrame={hideDetailFrame} setDBObject={setDBObject} setBreadcrumbItems={setBreadcrumbItems} detailClickedHandler={detailClickedHandler} deleteItemHandler={deleteItemHandler} editItemHandler={editItemHandler} showDetailFrame={showDetailFrame} setSaveDialogVisible={setSaveDialogVisible} setErrorMsg={setErrorMsg} updateDBObject={updateDBObject} />
+            <FormFrame DBObjectClass={DBObjectClass} errorMsg={errorMsg} detailFrameVisible={detailFrameVisible} saveDialogVisible={saveDialogVisible} entries={entries} detailFrameMode={detailFrameMode} definition={definition} DBObject={DBObject} hideDetailFrame={hideDetailFrame} setDBObject={setDBObject} detailClickedHandler={detailClickedHandler} deleteItemHandler={deleteItemHandler} editItemHandler={editItemHandler} showDetailFrame={showDetailFrame} setSaveDialogVisible={setSaveDialogVisible} setErrorMsg={setErrorMsg} updateDBObject={updateDBObject} />
         </>
     )
 }

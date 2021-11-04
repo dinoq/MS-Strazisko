@@ -36,7 +36,6 @@ const ListFrame: FC<{ definition: ListFrameDef, DBObjectClass: string, DBObject:
 
                                         let getAttrVal = (key)=>DBManager.getAttrFromArrByKey(entry.attributes, key).value;
                                         command = command.replaceAll(/@\[(.*)\]/g, "getAttrVal('$1')"); // remove @[attrKey] (=> val of attr of attrKey)
-                                        console.log('command: ', command);
                                         value = eval(command);
                                     }
                                     return <td key={"tbtrtd-" + index}>{value}</td>;

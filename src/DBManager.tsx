@@ -9,7 +9,7 @@ import { Interface } from "readline";
 export class DBManager {
 
 
-    protected static _defaultDefinition: RecursivePartial<FormDef> = {
+    public static _defaultDefinition: RecursivePartial<FormDef> = {
         detailFrame: {
             components: [
                 {
@@ -51,7 +51,7 @@ export class DBManager {
 
     protected static _isNumBoolStr = object => (typeof object == "number" || typeof object == "boolean" || typeof object == "string");
 
-    public static getFormDefinition = (DBObjectClass: string): FormDef => {
+    public static getFormDefinition = async (DBObjectClass: string): Promise<FormDef> => {
         let def = getRawFormDefinition(DBObjectClass);
         if (def == undefined) {
             throw new Error("Error: Class '" + DBObjectClass + "' has not form defined!");
@@ -78,7 +78,7 @@ export class DBManager {
                 throw new Error("Error: Form attribute '" + def.DB.orderBy.attr + "' (from orderBy definition) is not member of object class '" + DBObjectClass + "'!");
             }
         }
-        
+
         return clone(def);
     }
 
@@ -105,6 +105,7 @@ export class DBManager {
                 }
             }
         }
+        return formDefTree;
     }
 
 
@@ -121,7 +122,7 @@ export class DBManager {
                 attr.value = "";
             }
         });
-        
+
         return clone(obj);
     }
 
@@ -129,7 +130,7 @@ export class DBManager {
         let obj: DBObject = {
             DBObjectClass,
             id: -1,
-            attributes: DBManager.getDBObjectDefinition(DBObjectClass).attributes,
+            attributes: (DBObjectClass == undefined) ? [] : DBManager.getDBObjectDefinition(DBObjectClass).attributes,
             editedAttrs: [],
             isEdited: false
         }
@@ -139,35 +140,33 @@ export class DBManager {
     public static clearBinding = (key: string): string => {
         let newKey = key.replace("*", "");
         let verticalIndex = newKey.indexOf("|");
-        if(verticalIndex != -1)
+        if (verticalIndex != -1)
             newKey = newKey.substring(0, verticalIndex);
-        console.log('newKey: ', newKey);
         return newKey;
     }
-    protected static getAttrOrComponentFromArrByKey(arr: Array<DBObjectAttr | DBObjectEditedAttr | DFComponentDef | LFComponentDef>, key: string, type?: string): DBObjectAttr | LFComponentDef | DFComponentDef {        
-        let attr =  arr.find(a => {
-            if(Object.keys(a).includes("key")){
-                console.log('a["key"]: ', a["key"]);
+    protected static getAttrOrComponentFromArrByKey(arr: Array<DBObjectAttr | DBObjectEditedAttr | DFComponentDef | LFComponentDef>, key: string, type?: string): DBObjectAttr | LFComponentDef | DFComponentDef {
+        let attr = arr.find(a => {
+            if (Object.keys(a).includes("key")) {
                 return DBManager.clearBinding(a["key"]) == DBManager.clearBinding(key);
-            }else{
+            } else {
                 return DBManager.clearBinding(a["attributeKey"]) == DBManager.clearBinding(key);
             }
         });
-        
-        if(type == "LFComponentDef"){
-            return (attr as LFComponentDef) || {attributeKey: "", transformation: "", isBreadcrumbKey: false};
-        } else if(type == "DFComponentDef"){
-            return (attr as DFComponentDef) || {attributeKey: "", componentType: ComponentType.UNKNOWN, inputType: "", values: [], constraints: [], editable: true};
-        } else{
-            return (attr as DBObjectAttr) || {key: "", name: "", value: ""};
+
+        if (type == "LFComponentDef") {
+            return (attr as LFComponentDef) || { attributeKey: "", transformation: "", isBreadcrumbKey: false };
+        } else if (type == "DFComponentDef") {
+            return (attr as DFComponentDef) || { attributeKey: "", componentType: ComponentType.UNKNOWN, inputType: "", values: [], constraints: [], editable: true };
+        } else {
+            return (attr as DBObjectAttr) || { key: "", name: "", value: "" };
         }
     }
 
-    
+
     public static getAttrFromArrByKey(arr: Array<DBObjectAttr | DBObjectEditedAttr>, key: string): DBObjectAttr {
         return DBManager.getAttrOrComponentFromArrByKey(arr, key) as DBObjectAttr;
     }
-    
+
     public static getLFComponentFromArrByKey(arr: Array<LFComponentDef>, key: string): LFComponentDef {
         return (DBManager.getAttrOrComponentFromArrByKey(arr, key, "LFComonentDef") as LFComponentDef);
     }
@@ -176,28 +175,31 @@ export class DBManager {
         return (DBManager.getAttrOrComponentFromArrByKey(arr, key, "DFComonentDef") as DFComponentDef);
     }
 
-    public static getAllDBObjectEntries = async (DBObjectClass: string, orderBy: OrderByDef, condition: string = ""): Promise<Array<DBObject>> => {
-        let order = "";
-        if (orderBy.attr) {
-            order = "&order=" + orderBy.attr + "|" + (orderBy.descending ? "DESC" : "ASC");
-        }
-        const resp = await fetch("/api/admin/data?className=" + DBObjectClass + (condition ? "&condition=" + condition : "") + order);
-        if (resp.status == 200) {
-            let entries = [];
-            let json = await resp.json();
-            for (const attributes of json) {
-                let entry = DBManager.getEmptyDBObject(DBObjectClass);
-                entry.id = attributes[Object.keys(attributes)[0]];
-                for (const attrName in attributes) {
-                    entry.attributes[Object.keys(attributes).indexOf(attrName)].value = attributes[attrName];
-                    console.log('attributes[attrName]: ',attrName, attributes[attrName]);
-                }
-                entries.push(entry);
-            }
-            return entries;
+    public static getAllDBObjectEntries = async (DBObjectClass: string, /*orderBy: OrderByDef,*/ condition: string = ""): Promise<Array<DBObject>> => {
+        if (DBObjectClass == undefined) {
+            return [];
         } else {
-            let text = await resp.text();
-            throw new Error("Error: database return no object data. Msg from server: " + text);
+            let order = "";
+            /*if (orderBy.attr) {
+                order = "&order=" + orderBy.attr + "|" + (orderBy.descending ? "DESC" : "ASC");
+            }*/
+            const resp = await fetch("/api/admin/data?className=" + DBObjectClass + (condition ? "&condition=" + condition : "") + order);
+            if (resp.status == 200) {
+                let entries = [];
+                let json = await resp.json();
+                for (const attributes of json) {
+                    let entry = DBManager.getEmptyDBObject(DBObjectClass);
+                    entry.id = attributes[Object.keys(attributes)[0]];
+                    for (const attrName in attributes) {
+                        entry.attributes[Object.keys(attributes).indexOf(attrName)].value = attributes[attrName];
+                    }
+                    entries.push(entry);
+                }
+                return entries;
+            } else {
+                let text = await resp.text();
+                throw new Error("Error: database return no object data. Msg from server: " + text);
+            }
         }
 
     }
@@ -260,8 +262,8 @@ export class DBManager {
         return check;
     }
 
-    public static getBreadcrumbAttr = (DBObject: DBObject): DBObjectAttr =>{
-        let key: string = DBManager.getFormDefinition(DBObject.DBObjectClass).listFrame.components.find(component=>component.isBreadcrumbKey).attributeKey;
+    public static getBreadcrumbAttr = async (DBObject: DBObject): Promise<DBObjectAttr> => {
+        let key: string = (await DBManager.getFormDefinition(DBObject.DBObjectClass)).listFrame.components.find(component => component.isBreadcrumbKey).attributeKey;
         return (DBManager.getAttrOrComponentFromArrByKey(DBObject.attributes, key) as DBObjectAttr);
     }
 }
