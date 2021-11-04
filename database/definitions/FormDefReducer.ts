@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { DBManager } from "../../src/DBManager";
-import { FormDef } from "../../src/types";
+import { FormDef, FormDefinitionsState, FormDefs } from "../../src/types";
 
+/*
 const initialState: FormDef = DBManager.createFullDef(DBManager._defaultDefinition, {
     detailFrame: {
         components: []
@@ -9,20 +10,36 @@ const initialState: FormDef = DBManager.createFullDef(DBManager._defaultDefiniti
     listFrame:{
         components: []
     }
-});
+});*/
+
+let initialState: FormDefinitionsState = {
+    actualFormDefinition: DBManager.createFullDef(DBManager._defaultDefinition, {
+        detailFrame: {
+            components: []
+        },
+        listFrame:{
+            components: []
+        }
+    }),
+    definitions: {},
+    definitionsLoaded: false
+}
+console.log('initialState: ', initialState);
 
 const defSlice = createSlice({
     name: "defSlice",
     initialState,
     reducers:{
-        loadDef(state, action){
-            DBManager.getFormDefinition(action.payload).then(def=>{
-                console.log('defddddd: ', def);
-                state = def;
-            })
+        loadFormDef(state, action){
+            state.definitions = action.payload.def;
+            state.definitionsLoaded = true;
+        },
+        setActualFormDef(state, action){
+            console.log('action.payload: ', action.payload);
+            state.actualFormDefinition = state.definitions[action.payload];
         }
     }
 })
 
-export const { loadDef } = defSlice.actions;
+export const { loadFormDef, setActualFormDef } = defSlice.actions;
 export default defSlice.reducer;

@@ -51,6 +51,12 @@ export class DBManager {
 
     protected static _isNumBoolStr = object => (typeof object == "number" || typeof object == "boolean" || typeof object == "string");
 
+    public static fetchFormDefinitions = async () => {
+        let definitions = {a:4};
+
+
+        return definitions;
+    }
     public static getFormDefinition = async (DBObjectClass: string): Promise<FormDef> => {
         let def = getRawFormDefinition(DBObjectClass);
         if (def == undefined) {

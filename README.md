@@ -16,6 +16,7 @@ TODO:
 - Zkontrolovat prepared statements - není někde přiřazováno přímo??
 - admin - akruální záložka zvýraznit
 - Upravit albumPaswords v databázi tak, aby mělo id (číslo)
+- js > ts
 ############################################################################################
 
 

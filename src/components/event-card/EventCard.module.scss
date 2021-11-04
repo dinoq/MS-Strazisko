@@ -1,0 +1,24 @@
+@import "../../../styles/custom.scss";
+
+.card{
+    color: $primary;
+    $border-radius: 20px;
+    border-radius: $border-radius;
+    margin: 20px;
+
+    p{
+        color: black;
+    }
+
+    img{
+        border-radius: $border-radius 0 0 $border-radius;
+    }
+}
+.event-date{
+    background-color: rgb(10, 88, 202);
+    color: white;
+    width: fit-content;
+    padding: 5px 10px;
+    margin: 10px;
+    border-radius: 10px;;
+}

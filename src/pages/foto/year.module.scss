@@ -1,0 +1,93 @@
+@use 'sass:math';
+@import "../../../styles/custom.scss";
+
+.login {
+    background-color: #83c3ff;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    font-size: 1.25rem;
+    max-width: 500px;
+    padding: 20px 40px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    input[type="password"], input[type="text"] {
+        max-width: 200px;
+        margin-top: 20px;
+        border-radius: 5px;
+        outline: none;
+        border: 1px transparent solid;
+
+        &:focus {
+            outline: none;
+            border: 1px $primary solid;
+        }
+    }
+    input:read-only {
+        background-color: rgb(204, 204, 204);
+        color: rgb(119, 119, 119);
+    }
+
+    input[type="submit"] {
+        border: none;
+        background-color: white;
+        margin-top: 10px;
+        border-radius: 5px;
+    }
+}
+
+$size: 250px;
+$transition-time: 0.5s;
+.overlay {
+    //height: $size;
+    aspect-ratio: 2;
+    //width: $size * 4;
+    width: math.div(100%, 12) * 10;
+    @include media-breakpoint-up(md) {
+        //width: (100%);
+        aspect-ratio: 4;
+    }
+    @include media-breakpoint-up(lg) {
+        aspect-ratio: 6;
+    }
+    background: linear-gradient(90deg, rgba(2, 0, 36, 0) 80%, white 90%);
+    opacity: 1;
+    position: absolute;
+    display: flex;
+    //justify-content: flex-end;
+    align-items: center;
+    transition: opacity $transition-time ease;
+
+    &:hover{
+        //background: linear-gradient(90deg, rgb(2 0 36 / 0%), rgb(255 255 255) 80%);
+        opacity: 0.8;
+        div{
+            right: 25%;
+
+        }
+    }
+    div{
+        font-size: 3rem;
+        margin-right: 5%;
+        color: black;
+        position: absolute;
+        right: 0;
+        transition: right $transition-time ease;
+        
+        
+    }
+}
+.img-container {
+    //height: $size;
+    aspect-ratio: 1;
+
+    img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+    }
+}

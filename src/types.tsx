@@ -1,5 +1,10 @@
 import { ComponentType } from "./constants"
 
+/**
+ * ########
+ * DBObject
+ * ########
+ */
 export type DBObject = {
     id: number,
     DBObjectClass: string,
@@ -19,6 +24,11 @@ export type DBObjectEditedAttr = {
     value: any
 }
 
+/**
+ * ###############
+ * FORM DEFINITION
+ * ###############
+ */
 export type FormDef = {
     detailFrame: DetailFrameDef,
     listFrame: ListFrameDef,
@@ -27,6 +37,11 @@ export type FormDef = {
     }
     //DBOClass: string,???? - bude bez toho vedet co "tahat"??
 }
+
+export type FormDefs = {
+    [key: string]: FormDef;
+}
+
 
 export type DetailFrameDef = {
     components: Array<DFComponentDef>,
@@ -76,7 +91,31 @@ export type BreadcrumbItemDef = {
     text: string
 }
 
+/**
+ * ############
+ * REDUX STATES
+ * ############
+ */
+ export interface ReducerStates {
+    breadcrumb: BreadcrumbState,
+    formDefinitions: FormDefinitionsState,
+}
 
+export interface BreadcrumbState{
+    items: Array<any>
+}
+
+export interface FormDefinitionsState {
+    definitions: FormDefs,
+    actualFormDefinition: FormDef,
+    definitionsLoaded: boolean
+}
+
+/**
+ * #########
+ * UTILITIES
+ * #########
+ */
 export type RecursivePartial<T> = {
     [P in keyof T]?: T[P] | RecursivePartial<T[P]>;
 };
