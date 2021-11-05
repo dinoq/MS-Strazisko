@@ -2,9 +2,10 @@ import { getRawDBObjectDefinition } from "../database/definitions/db-object-defi
 import { getRawFormDefinition } from "../database/definitions/form-definitions";
 import { getEmptyValues } from "../database/definitions/values-definitions";
 import { ComponentType } from "./constants";
-import { DBObject, DBObjectAttr, DBObjectEditedAttr, DFComponentDef, FormDef, LFComponentDef, OrderByDef, RecursivePartial } from "./types";
+import { DBObject, DBObjectAttr, DBObjectEditedAttr, DFComponentDef, FormDef, FormDefs, LFComponentDef, OrderByDef, RecursivePartial } from "./types";
 import clone from "clone";
 import { Interface } from "readline";
+import { getApiURL } from "./utils";
 
 export class DBManager {
 
@@ -50,10 +51,31 @@ export class DBManager {
     }
 
     protected static _isNumBoolStr = object => (typeof object == "number" || typeof object == "boolean" || typeof object == "string");
+/*
+    public static getFormDefinitions = async (DBObjectClass: string): Promise<FormDef> => {
+    }*/
 
-    public static fetchFormDefinitions = async () => {
-        let definitions = {a:4};
+    public static fetchFormDefinitions = async (): Promise<FormDefs> => {
+        console.log('fetchFormDefinitions() CALLED FROM SAGA!');
+        let definitions = {};
+        let response: any = await fetch(getApiURL("/admin/forms"),
+            {
+                method: "GET",
+                mode: "same-origin"
+            })
 
+        if (response.status == 200) {
+            definitions = JSON.parse(await response.text());
+            console.log("DEFS gained");
+        } else {
+            let text = "";
+            try {
+                text = await response.text();
+                throw new Error(text);
+            } catch (error) {
+                return error.message;
+            }
+        }
 
         return definitions;
     }

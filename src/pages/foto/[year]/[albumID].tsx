@@ -1,10 +1,7 @@
 // eslint-disable-next-line
 import classes from "./albumID.module.scss";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { withIronSession } from "next-iron-session";
-import { getApiURL } from "../../../utils";
 
 const AlbumDetail: React.FC<{ logged: boolean }> = (props) => {
   const router = useRouter();

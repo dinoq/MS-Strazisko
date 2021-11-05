@@ -1,13 +1,13 @@
 import { FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { BreadcrumbItemDef, ReducerStates } from "../../../types";
+import { BreadcrumbItemDef, RootState } from "../../../types";
 import Breadcrumb from "./Breadcrumb";
 import classes from "./Breadcrumb.module.scss";
 import { selectBreadcrumbItem } from "./BreadcrumbReducer";
 
 const BreadcrumbContainer: FC<{} > = (props) => {
     const dispatch = useDispatch();
-    const items = useSelector((state: ReducerStates) => state.breadcrumb.items)
+    const items = useSelector((state: RootState) => state.breadcrumb.items)
     console.log('itemsssssss: ', items);
     //let items: Array<BreadcrumbItemDef> = props.items ? props.items : [];
 

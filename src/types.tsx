@@ -1,4 +1,5 @@
 import { ComponentType } from "./constants"
+import store from "./store"
 
 /**
  * ########
@@ -96,10 +97,8 @@ export type BreadcrumbItemDef = {
  * REDUX STATES
  * ############
  */
- export interface ReducerStates {
-    breadcrumb: BreadcrumbState,
-    formDefinitions: FormDefinitionsState,
-}
+
+export type RootState = ReturnType<typeof store.getState>
 
 export interface BreadcrumbState{
     items: Array<any>

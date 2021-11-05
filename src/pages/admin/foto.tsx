@@ -18,7 +18,7 @@ const AdminPhotosPage: NextPage = (props: any) => {
 
     const DBObjectClass = "albumPasswords";
     useEffect(() => {
-        dispatch(addItemToBreadcrumb([{ DBObjectClass: DBObjectClass, DBObject: DBManager.getEmptyDBObject(DBObjectClass), text: "" }]));
+        dispatch(addItemToBreadcrumb({ DBObjectClass: DBObjectClass, DBObject: DBManager.getEmptyDBObject(DBObjectClass), text: "" }));
         
     }, [])
     return (

@@ -21,7 +21,8 @@ const getEnvDomain = () => {
 
 export const getApiURL = (url: string) => {
     let urlWithoutSlash = url.startsWith("/")? url.substring(1) : url;
-    return getEnvDomain() + "/api/" + urlWithoutSlash;
+    let apiUrl = getEnvDomain() + "/api/" + urlWithoutSlash;
+    return apiUrl;
 }
 
 export const checkIfLettersSlashUnderscore = (words: string | Array<string>) => {

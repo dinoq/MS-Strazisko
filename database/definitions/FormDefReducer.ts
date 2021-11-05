@@ -1,16 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { DBManager } from "../../src/DBManager";
 import { FormDef, FormDefinitionsState, FormDefs } from "../../src/types";
-
-/*
-const initialState: FormDef = DBManager.createFullDef(DBManager._defaultDefinition, {
-    detailFrame: {
-        components: []
-    },
-    listFrame:{
-        components: []
-    }
-});*/
 
 let initialState: FormDefinitionsState = {
     actualFormDefinition: DBManager.createFullDef(DBManager._defaultDefinition, {
@@ -24,17 +14,17 @@ let initialState: FormDefinitionsState = {
     definitions: {},
     definitionsLoaded: false
 }
-console.log('initialState: ', initialState);
 
 const defSlice = createSlice({
     name: "defSlice",
     initialState,
     reducers:{
-        loadFormDef(state, action){
-            state.definitions = action.payload.def;
+        loadFormDef(state, action: PayloadAction<FormDefs>){
+            console.log("LOADED should be only one");
+            state.definitions = action.payload;
             state.definitionsLoaded = true;
         },
-        setActualFormDef(state, action){
+        setActualFormDef(state, action: PayloadAction<string>){
             console.log('action.payload: ', action.payload);
             state.actualFormDefinition = state.definitions[action.payload];
         }

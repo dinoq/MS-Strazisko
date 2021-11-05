@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import Link from "next/link";
-import classes from "./MainLayout.module.scss";
+import classes from "./AdminPageLayout.module.scss";
 
-const MainLayout = (props) => {
+const AdminPageLayout = (props) => {
   const logout = async () => {
     const result = await fetch("/api/admin/logoutAdmin", {
       method: "POST",
@@ -52,7 +52,7 @@ const MainLayout = (props) => {
   );
 };
 
-export default MainLayout;
+export default AdminPageLayout;
 
 /**
  *

@@ -2,12 +2,12 @@ import React, { FC, MouseEventHandler, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { ComponentType, DetailFrameMode } from "../../../constants";
 import { DBManager } from "../../../DBManager";
-import { DBObject, DBObjectAttr, ReducerStates } from "../../../types";
+import { DBObject, DBObjectAttr, RootState } from "../../../types";
 import ErrorDialog from "../ErrorDialog";
 import DetailFrame from "./DetailFrame";
 
 const DetailFrameContainer: FC<{ DBObjectClass: string, DBObject: DBObject, mode: DetailFrameMode, hideDetailFrame: MouseEventHandler<HTMLInputElement>, setDBObject: Function, setErrorMsg: Function, updateDBObject: Function }> = (props) => {
-    const formDefinition = useSelector((state: ReducerStates) => state.formDefinitions).actualFormDefinition;
+    const formDefinition = useSelector((state: RootState) => state.formDefinitions).actualFormDefinition;
     console.log('formDefinition: ', formDefinition);
 
     const formSubmitted = async (event) => {

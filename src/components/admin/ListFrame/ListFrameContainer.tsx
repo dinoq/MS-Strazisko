@@ -4,11 +4,11 @@
 import { FC, useState, } from "react";
 import { useSelector } from "react-redux";
 import { DBManager } from "../../../DBManager";
-import { DBObject, ReducerStates } from "../../../types";
+import { DBObject, RootState } from "../../../types";
 import ListFrame from "./ListFrame";
 
 const ListFrameContainer: FC<{ DBObjectClass: string, DBObject: DBObject, detailClickedHandler: Function, deleteItemHandler: Function, editItemHandler: Function, entries: Array<DBObject> }> = (props) => {
-    const formDefinition = useSelector((state: ReducerStates) => state.formDefinitions.actualFormDefinition);
+    const formDefinition = useSelector((state: RootState) => state.formDefinitions.actualFormDefinition);
 
     let colspanNoData = -1;
     if (!props.entries || !props.entries.length) {

@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState } from "react";
 import { DetailFrameMode } from "../../../constants";
-import { BreadcrumbItemDef, DBObject, ReducerStates } from "../../../types";
+import { BreadcrumbItemDef, DBObject, RootState } from "../../../types";
 import FormFrame from "./FormFrame";
 import { DBManager } from "../../../DBManager";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,11 +11,8 @@ import { addItemToBreadcrumb } from "../Breadcrumb/BreadcrumbReducer";
 
 const FormFrameContainer: React.FC<{ DBObjectClass: string }> = (props) => {
     const dispatch = useDispatch();
-    const breadcrumbItems = useSelector((state: ReducerStates) => state.breadcrumb.items)
-    const s = useSelector((state: ReducerStates) => state);
-    console.log('s: ', s);
-    const definition = useSelector((state: ReducerStates) => state.formDefinitions.actualFormDefinition);
-    console.log('definitioxxxxxxxxxn: ', definition);
+    const breadcrumbItems = useSelector((state: RootState) => state.breadcrumb.items)
+    const definition = useSelector((state: RootState) => state.formDefinitions.actualFormDefinition);
     //const [breadcrumbItems, setBreadcrumbItems]: [Array<BreadcrumbItemDef>, Function] = useState([{ DBObjectClass: props.DBObjectClass, DBObject: DBManager.getEmptyDBObject(props.DBObjectClass), text: "" }]);
     const [errorMsg, setErrorMsg] = useState("")
 
