@@ -8,7 +8,6 @@ import { selectBreadcrumbItem } from "./BreadcrumbReducer";
 const BreadcrumbContainer: FC<{} > = (props) => {
     const dispatch = useDispatch();
     const items = useSelector((state: RootState) => state.breadcrumb.items)
-    console.log('itemsssssss: ', items);
     //let items: Array<BreadcrumbItemDef> = props.items ? props.items : [];
 
     const resetNav = () => {

@@ -1,4 +1,4 @@
-import { withIronSession } from "next-iron-session";
+import { withIronSessionApiRoute } from "iron-session/next";
 
 async function handler(req, res) {
   try {
@@ -10,7 +10,7 @@ async function handler(req, res) {
   }
 }
 
-export default withIronSession(handler, {
+export default withIronSessionApiRoute(handler, {
   password: "P5hBP4iHlvp6obqtWK0mNuMrZow5x6DQV61W3EUG",
   cookieName: "myapp_cookiename",
   // if your localhost is served on http:// then disable the secure flag

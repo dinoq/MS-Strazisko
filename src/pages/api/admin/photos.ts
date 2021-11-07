@@ -1,10 +1,10 @@
-import { withIronSession } from "next-iron-session";
+import { withIronSessionApiRoute } from "iron-session/next";
 import Database from "better-sqlite3";
 import formidable from "formidable";
 
 const handler = async (req, res) => {
   const albumID = req.query["albumID"];
-  const adminLogged: Array<any> = await req.session.get("adminLogged");
+  const adminLogged: boolean = await req.session.adminLogged;
   if (!adminLogged) {
     res.status(401).send("Unauthorized!");
     return;
@@ -78,7 +78,7 @@ const handler = async (req, res) => {
 }
 
 
-export default withIronSession(handler, {
+export default withIronSessionApiRoute(handler, {
   cookieName: "myapp_cookiename",
   cookieOptions: {
     secure: process.env.NODE_ENV === "production" ? true : false

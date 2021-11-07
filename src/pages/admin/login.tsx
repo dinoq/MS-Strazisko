@@ -1,5 +1,5 @@
 import type { NextPage } from 'next'
-import { withIronSession } from 'next-iron-session';
+import { withIronSessionApiRoute, withIronSessionSsr  } from "iron-session/next";;
 import Head from 'next/head'
 import { useState } from 'react';
 import styles from './login.module.scss'
@@ -47,10 +47,10 @@ const AdminLoginPage: NextPage = (props: any)  => {
 
 export default AdminLoginPage
 
-export const getServerSideProps = withIronSession(
+export const getServerSideProps = withIronSessionSsr(
   async ({ req, res }) => {
 
-    const adminLogged: Array<any> = req.session.get("adminLogged");
+    const adminLogged: boolean = req.session.adminLogged;
 
     if (!adminLogged
     ) {

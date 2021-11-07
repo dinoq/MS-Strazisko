@@ -20,12 +20,10 @@ const defSlice = createSlice({
     initialState,
     reducers:{
         loadFormDef(state, action: PayloadAction<FormDefs>){
-            console.log("LOADED should be only one");
             state.definitions = action.payload;
             state.definitionsLoaded = true;
         },
         setActualFormDef(state, action: PayloadAction<string>){
-            console.log('action.payload: ', action.payload);
             state.actualFormDefinition = state.definitions[action.payload];
         }
     }

@@ -1,5 +1,5 @@
 import type { NextPage } from 'next'
-import { withIronSession } from 'next-iron-session'
+import { withIronSessionApiRoute, withIronSessionSsr  } from "iron-session/next";
 import Head from 'next/head'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -191,9 +191,9 @@ const Modal = (props) => {
     )
 }
 
-export const getServerSideProps = withIronSession(
+export const getServerSideProps = withIronSessionSsr(
     async ({ req, res }) => {
-        const adminLogged: Array<any> = req.session.get("adminLogged");
+        const adminLogged: boolean = req.session.adminLogged;
 
         if (adminLogged
         ) {

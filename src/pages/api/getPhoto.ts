@@ -1,15 +1,15 @@
 import { NextApiResponse } from "next";
-import { withIronSession } from "next-iron-session";
+import { withIronSessionApiRoute } from "iron-session/next";
 import sharp from "sharp";
 import Database from "better-sqlite3";
 import fs from "fs";
 
-async function handler(req, res: NextApiResponse, session) {
+async function handler(req, res) {
   let filename: string = req?.query?.file;
   let minify = req?.query?.minify;
 
-  const loggedForYears: Array<any> = await req.session.get("loggedForYears");
-  const adminLogged: Array<any> = await req.session.get("adminLogged");
+  const loggedForYears: Array<any> = await req.session.loggedForYears;
+  const adminLogged: boolean = await req.session.adminLogged;
   if ((!loggedForYears || !loggedForYears.length) && (!adminLogged)) {
     res.status(401).send("Unauthorized!");
     return;
@@ -68,7 +68,7 @@ async function handler(req, res: NextApiResponse, session) {
 
 }
 
-export default withIronSession(handler, {
+export default withIronSessionApiRoute(handler, {
   cookieName: "myapp_cookiename",
   cookieOptions: {
     secure: process.env.NODE_ENV === "production" ? true : false

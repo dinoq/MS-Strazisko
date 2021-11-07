@@ -1,10 +1,22 @@
-<Form FID="albumPasswords" cantDeleteItemMsg="Dané album obsahuje nějaké fotografie.&lt;br&gt;Nejprve musíte smazat je a až potom samotné album!">
-    <DetailFrame createNewEntryText="Přidat školní rok" uniqueConstraintFailed="Při vkládání do databáze došlo k problému kvůli vkládání již existujícího unikátního klíče.&lt;br/&gt;Zřejmě se pokoušíte vložit školní rok, který již v databázi existuje!">
-        <Component key="id_albumPasswords" type="SelectBox" values="getYears" editable="false" />
-        <Component key="passwordHash" type="TextField" constraints="[{ condition: '$.length &gt;= 6', errMsgIfFail: 'Heslo musí obsahovat alespoň 6 znaků!' }]" />
-    </DetailFrame>
-    <ListFrame detailDBOClass="albums" orderBy="id_albumPasswords" descending="true">
-        <Component key="id_albumPasswords" isBreadcrumbKey="true" />
-        <Component key="passwordHash" />
-    </ListFrame>
-</Form>
+<Forms>
+    <Form FID="albumPasswords" cantDeleteItemMsg="Dané album obsahuje nějaké fotografie.&lt;br&gt;Nejprve musíte smazat je a až potom samotné album!">
+        <DetailFrame createNewEntryText="Přidat školní rok" uniqueConstraintFailed="Při vkládání do databáze došlo k problému kvůli vkládání již existujícího unikátního klíče.&lt;br/&gt;Zřejmě se pokoušíte vložit školní rok, který již v databázi existuje!">
+            <Component key="id_albumPasswords" type="SelectBox" values="getYears" editable="false" />
+            <Component key="passwordHash" type="TextField" constraints="[{ condition: '$.length &gt;= 6', errMsgIfFail: 'Heslo musí obsahovat alespoň 6 znaků!' }]" />
+        </DetailFrame>
+        <ListFrame detailDBOClass="albums" orderBy="id_albumPasswords" descending="true">
+            <Component key="id_albumPasswords" isBreadcrumbKey="true" />
+            <Component key="passwordHash" />
+        </ListFrame>
+    </Form>
+    <Form FID="albums" cantDeleteItemMsg="Dané album obsahuje nějaké fotografie.&lt;br&gt;Nejprve musíte smazat je a až potom samotné album!">
+        <DetailFrame createNewEntryText="Přidat školní rok">
+            <Component key="id_albumPasswords" type="SelectBox" values="getYears" editable="false" />
+            <Component key="passwordHash" type="TextField" constraints="[{ condition: '$.length &gt;= 6', errMsgIfFail: 'Heslo musí obsahovat alespoň 6 znaků!' }]" />
+        </DetailFrame>
+        <ListFrame detailDBOClass="albums" orderBy="id_albumPasswords" descending="true">
+            <Component key="id_albumPasswords" isBreadcrumbKey="true" />
+            <Component key="passwordHash" />
+        </ListFrame>
+    </Form>
+</Forms>

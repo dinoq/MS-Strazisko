@@ -1,5 +1,5 @@
 import type { NextPage } from 'next'
-import { withIronSession } from 'next-iron-session'
+import { withIronSessionApiRoute  } from "iron-session/next";
 import Head from 'next/head'
 import React, { useState } from 'react'
 import ErrorDialog from '../../components/admin/ErrorDialog'
@@ -167,9 +167,9 @@ const getEmptyDBObject = (DBObjectClass: string): DBObject => {
   return fields;
 }
 
-export const getServerSideProps = withIronSession(
+export const getServerSideProps = withIronSessionApiRoute(
   async ({ req, res }) => {
-    const adminLogged: Array<any> = req.session.get("adminLogged");
+    const adminLogged: boolean = req.session.adminLogged;
 
     if (adminLogged
     ) {

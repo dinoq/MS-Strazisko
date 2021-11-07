@@ -2,7 +2,7 @@
 //import classes from "./FotoPage.module.css";
 
 import { GetServerSideProps } from "next";
-import { withIronSession } from "next-iron-session";
+import { withIronSessionApiRoute } from "iron-session/next";
 import { useEffect, useState } from "react";
 import { useRef } from "react";
 import Image from "next/image";

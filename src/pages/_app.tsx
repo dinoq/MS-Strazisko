@@ -10,6 +10,7 @@ import { Provider, useDispatch, useSelector } from "react-redux"
 import { RootState } from '../types';
 import store from "../store";
 import { SagaActions } from '../store/sagas';
+import { useEffect } from 'react';
 
 function MyAppWrapper({ Component, pageProps }) {
 
@@ -26,6 +27,13 @@ function MyApp(props) {
     const dispatch = useDispatch();
     const router = useRouter();
     const definitions = useSelector((state: RootState) => state.formDefinitions);
+
+    useEffect(() => {
+        if (!definitions.definitionsLoaded) {
+            store.dispatch({ type: SagaActions.LOAD_FORM_DEFINITIONS })
+            store.dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: "albumPasswords" })
+        }
+    }, [])
     if (router.pathname === "/404") { // not index
         return (
             <div className="layout">
@@ -36,10 +44,6 @@ function MyApp(props) {
     }
 
     if (router.pathname.includes("admin")) {
-        if (!definitions.definitionsLoaded) {
-            store.dispatch({ type: SagaActions.LOAD_FORM_DEFINITIONS })
-            store.dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: "albumPasswords" })
-        }
         if (router.pathname.includes("login")) {
             return (
                 <div className="admin">

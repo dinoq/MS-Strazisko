@@ -43,10 +43,6 @@ const FormFrameContainer: React.FC<{ DBObjectClass: string }> = (props) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [DBObject]);
 
-    useEffect(() => {
-        console.log("definitiondefinitiondefinition", definition);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [definition]);
 
     useEffect(() => {
         //dispatch(addItemToBreadcrumb({ DBObjectClass: props.DBObjectClass, DBObject: DBManager.getEmptyDBObject(props.DBObjectClass), text: "" }));

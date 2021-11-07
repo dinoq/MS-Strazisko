@@ -3,7 +3,7 @@ import classes from "./year.module.scss";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { withIronSession } from "next-iron-session";
+import { withIronSessionApiRoute, withIronSessionSsr } from "iron-session/next";
 
 const YearPage: React.FC<{ logged: boolean }> = (props) => {
   const router = useRouter();
@@ -160,11 +160,11 @@ const Gallery = (props) => {
   );
 };
 
-export const getServerSideProps = withIronSession(
+export const getServerSideProps = withIronSessionSsr(
   async ({ req, res }) => {
     const fotoIndex = req.url.indexOf("foto/") + 5;
     const pageYear = req.url.substring(fotoIndex, fotoIndex + 9).replace("_", "/");
-    const loggedForYears: Array<any> = req.session.get("loggedForYears");
+    const loggedForYears: Array<any> = req.session.loggedForYears;
 
     if (
       loggedForYears &&

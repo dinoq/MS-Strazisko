@@ -1,6 +1,7 @@
 ############################################################################################
 TODO:
 - cookieOptions-secure... na produkci...
+- https://github.com/vvo/iron-session#session-wrappers
 - komentář "// check class..." v data.ts v POST 
 - ošetřit padavku, když se zadá neplatné jméno třídy jako detail LF
 - DBObjectClass - je potřeba ji posílat z FormFrame do potomků? Není možné ji vždy získat s aktuálního objeku?

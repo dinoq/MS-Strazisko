@@ -51,33 +51,44 @@ export class DBManager {
     }
 
     protected static _isNumBoolStr = object => (typeof object == "number" || typeof object == "boolean" || typeof object == "string");
-/*
-    public static getFormDefinitions = async (DBObjectClass: string): Promise<FormDef> => {
-    }*/
+    /*
+        public static getFormDefinitions = async (DBObjectClass: string): Promise<FormDef> => {
+        }*/
 
     public static fetchFormDefinitions = async (): Promise<FormDefs> => {
-        console.log('fetchFormDefinitions() CALLED FROM SAGA!');
-        let definitions = {};
         let response: any = await fetch(getApiURL("/admin/forms"),
             {
                 method: "GET",
                 mode: "same-origin"
             })
 
-        if (response.status == 200) {
-            definitions = JSON.parse(await response.text());
-            console.log("DEFS gained");
-        } else {
-            let text = "";
-            try {
-                text = await response.text();
-                throw new Error(text);
-            } catch (error) {
-                return error.message;
+        try {
+            if (response.status == 200) {
+                let parser = new DOMParser();
+                let xmlDef = parser.parseFromString(await response.text(), "text/xml");
+                return DBManager.parseXMLFormDefinitions(xmlDef);
+            } else {
+                throw new Error(await response.text());
             }
+        } catch (error) {
+            return error.message;
         }
+    }
 
-        return definitions;
+    public static parseXMLFormDefinitions = async (xmlDef: XMLDocument): Promise<FormDefs> => {
+        let defs = {};
+        let forms = Array.from(xmlDef.documentElement.children);
+        forms.forEach(form=>{
+            let def = {};
+            let formName = form.getAttribute("FID")
+            defs[formName] = def;
+        })
+        console.log('forms: ', forms);
+        DBManager.createFullDef(DBManager._defaultDefinition, defs);
+        console.log('defs: ', defs);
+
+
+        return defs;
     }
     public static getFormDefinition = async (DBObjectClass: string): Promise<FormDef> => {
         let def = getRawFormDefinition(DBObjectClass);

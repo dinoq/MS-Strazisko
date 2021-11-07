@@ -1,4 +1,4 @@
-import { withIronSession } from "next-iron-session";
+import { withIronSessionApiRoute } from "iron-session/next";
 
 async function handler(req, res) {
   //TODO získat heslo pro daný rok z DB
@@ -8,7 +8,7 @@ async function handler(req, res) {
   const rigtPwd = "skolka" + year.substring(0, 4);
   
   if (req.method === "POST" && pwd === rigtPwd && year) {
-    let prevLoggedForYears = req.session.get("loggedForYears");
+    let prevLoggedForYears = req.session.loggedForYears;
     prevLoggedForYears ??= [];
     console.log('prevLoggedForYears: ', prevLoggedForYears);
     if(!prevLoggedForYears.includes(year)){
@@ -22,7 +22,7 @@ async function handler(req, res) {
   }
 }
 
-export default withIronSession(handler, {
+export default withIronSessionApiRoute(handler, {
   password: "P5hBP4iHlvp6obqtWK0mNuMrZow5x6DQV61W3EUG",
   cookieName: "myapp_cookiename",
   // if your localhost is served on http:// then disable the secure flag

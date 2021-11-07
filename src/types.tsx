@@ -87,7 +87,7 @@ export type OrderByDef = {
 }
 
 export type BreadcrumbItemDef = {
-    DBObjectClass: string, 
+    DBObjectClass: string,
     DBObject: DBObject,
     text: string
 }
@@ -100,7 +100,7 @@ export type BreadcrumbItemDef = {
 
 export type RootState = ReturnType<typeof store.getState>
 
-export interface BreadcrumbState{
+export interface BreadcrumbState {
     items: Array<any>
 }
 
@@ -118,3 +118,10 @@ export interface FormDefinitionsState {
 export type RecursivePartial<T> = {
     [P in keyof T]?: T[P] | RecursivePartial<T[P]>;
 };
+
+declare module "iron-session" {
+    interface IronSessionData {
+        adminLogged?: boolean;
+        loggedForYears?: Array<string>
+    }
+}
