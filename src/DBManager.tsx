@@ -6,6 +6,10 @@ import { DBObject, DBObjectAttr, DBObjectEditedAttr, DFComponentDef, FormDef, Fo
 import clone from "clone";
 import { Interface } from "readline";
 import { getApiURL } from "./utils";
+import * as ValuesDefinitions from "../database/definitions/values-definitions";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { addItemToBreadcrumb } from "./components/admin/Breadcrumb/BreadcrumbReducer";
 
 export class DBManager {
 
@@ -56,35 +60,109 @@ export class DBManager {
         }*/
 
     public static fetchFormDefinitions = async (): Promise<FormDefs> => {
-        let response: any = await fetch(getApiURL("/admin/forms"),
-            {
-                method: "GET",
-                mode: "same-origin"
-            })
-
-        try {
-            if (response.status == 200) {
-                let parser = new DOMParser();
-                let xmlDef = parser.parseFromString(await response.text(), "text/xml");
-                return DBManager.parseXMLFormDefinitions(xmlDef);
-            } else {
-                throw new Error(await response.text());
+        return new Promise(async (res, rej)=>{
+            let response: any = await fetch(getApiURL("/admin/forms"),
+                {
+                    method: "GET",
+                    mode: "same-origin"
+                })
+    
+            try {
+                if (response.status == 200) {
+                    let parser = new DOMParser();
+                    let xmlDef = parser.parseFromString(await response.text(), "text/xml");
+                    res(DBManager.parseXMLFormDefinitions(xmlDef));
+                } else {
+                    throw new Error(await response.text());
+                }
+            } catch (error) {
+                return error.message;
             }
-        } catch (error) {
-            return error.message;
-        }
+        })
     }
 
     public static parseXMLFormDefinitions = async (xmlDef: XMLDocument): Promise<FormDefs> => {
+
+        let getREQUIREDAttrFromXML = (attrName: string, XML: Element) => {
+            if (!XML.getAttribute(attrName)) {
+                throw new Error(`ERROR: Required attribute '${attrName}' missing in form definition!`)
+            }
+            return XML.getAttribute(attrName);
+        }
+        let getOptionalAttrFromXML = (attrName: string, XML: Element) => {
+            if (!XML.getAttribute(attrName)) {
+                return "";
+            }
+            return XML.getAttribute(attrName);
+        }
+
+        let mapToComponentType = (type: string) => {
+            switch (type) {
+                case "SelectBox":
+                    return ComponentType.SELECTBOX;
+
+                case "TextField":
+                default:
+                    return ComponentType.INPUT;
+
+            }
+        }
         let defs = {};
         let forms = Array.from(xmlDef.documentElement.children);
-        forms.forEach(form=>{
-            let def = {};
+        forms.forEach(form => {
+            let def: FormDef = DBManager.createFullDef(DBManager._defaultDefinition, {});
+
+            // DETAIL FRAME DEF
+            let XMLDF = form.getElementsByTagName("DetailFrame")[0];
+            let XMLDFComponents = Array.from(XMLDF.getElementsByTagName("Component"));
+            for (const XMLcomponent of XMLDFComponents) {
+                let component: DFComponentDef = {
+                    attributeKey: ""
+                };
+                component.attributeKey = getREQUIREDAttrFromXML("attributeKey", XMLcomponent);
+                component.componentType = mapToComponentType(getOptionalAttrFromXML("componentType", XMLcomponent));
+                let constraints = getOptionalAttrFromXML("constraints", XMLcomponent);
+                component.constraints = (constraints.length)? JSON.parse(constraints) : "";
+                component.editable = getOptionalAttrFromXML("editable", XMLcomponent).toLowerCase() != "false";
+                component.inputType = getOptionalAttrFromXML("inputType", XMLcomponent);
+                let values = getOptionalAttrFromXML("values", XMLcomponent);
+                if(values.length){
+                    component.values = eval(ValuesDefinitions[values + "()"]);
+                }
+
+                def.detailFrame.components.push(component);
+            }
+            def.detailFrame.createNewEntryText = getOptionalAttrFromXML("createNewEntryText", XMLDF);
+            def.detailFrame.uniqueConstraintFailed = getOptionalAttrFromXML("uniqueConstraintFailed", XMLDF);
+
+            // LIST FRAME DEF
+            let XMLLF = form.getElementsByTagName("ListFrame")[0];
+            let XMLLFComponents = Array.from(XMLDF.getElementsByTagName("Component"));
+            for (const XMLcomponent of XMLLFComponents) {
+                let component: LFComponentDef = {
+                    attributeKey: ""
+                };
+                component.attributeKey = getREQUIREDAttrFromXML("attributeKey", XMLcomponent);
+                component.isBreadcrumbKey = getOptionalAttrFromXML("isBreadcrumbKey", XMLcomponent).toLowerCase() == "true";
+                component.transformation = getOptionalAttrFromXML("transformation", XMLcomponent);
+
+                def.listFrame.components.push(component);
+            }
+
+            def.listFrame.detailDBOClass = getOptionalAttrFromXML("detailDBOClass", XMLLF);
+            let actions = getOptionalAttrFromXML("actions", XMLLF);
+            def.listFrame.actions = (actions.length)? {...def.listFrame.actions, ...JSON.parse(actions)} : def.listFrame.actions;
+            def.listFrame.cantDeleteItemMsg = getOptionalAttrFromXML("cantDeleteItemMsg", XMLLF);
+            let orderByAttr = getOptionalAttrFromXML("orderBy", form.getElementsByTagName("ListFrame")[0]);
+            let orderByDESC = getOptionalAttrFromXML("descending", form.getElementsByTagName("ListFrame")[0]);
+            if(orderByAttr.length){
+                def.DB.orderBy.attr = orderByAttr;
+                def.DB.orderBy.descending = orderByDESC.toLowerCase() == "true";
+            }
+
             let formName = form.getAttribute("FID")
             defs[formName] = def;
         })
-        console.log('forms: ', forms);
-        DBManager.createFullDef(DBManager._defaultDefinition, defs);
         console.log('defs: ', defs);
 
 
@@ -304,5 +382,14 @@ export class DBManager {
     public static getBreadcrumbAttr = async (DBObject: DBObject): Promise<DBObjectAttr> => {
         let key: string = (await DBManager.getFormDefinition(DBObject.DBObjectClass)).listFrame.components.find(component => component.isBreadcrumbKey).attributeKey;
         return (DBManager.getAttrOrComponentFromArrByKey(DBObject.attributes, key) as DBObjectAttr);
+    }
+
+    loadForm =  (DBObjectClass: string)=>{
+        const dispatch = useDispatch();
+        useEffect(() => {
+            dispatch(addItemToBreadcrumb({ DBObjectClass: DBObjectClass, DBObject: DBManager.getEmptyDBObject(DBObjectClass), text: "" }));
+            
+            dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: "albumPasswords" })
+        }, [])
     }
 }

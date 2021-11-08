@@ -198,25 +198,4 @@ export const getRawFormDefinition = (DBObjectClass: string): FormDef => {
 
 /**
  *
- *
-            {
-                key: "id_album",
-                name: "ID alba"
-            },
-            {
-                key: "date",
-                name: "Datum"
-            },
-            {
-                key: "title",
-                name: "URL"
-            },
-            {
-                key: "id_albumPasswords",
-                name: "Heslo"
-            },
-            {
-                key: "name",
-                name: "Název"
-            }
  */

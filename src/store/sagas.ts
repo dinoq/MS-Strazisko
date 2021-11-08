@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { all, call, fork, put, select, takeEvery, takeLatest,takeLeading } from 'redux-saga/effects'
+import { all, call, fork, put, putResolve, select, takeEvery, takeLatest,takeLeading } from 'redux-saga/effects'
 import { loadFormDef, setActualFormDef } from '../../database/definitions/FormDefReducer';
 import { DBManager } from '../DBManager';
 import { FormDefinitionsState, RootState } from '../types';
@@ -10,25 +10,14 @@ export enum SagaActions {
 }
 
 
-function* loadFormDefinitions(){
-    try {
-        const formDefinitions: FormDefinitionsState = yield select((state: RootState)=>state.formDefinitions);
-        if(formDefinitions.definitionsLoaded)
-            return;
-
-        const definitions = yield call(DBManager.fetchFormDefinitions);
-        yield put(loadFormDef(definitions))        
-    } catch (error) {
-        console.log('error: ', error);        
-    }
-}
-
 function* setFormDefinitions(action){
     try {
-        const formDefinitions: FormDefinitionsState = yield select((state: RootState)=>state.formDefinitions);
+        let formDefinitions: FormDefinitionsState = yield select((state: RootState)=>state.formDefinitions);
         if(!formDefinitions.definitionsLoaded){
-            yield put({ type: SagaActions.LOAD_FORM_DEFINITIONS })        
+            const definitions = yield call(DBManager.fetchFormDefinitions);
+            yield putResolve(loadFormDef(definitions))    
         }
+        formDefinitions = yield select((state: RootState)=>state.formDefinitions);
         if(formDefinitions.definitions[action.FID]){
             yield put(setActualFormDef(action.FID))   
         }     
@@ -37,20 +26,14 @@ function* setFormDefinitions(action){
     }
 }
 
-function* asd(){
-    yield takeLeading(SagaActions.LOAD_FORM_DEFINITIONS, loadFormDefinitions);
-}
-function* qwe(){
-    yield takeLatest(SagaActions.SET_FORM_DEFINITIONS, setFormDefinitions);
-}
-
 function* rootSaga(){
-    // yield fork(asd);
-    // yield fork(qwe);
-    yield all([
-        asd(),
-        qwe()
-    ])
+    //  yield fork(asd);
+    //  yield fork(qwe);
+    // yield all([
+    //     fork(qwe)
+    // ])
+
+    yield takeLatest(SagaActions.SET_FORM_DEFINITIONS, setFormDefinitions);
 }
 
 export default rootSaga;

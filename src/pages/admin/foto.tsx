@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux'
 import { addItemToBreadcrumb } from '../../../src/components/admin/Breadcrumb/BreadcrumbReducer'
 import FormFrameContainer from '../../../src/components/admin/FormFrame/FormFrameContainer'
 import { DBManager } from '../../../src/DBManager'
+import { SagaActions } from '../../store/sagas';
 
 enum ShownLevel {
     YEARS,
@@ -17,10 +18,6 @@ const AdminPhotosPage: NextPage = (props: any) => {
     const dispatch = useDispatch();
 
     const DBObjectClass = "albumPasswords";
-    useEffect(() => {
-        dispatch(addItemToBreadcrumb({ DBObjectClass: DBObjectClass, DBObject: DBManager.getEmptyDBObject(DBObjectClass), text: "" }));
-        
-    }, [])
     return (
         <div className={""}>
             <Head>

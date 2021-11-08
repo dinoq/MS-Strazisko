@@ -25,6 +25,7 @@ const defSlice = createSlice({
         },
         setActualFormDef(state, action: PayloadAction<string>){
             state.actualFormDefinition = state.definitions[action.payload];
+            console.log('state.definitions[action.payload]: ', state.definitions[action.payload]);
         }
     }
 })
