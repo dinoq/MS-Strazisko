@@ -5,13 +5,20 @@
     margin: 10px;
     font-size: 1.3rem;
 
-    .breadcrumbItem{
-        cursor: pointer;
+    .breadcrumbItemWrapper{
 
-        &:last-of-type{
+        .breadcrumbItem{
+            cursor: pointer;
+    
+            
+        } 
+        &:last-of-type .breadcrumbItem{
             font-weight: bold;
-        }
-        
-    } 
+            cursor: initial;
+            color: #a7caff !important;
+    
+            
+        } 
+    }
     
 }

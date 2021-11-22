@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux';
 import { all, call, fork, put, putResolve, select, takeEvery, takeLatest,takeLeading } from 'redux-saga/effects'
-import { loadFormDef, setActualFormDef } from '../../database/definitions/FormDefReducer';
+import { loadFormDef, setActualFormDef } from './reducers/FormDefReducer';
 import { DBManager } from '../DBManager';
 import { FormDefinitionsState, RootState } from '../types';
 
@@ -18,6 +18,7 @@ function* setFormDefinitions(action){
             yield putResolve(loadFormDef(definitions))    
         }
         formDefinitions = yield select((state: RootState)=>state.formDefinitions);
+        console.log('formDefinitions.definitions[action.FID]: ', action.FID, formDefinitions.definitions[action.FID]);
         if(formDefinitions.definitions[action.FID]){
             yield put(setActualFormDef(action.FID))   
         }     

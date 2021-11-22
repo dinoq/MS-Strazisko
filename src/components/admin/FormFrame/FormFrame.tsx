@@ -14,7 +14,7 @@ import ListFrameContainer from "../ListFrame/ListFrameContainer";
 import BreadcrumbContainer from "../Breadcrumb/BreadcrumbContainer";
 import { DBManager } from "../../../DBManager";
 
-const FormFrame: React.FC<{ DBObjectClass: string, errorMsg: string, detailFrameVisible: boolean, saveDialogVisible: boolean, entries: Array<DBObject>, detailFrameMode: DetailFrameMode, definition: FormDef, DBObject: DBObject, hideDetailFrame: EventHandler<any>, setDBObject: Function,  detailClickedHandler: Function, deleteItemHandler: Function, editItemHandler: Function, showDetailFrame: Function, setSaveDialogVisible: Function, setErrorMsg: Function, updateDBObject: Function }> = (props) => {
+const FormFrame: React.FC<{ errorMsg: string, detailFrameVisible: boolean, saveDialogVisible: boolean, entries: Array<DBObject>, detailFrameMode: DetailFrameMode, definition: FormDef, DBObject: DBObject, hideDetailFrame: EventHandler<any>, setDBObject: Function,  detailClickedHandler: Function, deleteItemHandler: Function, editItemHandler: Function, showDetailFrame: Function, setSaveDialogVisible: Function, setErrorMsg: Function, updateDBObject: Function }> = (props) => {
   
   return (
     <>
@@ -23,8 +23,8 @@ const FormFrame: React.FC<{ DBObjectClass: string, errorMsg: string, detailFrame
       <div className={"form-wrapper"}>
         {(props.definition.detailFrame.createNewEntryText.length != 0 && !props.detailFrameVisible) && <span className={"link " + "add-document-btn mb-3"} onClick={props.showDetailFrame.bind(this, true)}>{props.definition.detailFrame.createNewEntryText}</span>}
         {props.detailFrameVisible &&
-          <DetailFrameContainer DBObject={props.DBObject} DBObjectClass={props.DBObjectClass} setErrorMsg={props.setErrorMsg} mode={props.detailFrameMode} hideDetailFrame={props.hideDetailFrame} setDBObject={props.setDBObject} updateDBObject={props.updateDBObject} />}
-        {<ListFrameContainer DBObjectClass={props.DBObjectClass} DBObject={props.DBObject} detailClickedHandler={props.detailClickedHandler} deleteItemHandler={props.deleteItemHandler} editItemHandler={props.editItemHandler} entries={props.entries} />}
+          <DetailFrameContainer DBObject={props.DBObject} setErrorMsg={props.setErrorMsg} mode={props.detailFrameMode} hideDetailFrame={props.hideDetailFrame} setDBObject={props.setDBObject} updateDBObject={props.updateDBObject} />}
+        {<ListFrameContainer DBObject={props.DBObject} detailClickedHandler={props.detailClickedHandler} deleteItemHandler={props.deleteItemHandler} editItemHandler={props.editItemHandler} entries={props.entries} />}
         {props.saveDialogVisible &&
           <TreeChoiceDialog dialogText="Chcete změny uložit?" overlayCancels={true} onYes={null} yesText="Uložit" onNo={null} noText="Neukládat" onCancel={() => { props.setSaveDialogVisible(false) }} cancelText="Zrušit" />}
         {(props.errorMsg && props.errorMsg.length) && <ErrorDialog msg={props.errorMsg} onOk={() => { props.setErrorMsg("") }} />}

@@ -4,7 +4,7 @@ TODO:
 - https://github.com/vvo/iron-session#session-wrappers
 - komentář "// check class..." v data.ts v POST 
 - ošetřit padavku, když se zadá neplatné jméno třídy jako detail LF
-- DBObjectClass - je potřeba ji posílat z FormFrame do potomků? Není možné ji vždy získat s aktuálního objeku?
+- DBOClass - je potřeba ji posílat z FormFrame do potomků? Není možné ji vždy získat s aktuálního objeku?
 - primaryKey není potřeba posílat do data, může se vzít z definice objektu (první atribut)
 - definici objektů vytvářet přímo z databáze (bude to chtít nový handler a také tabulku mapování trida.atribut-> nazev atributu s diakritikou).
 - práci s databází a doubory do try-catch

@@ -4,7 +4,12 @@ import { DBManager } from "../../../DBManager";
 import { DBObject, DetailFrameDef, FormDef } from "../../../types";
 import ErrorDialog from "../ErrorDialog";
 
-const DetailFrame: FC<{ DBObjectClass: string, DBObject: DBObject, definition: FormDef, mode: DetailFrameMode, hideDetailFrame: MouseEventHandler<HTMLInputElement>, formSubmitted: FormEventHandler<HTMLFormElement>, setErrorMsg: Function, updateDBObject: Function }> = (props) => {
+const DetailFrame: FC<{ DBOClass: string, DBObject: DBObject, definition: FormDef, mode: DetailFrameMode, hideDetailFrame: MouseEventHandler<HTMLInputElement>, formSubmitted: FormEventHandler<HTMLFormElement>, setErrorMsg: Function, updateDBObject: Function }> = (props) => {
+    const getInput = (componentType: ComponentType, attrs) =>{
+        return (
+            <input type="text" {...attrs}/>
+        );
+    }
     return (
         <div>
             <form className="d-flex flex-column bordered p-2 mb-3" onSubmit={props.formSubmitted}>
@@ -15,15 +20,19 @@ const DetailFrame: FC<{ DBObjectClass: string, DBObject: DBObject, definition: F
                         disabled = !item.editable;
                     }
 
-                    if (item.componentType == ComponentType.INPUT) {
+                    if (item.componentType == ComponentType.TextField) {
                         return (
                             <div key={"input-" + i}>
                                 <div className="d-flex justify-content-center">
-                                    <input type={item.inputType ? item.inputType : "text"} placeholder={props.DBObject.attributes[item.attributeKey]} value={value} onChange={props.updateDBObject.bind(this, item.attributeKey)} required  disabled={disabled}/>
+                                    {/* <input type={item.inputType ? item.inputType : "text"} placeholder={props.DBObject.attributes[item.attributeKey]} value={value} onChange={props.updateDBObject.bind(this, item.attributeKey)} required  disabled={disabled}/> */}
+
+                                    {getInput(ComponentType.TextField,{
+                                        placeholder:props.DBObject.attributes[item.attributeKey], value, onChange:props.updateDBObject.bind(this, item.attributeKey), required: true,  disabled
+                                    })}
                                 </div>
                             </div>
                         );
-                    } else if (item.componentType == ComponentType.SELECTBOX) {
+                    } else if (item.componentType == ComponentType.SelectBox) {
                         return (
                             <select key={"selectbox-" + i} value={value} onChange={props.updateDBObject.bind(this, item.attributeKey)} disabled={disabled}>
                                 {item.values.map((val, j) => {

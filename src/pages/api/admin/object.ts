@@ -40,7 +40,7 @@ const handler = async (req, res) => {
             }
         }
 		db.close();
-        let DBObjectDef = {DBObjectClass: className, attributes}
+        let DBObjectDef = {DBOClass: className, attributes}
 		return res.json(DBObjectDef);
 	} else {
 		db.close();

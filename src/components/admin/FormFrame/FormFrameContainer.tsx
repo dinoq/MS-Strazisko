@@ -3,17 +3,17 @@
 
 import React, { useEffect, useState } from "react";
 import { DetailFrameMode } from "../../../constants";
-import { BreadcrumbItemDef, DBObject, RootState } from "../../../types";
+import { BreadcrumbItemDef, BreadcrumbState, DBObject, RootState } from "../../../types";
 import FormFrame from "./FormFrame";
 import { DBManager } from "../../../DBManager";
 import { useDispatch, useSelector } from "react-redux";
-import { addItemToBreadcrumb } from "../Breadcrumb/BreadcrumbReducer";
+import { addItemToBreadcrumb } from "../../../store/reducers/BreadcrumbReducer";
+import { SagaActions } from "../../../store/sagas";
 
-const FormFrameContainer: React.FC<{ DBObjectClass: string }> = (props) => {
+const FormFrameContainer: React.FC<{}> = (props) => {
     const dispatch = useDispatch();
-    const breadcrumbItems = useSelector((state: RootState) => state.breadcrumb.items)
     const definition = useSelector((state: RootState) => state.formDefinitions.actualFormDefinition);
-    //const [breadcrumbItems, setBreadcrumbItems]: [Array<BreadcrumbItemDef>, Function] = useState([{ DBObjectClass: props.DBObjectClass, DBObject: DBManager.getEmptyDBObject(props.DBObjectClass), text: "" }]);
+    const breadcrumbItems: Array<BreadcrumbItemDef>= useSelector((state: RootState) => state.breadcrumb.items);
     const [errorMsg, setErrorMsg] = useState("")
 
     const [saveDialogVisible, setSaveDialogVisible] = useState(false);
@@ -21,31 +21,29 @@ const FormFrameContainer: React.FC<{ DBObjectClass: string }> = (props) => {
     const [detailFrameVisible, setDetailFrameVisible] = useState(false)
     const [entries, setEntries] = useState([]);
 
-    //let DBObjectClass = breadcrumbItems[breadcrumbItems.length - 1].DBObjectClass;
-    let DBObjectClass = props.DBObjectClass;
+    let DBOClass = useSelector((state: RootState) => state.formDefinitions.actualFormDefinition.DB.DBOClass);
 
-    const [DBObject, setDBObject]: [DBObject, any] = useState(DBManager.getEmptyDBObject(DBObjectClass));
+    const [DBObject, setDBObject]: [DBObject, any] = useState(DBManager.getEmptyDBObject(DBOClass));
 
     const [detailItemCondition, setDetailItemCondition] = useState("");
 
-    //const definition = DBManager.getFormDefinition(DBObjectClass);
+    //const definition = DBManager.getFormDefinition(DBOClass);
 
     useEffect(() => {
-        setDBObject(DBManager.getEmptyDBObject(DBObjectClass));
-        DBManager.getAllDBObjectEntries(DBObjectClass, /*definition.DB.orderBy, */detailItemCondition).then(entries => {
+        setDBObject(DBManager.getEmptyDBObject(DBOClass));
+        DBManager.getAllDBObjectEntries(DBOClass, /*definition.DB.orderBy, */detailItemCondition).then(entries => {
             setEntries(entries);
         })
         setDetailItemCondition("");
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [DBObjectClass]);
+    }, [DBOClass]);
 
     useEffect(() => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [DBObject]);
 
-
     useEffect(() => {
-        //dispatch(addItemToBreadcrumb({ DBObjectClass: props.DBObjectClass, DBObject: DBManager.getEmptyDBObject(props.DBObjectClass), text: "" }));
+        //dispatch(addItemToBreadcrumb({ DBOClass: props.DBOClass, DBObject: DBManager.getEmptyDBObject(props.DBOClass), text: "" }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -58,10 +56,9 @@ const FormFrameContainer: React.FC<{ DBObjectClass: string }> = (props) => {
 
     const hideDetailFrame = () => {
         setDetailFrameVisible(false);
-        setDBObject(DBManager.getEmptyDBObject(DBObjectClass));
+        setDBObject(DBManager.getEmptyDBObject(DBOClass));
         setDetailFrameMode(DetailFrameMode.NEW_ENTRY);
     }
-
 
     /**
      * Bylo kliknuto na položku, změní se úroveň
@@ -74,9 +71,17 @@ const FormFrameContainer: React.FC<{ DBObjectClass: string }> = (props) => {
         setDetailItemCondition("WHERE " + prevPrimaryKey + "='" + prevPrimaryKeyValue + "'");
         let breadcrumbAttr = DBManager.getBreadcrumbAttr(DBObject);
         let objBreadcrumbAttr = DBManager.getAttrFromArrByKey(item.attributes, (await breadcrumbAttr).key);
-        dispatch(addItemToBreadcrumb(objBreadcrumbAttr.value))
+        
+        const newClass = definition.listFrame.detailDBOClass;
+        const newBItem: BreadcrumbItemDef = {
+            DBOClass: newClass,
+            DBObject,
+            text: objBreadcrumbAttr.value
+        };
+        dispatch(addItemToBreadcrumb(newBItem))
+        dispatch({type: SagaActions.SET_FORM_DEFINITIONS, FID: newClass})
         /*setBreadcrumbItems(prevState => {
-            return [...prevState, { DBObjectClass: (await definition).listFrame.detailDBOClass, text: objBreadcrumbAttr.value }]
+            return [...prevState, { DBOClass: (await definition).listFrame.detailDBOClass, text: objBreadcrumbAttr.value }]
         })*/
     }
 
@@ -84,7 +89,7 @@ const FormFrameContainer: React.FC<{ DBObjectClass: string }> = (props) => {
         console.log('item: ', item);
         let body = {
             deleteId: item.id,
-            className: item.DBObjectClass
+            className: item.DBOClass
         };
         if (definition.listFrame.detailDBOClass) {
             body["detailClass"] = definition.listFrame.detailDBOClass;
@@ -133,7 +138,7 @@ const FormFrameContainer: React.FC<{ DBObjectClass: string }> = (props) => {
 
     return (
         <>
-            <FormFrame DBObjectClass={DBObjectClass} errorMsg={errorMsg} detailFrameVisible={detailFrameVisible} saveDialogVisible={saveDialogVisible} entries={entries} detailFrameMode={detailFrameMode} definition={definition} DBObject={DBObject} hideDetailFrame={hideDetailFrame} setDBObject={setDBObject} detailClickedHandler={detailClickedHandler} deleteItemHandler={deleteItemHandler} editItemHandler={editItemHandler} showDetailFrame={showDetailFrame} setSaveDialogVisible={setSaveDialogVisible} setErrorMsg={setErrorMsg} updateDBObject={updateDBObject} />
+            <FormFrame errorMsg={errorMsg} detailFrameVisible={detailFrameVisible} saveDialogVisible={saveDialogVisible} entries={entries} detailFrameMode={detailFrameMode} definition={definition} DBObject={DBObject} hideDetailFrame={hideDetailFrame} setDBObject={setDBObject} detailClickedHandler={detailClickedHandler} deleteItemHandler={deleteItemHandler} editItemHandler={editItemHandler} showDetailFrame={showDetailFrame} setSaveDialogVisible={setSaveDialogVisible} setErrorMsg={setErrorMsg} updateDBObject={updateDBObject} />
         </>
     )
 }

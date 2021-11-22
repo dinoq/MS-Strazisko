@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { DBManager } from "../../src/DBManager";
-import { FormDef, FormDefinitionsState, FormDefs } from "../../src/types";
+import { DBManager } from "../../DBManager";
+import { FormDef, FormDefinitionsState, FormDefs } from "../../types";
 
 let initialState: FormDefinitionsState = {
     actualFormDefinition: DBManager.createFullDef(DBManager._defaultDefinition, {
@@ -25,7 +25,6 @@ const defSlice = createSlice({
         },
         setActualFormDef(state, action: PayloadAction<string>){
             state.actualFormDefinition = state.definitions[action.payload];
-            console.log('state.definitions[action.payload]: ', state.definitions[action.payload]);
         }
     }
 })

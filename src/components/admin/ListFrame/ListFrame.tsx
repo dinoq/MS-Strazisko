@@ -5,7 +5,7 @@ import { FC, useEffect, useState } from "react";
 import { DBManager } from "../../../DBManager";
 import { DBObject, DBObjectAttr, DBObjectEditedAttr, FormDef, LFComponentDef, ListFrameDef } from "../../../types";
 
-const ListFrame: FC<{ definition: ListFrameDef, DBObjectClass: string, DBObject: DBObject, detailClickedHandler: Function, deleteItemHandler: Function, editItemHandler: Function, entries: Array<DBObject>, colspanNoData: number }> = (props) => {
+const ListFrame: FC<{ definition: ListFrameDef, DBOClass: string, DBObject: DBObject, detailClickedHandler: Function, deleteItemHandler: Function, editItemHandler: Function, entries: Array<DBObject>, colspanNoData: number }> = (props) => {
 
     return (
         <>

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { BreadcrumbItemDef, BreadcrumbState } from "../../../types";
+import { BreadcrumbItemDef, BreadcrumbState } from "../../types";
 
 const initialState: BreadcrumbState = {
     items: []
@@ -13,7 +13,7 @@ const breadcrumbSlice = createSlice({
             state.items.push(action.payload);
         },
         selectBreadcrumbItem(state, action: PayloadAction<number>){
-
+            state.items.splice(action.payload);
         }
     }
 })

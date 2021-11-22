@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { BreadcrumbItemDef, RootState } from "../../../types";
 import Breadcrumb from "./Breadcrumb";
 import classes from "./Breadcrumb.module.scss";
-import { selectBreadcrumbItem } from "./BreadcrumbReducer";
+import { selectBreadcrumbItem } from "../../../store/reducers/BreadcrumbReducer";
+import { SagaActions } from "../../../store/sagas";
 
 const BreadcrumbContainer: FC<{} > = (props) => {
     const dispatch = useDispatch();
@@ -11,12 +12,14 @@ const BreadcrumbContainer: FC<{} > = (props) => {
     //let items: Array<BreadcrumbItemDef> = props.items ? props.items : [];
 
     const resetNav = () => {
+        dispatch({type: SagaActions.SET_FORM_DEFINITIONS, FID: items[0].DBOClass})
         dispatch(selectBreadcrumbItem(0))
         //props.setItems([]);
     }
 
     const itemClicked = (index) => {
-        dispatch(selectBreadcrumbItem(index))
+        dispatch({type: SagaActions.SET_FORM_DEFINITIONS, FID: items[index].DBOClass})
+        dispatch(selectBreadcrumbItem(index+1))
         //props.setItems(prevState => [...items.slice(0, index + 1)]);
     }
     return (

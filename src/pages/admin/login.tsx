@@ -8,6 +8,9 @@ const AdminLoginPage: NextPage = (props: any)  => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  /*useEffect(() => {
+      
+  }, [])*/
   const loginFormSubmitted = async (event) => {
     event.preventDefault();
     const body = JSON.stringify({ username, password });
@@ -20,7 +23,7 @@ const AdminLoginPage: NextPage = (props: any)  => {
     })
     
     if(result.status === 200){
-      window.location.replace("/admin/login");
+      window.location.replace("/admin");
     }
   }
   return (

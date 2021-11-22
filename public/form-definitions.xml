@@ -12,24 +12,36 @@
         </ListFrame>
     </Form>
 
-
-
-
     <Form FID="albums" cantDeleteItemMsg="Dané album obsahuje nějaké fotografie.&lt;br&gt;Nejprve musíte smazat je a až potom samotné album!">
-        <DetailFrame createNewEntryText="Přidat školní rok">
-            <Component attributeKey="id_albumPasswords" componentType="SelectBox" values="getYears" editable="false" />
-            <Component attributeKey="passwordHash" componentType="TextField" />
+        <DetailFrame createNewEntryText="Přidat album">
+            <Component attributeKey="id_album" componentType="NumberField" editable="false" />
+            <Component attributeKey="date" componentType="DateField" />
+            <Component attributeKey="name" componentType="TextField" />
+            <Component attributeKey="title" componentType="TextField" />
         </DetailFrame>
-        <ListFrame detailDBOClass="albums">
-            <Component attributeKey="id_albumPasswords" isBreadcrumbattributeKey="true" />
-            <Component attributeKey="passwordHash" />
+        <ListFrame detailDBOClass="photos" orderBy="id_album" descending="true">
+            <Component attributeKey="id_album" />
+            <Component attributeKey="date" transformation="const date = new Date('$');date.getDate() + '. ' + (date.getMonth() + 1) + '. ' + date.getFullYear()"/>
+            <Component attributeKey="name" />
+            <Component attributeKey="title" />
+        </ListFrame>
+    </Form>
+
+    <Form FID="photos">
+        <DetailFrame createNewEntryText="Přidat Fotku/y">
+            <Component attributeKey="id_photo" componentType="NumberField" editable="false" />
+            <Component attributeKey="filename" componentType="TextField" />
+        </DetailFrame>
+        <ListFrame orderBy="id_photo" descending="true">
+            <Component attributeKey="id_photo" />
+            <Component attributeKey="filename" transformatio="@[albums.title]" />
         </ListFrame>
     </Form>
 
 
     <Form FID="ContactTexts">
         <DetailFrame>
-            <Component attributeKey="contact_text_id" componentType="TextField" inputType="number" editable="false"/>
+            <Component attributeKey="contact_text_id" componentType="NumberField" editable="false"/>
             <Component attributeKey="title" componentType="TextField" editable="false" />
             <Component attributeKey="content" componentType="TextField"/>
         </DetailFrame>

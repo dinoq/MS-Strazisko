@@ -8,7 +8,7 @@ import store from "./store"
  */
 export type DBObject = {
     id: number,
-    DBObjectClass: string,
+    DBOClass: string,
     attributes: Array<DBObjectAttr>,
     isEdited: boolean,
     editedAttrs: Array<DBObjectEditedAttr>
@@ -34,7 +34,8 @@ export type FormDef = {
     detailFrame: DetailFrameDef,
     listFrame: ListFrameDef,
     DB?: {
-        orderBy?: OrderByDef
+        orderBy?: OrderByDef,
+        DBOClass: string,
     }
     //DBOClass: string,???? - bude bez toho vedet co "tahat"??
 }
@@ -53,7 +54,6 @@ export type DetailFrameDef = {
 export type DFComponentDef = {
     attributeKey: string,
     componentType?: ComponentType,
-    inputType?: string,
     values?: Array<any>,
     constraints?: Array<FormAttrConstraintDef>,
     editable?: boolean
@@ -87,7 +87,7 @@ export type OrderByDef = {
 }
 
 export type BreadcrumbItemDef = {
-    DBObjectClass: string,
+    DBOClass: string,
     DBObject: DBObject,
     text: string
 }
@@ -101,13 +101,16 @@ export type BreadcrumbItemDef = {
 export type RootState = ReturnType<typeof store.getState>
 
 export interface BreadcrumbState {
-    items: Array<any>
+    items: Array<BreadcrumbItemDef>
 }
 
 export interface FormDefinitionsState {
     definitions: FormDefs,
     actualFormDefinition: FormDef,
     definitionsLoaded: boolean
+}
+
+export interface OtherStates {
 }
 
 /**

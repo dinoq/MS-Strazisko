@@ -12,7 +12,7 @@ async function handler(req, res) {
     prevLoggedForYears ??= [];
     console.log('prevLoggedForYears: ', prevLoggedForYears);
     if(!prevLoggedForYears.includes(year)){
-      req.session.set("loggedForYears", [...prevLoggedForYears, year]); 
+      req.session.loggedForYears = [...prevLoggedForYears, year]; 
       await req.session.save();
     }
 

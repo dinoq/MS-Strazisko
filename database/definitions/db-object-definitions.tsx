@@ -6,7 +6,7 @@ interface DBOBjectDefs {
 
 const DBObjectDefinitions: RecursivePartial<DBOBjectDefs> = {
     albumPasswords: {
-        DBObjectClass: "albumPasswords",
+        DBOClass: "albumPasswords",
         attributes: [
             {
                 key: "id_albumPasswords",
@@ -19,7 +19,7 @@ const DBObjectDefinitions: RecursivePartial<DBOBjectDefs> = {
         ]
     }, 
     albums: {
-        DBObjectClass: "albums",
+        DBOClass: "albums",
         attributes: [
             {
                 key: "id_album",
@@ -44,7 +44,7 @@ const DBObjectDefinitions: RecursivePartial<DBOBjectDefs> = {
         ]
     }, 
     photos: {
-        DBObjectClass: "photos",
+        DBOClass: "photos",
         attributes: [
             {
                 key: "id_photo",
@@ -68,7 +68,7 @@ const DBObjectDefinitions: RecursivePartial<DBOBjectDefs> = {
 
 
     ContactTexts: {
-        DBObjectClass: "ContactTexts",
+        DBOClass: "ContactTexts",
         attributes: [
             {
                 key: "contact_text_id",
@@ -86,6 +86,6 @@ const DBObjectDefinitions: RecursivePartial<DBOBjectDefs> = {
     }
 }
 
-export const getRawDBObjectDefinition = (DBObjectClass: string): DBObject => {
-    return (DBObjectDefinitions[DBObjectClass] as DBObject);
+export const getRawDBObjectDefinition = (DBOClass: string): DBObject => {
+    return (DBObjectDefinitions[DBOClass] as DBObject);
   }

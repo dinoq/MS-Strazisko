@@ -2,7 +2,7 @@ import { withIronSessionApiRoute } from "iron-session/next";
 
 async function handler(req, res) {
   try {
-    req.session.set("adminLogged", false); 
+    req.session.adminLogged = false; 
     await req.session.save();
     return res.status(200).send("Successfully logged out.");
   } catch (error) {

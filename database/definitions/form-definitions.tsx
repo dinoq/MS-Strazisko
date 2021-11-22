@@ -21,7 +21,7 @@ const FormDefinitions: FormDefs = {
             components: [
                 {
                     attributeKey: "id_albumPasswords",
-                    componentType: ComponentType.SELECTBOX,
+                    componentType: ComponentType.SelectBox,
                     values: getYears(),
                     editable: false
                 },
@@ -50,7 +50,8 @@ const FormDefinitions: FormDefs = {
             orderBy: {
                 attr: "id_albumPasswords",
                 descending: true
-            }
+            },
+            DBOClass: "albumPasswords"
         }
     },
     albums: {
@@ -58,14 +59,12 @@ const FormDefinitions: FormDefs = {
             components: [
                 {
                     attributeKey: "id_album",
-                    componentType: ComponentType.INPUT,
-                    inputType: "number",
+                    componentType: ComponentType.TextField,
                     editable: false
                 },
                 {
                     attributeKey: "date",
-                    componentType: ComponentType.INPUT,
-                    inputType: "date",
+                    componentType: ComponentType.DateField,
                 },
                 {
                     attributeKey: "name",
@@ -100,7 +99,8 @@ const FormDefinitions: FormDefs = {
             orderBy: {
                 attr: "id_album",
                 descending: true
-            }
+            },
+            DBOClass: "albums"
         }
     },
     photos: {
@@ -108,8 +108,8 @@ const FormDefinitions: FormDefs = {
             components: [
                 {
                     attributeKey: "id_photo",
-                    componentType: ComponentType.INPUT,
-                    inputType: "number",
+                    componentType: ComponentType.TextField,
+                    //inputType: "number",
                     editable: false
                 },
                 {
@@ -140,7 +140,8 @@ const FormDefinitions: FormDefs = {
             orderBy: {
                 attr: "id_photo",
                 descending: true
-            }
+            },
+            DBOClass: "photos"
         }
     },
 
@@ -153,8 +154,8 @@ const FormDefinitions: FormDefs = {
             components: [
                 {
                     attributeKey: "contact_text_id",
-                    componentType: ComponentType.INPUT,
-                    inputType: "number",
+                    componentType: ComponentType.TextField,
+                    //inputType: "number",
                     editable: false
                 },
                 {
@@ -186,14 +187,15 @@ const FormDefinitions: FormDefs = {
         DB: {
             orderBy: {
                 attr: "contact_text_id"
-            }
+            },
+            DBOClass: "ContactTexts"
         }
     },
 };
 
 
-export const getRawFormDefinition = (DBObjectClass: string): FormDef => {
-    return FormDefinitions[DBObjectClass];
+export const getRawFormDefinition = (DBOClass: string): FormDef => {
+    return FormDefinitions[DBOClass];
 }
 
 /**

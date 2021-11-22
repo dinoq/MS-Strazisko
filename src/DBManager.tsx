@@ -9,7 +9,8 @@ import { getApiURL } from "./utils";
 import * as ValuesDefinitions from "../database/definitions/values-definitions";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { addItemToBreadcrumb } from "./components/admin/Breadcrumb/BreadcrumbReducer";
+import { addItemToBreadcrumb } from "./store/reducers/BreadcrumbReducer";
+import { SagaActions } from "./store/sagas";
 
 export class DBManager {
 
@@ -18,8 +19,7 @@ export class DBManager {
         detailFrame: {
             components: [
                 {
-                    componentType: ComponentType.INPUT,
-                    inputType: "text",
+                    componentType: ComponentType.TextField,
                     values: getEmptyValues(),
                     editable: true,
                     constraints: [
@@ -50,23 +50,24 @@ export class DBManager {
         DB: {
             orderBy: {
                 descending: false
-            }
+            },
+            DBOClass: ""
         }
     }
 
     protected static _isNumBoolStr = object => (typeof object == "number" || typeof object == "boolean" || typeof object == "string");
     /*
-        public static getFormDefinitions = async (DBObjectClass: string): Promise<FormDef> => {
+        public static getFormDefinitions = async (DBOClass: string): Promise<FormDef> => {
         }*/
 
     public static fetchFormDefinitions = async (): Promise<FormDefs> => {
-        return new Promise(async (res, rej)=>{
+        return new Promise(async (res, rej) => {
             let response: any = await fetch(getApiURL("/admin/forms"),
                 {
                     method: "GET",
                     mode: "same-origin"
                 })
-    
+
             try {
                 if (response.status == 200) {
                     let parser = new DOMParser();
@@ -81,7 +82,7 @@ export class DBManager {
         })
     }
 
-    public static parseXMLFormDefinitions = async (xmlDef: XMLDocument): Promise<FormDefs> => {
+    private static parseXMLFormDefinitions = async (xmlDef: XMLDocument): Promise<FormDefs> => {
 
         let getREQUIREDAttrFromXML = (attrName: string, XML: Element) => {
             if (!XML.getAttribute(attrName)) {
@@ -99,11 +100,17 @@ export class DBManager {
         let mapToComponentType = (type: string) => {
             switch (type) {
                 case "SelectBox":
-                    return ComponentType.SELECTBOX;
+                    return ComponentType.SelectBox;
 
                 case "TextField":
+                    return ComponentType.TextField;
+                case "NumberField":
+                    return ComponentType.NumberField;
+                case "DateField":
+                    return ComponentType.DateField;
                 default:
-                    return ComponentType.INPUT;
+                    throw new Error("Uknown componentType ('" + type + "') in form definition!")
+                    return ComponentType.UNKNOWN;
 
             }
         }
@@ -122,11 +129,10 @@ export class DBManager {
                 component.attributeKey = getREQUIREDAttrFromXML("attributeKey", XMLcomponent);
                 component.componentType = mapToComponentType(getOptionalAttrFromXML("componentType", XMLcomponent));
                 let constraints = getOptionalAttrFromXML("constraints", XMLcomponent);
-                component.constraints = (constraints.length)? JSON.parse(constraints) : "";
+                component.constraints = (constraints.length) ? JSON.parse(constraints) : "";
                 component.editable = getOptionalAttrFromXML("editable", XMLcomponent).toLowerCase() != "false";
-                component.inputType = getOptionalAttrFromXML("inputType", XMLcomponent);
                 let values = getOptionalAttrFromXML("values", XMLcomponent);
-                if(values.length){
+                if (values.length) {
                     component.values = eval(ValuesDefinitions[values + "()"]);
                 }
 
@@ -151,48 +157,47 @@ export class DBManager {
 
             def.listFrame.detailDBOClass = getOptionalAttrFromXML("detailDBOClass", XMLLF);
             let actions = getOptionalAttrFromXML("actions", XMLLF);
-            def.listFrame.actions = (actions.length)? {...def.listFrame.actions, ...JSON.parse(actions)} : def.listFrame.actions;
+            def.listFrame.actions = (actions.length) ? { ...def.listFrame.actions, ...JSON.parse(actions) } : def.listFrame.actions;
             def.listFrame.cantDeleteItemMsg = getOptionalAttrFromXML("cantDeleteItemMsg", XMLLF);
             let orderByAttr = getOptionalAttrFromXML("orderBy", form.getElementsByTagName("ListFrame")[0]);
             let orderByDESC = getOptionalAttrFromXML("descending", form.getElementsByTagName("ListFrame")[0]);
-            if(orderByAttr.length){
+            if (orderByAttr.length) {
                 def.DB.orderBy.attr = orderByAttr;
                 def.DB.orderBy.descending = orderByDESC.toLowerCase() == "true";
             }
 
             let formName = form.getAttribute("FID")
+            def.DB.DBOClass = formName;
             defs[formName] = def;
         })
-        console.log('defs: ', defs);
-
 
         return defs;
     }
-    public static getFormDefinition = async (DBObjectClass: string): Promise<FormDef> => {
-        let def = getRawFormDefinition(DBObjectClass);
+    public static getFormDefinition = async (DBOClass: string): Promise<FormDef> => {
+        let def = getRawFormDefinition(DBOClass);
         if (def == undefined) {
-            throw new Error("Error: Class '" + DBObjectClass + "' has not form defined!");
+            throw new Error("Error: Class '" + DBOClass + "' has not form defined!");
         }
         DBManager.createFullDef(DBManager._defaultDefinition, def);
         //Kontrola atributů...
-        const dbObjectAttrKeys: Array<DBObjectAttr | any> = DBManager.getDBObjectDefinition(DBObjectClass)?.attributes?.map(attr => attr.key);
+        const dbObjectAttrKeys: Array<DBObjectAttr | any> = DBManager.getDBObjectDefinition(DBOClass)?.attributes?.map(attr => attr.key);
         if (!dbObjectAttrKeys || !dbObjectAttrKeys.length) {
-            throw new Error("Error: Class '" + DBObjectClass + "' has not any attributes!");
+            throw new Error("Error: Class '" + DBOClass + "' has not any attributes!");
         }
         for (const attr of def.detailFrame.components) {
             if (!dbObjectAttrKeys.includes(attr.attributeKey)) {
-                throw new Error("Error: Form attribute '" + attr.attributeKey + "' (from DetailFrame definition) is not member of object class '" + DBObjectClass + "'!");
+                throw new Error("Error: Form attribute '" + attr.attributeKey + "' (from DetailFrame definition) is not member of object class '" + DBOClass + "'!");
             }
         }
         for (const attr of def.listFrame.components) {
             if (!dbObjectAttrKeys.includes(attr.attributeKey)) {
-                throw new Error("Error: Form attribute '" + attr.attributeKey + "' (from ListFrame definition) is not member of object class '" + DBObjectClass + "'!");
+                throw new Error("Error: Form attribute '" + attr.attributeKey + "' (from ListFrame definition) is not member of object class '" + DBOClass + "'!");
             }
         }
         //Kotrola atributu orderBy, pokud je nastaven
         if (def.DB.orderBy.attr) {
             if (!dbObjectAttrKeys.includes(def.DB.orderBy.attr)) {
-                throw new Error("Error: Form attribute '" + def.DB.orderBy.attr + "' (from orderBy definition) is not member of object class '" + DBObjectClass + "'!");
+                throw new Error("Error: Form attribute '" + def.DB.orderBy.attr + "' (from orderBy definition) is not member of object class '" + DBOClass + "'!");
             }
         }
 
@@ -226,13 +231,13 @@ export class DBManager {
     }
 
 
-    public static getDBObjectDefinition = (DBObjectClass: string): DBObject => {
-        let obj: DBObject = getRawDBObjectDefinition(DBObjectClass);
+    public static getDBObjectDefinition = (DBOClass: string): DBObject => {
+        let obj: DBObject = getRawDBObjectDefinition(DBOClass);
         if (obj == undefined) {
-            throw new Error("Error: Class '" + DBObjectClass + "' has not object defined!");
+            throw new Error("Error: Class '" + DBOClass + "' has not object defined!");
         }
-        if (obj.DBObjectClass != DBObjectClass) {
-            throw new Error("Error: Class '" + DBObjectClass + "' has has inconsistency in definition (has DBObjectClass='" + obj.DBObjectClass + "')!");
+        if (obj.DBOClass != DBOClass) {
+            throw new Error("Error: Class '" + DBOClass + "' has has inconsistency in definition (has DBOClass='" + obj.DBOClass + "')!");
         }
         obj.attributes.forEach(attr => {
             if (attr.value == undefined) {
@@ -243,11 +248,11 @@ export class DBManager {
         return clone(obj);
     }
 
-    public static getEmptyDBObject = (DBObjectClass: string, condition: string = ""): DBObject => {
+    public static getEmptyDBObject = (DBOClass: string, condition: string = ""): DBObject => {
         let obj: DBObject = {
-            DBObjectClass,
+            DBOClass: DBOClass,
             id: -1,
-            attributes: (DBObjectClass == undefined) ? [] : DBManager.getDBObjectDefinition(DBObjectClass).attributes,
+            attributes: (DBOClass == undefined || DBOClass == "") ? [] : DBManager.getDBObjectDefinition(DBOClass).attributes,
             editedAttrs: [],
             isEdited: false
         }
@@ -273,7 +278,7 @@ export class DBManager {
         if (type == "LFComponentDef") {
             return (attr as LFComponentDef) || { attributeKey: "", transformation: "", isBreadcrumbKey: false };
         } else if (type == "DFComponentDef") {
-            return (attr as DFComponentDef) || { attributeKey: "", componentType: ComponentType.UNKNOWN, inputType: "", values: [], constraints: [], editable: true };
+            return (attr as DFComponentDef) || { attributeKey: "", componentType: ComponentType.UNKNOWN, values: [], constraints: [], editable: true };
         } else {
             return (attr as DBObjectAttr) || { key: "", name: "", value: "" };
         }
@@ -292,20 +297,20 @@ export class DBManager {
         return (DBManager.getAttrOrComponentFromArrByKey(arr, key, "DFComonentDef") as DFComponentDef);
     }
 
-    public static getAllDBObjectEntries = async (DBObjectClass: string, /*orderBy: OrderByDef,*/ condition: string = ""): Promise<Array<DBObject>> => {
-        if (DBObjectClass == undefined) {
+    public static getAllDBObjectEntries = async (DBOClass: string, /*orderBy: OrderByDef,*/ condition: string = ""): Promise<Array<DBObject>> => {
+        if (DBOClass == undefined || DBOClass == "") {
             return [];
         } else {
             let order = "";
             /*if (orderBy.attr) {
                 order = "&order=" + orderBy.attr + "|" + (orderBy.descending ? "DESC" : "ASC");
             }*/
-            const resp = await fetch("/api/admin/data?className=" + DBObjectClass + (condition ? "&condition=" + condition : "") + order);
+            const resp = await fetch("/api/admin/data?className=" + DBOClass + (condition ? "&condition=" + condition : "") + order);
             if (resp.status == 200) {
                 let entries = [];
                 let json = await resp.json();
                 for (const attributes of json) {
-                    let entry = DBManager.getEmptyDBObject(DBObjectClass);
+                    let entry = DBManager.getEmptyDBObject(DBOClass);
                     entry.id = attributes[Object.keys(attributes)[0]];
                     for (const attrName in attributes) {
                         entry.attributes[Object.keys(attributes).indexOf(attrName)].value = attributes[attrName];
@@ -354,17 +359,17 @@ export class DBManager {
         }
     }
 
-    public static checkClassAttrs = (attrs: any, DBObjectClass: string): { success: boolean, errorMsg: string } => {
+    public static checkClassAttrs = (attrs: any, DBOClass: string): { success: boolean, errorMsg: string } => {
         let check = {
             success: true,
             errorMsg: ""
         }
         try {
-            const DBObjectDefinitionAttrs: Array<DBObjectAttr> = DBManager.getDBObjectDefinition(DBObjectClass).attributes;
+            const DBObjectDefinitionAttrs: Array<DBObjectAttr> = DBManager.getDBObjectDefinition(DBOClass).attributes;
             for (const attrKey in attrs) {
                 if (!DBObjectDefinitionAttrs.find(definitionAttr => definitionAttr.key == attrKey)) {
                     check.success = false;
-                    check.errorMsg = "ERROR - wrong attribute key! Attribute '" + attrKey + "' is not in class '" + DBObjectClass + "'";
+                    check.errorMsg = "ERROR - wrong attribute key! Attribute '" + attrKey + "' is not in class '" + DBOClass + "'";
                 }
             };
             if (Object.keys(attrs).length != DBObjectDefinitionAttrs.length) {
@@ -373,23 +378,14 @@ export class DBManager {
             }
         } catch (error) {
             check.success = false;
-            check.errorMsg = "ERROR - unknown error when checking class attrs! For class '" + DBObjectClass + "'";
+            check.errorMsg = "ERROR - unknown error when checking class attrs! For class '" + DBOClass + "'";
         }
 
         return check;
     }
 
     public static getBreadcrumbAttr = async (DBObject: DBObject): Promise<DBObjectAttr> => {
-        let key: string = (await DBManager.getFormDefinition(DBObject.DBObjectClass)).listFrame.components.find(component => component.isBreadcrumbKey).attributeKey;
+        let key: string = (await DBManager.getFormDefinition(DBObject.DBOClass)).listFrame.components.find(component => component.isBreadcrumbKey).attributeKey;
         return (DBManager.getAttrOrComponentFromArrByKey(DBObject.attributes, key) as DBObjectAttr);
-    }
-
-    loadForm =  (DBObjectClass: string)=>{
-        const dispatch = useDispatch();
-        useEffect(() => {
-            dispatch(addItemToBreadcrumb({ DBObjectClass: DBObjectClass, DBObject: DBManager.getEmptyDBObject(DBObjectClass), text: "" }));
-            
-            dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: "albumPasswords" })
-        }, [])
     }
 }

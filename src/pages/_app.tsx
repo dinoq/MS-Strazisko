@@ -30,7 +30,7 @@ function MyApp(props) {
 
     useEffect(() => {
         if (!definitions.definitionsLoaded) {
-            // store.dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: "albumPasswords" })
+            //store.dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: "albumPasswords" })
         }
     }, [])
     if (router.pathname === "/404") { // not index

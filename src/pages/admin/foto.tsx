@@ -3,21 +3,19 @@ import { withIronSessionApiRoute, withIronSessionSsr  } from "iron-session/next"
 import Head from 'next/head'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { addItemToBreadcrumb } from '../../../src/components/admin/Breadcrumb/BreadcrumbReducer'
+import { addItemToBreadcrumb } from '../../store/reducers/BreadcrumbReducer'
 import FormFrameContainer from '../../../src/components/admin/FormFrame/FormFrameContainer'
 import { DBManager } from '../../../src/DBManager'
 import { SagaActions } from '../../store/sagas';
 
-enum ShownLevel {
-    YEARS,
-    ALBUMS,
-    PHOTOS
-}
 
 const AdminPhotosPage: NextPage = (props: any) => {
     const dispatch = useDispatch();
 
-    const DBObjectClass = "albumPasswords";
+    useEffect(() => {
+        dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: "albumPasswords" });
+    }, [])
+
     return (
         <div className={""}>
             <Head>
@@ -27,7 +25,7 @@ const AdminPhotosPage: NextPage = (props: any) => {
             </Head>
 
             <main className={""}>
-                <FormFrameContainer DBObjectClass={DBObjectClass} />
+                <FormFrameContainer />
             </main>
         </div>
     )

@@ -7,8 +7,10 @@ import { DBManager } from "../../../DBManager";
 import { DBObject, RootState } from "../../../types";
 import ListFrame from "./ListFrame";
 
-const ListFrameContainer: FC<{ DBObjectClass: string, DBObject: DBObject, detailClickedHandler: Function, deleteItemHandler: Function, editItemHandler: Function, entries: Array<DBObject> }> = (props) => {
+const ListFrameContainer: FC<{ DBObject: DBObject, detailClickedHandler: Function, deleteItemHandler: Function, editItemHandler: Function, entries: Array<DBObject> }> = (props) => {
     const formDefinition = useSelector((state: RootState) => state.formDefinitions.actualFormDefinition);
+
+    let DBOClass = useSelector((state: RootState) => state.formDefinitions.actualFormDefinition.DB.DBOClass);
 
     let colspanNoData = -1;
     if (!props.entries || !props.entries.length) {
@@ -18,7 +20,7 @@ const ListFrameContainer: FC<{ DBObjectClass: string, DBObject: DBObject, detail
     }
     return (
         <>
-            {formDefinition && <ListFrame definition={formDefinition.listFrame} DBObjectClass={props.DBObjectClass} DBObject={props.DBObject} deleteItemHandler={props.deleteItemHandler} detailClickedHandler={props.detailClickedHandler} editItemHandler={props.editItemHandler} entries={props.entries} colspanNoData={colspanNoData} />}
+            {formDefinition && <ListFrame definition={formDefinition.listFrame} DBOClass={DBOClass} DBObject={props.DBObject} deleteItemHandler={props.deleteItemHandler} detailClickedHandler={props.detailClickedHandler} editItemHandler={props.editItemHandler} entries={props.entries} colspanNoData={colspanNoData} />}
         </>
     )
 }

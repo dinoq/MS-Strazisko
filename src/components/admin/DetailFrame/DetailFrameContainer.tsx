@@ -6,17 +6,17 @@ import { DBObject, DBObjectAttr, RootState } from "../../../types";
 import ErrorDialog from "../ErrorDialog";
 import DetailFrame from "./DetailFrame";
 
-const DetailFrameContainer: FC<{ DBObjectClass: string, DBObject: DBObject, mode: DetailFrameMode, hideDetailFrame: MouseEventHandler<HTMLInputElement>, setDBObject: Function, setErrorMsg: Function, updateDBObject: Function }> = (props) => {
+const DetailFrameContainer: FC<{ DBObject: DBObject, mode: DetailFrameMode, hideDetailFrame: MouseEventHandler<HTMLInputElement>, setDBObject: Function, setErrorMsg: Function, updateDBObject: Function }> = (props) => {
     const formDefinition = useSelector((state: RootState) => state.formDefinitions).actualFormDefinition;
     console.log('formDefinition: ', formDefinition);
 
+    let DBOClass = useSelector((state: RootState) => state.formDefinitions.actualFormDefinition.DB.DBOClass);
+
     const formSubmitted = async (event) => {
         event.preventDefault();
-        console.log('props.DBObject: ', props.DBObject);
         let conditionError = "";
         formDefinition.detailFrame.components.forEach((component, index, array) => {
             if (component.constraints) {
-                console.log('item.constraints: ', component.constraints);
                 component.constraints.forEach((constraint, index, array) => {
                     let subtituted = constraint.condition.replaceAll("$", "props.DBObject.editedAttrs[props.DBObject.editedAttrs.findIndex(attr=>attr.key=='" + component.attributeKey + "')].value");
                     console.log('subtituted: ', subtituted);
@@ -31,13 +31,13 @@ const DetailFrameContainer: FC<{ DBObjectClass: string, DBObject: DBObject, mode
             props.setErrorMsg(conditionError);
             return;
         }
-        let body: any = { className: props.DBObjectClass, attributes: {}};
+        let body: any = { className: DBOClass, attributes: {}};
         props.DBObject.editedAttrs.forEach((attr, index, array) => {
             body.attributes[attr.key] = attr.value;
         })
         if(props.mode == DetailFrameMode.NEW_ENTRY){ // set default values for selectboxes...
             formDefinition.detailFrame.components.forEach(component =>{
-                if(component.componentType == ComponentType.SELECTBOX && body.attributes[component.attributeKey] == undefined){
+                if(component.componentType == ComponentType.SelectBox && body.attributes[component.attributeKey] == undefined){
                     body.attributes[component.attributeKey] = component.values[0]; // set only body, not DBObject.editedAttrs!
                 }
             })    
@@ -88,7 +88,7 @@ const DetailFrameContainer: FC<{ DBObjectClass: string, DBObject: DBObject, mode
     }, [props.headerItems])*/
 
     return (
-        <DetailFrame DBObjectClass={props.DBObjectClass} DBObject={props.DBObject} definition={formDefinition} mode={props.mode} hideDetailFrame={props.hideDetailFrame} formSubmitted={formSubmitted} setErrorMsg={props.setErrorMsg} updateDBObject={updateDBObject} />
+        <DetailFrame DBOClass={DBOClass} DBObject={props.DBObject} definition={formDefinition} mode={props.mode} hideDetailFrame={props.hideDetailFrame} formSubmitted={formSubmitted} setErrorMsg={props.setErrorMsg} updateDBObject={updateDBObject} />
     )
 }
 

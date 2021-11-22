@@ -32,7 +32,7 @@ const handler = async (req, res) => {
             return res.status(500).send("ERROR - className not received!");
         }
         let orderBy = (order.length)? " ORDER BY " + order.split("|")[0] + " " + order.split("|")[1]: "";
-		const stmt = db.prepare("SELECT * FROM " + className + condition + orderBy + ";")
+		const stmt = db.prepare("SELECT * FROM " + className + condition + orderBy + ";");
 		const sqlResults = stmt.all();
         const DBObjectDefinitionAttrs: Array<DBObjectAttr> = DBManager.getDBObjectDefinition(className).attributes;
         if(sqlResults?.length > 0){

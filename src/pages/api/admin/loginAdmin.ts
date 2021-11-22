@@ -4,7 +4,7 @@ import { withIronSessionApiRoute } from "iron-session/next";
 async function handler(req, res) {
   const { username, password } = req.body;
   if (req.method === "POST" && password === "skolkaAdmin1" && username && username === "admin") {
-    req.session.set("adminLogged", true); 
+    req.session.adminLogged =true; 
     await req.session.save();
     return res.status(200).send("Successfully logged in.");
   } else {

@@ -40,7 +40,7 @@ const AdminPhotosPage: NextPage = (props: any) => {
   const detailClickedHandler = async (item) => {    //JSON.parse(JSON.stringify("asd"))
     console.log('item: ', item);
     console.log();
-    const newDetailClass = getFormDefinition(formClassName[formClassName.length - 1]).DBObjectClass;
+    const newDetailClass = getFormDefinition(formClassName[formClassName.length - 1]).DBOClass;
     console.log('newDetailClass: ', newDetailClass);
     console.log('formClassName: ', formClassName);
 
@@ -134,11 +134,11 @@ const AdminPhotosPage: NextPage = (props: any) => {
       <main className={""}>
 
         <div className={"form-wrapper"}>
-          <FormFrame DBObjectClass="" />
+          <FormFrame DBOClass="" />
           {!objectManagerVisible && <span className={"link " + "add-document-btn mb-3"} onClick={showObjectManager.bind(this, true)}>{title}</span>}
           {objectManagerVisible &&
             <DetailFrameContainer url={url} setErrorMsg={setErrorMsg} mode={objectManagerMode} hideObjectManager={hideObjectManager} DBObject={DBObject} setDBObject={setDBObject} />}
-          <ListFrame DBObjectClass={formClassName[formClassName.length - 1]} DBObject={DBObject} detailClickedHandler={detailClickedHandler} deleteItemHandler={deleteItemHandler} editItemHandler={editItemHandler} />
+          <ListFrame DBOClass={formClassName[formClassName.length - 1]} DBObject={DBObject} detailClickedHandler={detailClickedHandler} deleteItemHandler={deleteItemHandler} editItemHandler={editItemHandler} />
           {saveDialogVisible &&
             <TreeChoiceDialog dialogText="Chcete změny uložit?" overlayCancels={true} onYes={null} yesText="Uložit" onNo={null} noText="Neukládat" onCancel={() => { setSaveDialogVisible(false) }} cancelText="Zrušit" />}
           {(errorMsg && errorMsg.length) && <ErrorDialog msg={errorMsg} onOk={() => { setErrorMsg("") }} />}
@@ -157,8 +157,8 @@ const getYears = () => {
   return years;
 }
 
-const getEmptyDBObject = (DBObjectClass: string): DBObject => {
-  let attrs = getFormDefinition(DBObjectClass).attributes;
+const getEmptyDBObject = (DBOClass: string): DBObject => {
+  let attrs = getFormDefinition(DBOClass).attributes;
   let fields = { id: -1, attrs: [], editedAttrs: [] };
   attrs.forEach(attr => {
     fields.attrs[attr.name] = "";
