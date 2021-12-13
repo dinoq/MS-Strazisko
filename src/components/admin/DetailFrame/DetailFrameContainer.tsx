@@ -8,6 +8,7 @@ import DetailFrame from "./DetailFrame";
 
 const DetailFrameContainer: FC<{ DBObject: DBObject, mode: DetailFrameMode, hideDetailFrame: MouseEventHandler<HTMLInputElement>, setDBObject: Function, setErrorMsg: Function, updateDBObject: Function }> = (props) => {
     const formDefinition = useSelector((state: RootState) => state.formDefinitions).actualFormDefinition;
+    const breadcrumbItems = useSelector((state: RootState) => state.breadcrumb.items);
     console.log('formDefinition: ', formDefinition);
 
     let DBOClass = useSelector((state: RootState) => state.formDefinitions.actualFormDefinition.DB.DBOClass);
@@ -35,12 +36,18 @@ const DetailFrameContainer: FC<{ DBObject: DBObject, mode: DetailFrameMode, hide
         props.DBObject.editedAttrs.forEach((attr, index, array) => {
             body.attributes[attr.key] = attr.value;
         })
+        console.log('props.DBObject: ', props.DBObject);
         if(props.mode == DetailFrameMode.NEW_ENTRY){ // set default values for selectboxes...
             formDefinition.detailFrame.components.forEach(component =>{
                 if(component.componentType == ComponentType.SelectBox && body.attributes[component.attributeKey] == undefined){
                     body.attributes[component.attributeKey] = component.values[0]; // set only body, not DBObject.editedAttrs!
                 }
             })    
+        }
+
+        if(breadcrumbItems.length && breadcrumbItems[breadcrumbItems.length - 1].parentCondition){
+            const condition = breadcrumbItems[breadcrumbItems.length - 1].parentCondition;
+            body.attributes[condition.key] = condition.value;
         }
 
         let resultErr = "";

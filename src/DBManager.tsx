@@ -1,14 +1,13 @@
 import { getRawDBObjectDefinition } from "../database/definitions/db-object-definitions";
-import { getRawFormDefinition } from "../database/definitions/form-definitions";
 import { getEmptyValues } from "../database/definitions/values-definitions";
 import { ComponentType } from "./constants";
-import { DBObject, DBObjectAttr, DBObjectEditedAttr, DFComponentDef, FormDef, FormDefs, LFComponentDef, OrderByDef, RecursivePartial } from "./types";
+import { DBObject, DBObjectAttr, DBObjectEditedAttr, DFComponentDef, FormDef, FormDefs, LFComponentDef, OrderByDef, RecursivePartial, RootState } from "./types";
 import clone from "clone";
 import { Interface } from "readline";
 import { getApiURL } from "./utils";
 import * as ValuesDefinitions from "../database/definitions/values-definitions";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addItemToBreadcrumb } from "./store/reducers/BreadcrumbReducer";
 import { SagaActions } from "./store/sagas";
 
@@ -90,9 +89,9 @@ export class DBManager {
             }
             return XML.getAttribute(attrName);
         }
-        let getOptionalAttrFromXML = (attrName: string, XML: Element) => {
+        let getOptionalAttrFromXML = (attrName: string, XML: Element, defaultVal?: any) => {
             if (!XML.getAttribute(attrName)) {
-                return "";
+                return (defaultVal !== undefined)? defaultVal : "";
             }
             return XML.getAttribute(attrName);
         }
@@ -128,12 +127,12 @@ export class DBManager {
                 };
                 component.attributeKey = getREQUIREDAttrFromXML("attributeKey", XMLcomponent);
                 component.componentType = mapToComponentType(getOptionalAttrFromXML("componentType", XMLcomponent));
-                let constraints = getOptionalAttrFromXML("constraints", XMLcomponent);
+                let constraints = getOptionalAttrFromXML("constraints", XMLcomponent, new Array());
                 component.constraints = (constraints.length) ? JSON.parse(constraints) : "";
                 component.editable = getOptionalAttrFromXML("editable", XMLcomponent).toLowerCase() != "false";
                 let values = getOptionalAttrFromXML("values", XMLcomponent);
                 if (values.length) {
-                    component.values = eval(ValuesDefinitions[values + "()"]);
+                    component.values = ValuesDefinitions[values]();
                 }
 
                 def.detailFrame.components.push(component);
@@ -173,7 +172,9 @@ export class DBManager {
 
         return defs;
     }
+    /*
     public static getFormDefinition = async (DBOClass: string): Promise<FormDef> => {
+        //return null;
         let def = getRawFormDefinition(DBOClass);
         if (def == undefined) {
             throw new Error("Error: Class '" + DBOClass + "' has not form defined!");
@@ -202,7 +203,7 @@ export class DBManager {
         }
 
         return clone(def);
-    }
+    }*/
 
     public static createFullDef = (defaultDefTree, formDefTree) => {
         for (const childKey in defaultDefTree) {
@@ -359,24 +360,27 @@ export class DBManager {
         }
     }
 
-    public static checkClassAttrs = (attrs: any, DBOClass: string): { success: boolean, errorMsg: string } => {
+    public static checkClassAttrs = (attrs: Array<any>, DBOClass: string, tolerateMissingPrimaryKey = false): { success: boolean, errorMsg: string } => {
         let check = {
             success: true,
             errorMsg: ""
         }
         try {
             const DBObjectDefinitionAttrs: Array<DBObjectAttr> = DBManager.getDBObjectDefinition(DBOClass).attributes;
-            for (const attrKey in attrs) {
+            for (const attrKey in attrs) { // Check if there is not any foreign attr
                 if (!DBObjectDefinitionAttrs.find(definitionAttr => definitionAttr.key == attrKey)) {
                     check.success = false;
                     check.errorMsg = "ERROR - wrong attribute key! Attribute '" + attrKey + "' is not in class '" + DBOClass + "'";
                 }
             };
-            if (Object.keys(attrs).length != DBObjectDefinitionAttrs.length) {
+            let successExactMatch = Object.keys(attrs).length == DBObjectDefinitionAttrs.length;
+            let successMatchWithoutPrimaryKeyIfTolerated = tolerateMissingPrimaryKey && Object.keys(attrs).length+1 == DBObjectDefinitionAttrs.length && attrs[DBObjectDefinitionAttrs[0].key] == undefined;
+            if (!(successExactMatch || successMatchWithoutPrimaryKeyIfTolerated)) {
                 check.success = false;
                 check.errorMsg = "ERROR - Wrong attribute count!";
             }
         } catch (error) {
+            console.log('error: ', error);
             check.success = false;
             check.errorMsg = "ERROR - unknown error when checking class attrs! For class '" + DBOClass + "'";
         }
@@ -384,8 +388,13 @@ export class DBManager {
         return check;
     }
 
-    public static getBreadcrumbAttr = async (DBObject: DBObject): Promise<DBObjectAttr> => {
-        let key: string = (await DBManager.getFormDefinition(DBObject.DBOClass)).listFrame.components.find(component => component.isBreadcrumbKey).attributeKey;
+    public static getBreadcrumbAttr = (DBObject: DBObject, formDefinition: FormDef): DBObjectAttr => {
+        console.log('formDefinition: ', formDefinition);
+        const breadcrumbComponent = formDefinition.listFrame.components.find(component => component.isBreadcrumbKey);
+        if(breadcrumbComponent == undefined){
+            throw new Error("ERROR - No breadcrumb item set in form definitions");
+        }
+        let key: string = breadcrumbComponent.attributeKey;
         return (DBManager.getAttrOrComponentFromArrByKey(DBObject.attributes, key) as DBObjectAttr);
     }
 }

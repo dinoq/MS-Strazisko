@@ -1,3 +1,11 @@
+@mixin input-disabled {
+  &:disabled {
+    background: #c3c3c3;
+    color: #606060;
+    cursor: not-allowed;
+  }
+}
+
 .admin {
   table {
     border-collapse: collapse;
@@ -9,7 +17,7 @@
     padding: 5px 15px;
   }
 
-  .selected-row{    
+  .selected-row {
     background-color: #4c4c4c;
   }
 
@@ -50,7 +58,7 @@
       //-2886414
     }
 
-    &.link-danger{
+    &.link-danger {
       color: #dc3545;
 
       &:hover,
@@ -60,7 +68,6 @@
       }
     }
   }
-  
 
   main {
     margin: 20px 0px;
@@ -73,11 +80,7 @@
     border-radius: 10px;
     padding: 5px;
 
-    &:disabled{
-        background: #c3c3c3;
-        color: #0f0f0f;
-        cursor: not-allowed;
-    }
+    @include input-disabled();
 
     &.button {
       background-color: rgb(0, 125, 163);
@@ -153,9 +156,8 @@
     border: 1px solid #777777;
   }
 
-  .dialog{
-
-    .overlay{
+  .dialog {
+    .overlay {
       position: fixed;
       background-color: rgba(0, 0, 0, 0.534);
       width: 100%;
@@ -164,7 +166,7 @@
       left: 0;
     }
 
-    .dialog-body{
+    .dialog-body {
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -180,20 +182,42 @@
       transform: translate(-50%, -50%);
       border-radius: 25px;
 
-      .btns-group{
+      .btns-group {
         width: 80%;
         justify-content: space-evenly;
         display: flex;
 
-        .btn{
+        .btn {
           font-size: 1.3rem;
 
-          &:nth-child(1) {
+          /*&:nth-child(1) {
             //margin-right: 15px;
-          }
+          }*/
         }
       }
     }
+  }
 
+  label {
+    position: absolute;
+    left: 0px;
+    transform: translate(55%, 0);
+    background-color: #f9f9f9;
+    color: #679fc9;
+    border-radius: 10px;
+    border: 1px solid #588cb3;
+    font-size: 0.75rem;
+    padding: 0px 4px;
+  }
+
+  select {
+    width: 80%;
+    text-align: center;
+    height: 34px;
+    border-radius: 10px;
+    margin-top: 7px;
+
+    
+    @include input-disabled();
   }
 }

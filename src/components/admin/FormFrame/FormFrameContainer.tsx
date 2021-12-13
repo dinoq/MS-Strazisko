@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState } from "react";
 import { DetailFrameMode } from "../../../constants";
-import { BreadcrumbItemDef, BreadcrumbState, DBObject, RootState } from "../../../types";
+import { BreadcrumbItemDef, BreadcrumbState, DBObject, DBObjectAttr, RootState } from "../../../types";
 import FormFrame from "./FormFrame";
 import { DBManager } from "../../../DBManager";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,7 +13,8 @@ import { SagaActions } from "../../../store/sagas";
 const FormFrameContainer: React.FC<{}> = (props) => {
     const dispatch = useDispatch();
     const definition = useSelector((state: RootState) => state.formDefinitions.actualFormDefinition);
-    const breadcrumbItems: Array<BreadcrumbItemDef>= useSelector((state: RootState) => state.breadcrumb.items);
+    let DBOClass = definition.DB.DBOClass;
+    const breadcrumbItems: Array<BreadcrumbItemDef> = useSelector((state: RootState) => state.breadcrumb.items);
     const [errorMsg, setErrorMsg] = useState("")
 
     const [saveDialogVisible, setSaveDialogVisible] = useState(false);
@@ -21,20 +22,32 @@ const FormFrameContainer: React.FC<{}> = (props) => {
     const [detailFrameVisible, setDetailFrameVisible] = useState(false)
     const [entries, setEntries] = useState([]);
 
-    let DBOClass = useSelector((state: RootState) => state.formDefinitions.actualFormDefinition.DB.DBOClass);
 
     const [DBObject, setDBObject]: [DBObject, any] = useState(DBManager.getEmptyDBObject(DBOClass));
 
-    const [detailItemCondition, setDetailItemCondition] = useState("");
 
     //const definition = DBManager.getFormDefinition(DBOClass);
 
     useEffect(() => {
+        if (DBOClass.length && !breadcrumbItems.length) { // DBOClass is set, but there is no item in breadcrumb => add root item
+            const newClass = DBOClass;
+            const newBItem: BreadcrumbItemDef = {
+                DBOClass: newClass,
+                parentCondition: null,
+                text: ""
+            };
+            dispatch(addItemToBreadcrumb(newBItem))
+        }
         setDBObject(DBManager.getEmptyDBObject(DBOClass));
-        DBManager.getAllDBObjectEntries(DBOClass, /*definition.DB.orderBy, */detailItemCondition).then(entries => {
+        let detailItemCondition = "";
+        if(breadcrumbItems.length){
+            let condition = breadcrumbItems[breadcrumbItems.length-1].parentCondition;
+            if(condition)
+                detailItemCondition = `WHERE ${condition.key}='${condition.value}'`;
+        }
+        DBManager.getAllDBObjectEntries(DBOClass, /*definition.DB.orderBy, detailItemCondition*/detailItemCondition ).then(entries => {
             setEntries(entries);
         })
-        setDetailItemCondition("");
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [DBOClass]);
 
@@ -66,27 +79,28 @@ const FormFrameContainer: React.FC<{}> = (props) => {
     const detailClickedHandler = async (itm) => {
         let item: DBObject = itm as DBObject;
 
-        let prevPrimaryKey = item.attributes[0].key;
-        let prevPrimaryKeyValue = item.attributes[0].value;
-        setDetailItemCondition("WHERE " + prevPrimaryKey + "='" + prevPrimaryKeyValue + "'");
-        let breadcrumbAttr = DBManager.getBreadcrumbAttr(DBObject);
+        /*let prevPrimaryKey = item.attributes[0].key;
+        let prevPrimaryKeyValue: string = item.attributes[0].value;
+        const detailItemCondition = "WHERE " + prevPrimaryKey + "='" + prevPrimaryKeyValue + "'";*/
+        const parentCondition: DBObjectAttr = {
+            key: item.attributes[0].key,
+            name: item.attributes[0].name, 
+            value: item.attributes[0].value
+        }
+        let breadcrumbAttr = await DBManager.getBreadcrumbAttr(DBObject, definition);
         let objBreadcrumbAttr = DBManager.getAttrFromArrByKey(item.attributes, (await breadcrumbAttr).key);
-        
+
         const newClass = definition.listFrame.detailDBOClass;
         const newBItem: BreadcrumbItemDef = {
             DBOClass: newClass,
-            DBObject,
+            parentCondition,
             text: objBreadcrumbAttr.value
         };
         dispatch(addItemToBreadcrumb(newBItem))
-        dispatch({type: SagaActions.SET_FORM_DEFINITIONS, FID: newClass})
-        /*setBreadcrumbItems(prevState => {
-            return [...prevState, { DBOClass: (await definition).listFrame.detailDBOClass, text: objBreadcrumbAttr.value }]
-        })*/
+        dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: newClass })
     }
 
     const deleteItemHandler = async (item: DBObject) => {
-        console.log('item: ', item);
         let body = {
             deleteId: item.id,
             className: item.DBOClass

@@ -14,7 +14,7 @@ interface FormDefs {
  * @[attributeKey] - value of attribute of attributeKey
  */
 
-
+/*
 const FormDefinitions: FormDefs = {
     albumPasswords: {
         detailFrame: {
@@ -196,7 +196,7 @@ const FormDefinitions: FormDefs = {
 
 export const getRawFormDefinition = (DBOClass: string): FormDef => {
     return FormDefinitions[DBOClass];
-}
+}*/
 
 /**
  *

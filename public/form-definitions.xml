@@ -1,25 +1,23 @@
 <Forms>
-
-
-    <Form FID="albumPasswords" cantDeleteItemMsg="Dané album obsahuje nějaké fotografie.&lt;br&gt;Nejprve musíte smazat je a až potom samotné album!">
+    <Form FID="albumPasswords">
         <DetailFrame createNewEntryText="Přidat školní rok" uniqueConstraintFailed="Při vkládání do databáze došlo k problému kvůli vkládání již existujícího unikátního klíče.&lt;br/&gt;Zřejmě se pokoušíte vložit školní rok, který již v databázi existuje!">
-            <Component attributeKey="id_albumPasswords" componentType="SelectBox" values="getYears" editable="false" />
+            <Component attributeKey="id_albumPasswords" componentType="SelectBox" values="getYears" editable="false" isBreadcrumbKey="true" />
             <Component attributeKey="passwordHash" componentType="TextField" constraints="[{&quot;condition&quot;:&quot;$.length >= 6&quot;,&quot;errMsgIfFail&quot;:&quot;Heslo musí obsahovat alespoň 6 znaků!&quot;}]" />
         </DetailFrame>
-        <ListFrame detailDBOClass="albums" actions="{&quot;delete&quot;:false}" orderBy="id_albumPasswords" descending="true">
+        <ListFrame detailDBOClass="albums" orderBy="id_albumPasswords" descending="true" cantDeleteItemMsg="Dané album obsahuje nějaké fotografie.&lt;br&gt;Nejprve musíte smazat je a až potom samotné album!">
             <Component attributeKey="id_albumPasswords" isBreadcrumbattributeKey="true" />
             <Component attributeKey="passwordHash" />
         </ListFrame>
     </Form>
 
-    <Form FID="albums" cantDeleteItemMsg="Dané album obsahuje nějaké fotografie.&lt;br&gt;Nejprve musíte smazat je a až potom samotné album!">
+    <Form FID="albums">
         <DetailFrame createNewEntryText="Přidat album">
             <Component attributeKey="id_album" componentType="NumberField" editable="false" />
             <Component attributeKey="date" componentType="DateField" />
-            <Component attributeKey="name" componentType="TextField" />
+            <Component attributeKey="name" componentType="TextField" isBreadcrumbKey="true" />
             <Component attributeKey="title" componentType="TextField" />
         </DetailFrame>
-        <ListFrame detailDBOClass="photos" orderBy="id_album" descending="true">
+        <ListFrame detailDBOClass="photos" orderBy="id_album" descending="true" cantDeleteItemMsg="Dané album obsahuje nějaké fotografie.&lt;br&gt;Nejprve musíte smazat je a až potom samotné album!">
             <Component attributeKey="id_album" />
             <Component attributeKey="date" transformation="const date = new Date('$');date.getDate() + '. ' + (date.getMonth() + 1) + '. ' + date.getFullYear()"/>
             <Component attributeKey="name" />

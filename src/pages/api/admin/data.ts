@@ -86,7 +86,8 @@ const handler = async (req, res) => {
 					return res.status(500).send("ERROR - wrong attribute key! Attribute '" + attrKey + "' is not in class '" + className + "'");
 				}
 			};*/
-            let checkClass = DBManager.checkClassAttrs(attrs, className);
+            console.log('attrs: ', attrs, className);
+            let checkClass = DBManager.checkClassAttrs(attrs, className, true);
             if(!checkClass.success){
                 db.close();
                 return res.status(500).send(checkClass.errorMsg);
@@ -138,7 +139,7 @@ const handler = async (req, res) => {
 		const className: string = req.body["className"];
 		const detailClass: string = req.body["detailClass"];
 		const primaryKey: string = req.body["primaryKey"];
-		const deleteId: string = req.body["deleteId"];
+		const deleteId: string = req.body["deleteId"].toString();
 		const cantDeleteItemMsg: string = req.body["cantDeleteItemMsg"];
         if(!checkIfLettersSlashUnderscore([className, detailClass, primaryKey, deleteId])){ // bezpečnostní pojistka
 			return res.status(500).send("ERROR - wrong data className, detailClass, primaryKey or deleteId!");

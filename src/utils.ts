@@ -29,13 +29,15 @@ export const checkIfLettersSlashUnderscore = (words: string | Array<string>) => 
     if(Array.isArray(words)){
         let error = false;
         words.forEach(word=>{
+            word = (typeof word == "number")? (word as number).toString() : word;
             if(!(typeof word == "string" && (word.match(/^[A-Za-z_/0-9]*$/) || word.length == 0))){
                 error = true;
             }
         })
         return !error;
     }else{
-        return typeof words == "string" && (words.match(/^[A-Za-z_/0-9]*$/) || words.length == 0);
+        const word = (typeof words == "number")? (words as number).toString() : words;
+        return typeof word == "string" && (word.match(/^[A-Za-z_/0-9]*$/) || word.length == 0);
     }
 };
 
