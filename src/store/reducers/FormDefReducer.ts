@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { DBManager } from "../../DBManager";
 import { FormDef, FormDefinitionsState, FormDefs } from "../../types";
+import { XMLParser } from "../../XMLParser";
 
 let initialState: FormDefinitionsState = {
-    actualFormDefinition: DBManager.createFullDef(DBManager._defaultDefinition, {
+    actualFormDefinition: XMLParser.createFullDef(XMLParser._defaultDefinition, {
         detailFrame: {
             components: []
         },

@@ -33,7 +33,7 @@ const FormFrameContainer: React.FC<{}> = (props) => {
             const newClass = DBOClass;
             const newBItem: BreadcrumbItemDef = {
                 DBOClass: newClass,
-                parentCondition: null,
+                parentAttribute: null,
                 text: ""
             };
             dispatch(addItemToBreadcrumb(newBItem))
@@ -41,9 +41,9 @@ const FormFrameContainer: React.FC<{}> = (props) => {
         setDBObject(DBManager.getEmptyDBObject(DBOClass));
         let detailItemCondition = "";
         if(breadcrumbItems.length){
-            let condition = breadcrumbItems[breadcrumbItems.length-1].parentCondition;
-            if(condition)
-                detailItemCondition = `WHERE ${condition.key}='${condition.value}'`;
+            let parentAttribute = breadcrumbItems[breadcrumbItems.length-1].parentAttribute;
+            if(parentAttribute)
+                detailItemCondition = `WHERE ${parentAttribute.key}='${parentAttribute.value}'`;
         }
         DBManager.getAllDBObjectEntries(DBOClass, /*definition.DB.orderBy, detailItemCondition*/detailItemCondition ).then(entries => {
             setEntries(entries);
@@ -71,33 +71,6 @@ const FormFrameContainer: React.FC<{}> = (props) => {
         setDetailFrameVisible(false);
         setDBObject(DBManager.getEmptyDBObject(DBOClass));
         setDetailFrameMode(DetailFrameMode.NEW_ENTRY);
-    }
-
-    /**
-     * Bylo kliknuto na položku, změní se úroveň
-     */
-    const detailClickedHandler = async (itm) => {
-        let item: DBObject = itm as DBObject;
-
-        /*let prevPrimaryKey = item.attributes[0].key;
-        let prevPrimaryKeyValue: string = item.attributes[0].value;
-        const detailItemCondition = "WHERE " + prevPrimaryKey + "='" + prevPrimaryKeyValue + "'";*/
-        const parentCondition: DBObjectAttr = {
-            key: item.attributes[0].key,
-            name: item.attributes[0].name, 
-            value: item.attributes[0].value
-        }
-        let breadcrumbAttr = await DBManager.getBreadcrumbAttr(DBObject, definition);
-        let objBreadcrumbAttr = DBManager.getAttrFromArrByKey(item.attributes, (await breadcrumbAttr).key);
-
-        const newClass = definition.listFrame.detailDBOClass;
-        const newBItem: BreadcrumbItemDef = {
-            DBOClass: newClass,
-            parentCondition,
-            text: objBreadcrumbAttr.value
-        };
-        dispatch(addItemToBreadcrumb(newBItem))
-        dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: newClass })
     }
 
     const deleteItemHandler = async (item: DBObject) => {
@@ -152,7 +125,7 @@ const FormFrameContainer: React.FC<{}> = (props) => {
 
     return (
         <>
-            <FormFrame errorMsg={errorMsg} detailFrameVisible={detailFrameVisible} saveDialogVisible={saveDialogVisible} entries={entries} detailFrameMode={detailFrameMode} definition={definition} DBObject={DBObject} hideDetailFrame={hideDetailFrame} setDBObject={setDBObject} detailClickedHandler={detailClickedHandler} deleteItemHandler={deleteItemHandler} editItemHandler={editItemHandler} showDetailFrame={showDetailFrame} setSaveDialogVisible={setSaveDialogVisible} setErrorMsg={setErrorMsg} updateDBObject={updateDBObject} />
+            <FormFrame errorMsg={errorMsg} detailFrameVisible={detailFrameVisible} saveDialogVisible={saveDialogVisible} entries={entries} detailFrameMode={detailFrameMode} definition={definition} DBObject={DBObject} hideDetailFrame={hideDetailFrame} setDBObject={setDBObject} deleteItemHandler={deleteItemHandler} editItemHandler={editItemHandler} showDetailFrame={showDetailFrame} setSaveDialogVisible={setSaveDialogVisible} setErrorMsg={setErrorMsg} updateDBObject={updateDBObject} />
         </>
     )
 }

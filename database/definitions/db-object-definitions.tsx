@@ -1,5 +1,11 @@
 import { DBObject, RecursivePartial } from "../../src/types";
 
+/**
+ * SUBSTITUCE ATD:
+ * *albums.title~id_album" 
+ *  - * znamená, že pro všechny získané hodnoty bude mít stejnou hodnotu (zejm. protože se ta hodnota bere ze společného předka)
+ *  - albums.title~id_album -  atribut 'title' ze třídy 'albums' přes vazbu 'id_album' (WHERE albums.id_album = id_album)
+ */
 interface DBOBjectDefs {
     [key: string]: DBObject;
 }
@@ -59,7 +65,7 @@ const DBObjectDefinitions: RecursivePartial<DBOBjectDefs> = {
                 name: "..."
             },
             {
-                key: "*albums.title|albums.id_album=id_album",
+                key: "*albums.title~id_album", // attribute 'title' from class 'albums' via constraint 'id_album' (WHERE albums.id_album = id_album)
                 name: "nameee"
             },
         ]

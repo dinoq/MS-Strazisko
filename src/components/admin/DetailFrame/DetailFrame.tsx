@@ -40,8 +40,6 @@ const DetailFrame: FC<{ DBOClass: string, DBObject: DBObject, definition: FormDe
                         return (
                             <div key={"input-" + i}>
                                 <div className="d-flex justify-content-center">
-                                    {/* <input type={item.inputType ? item.inputType : "text"} placeholder={props.DBObject.attributes[item.attributeKey]} value={value} onChange={props.updateDBObject.bind(this, item.attributeKey)} required  disabled={disabled}/> */}
-
                                     {getInput(item.componentType, {
                                         id: item.attributeKey,
                                         placeholder: DBManager.getAttrFromArrByKey(props.DBObject.attributes, item.attributeKey).name,

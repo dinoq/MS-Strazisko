@@ -9,7 +9,6 @@ import DetailFrame from "./DetailFrame";
 const DetailFrameContainer: FC<{ DBObject: DBObject, mode: DetailFrameMode, hideDetailFrame: MouseEventHandler<HTMLInputElement>, setDBObject: Function, setErrorMsg: Function, updateDBObject: Function }> = (props) => {
     const formDefinition = useSelector((state: RootState) => state.formDefinitions).actualFormDefinition;
     const breadcrumbItems = useSelector((state: RootState) => state.breadcrumb.items);
-    console.log('formDefinition: ', formDefinition);
 
     let DBOClass = useSelector((state: RootState) => state.formDefinitions.actualFormDefinition.DB.DBOClass);
 
@@ -45,11 +44,13 @@ const DetailFrameContainer: FC<{ DBObject: DBObject, mode: DetailFrameMode, hide
             })    
         }
 
-        if(breadcrumbItems.length && breadcrumbItems[breadcrumbItems.length - 1].parentCondition){
-            const condition = breadcrumbItems[breadcrumbItems.length - 1].parentCondition;
-            body.attributes[condition.key] = condition.value;
+        if(breadcrumbItems.length && breadcrumbItems[breadcrumbItems.length - 1].parentAttribute){
+            const parentAttribute = breadcrumbItems[breadcrumbItems.length - 1].parentAttribute;
+            body.attributes[parentAttribute.key] = parentAttribute.value;
         }
 
+        console.log('body.attributes: ', body.attributes);
+        
         let resultErr = "";
         if(props.mode == DetailFrameMode.EDITING_ENTRY){
             body["updateId"] = props.DBObject.id;

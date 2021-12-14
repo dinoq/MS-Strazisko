@@ -38,16 +38,14 @@ const handler = async (req, res) => {
         if(sqlResults?.length > 0){
             for (const attr of DBObjectDefinitionAttrs) {
                 let firstDotIndex = attr.key.indexOf(".");
-                let verticalIndex = attr.key.indexOf("|");
-                let equalIndex = attr.key.indexOf("=");
-                if(firstDotIndex != -1 && verticalIndex != -1){
+                let tildaIndex = attr.key.indexOf("~");
+                if(firstDotIndex != -1 && tildaIndex != -1){
                     let foreignClassName;
                     if(attr.key.startsWith("*")){ // Daný atribut je pro všechny položky dané třídy stejný
                         foreignClassName = attr.key.substring(1, firstDotIndex);
-                        let foreignAttrName = attr.key.substring(firstDotIndex+1, verticalIndex);
-                        let foreignConditionAttrName = attr.key.substring(verticalIndex+1, equalIndex);
-                        let conditionAttrName = attr.key.substring(equalIndex+1);
-                        let sql = `SELECT ${foreignAttrName} FROM ${foreignClassName} WHERE ${foreignConditionAttrName}=${sqlResults[0][conditionAttrName]};`;
+                        let foreignAttrName = attr.key.substring(firstDotIndex+1, tildaIndex);
+                        let foreignConditionAttrName = attr.key.substring(tildaIndex+1);
+                        let sql = `SELECT ${foreignAttrName} FROM ${foreignClassName} WHERE ${foreignConditionAttrName}=${sqlResults[0][foreignConditionAttrName]};`;
                         const stmtBindedAttrs = db.prepare(sql);
                         const sqlResultsBindedAttrs = stmtBindedAttrs.all();
                         if(sqlResultsBindedAttrs?.length > 0){
@@ -57,7 +55,7 @@ const handler = async (req, res) => {
                         }
                     }else{ // Daný atribut může pro každou položku nabývat jiné hodnoty
                         foreignClassName = attr.key.substring(0, firstDotIndex);
-                        return res.status(500).send("ERROR - not implemented binding without *!");
+                        return res.status(500).send("ERROR - not implemented binding without *! TODO!");
                     }
                 }
                 // if (!DBObjectDefinitionAttrs.find(definitionAttr => definitionAttr.key == attrKey)) {
@@ -80,13 +78,6 @@ const handler = async (req, res) => {
 
 		try {
 			// check class...
-			/*const DBObjectDefinitionAttrs: Array<DBObjectAttr> = DBManager.getDBObjectDefinition(className).attributes;
-			for (const attrKey in attrs) {
-				if (!DBObjectDefinitionAttrs.find(definitionAttr => definitionAttr.key == attrKey)) {
-					return res.status(500).send("ERROR - wrong attribute key! Attribute '" + attrKey + "' is not in class '" + className + "'");
-				}
-			};*/
-            console.log('attrs: ', attrs, className);
             let checkClass = DBManager.checkClassAttrs(attrs, className, true);
             if(!checkClass.success){
                 db.close();

@@ -1,6 +1,7 @@
 ############################################################################################
 TODO:
 - cookieOptions-secure... na produkci...
+- funkce checkClassAttrs - odstranit parametr tolerování chybějícího primary key a místo toho vložit přímo do definic objektů (nikoli formulářů!) required (s tím že defaultně bude true...)
 - https://github.com/vvo/iron-session#session-wrappers
 - komentář "// check class..." v data.ts v POST 
 - ošetřit padavku, když se zadá neplatné jméno třídy jako detail LF
