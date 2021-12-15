@@ -4,7 +4,9 @@ export enum ComponentType {
     SelectBox,
     UNKNOWN,
     DateField,
-    NumberField
+    NumberField,
+    ImagePreview,
+    FileChooser
 }
 
 export enum DetailFrameMode {

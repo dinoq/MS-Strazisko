@@ -10,17 +10,12 @@ export type DBObject = {
     id: number,
     DBOClass: string,
     attributes: Array<DBObjectAttr>,
+    persistentAttributes: Array<DBObjectAttr>,
     isEdited: boolean,
-    editedAttrs: Array<DBObjectEditedAttr>
+    editedAttrs: Array<DBObjectAttr>
 }
 
 export type DBObjectAttr = {
-    key: string,
-    name: string,
-    value: any
-}
-
-export type DBObjectEditedAttr = {
     key: string,
     value: any
 }
@@ -53,6 +48,7 @@ export type DetailFrameDef = {
 
 export type DFComponentDef = {
     attributeKey: string,
+    componentName?: string,
     componentType?: ComponentType,
     values?: Array<any>,
     constraints?: Array<FormAttrConstraintDef>,
@@ -77,6 +73,8 @@ export type ListFrameDef = {
 
 export type LFComponentDef = {
     attributeKey: string,
+    componentName?: string,
+    componentType?: ComponentType,
     transformation?: string
     isBreadcrumbKey?: boolean,
 }

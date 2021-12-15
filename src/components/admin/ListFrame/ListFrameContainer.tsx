@@ -30,7 +30,6 @@ const ListFrameContainer: FC<{ DBObject: DBObject, deleteItemHandler: Function, 
 
         const parentAttribute: DBObjectAttr = {
             key: item.attributes[0].key,
-            name: item.attributes[0].name, 
             value: item.attributes[0].value
         }
         let breadcrumbAttr = await DBManager.getBreadcrumbAttr(props.DBObject, formDefinition);

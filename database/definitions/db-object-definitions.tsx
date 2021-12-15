@@ -16,11 +16,11 @@ const DBObjectDefinitions: RecursivePartial<DBOBjectDefs> = {
         attributes: [
             {
                 key: "id_albumPasswords",
-                name: "Školní rok"
+                //name: "Školní rok"
             },
             {
                 key: "passwordHash",
-                name: "Heslo"
+                //name: "Heslo"
             }
         ]
     }, 
@@ -29,46 +29,50 @@ const DBObjectDefinitions: RecursivePartial<DBOBjectDefs> = {
         attributes: [
             {
                 key: "id_album",
-                name: "ID alba"
+                //name: "ID alba"
             },
             {
                 key: "date",
-                name: "Datum"
+                //name: "Datum"
             },
             {
                 key: "title",
-                name: "URL"
-            },
-            {
-                key: "id_albumPasswords",
-                name: "Heslo"
+                //name: "URL"
             },
             {
                 key: "name",
-                name: "Název"
+                //name: "Název"
             }
-        ]
+        ],
+        persistentAttributes: [
+            {
+                key: "id_albumPasswords",
+                //name: "Heslo"
+            },
+        ],
     }, 
     photos: {
         DBOClass: "photos",
         attributes: [
             {
                 key: "id_photo",
-                name: "ID"
+                //name: "ID"
             },
             {
                 key: "filename",
-                name: "URL"
+                //name: "URL"
             },
+        ],
+        persistentAttributes: [
             {
                 key: "id_album",
-                name: "..."
-            },
+                //name: "..."
+            },/*
             {
                 key: "*albums.title~id_album", // attribute 'title' from class 'albums' via constraint 'id_album' (WHERE albums.id_album = id_album)
                 name: "nameee"
-            },
-        ]
+            },*/
+        ],
     }, 
 
 
@@ -78,15 +82,15 @@ const DBObjectDefinitions: RecursivePartial<DBOBjectDefs> = {
         attributes: [
             {
                 key: "contact_text_id",
-                name: "ID textu"
+                //name: "ID textu"
             },
             {
                 key: "title",
-                name: "Typ textu"
+                //name: "Typ textu"
             },
             {
                 key: "content",
-                name: "Obsah"
+                //name: "Obsah"
             }
         ]
     }

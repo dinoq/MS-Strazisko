@@ -1,6 +1,6 @@
 import { getRawDBObjectDefinition } from "../database/definitions/db-object-definitions";
 import { ComponentType } from "./constants";
-import { DBObject, DBObjectAttr, DBObjectEditedAttr, DFComponentDef, FormDef, FormDefs, LFComponentDef, OrderByDef, RecursivePartial, RootState } from "./types";
+import { DBObject, DBObjectAttr, DFComponentDef, FormDef, FormDefs, LFComponentDef, OrderByDef, RecursivePartial, RootState } from "./types";
 import clone from "clone";
 import { getApiURL } from "./utils";
 import { XMLParser } from "./XMLParser";
@@ -19,7 +19,8 @@ export class DBManager {
 
             try {
                 if (response.status == 200) {
-                    res(XMLParser.parseXMLFormDefinitions(await response.text()));
+                    const definition = await response.text();
+                    res(XMLParser.parseXMLFormDefinitions(definition));
                 } else {
                     throw new Error(await response.text());
                 }
@@ -44,20 +45,50 @@ export class DBManager {
             }
         });
 
+        if (obj.persistentAttributes == undefined) {
+            obj.persistentAttributes = [];
+        }
+
+        obj.persistentAttributes.forEach(attr => {
+            if (attr.value == undefined) {
+                attr.value = "";
+            }
+        });
+
         return clone(obj);
     }
 
-    public static getEmptyDBObject = (DBOClass: string, condition: string = ""): DBObject => {
+    public static getEmptyDBObject = (DBOClass: string): DBObject => {
         let obj: DBObject = {
             DBOClass: DBOClass,
             id: -1,
             attributes: (DBOClass == undefined || DBOClass == "") ? [] : DBManager.getDBObjectDefinition(DBOClass).attributes,
+            persistentAttributes: (DBOClass == undefined || DBOClass == "") ? [] : DBManager.getDBObjectDefinition(DBOClass).persistentAttributes,
             editedAttrs: [],
             isEdited: false
         }
 
         return clone(obj);
     }
+
+    public static getClearedDBObject = (DBObject: DBObject): DBObject => {
+        let obj: DBObject = {
+            DBOClass: DBObject.DBOClass,
+            id: -1,
+            attributes: DBObject.attributes.map(attr => {
+                return {
+                    key: attr.key,
+                    value: ""
+                }
+            }),
+            persistentAttributes: clone(DBObject.persistentAttributes),
+            editedAttrs: [],
+            isEdited: false
+        }
+
+        return clone(obj);
+    }
+
     public static clearBinding = (key: string): string => {
         let newKey = key.replace("*", "");
         let verticalIndex = newKey.indexOf("|");
@@ -65,7 +96,7 @@ export class DBManager {
             newKey = newKey.substring(0, verticalIndex);
         return newKey;
     }
-    protected static getAttrOrComponentFromArrByKey(arr: Array<DBObjectAttr | DBObjectEditedAttr | DFComponentDef | LFComponentDef>, key: string, type?: string): DBObjectAttr | LFComponentDef | DFComponentDef {
+    protected static getAttrOrComponentFromArrByKey(arr: Array<DBObjectAttr | DFComponentDef | LFComponentDef>, key: string, type?: string): DBObjectAttr | LFComponentDef | DFComponentDef {
         let attr = arr.find(a => {
             if (Object.keys(a).includes("key")) {
                 return DBManager.clearBinding(a["key"]) == DBManager.clearBinding(key);
@@ -79,12 +110,12 @@ export class DBManager {
         } else if (type == "DFComponentDef") {
             return (attr as DFComponentDef) || { attributeKey: "", componentType: ComponentType.UNKNOWN, values: [], constraints: [], editable: true };
         } else {
-            return (attr as DBObjectAttr) || { key: "", name: "", value: "" };
+            return (attr as DBObjectAttr) || { key: "", value: "" };
         }
     }
 
 
-    public static getAttrFromArrByKey(arr: Array<DBObjectAttr | DBObjectEditedAttr>, key: string): DBObjectAttr {
+    public static getAttrFromArrByKey(arr: Array<DBObjectAttr>, key: string): DBObjectAttr {
         return DBManager.getAttrOrComponentFromArrByKey(arr, key) as DBObjectAttr;
     }
 
@@ -111,8 +142,14 @@ export class DBManager {
                 for (const attributes of json) {
                     let entry = DBManager.getEmptyDBObject(DBOClass);
                     entry.id = attributes[Object.keys(attributes)[0]];
-                    for (const attrName in attributes) {
-                        entry.attributes[Object.keys(attributes).indexOf(attrName)].value = attributes[attrName];
+                    for (const attrKey in attributes) {
+                        if (entry.attributes.find(attr => attr.key == attrKey)) { // Nepersistent attribute
+                            entry.attributes[entry.attributes.findIndex(attr => attr.key == attrKey)].value = attributes[attrKey];
+                        } else if (entry.persistentAttributes.find(attr => attr.key == attrKey)) { // Persistent attribute
+                            entry.persistentAttributes[entry.persistentAttributes.findIndex(attr => attr.key == attrKey)].value = attributes[attrKey];
+                        } else { // Error
+                            throw new Error(`ERROR - From server (database) come attribute '${attrKey}' of class '${DBOClass}' which is not part of this class definition!`)
+                        }
                     }
                     entries.push(entry);
                 }
@@ -165,14 +202,15 @@ export class DBManager {
         }
         try {
             const DBObjectDefinitionAttrs: Array<DBObjectAttr> = DBManager.getDBObjectDefinition(DBOClass).attributes;
+            const DBObjectDefinitionPersistentAttrs: Array<DBObjectAttr> = DBManager.getDBObjectDefinition(DBOClass).persistentAttributes;
             for (const attrKey in attrs) { // Check if there is not any foreign attr
-                if (!DBObjectDefinitionAttrs.find(definitionAttr => definitionAttr.key == attrKey)) {
+                if (!(DBObjectDefinitionAttrs.find(definitionAttr => definitionAttr.key == attrKey) || DBObjectDefinitionPersistentAttrs.find(definitionAttr => definitionAttr.key == attrKey))) {
                     check.success = false;
                     check.errorMsg = "ERROR - wrong attribute key! Attribute '" + attrKey + "' is not in class '" + DBOClass + "'";
                 }
             };
             let successExactMatch = Object.keys(attrs).length == DBObjectDefinitionAttrs.length;
-            let successMatchWithoutPrimaryKeyIfTolerated = tolerateMissingPrimaryKey && Object.keys(attrs).length+1 == DBObjectDefinitionAttrs.length && attrs[DBObjectDefinitionAttrs[0].key] == undefined;
+            let successMatchWithoutPrimaryKeyIfTolerated = tolerateMissingPrimaryKey && Object.keys(attrs).length + 1 == DBObjectDefinitionAttrs.length && attrs[DBObjectDefinitionAttrs[0].key] == undefined;
             if (!(successExactMatch || successMatchWithoutPrimaryKeyIfTolerated)) {
                 check.success = false;
                 check.errorMsg = "ERROR - Wrong attribute count!";
@@ -188,7 +226,7 @@ export class DBManager {
 
     public static getBreadcrumbAttr = (DBObject: DBObject, formDefinition: FormDef): DBObjectAttr => {
         const breadcrumbComponent = formDefinition.listFrame.components.find(component => component.isBreadcrumbKey);
-        if(breadcrumbComponent == undefined){
+        if (breadcrumbComponent == undefined) {
             throw new Error("ERROR - No breadcrumb item set in form definitions");
         }
         let key: string = breadcrumbComponent.attributeKey;

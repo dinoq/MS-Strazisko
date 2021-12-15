@@ -2,8 +2,9 @@
 //import styles from "./ListFrame.module.css";
 
 import { FC, useEffect, useState } from "react";
+import { ComponentType } from "../../../constants";
 import { DBManager } from "../../../DBManager";
-import { DBObject, DBObjectAttr, DBObjectEditedAttr, FormDef, LFComponentDef, ListFrameDef } from "../../../types";
+import { DBObject, LFComponentDef, ListFrameDef } from "../../../types";
 
 const ListFrame: FC<{ definition: ListFrameDef, DBOClass: string, DBObject: DBObject, detailClickedHandler: Function, deleteItemHandler: Function, editItemHandler: Function, entries: Array<DBObject>, colspanNoData: number }> = (props) => {
 
@@ -14,7 +15,7 @@ const ListFrame: FC<{ definition: ListFrameDef, DBOClass: string, DBObject: DBOb
                     <tr className={""}>
                         {props.definition?.detailDBOClass.length > 0 && <th className={""}>Detail</th>}
                         {props.definition?.components.map((item, index, array) => {
-                            return <th key={"thtrtd-" + index} className={""}>{(DBManager.getAttrFromArrByKey(props.DBObject.attributes, item.attributeKey) as DBObjectAttr).name}</th>
+                            return <th key={"thtrtd-" + index} className={""}>{item.componentName}</th>
                         })}
                         {props.definition?.actions && <th className={""}>Akce</th>}
                     </tr>
@@ -22,21 +23,33 @@ const ListFrame: FC<{ definition: ListFrameDef, DBOClass: string, DBObject: DBOb
                 <tbody>
                     {props.entries.map((entry, index, array) => {
                         return <tr key={"tbtr-" + index} className={(props.DBObject.id == entry.id) ? "selected-row" : ""}>
-                            {props.definition?.detailDBOClass.length > 0 && 
-                            <td className={""}>
-                                <span className="link" onClick={props.detailClickedHandler.bind(this, entry)}>Detail</span>
-                            </td>}
+                            {props.definition?.detailDBOClass.length > 0 &&
+                                <td className={""}>
+                                    <span className="link" onClick={props.detailClickedHandler.bind(this, entry)}>Detail</span>
+                                </td>}
                             {
-                                props.definition?.components.map((item, index, array) => {
-                                    let attr =DBManager.getAttrFromArrByKey(entry.attributes, item.attributeKey); // get object attr
-                                    let defAttr = DBManager.getLFComponentFromArrByKey(props.definition.components, item.attributeKey); // get def attr
-                                    let value = attr.value;
-                                    if(defAttr.transformation){
-                                        let command = defAttr.transformation.replaceAll("$", attr.value); // remove $ (=> attr Val)
+                                props.definition?.components.map((component: LFComponentDef, index, array) => {
+                                    let getAttrVal = (key) => {
+                                        return DBManager.getAttrFromArrByKey(entry.attributes, key).value
+                                    };
 
-                                        let getAttrVal = (key)=>DBManager.getAttrFromArrByKey(entry.attributes, key).value;
-                                        command = command.replaceAll(/@\[(.*)\]/g, "getAttrVal('$1')"); // remove @[attrKey] (=> val of attr of attrKey)
+                                    let value = "";
+                                    if(component.componentType == ComponentType.TextField){
+                                        let command = component.transformation.replaceAll(/@\[(.*)\]/g, "getAttrVal('$1')"); // remove @[attrKey] (=> val of attr of attrKey)
                                         value = eval(command);
+
+                                    }
+                                    /*let attr = DBManager.getAttrFromArrByKey(entry.attributes, component.attributeKey); // get object attr
+                                    let defAttr = DBManager.getLFComponentFromArrByKey(props.definition.components, component.attributeKey); // get def attr*/
+                                    if (component.transformation && false) {
+                                        //let command = component.transformation.replaceAll("$", attr.value); // remove $ (=> attr Val)
+
+                                        let command = component.transformation.replaceAll(/@\[(.*)\]/g, "getAttrVal('$1')"); // remove @[attrKey] (=> val of attr of attrKey)
+                                        console.log('command: ', command);
+                                        //value = eval("const date = new Date(getAttrVal('date'));date.getDate() + '. ' + (date.getMonth() + 1) + '. ' + date.getFullYear()");
+                                        value = eval(command);
+                                        console.log('value: ', value);
+                                        value = value.toString();
                                     }
                                     return <td key={"tbtrtd-" + index}>{value}</td>;
                                 })}

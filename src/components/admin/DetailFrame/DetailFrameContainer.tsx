@@ -6,7 +6,7 @@ import { DBObject, DBObjectAttr, RootState } from "../../../types";
 import ErrorDialog from "../ErrorDialog";
 import DetailFrame from "./DetailFrame";
 
-const DetailFrameContainer: FC<{ DBObject: DBObject, mode: DetailFrameMode, hideDetailFrame: MouseEventHandler<HTMLInputElement>, setDBObject: Function, setErrorMsg: Function, updateDBObject: Function }> = (props) => {
+const DetailFrameContainer: FC<{ DBObject: DBObject, mode: DetailFrameMode, hideDetailFrame: MouseEventHandler<HTMLInputElement>, setDBObject: Function, setErrorMsg: Function}> = (props) => {
     const formDefinition = useSelector((state: RootState) => state.formDefinitions).actualFormDefinition;
     const breadcrumbItems = useSelector((state: RootState) => state.breadcrumb.items);
 
@@ -35,6 +35,10 @@ const DetailFrameContainer: FC<{ DBObject: DBObject, mode: DetailFrameMode, hide
         props.DBObject.editedAttrs.forEach((attr, index, array) => {
             body.attributes[attr.key] = attr.value;
         })
+        
+        props.DBObject.persistentAttributes.forEach((attr, index, array) => {
+            body.attributes[attr.key] = attr.value;
+        })
         console.log('props.DBObject: ', props.DBObject);
         if(props.mode == DetailFrameMode.NEW_ENTRY){ // set default values for selectboxes...
             formDefinition.detailFrame.components.forEach(component =>{
@@ -44,10 +48,13 @@ const DetailFrameContainer: FC<{ DBObject: DBObject, mode: DetailFrameMode, hide
             })    
         }
 
+        /*
         if(breadcrumbItems.length && breadcrumbItems[breadcrumbItems.length - 1].parentAttribute){
             const parentAttribute = breadcrumbItems[breadcrumbItems.length - 1].parentAttribute;
             body.attributes[parentAttribute.key] = parentAttribute.value;
-        }
+        }*/
+
+
 
         console.log('body.attributes: ', body.attributes);
         
@@ -70,6 +77,7 @@ const DetailFrameContainer: FC<{ DBObject: DBObject, mode: DetailFrameMode, hide
     };
 
     const updateDBObject = (attrKey, e) => {
+        console.log('attrKey: ', attrKey, e.target);
         props.setDBObject(prevState => {
             //let editedAttrs = [...prevState.editedAttrs, {key: attrKey, value: e.target.value} as DBObjectAttr]
             let editedAttrs: Array<DBObjectAttr> = prevState.editedAttrs || [];

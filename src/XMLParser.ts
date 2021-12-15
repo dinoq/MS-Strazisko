@@ -15,6 +15,7 @@ export class XMLParser {
       components: [
         {
           componentType: ComponentType.TextField,
+          componentName: "??",
           values: getEmptyValues(),
           editable: true,
           constraints: [
@@ -37,6 +38,8 @@ export class XMLParser {
       },
       components: [
         {
+          componentType: ComponentType.TextField,
+          componentName: "??",
           isBreadcrumbKey: false,
           transformation: "",
         },
@@ -77,23 +80,19 @@ export class XMLParser {
     };
 
     let mapToComponentType = (type: string) => {
-      switch (type) {
-        case "SelectBox":
-          return ComponentType.SelectBox;
-
-        case "TextField":
-          return ComponentType.TextField;
-        case "NumberField":
-          return ComponentType.NumberField;
-        case "DateField":
-          return ComponentType.DateField;
-        default:
-          throw new Error(
-            "Uknown componentType ('" + type + "') in form definition!"
-          );
-          return ComponentType.UNKNOWN;
+      if (type == "") {
+        return ComponentType.TextField;
       }
+
+      if (ComponentType[type] == undefined) {
+        throw new Error(
+          "Uknown componentType ('" + type + "') in form definition!"
+        );
+        return ComponentType.UNKNOWN;
+      }
+      return ComponentType[type];
     };
+
     let defs = {};
     let forms = Array.from(xmlDef.documentElement.children);
     forms.forEach((form) => {
@@ -116,6 +115,13 @@ export class XMLParser {
         component.componentType = mapToComponentType(
           getOptionalAttrFromXML("componentType", XMLcomponent)
         );
+        component.componentName = getOptionalAttrFromXML(
+          "componentName",
+          XMLcomponent
+        );
+        if(!component.componentName.length){
+            component.componentName = component.attributeKey;
+        }
         let constraints = getOptionalAttrFromXML(
           "constraints",
           XMLcomponent,
@@ -145,7 +151,7 @@ export class XMLParser {
 
       // LIST FRAME DEF
       let XMLLF = form.getElementsByTagName("ListFrame")[0];
-      let XMLLFComponents = Array.from(XMLDF.getElementsByTagName("Component"));
+      let XMLLFComponents = Array.from(XMLLF.getElementsByTagName("Component"));
       for (const XMLcomponent of XMLLFComponents) {
         let component: LFComponentDef = {
           attributeKey: "",
@@ -153,6 +159,17 @@ export class XMLParser {
         component.attributeKey = getREQUIREDAttrFromXML(
           "attributeKey",
           XMLcomponent
+        );
+        component.componentName = getOptionalAttrFromXML(
+          "componentName",
+          XMLcomponent
+        );
+        if(!component.componentName.length){
+            component.componentName = component.attributeKey;
+        }
+
+        component.componentType = mapToComponentType(
+          getOptionalAttrFromXML("componentType", XMLcomponent)
         );
         component.isBreadcrumbKey =
           getOptionalAttrFromXML(

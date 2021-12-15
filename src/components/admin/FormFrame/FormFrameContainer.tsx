@@ -38,7 +38,15 @@ const FormFrameContainer: React.FC<{}> = (props) => {
             };
             dispatch(addItemToBreadcrumb(newBItem))
         }
-        setDBObject(DBManager.getEmptyDBObject(DBOClass));
+        setDBObject((prevDBObject: DBObject)=>{
+            let emptyObj: DBObject = DBManager.getEmptyDBObject(DBOClass);
+            if(emptyObj && emptyObj.persistentAttributes && prevDBObject.persistentAttributes && entries[0]){ // TODO entries[0] bere atributy i v opačném směru => když se jde z potomka výš. Zřejmě by to nikdy neměl být problém, ale chtělo by to opravit
+                for(const attr of emptyObj.persistentAttributes){
+                    attr.value = DBManager.getAttrFromArrByKey(entries[0].attributes, attr.key).value;    
+                }
+            }
+            return emptyObj;
+        });
         let detailItemCondition = "";
         if(breadcrumbItems.length){
             let parentAttribute = breadcrumbItems[breadcrumbItems.length-1].parentAttribute;
@@ -55,11 +63,6 @@ const FormFrameContainer: React.FC<{}> = (props) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [DBObject]);
 
-    useEffect(() => {
-        //dispatch(addItemToBreadcrumb({ DBOClass: props.DBOClass, DBObject: DBManager.getEmptyDBObject(props.DBOClass), text: "" }));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
     const showDetailFrame = () => {
         /*if (setEmptyObject) {
           setDBObject(getEmptyDBObject(formClassName[formClassName.length - 1]));
@@ -69,7 +72,7 @@ const FormFrameContainer: React.FC<{}> = (props) => {
 
     const hideDetailFrame = () => {
         setDetailFrameVisible(false);
-        setDBObject(DBManager.getEmptyDBObject(DBOClass));
+        setDBObject(DBManager.getClearedDBObject(DBObject));
         setDetailFrameMode(DetailFrameMode.NEW_ENTRY);
     }
 
@@ -120,12 +123,10 @@ const FormFrameContainer: React.FC<{}> = (props) => {
       }*/
     }
 
-    const updateDBObject = (item) => {
-    }
 
     return (
         <>
-            <FormFrame errorMsg={errorMsg} detailFrameVisible={detailFrameVisible} saveDialogVisible={saveDialogVisible} entries={entries} detailFrameMode={detailFrameMode} definition={definition} DBObject={DBObject} hideDetailFrame={hideDetailFrame} setDBObject={setDBObject} deleteItemHandler={deleteItemHandler} editItemHandler={editItemHandler} showDetailFrame={showDetailFrame} setSaveDialogVisible={setSaveDialogVisible} setErrorMsg={setErrorMsg} updateDBObject={updateDBObject} />
+            <FormFrame errorMsg={errorMsg} detailFrameVisible={detailFrameVisible} saveDialogVisible={saveDialogVisible} entries={entries} detailFrameMode={detailFrameMode} definition={definition} DBObject={DBObject} hideDetailFrame={hideDetailFrame} setDBObject={setDBObject} deleteItemHandler={deleteItemHandler} editItemHandler={editItemHandler} showDetailFrame={showDetailFrame} setSaveDialogVisible={setSaveDialogVisible} setErrorMsg={setErrorMsg} />
         </>
     )
 }

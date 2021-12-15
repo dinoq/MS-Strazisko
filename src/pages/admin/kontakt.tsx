@@ -14,7 +14,7 @@ const AdminContactsPage: NextPage = (props: any)  => {
       </Head>
 
       <main className={""}>
-        <FormFrameContainer DBOClass="ContactTexts" />
+        <FormFrameContainer />
       </main>
     </div>
   )
