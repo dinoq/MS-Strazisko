@@ -34,9 +34,11 @@ const handler = async (req, res) => {
         let orderBy = (order.length)? " ORDER BY " + order.split("|")[0] + " " + order.split("|")[1]: "";
 		const stmt = db.prepare("SELECT * FROM " + className + condition + orderBy + ";");
 		const sqlResults = stmt.all();
-        const DBObjectDefinitionAttrs: Array<DBObjectAttr> = DBManager.getDBObjectDefinition(className).attributes;
+        const DBObjectDefinitionPersistentAttrs: Array<DBObjectAttr> = DBManager.getDBObjectDefinition(className).persistentAttributes;
+        console.log('sqlResults: ', sqlResults);
         if(sqlResults?.length > 0){
-            for (const attr of DBObjectDefinitionAttrs) {
+            for (const attr of DBObjectDefinitionPersistentAttrs) {
+                console.log('attr: ', attr);
                 let firstDotIndex = attr.key.indexOf(".");
                 let tildaIndex = attr.key.indexOf("~");
                 if(firstDotIndex != -1 && tildaIndex != -1){
@@ -46,6 +48,7 @@ const handler = async (req, res) => {
                         let foreignAttrName = attr.key.substring(firstDotIndex+1, tildaIndex);
                         let foreignConditionAttrName = attr.key.substring(tildaIndex+1);
                         let sql = `SELECT ${foreignAttrName} FROM ${foreignClassName} WHERE ${foreignConditionAttrName}=${sqlResults[0][foreignConditionAttrName]};`;
+                        console.log('sqlllll: ', sql);
                         const stmtBindedAttrs = db.prepare(sql);
                         const sqlResultsBindedAttrs = stmtBindedAttrs.all();
                         if(sqlResultsBindedAttrs?.length > 0){
@@ -64,6 +67,7 @@ const handler = async (req, res) => {
             };
         }
 		db.close();
+        console.log('sqlResults11: ', sqlResults);
 		return res.json(sqlResults);
 	} else if (req.method == "POST") {
 		const className = req.body["className"];

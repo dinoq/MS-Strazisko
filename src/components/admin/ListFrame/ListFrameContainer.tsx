@@ -28,17 +28,12 @@ const ListFrameContainer: FC<{ DBObject: DBObject, deleteItemHandler: Function, 
      const detailClickedHandler = async (itm) => {
         let item: DBObject = itm as DBObject;
 
-        const parentAttribute: DBObjectAttr = {
-            key: item.attributes[0].key,
-            value: item.attributes[0].value
-        }
         let breadcrumbAttr = await DBManager.getBreadcrumbAttr(props.DBObject, formDefinition);
         let objBreadcrumbAttr = DBManager.getAttrFromArrByKey(item.attributes, (await breadcrumbAttr).key);
 
         const newClass = formDefinition.listFrame.detailDBOClass;
         const newBItem: BreadcrumbItemDef = {
-            DBOClass: newClass,
-            parentAttribute,
+            DBObject: item,
             text: objBreadcrumbAttr.value
         };
         dispatch(addItemToBreadcrumb(newBItem))

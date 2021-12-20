@@ -85,8 +85,7 @@ export type OrderByDef = {
 }
 
 export type BreadcrumbItemDef = {
-    DBOClass: string,
-    parentAttribute: DBObjectAttr,
+    DBObject: DBObject,
     text: string
 }
 

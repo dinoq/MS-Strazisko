@@ -31,7 +31,7 @@
         </DetailFrame>
         <ListFrame orderBy="id_photo" descending="true">
             <Component attributeKey="id_photo" componentName="ID" componentType="TextField" transformation="@[filename]" isBreadcrumbKey="true"/>
-            <Component attributeKey="filename" componentName="URL" componentType="ImagePreview" transformation="@[filename]" />
+            <Component attributeKey="filename" componentName="URL" componentType="ImagePreview" transformation="@[id_album]" />
             <!-- <Component attributeKey="filename" transformation="@[albums.title]" /> -->
         </ListFrame>
     </Form>

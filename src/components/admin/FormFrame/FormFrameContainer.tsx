@@ -29,33 +29,40 @@ const FormFrameContainer: React.FC<{}> = (props) => {
     //const definition = DBManager.getFormDefinition(DBOClass);
 
     useEffect(() => {
+
+        //TODO DBOClass.length==0 => return????
         if (DBOClass.length && !breadcrumbItems.length) { // DBOClass is set, but there is no item in breadcrumb => add root item
             const newClass = DBOClass;
             const newBItem: BreadcrumbItemDef = {
-                DBOClass: newClass,
-                parentAttribute: null,
+                DBObject: DBObject,
                 text: ""
             };
             dispatch(addItemToBreadcrumb(newBItem))
         }
-        setDBObject((prevDBObject: DBObject)=>{
+        
+        let detailItemCondition = "";
+        if (breadcrumbItems.length) {
+            let parentAttribute = DBManager.getEmptyDBObject(DBOClass)?.persistentAttributes[0];
+            
+            if (parentAttribute){
+                let key: string = parentAttribute.key;
+                key = (key.startsWith("*"))? key.substring(1) : key;
+                detailItemCondition = `WHERE ${key}='${DBManager.getAttrFromArrByKey(breadcrumbItems[breadcrumbItems.length - 1].DBObject.attributes, parentAttribute.key).value}'`;
+            }
+        }
+        DBManager.getAllDBObjectEntries(DBOClass, /*definition.DB.orderBy, detailItemCondition*/detailItemCondition).then(entries => {
+            setEntries(entries);
+        })
+
+        setDBObject((prevDBObject: DBObject) => {
             let emptyObj: DBObject = DBManager.getEmptyDBObject(DBOClass);
-            if(emptyObj && emptyObj.persistentAttributes && prevDBObject.persistentAttributes && entries[0]){ // TODO entries[0] bere atributy i v opačném směru => když se jde z potomka výš. Zřejmě by to nikdy neměl být problém, ale chtělo by to opravit
-                for(const attr of emptyObj.persistentAttributes){
-                    attr.value = DBManager.getAttrFromArrByKey(entries[0].attributes, attr.key).value;    
+            if (emptyObj && emptyObj.persistentAttributes && prevDBObject && prevDBObject.persistentAttributes && entries[0]) { // TODO entries[0] bere atributy i v opačném směru => když se jde z potomka výš. Zřejmě by to nikdy neměl být problém, ale chtělo by to opravit
+                for (const attr of emptyObj.persistentAttributes) {
+                    attr.value = DBManager.getAttrFromArrByKey(entries[0].attributes, attr.key).value;
                 }
             }
             return emptyObj;
         });
-        let detailItemCondition = "";
-        if(breadcrumbItems.length){
-            let parentAttribute = breadcrumbItems[breadcrumbItems.length-1].parentAttribute;
-            if(parentAttribute)
-                detailItemCondition = `WHERE ${parentAttribute.key}='${parentAttribute.value}'`;
-        }
-        DBManager.getAllDBObjectEntries(DBOClass, /*definition.DB.orderBy, detailItemCondition*/detailItemCondition ).then(entries => {
-            setEntries(entries);
-        })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [DBOClass]);
 

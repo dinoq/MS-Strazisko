@@ -46,7 +46,7 @@ const DBObjectDefinitions: RecursivePartial<DBOBjectDefs> = {
         ],
         persistentAttributes: [
             {
-                key: "id_albumPasswords",
+                key: "*id_albumPasswords",
                 //name: "Heslo"
             },
         ],
@@ -65,13 +65,13 @@ const DBObjectDefinitions: RecursivePartial<DBOBjectDefs> = {
         ],
         persistentAttributes: [
             {
-                key: "id_album",
+                key: "*id_album",
                 //name: "..."
-            },/*
+            },
             {
                 key: "*albums.title~id_album", // attribute 'title' from class 'albums' via constraint 'id_album' (WHERE albums.id_album = id_album)
-                name: "nameee"
-            },*/
+                //name: "nameee"
+            },
         ],
     }, 
 

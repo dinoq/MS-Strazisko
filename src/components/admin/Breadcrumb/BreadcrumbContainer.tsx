@@ -12,13 +12,13 @@ const BreadcrumbContainer: FC<{} > = (props) => {
     //let items: Array<BreadcrumbItemDef> = props.items ? props.items : [];
 
     const resetNav = () => {
-        dispatch({type: SagaActions.SET_FORM_DEFINITIONS, FID: items[0].DBOClass})
+        dispatch({type: SagaActions.SET_FORM_DEFINITIONS, FID: items[0].DBObject.DBOClass})
         dispatch(selectBreadcrumbItem(0))
         //props.setItems([]);
     }
 
     const itemClicked = (index) => {
-        dispatch({type: SagaActions.SET_FORM_DEFINITIONS, FID: items[index].DBOClass})
+        dispatch({type: SagaActions.SET_FORM_DEFINITIONS, FID: items[index+1].DBObject.DBOClass})
         dispatch(selectBreadcrumbItem(index+1))
         //props.setItems(prevState => [...items.slice(0, index + 1)]);
     }

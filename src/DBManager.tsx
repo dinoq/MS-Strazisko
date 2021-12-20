@@ -145,8 +145,10 @@ export class DBManager {
                     for (const attrKey in attributes) {
                         if (entry.attributes.find(attr => attr.key == attrKey)) { // Nepersistent attribute
                             entry.attributes[entry.attributes.findIndex(attr => attr.key == attrKey)].value = attributes[attrKey];
-                        } else if (entry.persistentAttributes.find(attr => attr.key == attrKey)) { // Persistent attribute
-                            entry.persistentAttributes[entry.persistentAttributes.findIndex(attr => attr.key == attrKey)].value = attributes[attrKey];
+                        } else if (entry.persistentAttributes.find(attr => (attr.key == attrKey || attr.key == ("*"+attrKey)))) { // Persistent attribute
+                            let attrIndex = entry.persistentAttributes.findIndex(attr => attr.key == attrKey);
+                            attrIndex = (attrIndex == -1)? entry.persistentAttributes.findIndex(attr => attr.key == "*"+attrKey) : attrIndex;
+                            entry.persistentAttributes[attrIndex].value = attributes[attrKey];
                         } else { // Error
                             throw new Error(`ERROR - From server (database) come attribute '${attrKey}' of class '${DBOClass}' which is not part of this class definition!`)
                         }
