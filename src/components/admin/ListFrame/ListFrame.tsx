@@ -30,26 +30,41 @@ const ListFrame: FC<{ definition: ListFrameDef, DBOClass: string, DBObject: DBOb
                             {
                                 props.definition?.components.map((component: LFComponentDef, index, array) => {
                                     let getAttrVal = (key) => {
-                                        return DBManager.getAttrFromArrByKey(entry.attributes, key).value
+                                        if(entry.attributes.findIndex((attr)=>{return attr.key == key}) > -1){ // Key is in attributes
+                                            return DBManager.getAttrFromArrByKey(entry.attributes, key).value
+                                        }else if(entry.persistentAttributes.findIndex((attr)=>{return attr.key == key}) > -1){ // Key is in persistent attributes
+                                            return DBManager.getAttrFromArrByKey(entry.persistentAttributes, key).value
+                                        }else{// else error?
+                                            
+                                        }
                                     };
 
-                                    let value = "";
-                                    if(component.componentType == ComponentType.TextField){
-                                        let command = component.transformation.replaceAll(/@\[(.*)\]/g, "getAttrVal('$1')"); // remove @[attrKey] (=> val of attr of attrKey)
-                                        value = eval(command);
+                                    let value: any = "";
 
+                                    let tr = component.transformation;
+                                    var count = (tr.match(/@\[(.*?)\]/g) || []).length;
+                                    let trSplitted = tr.split(/@\[(.*?)\]/g);
+                                    let evaluated = "";
+                                    for(let i = 0;i<trSplitted.length;i++){
+                                        //i = tr.indexOf(,i);
+                                        if(i%2 == 1){
+                                            evaluated = evaluated.concat(getAttrVal(trSplitted[i]));// remove @[attrKey] (=> val of attr of attrKey)
+                                        }else{
+                                            evaluated = evaluated.concat(trSplitted[i]);
+                                        }
                                     }
-                                    /*let attr = DBManager.getAttrFromArrByKey(entry.attributes, component.attributeKey); // get object attr
-                                    let defAttr = DBManager.getLFComponentFromArrByKey(props.definition.components, component.attributeKey); // get def attr*/
-                                    if (component.transformation && false) {
-                                        //let command = component.transformation.replaceAll("$", attr.value); // remove $ (=> attr Val)
 
-                                        let command = component.transformation.replaceAll(/@\[(.*)\]/g, "getAttrVal('$1')"); // remove @[attrKey] (=> val of attr of attrKey)
-                                        console.log('command: ', command);
-                                        //value = eval("const date = new Date(getAttrVal('date'));date.getDate() + '. ' + (date.getMonth() + 1) + '. ' + date.getFullYear()");
-                                        value = eval(command);
-                                        console.log('value: ', value);
-                                        value = value.toString();
+                                    //console.log("evaluated",evaluated, eval(evaluated));
+                                    if(component.componentType == ComponentType.TextField){
+                                        value = evaluated;
+
+                                    }else if(component.componentType == ComponentType.ImagePreview){
+                                        value = (
+                                            <img src={"../img/albums/"+evaluated} className="ImagePreview"/>
+                                        )
+                                    }else if(component.componentType == ComponentType.DateField){
+                                        let date = new Date(evaluated);
+                                        value = date.getDate() + ". " + (date.getMonth()+1) + ". " + date.getFullYear();
                                     }
                                     return <td key={"tbtrtd-" + index}>{value}</td>;
                                 })}

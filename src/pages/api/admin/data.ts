@@ -35,30 +35,32 @@ const handler = async (req, res) => {
 		const stmt = db.prepare("SELECT * FROM " + className + condition + orderBy + ";");
 		const sqlResults = stmt.all();
         const DBObjectDefinitionPersistentAttrs: Array<DBObjectAttr> = DBManager.getDBObjectDefinition(className).persistentAttributes;
-        console.log('sqlResults: ', sqlResults);
+        //console.log('sqlResults: ', sqlResults);
         if(sqlResults?.length > 0){
             for (const attr of DBObjectDefinitionPersistentAttrs) {
-                console.log('attr: ', attr);
-                let firstDotIndex = attr.key.indexOf(".");
-                let tildaIndex = attr.key.indexOf("~");
-                if(firstDotIndex != -1 && tildaIndex != -1){
-                    let foreignClassName;
-                    if(attr.key.startsWith("*")){ // Daný atribut je pro všechny položky dané třídy stejný
-                        foreignClassName = attr.key.substring(1, firstDotIndex);
-                        let foreignAttrName = attr.key.substring(firstDotIndex+1, tildaIndex);
-                        let foreignConditionAttrName = attr.key.substring(tildaIndex+1);
-                        let sql = `SELECT ${foreignAttrName} FROM ${foreignClassName} WHERE ${foreignConditionAttrName}=${sqlResults[0][foreignConditionAttrName]};`;
-                        console.log('sqlllll: ', sql);
-                        const stmtBindedAttrs = db.prepare(sql);
-                        const sqlResultsBindedAttrs = stmtBindedAttrs.all();
-                        if(sqlResultsBindedAttrs?.length > 0){
-                            for (const sqlResult of sqlResults) {
-                                sqlResult[`${foreignClassName}.${foreignAttrName}`] = sqlResultsBindedAttrs[0][foreignAttrName];
+                if(attr.source){
+                    console.log('attr: ', attr);
+                    let firstDotIndex = attr.source.indexOf(".");
+                    let tildaIndex = attr.source.indexOf("~");
+                    if(firstDotIndex != -1 && tildaIndex != -1){
+                        let foreignClassName;
+                        if(attr.source.startsWith("*")){ // Daný atribut je pro všechny položky dané třídy stejný
+                            foreignClassName = attr.source.substring(1, firstDotIndex);
+                            let foreignAttrName = attr.source.substring(firstDotIndex+1, tildaIndex);
+                            let foreignConditionAttrName = attr.source.substring(tildaIndex+1);
+                            let sql = `SELECT ${foreignAttrName} FROM ${foreignClassName} WHERE ${foreignConditionAttrName}=${sqlResults[0][foreignConditionAttrName]};`;
+                            console.log('sqlllll: ', sql);
+                            const stmtBindedAttrs = db.prepare(sql);
+                            const sqlResultsBindedAttrs = stmtBindedAttrs.all();
+                            if(sqlResultsBindedAttrs?.length > 0){
+                                for (const sqlResult of sqlResults) {
+                                    sqlResult[`${foreignClassName}.${foreignAttrName}`] = sqlResultsBindedAttrs[0][foreignAttrName];
+                                }
                             }
+                        }else{ // Daný atribut může pro každou položku nabývat jiné hodnoty
+                            foreignClassName = attr.source.substring(0, firstDotIndex);
+                            return res.status(500).send("ERROR - not implemented binding without *! TODO!");
                         }
-                    }else{ // Daný atribut může pro každou položku nabývat jiné hodnoty
-                        foreignClassName = attr.key.substring(0, firstDotIndex);
-                        return res.status(500).send("ERROR - not implemented binding without *! TODO!");
                     }
                 }
                 // if (!DBObjectDefinitionAttrs.find(definitionAttr => definitionAttr.key == attrKey)) {
@@ -67,7 +69,7 @@ const handler = async (req, res) => {
             };
         }
 		db.close();
-        console.log('sqlResults11: ', sqlResults);
+        //console.log('sqlResults11: ', sqlResults);
 		return res.json(sqlResults);
 	} else if (req.method == "POST") {
 		const className = req.body["className"];
@@ -88,17 +90,21 @@ const handler = async (req, res) => {
                 return res.status(500).send(checkClass.errorMsg);
             }
 
+            console.log('attrs: ', attrs);
             let attrsStr = "(" + Object.keys(attrs).join(", ") + ")";
             let questionsStr = "(" + Object.keys(attrs).map(attr=> "?").join(", ") + ")";
             if (attrsStr.includes(";") || questionsStr.includes(";")) { // bezpečnostní pojistka
                 db.close();
                 return res.status(500).send("ERROR - error with attributes!");
             }
-			const stmt = db.prepare('INSERT INTO ' + className + ' ' + attrsStr + ' VALUES ' + questionsStr);
-			const info = stmt.run(Object.values(attrs));
+            const sql = 'INSERT INTO ' + className + ' ' + attrsStr + ' VALUES ' + questionsStr;
+            console.log('sql: ', sql);
+			const stmt = db.prepare(sql);
+            console.log('Object.values(attrs): ', Object.values(attrs));
+			const info = stmt.run([...Object.values(attrs)]);
 		} catch (error) {
 			db.close();
-			return res.status(500).send((process.env.NODE_ENV === "production" ? "Došlo k neznámé chybě!" : ("ERROR! " + error)));
+			return res.status(500).send((process.env.NODE_ENV === "production" ? "Došlo k neznámé chybě!" : ("ERROR 2! " + error)));
 		}
 		db.close();
 		return res.status(200).send("Success!");
@@ -126,7 +132,7 @@ const handler = async (req, res) => {
           const info = stmt.run([...Object.values(attrs).slice(1), updateId]);
         } catch (error) {
           db.close();
-          return res.status(500).send("ERROR! " + (process.env.NODE_ENV === "production" ? "" : error));
+          return res.status(500).send("ERROR 3! " + (process.env.NODE_ENV === "production" ? "" : error));
         }
         db.close();
         return res.status(200).send("Success!");
@@ -158,7 +164,7 @@ const handler = async (req, res) => {
             stmt.run(deleteId);
         } catch (error) {
           db.close();
-          return res.status(500).send((process.env.NODE_ENV === "production" ? "Došlo k neznámé chybě!" : ("ERROR! " + error)));
+          return res.status(500).send((process.env.NODE_ENV === "production" ? "Došlo k neznámé chybě!" : ("ERROR 1! " + error)));
         }
         db.close();
         return res.status(200).send("Success!");

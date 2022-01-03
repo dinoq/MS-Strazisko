@@ -32,9 +32,9 @@ const DetailFrame: FC<{ DBOClass: string, DBObject: DBObject, definition: FormDe
                 {props.definition.detailFrame.components.map(((component, i) => {
                     let disabled = false;
                     let value = DBManager.getAttrFromArrByKey(props.DBObject.editedAttrs, component.attributeKey)?.value || "";
-                    if (props.mode == DetailFrameMode.EDITING_ENTRY) {
+                    //if (props.mode == DetailFrameMode.EDITING_ENTRY) {
                         disabled = !component.editable;
-                    }
+                    //}
 
                     if (component.componentType == ComponentType.TextField || component.componentType == ComponentType.DateField) {
                         return (
@@ -45,7 +45,7 @@ const DetailFrame: FC<{ DBOClass: string, DBObject: DBObject, definition: FormDe
                                         placeholder: component.componentName,
                                         value,
                                         onChange: props.updateDBObject.bind(this, component.attributeKey),
-                                        required: true,
+                                        //required: true,
                                         disabled
                                     })}
                                 </div>

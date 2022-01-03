@@ -37,7 +37,8 @@ const DetailFrameContainer: FC<{ DBObject: DBObject, mode: DetailFrameMode, hide
         })
         
         props.DBObject.persistentAttributes.forEach((attr, index, array) => {
-            body.attributes[attr.key] = attr.value;
+            if(!attr.source)
+                    body.attributes[attr.key] = attr.value;
         })
         console.log('props.DBObject: ', props.DBObject);
         if(props.mode == DetailFrameMode.NEW_ENTRY){ // set default values for selectboxes...
@@ -61,7 +62,7 @@ const DetailFrameContainer: FC<{ DBObject: DBObject, mode: DetailFrameMode, hide
         let resultErr = "";
         if(props.mode == DetailFrameMode.EDITING_ENTRY){
             body["updateId"] = props.DBObject.id;
-            body["primaryKey"] = props.DBObject.attributes[0].key;;
+            body["primaryKey"] = props.DBObject.attributes[0].key;
             resultErr = await DBManager.updateInDB(body);
         }else {
             resultErr = await DBManager.insertToDB(body);

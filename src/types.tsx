@@ -17,7 +17,8 @@ export type DBObject = {
 
 export type DBObjectAttr = {
     key: string,
-    value: any
+    value: any,
+    source?: string
 }
 
 /**
