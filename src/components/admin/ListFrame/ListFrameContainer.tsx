@@ -5,11 +5,12 @@ import { FC, useState, } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DBManager } from "../../../DBManager";
 import { addItemToBreadcrumb } from "../../../store/reducers/BreadcrumbReducer";
+import { setErrorMsg } from "../../../store/reducers/ErrorReducer";
 import { SagaActions } from "../../../store/sagas";
 import { BreadcrumbItemDef, DBObject, DBObjectAttr, RootState } from "../../../types";
 import ListFrame from "./ListFrame";
 
-const ListFrameContainer: FC<{ DBObject: DBObject, deleteItemHandler: Function, editItemHandler: Function, entries: Array<DBObject> }> = (props) => {
+const ListFrameContainer: FC<{ DBObject: DBObject, editItemHandler: Function, entries: Array<DBObject> }> = (props) => {
     const dispatch = useDispatch();
     const formDefinition = useSelector((state: RootState) => state.formDefinitions.actualFormDefinition);
 
@@ -40,9 +41,29 @@ const ListFrameContainer: FC<{ DBObject: DBObject, deleteItemHandler: Function, 
         dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: newClass })
     }
 
+    
+
+    const deleteItemHandler = async (item: DBObject) => {
+        let body = {
+            className: item.DBOClass,
+            deleteId: item.id,
+            primaryKey: item.attributes[0].key
+        };
+        if (formDefinition.listFrame.detailDBOClass) {
+            body["detailClass"] = formDefinition.listFrame.detailDBOClass;
+        }
+        if (formDefinition.listFrame.cantDeleteItemMsg) {
+            body["cantDeleteItemMsg"] = formDefinition.listFrame.cantDeleteItemMsg;
+        }
+        let resultErr = await DBManager.deleteInDB(body);
+
+        if (resultErr && typeof resultErr == "string" && resultErr.length) {
+            dispatch(setErrorMsg(resultErr));
+        }
+    }
     return (
         <>
-            {formDefinition && <ListFrame definition={formDefinition.listFrame} DBOClass={DBOClass} DBObject={props.DBObject} deleteItemHandler={props.deleteItemHandler} detailClickedHandler={detailClickedHandler} editItemHandler={props.editItemHandler} entries={props.entries} colspanNoData={colspanNoData} />}
+            {formDefinition && <ListFrame definition={formDefinition.listFrame} DBOClass={DBOClass} DBObject={props.DBObject} deleteItemHandler={deleteItemHandler} detailClickedHandler={detailClickedHandler} editItemHandler={props.editItemHandler} entries={props.entries} colspanNoData={colspanNoData} />}
         </>
     )
 }

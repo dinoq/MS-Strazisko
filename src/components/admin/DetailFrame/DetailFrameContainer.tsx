@@ -55,10 +55,8 @@ const DetailFrameContainer: FC<{ DBObject: DBObject, mode: DetailFrameMode, hide
             body.attributes[parentAttribute.key] = parentAttribute.value;
         }*/
 
-
-
         console.log('body.attributes: ', body.attributes);
-        
+        return;
         let resultErr = "";
         if(props.mode == DetailFrameMode.EDITING_ENTRY){
             body["updateId"] = props.DBObject.id;
@@ -90,19 +88,6 @@ const DetailFrameContainer: FC<{ DBObject: DBObject, mode: DetailFrameMode, hide
             return { ...prevState, isEdited: true, };
         })
     }
-
-    /*useEffect(() => {
-        props.headerItems.map(((item, i) => {            
-            if (item.type == ComponentType.SELECTBOX) {
-                if(!props.DBObject.edited[item.objectParamName]){
-                    updateDBObject(item.objectParamName, {target:{value: item.values[0]}});
-                }
-            }
-        }))
-        return () => {
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props.headerItems])*/
 
     return (
         <DetailFrame DBOClass={DBOClass} DBObject={props.DBObject} definition={formDefinition} mode={props.mode} hideDetailFrame={props.hideDetailFrame} formSubmitted={formSubmitted} setErrorMsg={props.setErrorMsg} updateDBObject={updateDBObject} />

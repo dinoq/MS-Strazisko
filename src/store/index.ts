@@ -5,6 +5,7 @@ import FormDefReducer from "./reducers/FormDefReducer";
 import BreadcrumbReducer from "./reducers/BreadcrumbReducer";
 import otherReducers from "./reducers/otherReducers";
 import rootSaga from "./sagas";
+import ErrorReducer from "./reducers/ErrorReducer";
 
 let sagaMiddleware = createSagaMiddleware();
 //const middleware = [...getDefaultMiddleware({ thunk: false }), sagaMiddleware];
@@ -13,6 +14,7 @@ const store = configureStore({
     reducer: {
         breadcrumb: BreadcrumbReducer,
         formDefinitions: FormDefReducer,
+        errorReducers: ErrorReducer,
         otherReducers: otherReducers
     },
     middleware: [sagaMiddleware]

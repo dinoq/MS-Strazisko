@@ -25,19 +25,19 @@ export const getApiURL = (url: string) => {
     return apiUrl;
 }
 
-export const checkIfLettersSlashUnderscore = (words: string | Array<string>) => {
+export const checkIfLettersSlashUnderscoreUndef = (words: string | Array<string>) => {
     if(Array.isArray(words)){
         let error = false;
         words.forEach(word=>{
             word = (typeof word == "number")? (word as number).toString() : word;
-            if(!(typeof word == "string" && (word.match(/^[A-Za-z_/0-9]*$/) || word.length == 0))){
+            if(!(word == undefined || typeof word == "string" && (word.match(/^[A-Za-z_/0-9]*$/) || word.length == 0))){
                 error = true;
             }
         })
         return !error;
     }else{
         const word = (typeof words == "number")? (words as number).toString() : words;
-        return typeof word == "string" && (word.match(/^[A-Za-z_/0-9]*$/) || word.length == 0);
+        return word == undefined || typeof word == "string" && (word.match(/^[A-Za-z_/0-9]*$/) || word.length == 0);
     }
 };
 

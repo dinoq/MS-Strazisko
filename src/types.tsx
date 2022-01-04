@@ -53,7 +53,8 @@ export type DFComponentDef = {
     componentType?: ComponentType,
     values?: Array<any>,
     constraints?: Array<FormAttrConstraintDef>,
-    editable?: boolean
+    editable?: boolean,
+    required?: boolean,
 }
 
 

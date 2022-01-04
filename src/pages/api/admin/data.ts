@@ -2,7 +2,7 @@ import { withIronSessionApiRoute } from "iron-session/next";
 import Database from "better-sqlite3";
 import { DBManager } from "../../../DBManager";
 import { DBObjectAttr } from "../../../types";
-import { checkIfLettersSlashUnderscore, checkIfNotDangerSQL } from "../../../utils";
+import { checkIfLettersSlashUnderscoreUndef, checkIfNotDangerSQL } from "../../../utils";
 
 
 const handler = async (req, res) => {
@@ -24,11 +24,11 @@ const handler = async (req, res) => {
         condition = condition.length? (" " + condition.trim()) : "";
 		const order: string = req.query["order"] || "";
         
-		if (!checkIfLettersSlashUnderscore(className) || !checkIfNotDangerSQL([condition, order])) { // bezpečnostní pojistka
+		if (!checkIfLettersSlashUnderscoreUndef(className) || !checkIfNotDangerSQL([condition, order])) { // bezpečnostní pojistka
 			db.close();
 			return res.status(500).send("ERROR - wrong data className, condition or order!");
 		}
-        if(!className.length){
+        if(!className){
             return res.status(500).send("ERROR - className not received!");
         }
         let orderBy = (order.length)? " ORDER BY " + order.split("|")[0] + " " + order.split("|")[1]: "";
@@ -74,11 +74,11 @@ const handler = async (req, res) => {
 	} else if (req.method == "POST") {
 		const className = req.body["className"];
 		const attrs = req.body["attributes"];
-		if (!checkIfLettersSlashUnderscore(className) || !attrs || Array.isArray(attrs) || typeof attrs != "object") { // bezpečnostní pojistka
+		if (!checkIfLettersSlashUnderscoreUndef(className) || !attrs || Array.isArray(attrs) || typeof attrs != "object") { // bezpečnostní pojistka
 			db.close();
 			return res.status(500).send("ERROR - wrong data className or attribute!");
 		}
-        if(!className.length){
+        if(!className){
             return res.status(500).send("ERROR - className not received!");
         }
 
@@ -90,7 +90,6 @@ const handler = async (req, res) => {
                 return res.status(500).send(checkClass.errorMsg);
             }
 
-            console.log('attrs: ', attrs);
             let attrsStr = "(" + Object.keys(attrs).join(", ") + ")";
             let questionsStr = "(" + Object.keys(attrs).map(attr=> "?").join(", ") + ")";
             if (attrsStr.includes(";") || questionsStr.includes(";")) { // bezpečnostní pojistka
@@ -98,9 +97,7 @@ const handler = async (req, res) => {
                 return res.status(500).send("ERROR - error with attributes!");
             }
             const sql = 'INSERT INTO ' + className + ' ' + attrsStr + ' VALUES ' + questionsStr;
-            console.log('sql: ', sql);
 			const stmt = db.prepare(sql);
-            console.log('Object.values(attrs): ', Object.values(attrs));
 			const info = stmt.run([...Object.values(attrs)]);
 		} catch (error) {
 			db.close();
@@ -114,11 +111,11 @@ const handler = async (req, res) => {
         const updateId = req.body["updateId"]; 
 		const primaryKey: string = req.body["primaryKey"];
     
-        if(!checkIfLettersSlashUnderscore([className, updateId, primaryKey]) || !attrs || Array.isArray(attrs) || typeof attrs != "object"){ // bezpečnostní pojistka
+        if(!checkIfLettersSlashUnderscoreUndef([className, updateId, primaryKey]) || !attrs || Array.isArray(attrs) || typeof attrs != "object"){ // bezpečnostní pojistka
 			db.close();
 			return res.status(500).send("ERROR - wrong data className, updateId, primaryKey or attrs!");
         }
-        if(!className.length || !updateId.length || !primaryKey.length){
+        if(!className || !updateId || !primaryKey){
 			db.close();
             return res.status(500).send("ERROR - className, primary key or updateId not received!");
         }
@@ -142,10 +139,11 @@ const handler = async (req, res) => {
 		const primaryKey: string = req.body["primaryKey"];
 		const deleteId: string = req.body["deleteId"].toString();
 		const cantDeleteItemMsg: string = req.body["cantDeleteItemMsg"];
-        if(!checkIfLettersSlashUnderscore([className, detailClass, primaryKey, deleteId])){ // bezpečnostní pojistka
+        if(!checkIfLettersSlashUnderscoreUndef([className, detailClass, primaryKey, deleteId])){ // bezpečnostní pojistka
 			return res.status(500).send("ERROR - wrong data className, detailClass, primaryKey or deleteId!");
         }
-        if(!className.length || !primaryKey.length || !deleteId.length){
+        if(!className || !primaryKey || !deleteId){
+            console.log('className, primaryKey, deleteId: ', className, primaryKey, deleteId);
             return res.status(500).send("ERROR - className, primary key or deleteID not received!");
         }
         

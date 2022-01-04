@@ -124,7 +124,6 @@ const NewDocumentManager = (props) => {
         }
     }
 
-
     const uploadToServer = async (event) => {
         event.preventDefault();
         const body = new FormData();

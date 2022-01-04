@@ -130,9 +130,12 @@ export class XMLParser {
         component.constraints = constraints.length
           ? JSON.parse(constraints)
           : "";
+
         component.editable =
           getOptionalAttrFromXML("editable", XMLcomponent).toLowerCase() !=
           "false";
+        component.required = getOptionalAttrFromXML("required", XMLcomponent, "true").toLowerCase() !=
+        "false";
         let values = getOptionalAttrFromXML("values", XMLcomponent);
         if (values.length) {
           component.values = ValuesDefinitions[values]();

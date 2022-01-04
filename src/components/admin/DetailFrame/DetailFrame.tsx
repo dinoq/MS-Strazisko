@@ -45,7 +45,7 @@ const DetailFrame: FC<{ DBOClass: string, DBObject: DBObject, definition: FormDe
                                         placeholder: component.componentName,
                                         value,
                                         onChange: props.updateDBObject.bind(this, component.attributeKey),
-                                        //required: true,
+                                        required: component.required,
                                         disabled
                                     })}
                                 </div>
@@ -66,7 +66,7 @@ const DetailFrame: FC<{ DBOClass: string, DBObject: DBObject, definition: FormDe
                         );
                     }  else if(component.componentType == ComponentType.FileChooser){
                         return (
-                            <FileChooser id={component.attributeKey}/>
+                            <FileChooser key={"input-" + i} id={component.attributeKey}/>
                         )
                     } else {
                         throw new Error(`Neznámý typ komponenty (${component.componentType}) v DetailFramu!`);

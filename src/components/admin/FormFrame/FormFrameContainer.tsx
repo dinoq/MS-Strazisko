@@ -9,13 +9,17 @@ import { DBManager } from "../../../DBManager";
 import { useDispatch, useSelector } from "react-redux";
 import { addItemToBreadcrumb } from "../../../store/reducers/BreadcrumbReducer";
 import { SagaActions } from "../../../store/sagas";
+import { setErrorMsg } from "../../../store/reducers/ErrorReducer";
 
 const FormFrameContainer: React.FC<{}> = (props) => {
     const dispatch = useDispatch();
     const definition = useSelector((state: RootState) => state.formDefinitions.actualFormDefinition);
     let DBOClass = definition.DB.DBOClass;
     const breadcrumbItems: Array<BreadcrumbItemDef> = useSelector((state: RootState) => state.breadcrumb.items);
-    const [errorMsg, setErrorMsg] = useState("")
+    const errorMsg = useSelector((state: RootState) => state.errorReducers.msg);
+    const setErrMsg = (msg: string)=>{
+        dispatch(setErrorMsg(msg));
+    }
 
     const [saveDialogVisible, setSaveDialogVisible] = useState(false);
     const [detailFrameMode, setDetailFrameMode] = useState(DetailFrameMode.NEW_ENTRY);
@@ -83,25 +87,6 @@ const FormFrameContainer: React.FC<{}> = (props) => {
         setDetailFrameMode(DetailFrameMode.NEW_ENTRY);
     }
 
-    const deleteItemHandler = async (item: DBObject) => {
-        let body = {
-            deleteId: item.id,
-            className: item.DBOClass
-        };
-        if (definition.listFrame.detailDBOClass) {
-            body["detailClass"] = definition.listFrame.detailDBOClass;
-            body["primaryKey"] = item.attributes[0].key;
-        }
-        if (definition.listFrame.cantDeleteItemMsg) {
-            body["cantDeleteItemMsg"] = definition.listFrame.cantDeleteItemMsg;
-        }
-        let resultErr = await DBManager.deleteInDB(body);
-
-        if (resultErr && typeof resultErr == "string" && resultErr.length) {
-            setErrorMsg(resultErr);
-        }
-    }
-
     /**
      * Položka byla přepnuta do editace
      */
@@ -133,7 +118,7 @@ const FormFrameContainer: React.FC<{}> = (props) => {
 
     return (
         <>
-            <FormFrame errorMsg={errorMsg} detailFrameVisible={detailFrameVisible} saveDialogVisible={saveDialogVisible} entries={entries} detailFrameMode={detailFrameMode} definition={definition} DBObject={DBObject} hideDetailFrame={hideDetailFrame} setDBObject={setDBObject} deleteItemHandler={deleteItemHandler} editItemHandler={editItemHandler} showDetailFrame={showDetailFrame} setSaveDialogVisible={setSaveDialogVisible} setErrorMsg={setErrorMsg} />
+            <FormFrame errorMsg={errorMsg} detailFrameVisible={detailFrameVisible} saveDialogVisible={saveDialogVisible} entries={entries} detailFrameMode={detailFrameMode} definition={definition} DBObject={DBObject} hideDetailFrame={hideDetailFrame} setDBObject={setDBObject} editItemHandler={editItemHandler} showDetailFrame={showDetailFrame} setSaveDialogVisible={setSaveDialogVisible} setErrorMsg={setErrMsg} />
         </>
     )
 }
