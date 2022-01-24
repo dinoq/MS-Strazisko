@@ -11,8 +11,9 @@ export type DBObject = {
     DBOClass: string,
     attributes: Array<DBObjectAttr>,
     persistentAttributes: Array<DBObjectAttr>,
-    isEdited: boolean,
-    editedAttrs: Array<DBObjectAttr>
+    editedAttrs: Array<DBObjectAttr>,
+    filesToUpload: Array<File>,
+    isEdited: boolean
 }
 
 export type DBObjectAttr = {
@@ -45,6 +46,7 @@ export type DetailFrameDef = {
     components: Array<DFComponentDef>,
     createNewEntryText?: string,
     uniqueConstraintFailed?: string,
+    afterSaveMethod?: string,
 }
 
 export type DFComponentDef = {

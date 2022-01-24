@@ -29,31 +29,11 @@ const ListFrame: FC<{ definition: ListFrameDef, DBOClass: string, DBObject: DBOb
                                 </td>}
                             {
                                 props.definition?.components.map((component: LFComponentDef, index, array) => {
-                                    let getAttrVal = (key) => {
-                                        if(entry.attributes.findIndex((attr)=>{return attr.key == key}) > -1){ // Key is in attributes
-                                            return DBManager.getAttrFromArrByKey(entry.attributes, key).value
-                                        }else if(entry.persistentAttributes.findIndex((attr)=>{return attr.key == key}) > -1){ // Key is in persistent attributes
-                                            return DBManager.getAttrFromArrByKey(entry.persistentAttributes, key).value
-                                        }else{// else error?
-                                            
-                                        }
-                                    };
 
                                     let value: any = "";
 
-                                    let tr = component.transformation;
-                                    var count = (tr.match(/@\[(.*?)\]/g) || []).length;
-                                    let trSplitted = tr.split(/@\[(.*?)\]/g);
-                                    let evaluated = "";
-                                    for(let i = 0;i<trSplitted.length;i++){
-                                        //i = tr.indexOf(,i);
-                                        if(i%2 == 1){
-                                            evaluated = evaluated.concat(getAttrVal(trSplitted[i]));// remove @[attrKey] (=> val of attr of attrKey)
-                                        }else{
-                                            evaluated = evaluated.concat(trSplitted[i]);
-                                        }
-                                    }
-
+                                    let evaluated = DBManager.substituteExpression(component.transformation, entry);
+                                    
                                     //console.log("evaluated",evaluated, eval(evaluated));
                                     if(component.componentType == ComponentType.TextField){
                                         value = evaluated;

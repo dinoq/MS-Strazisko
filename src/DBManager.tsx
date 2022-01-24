@@ -58,13 +58,14 @@ export class DBManager {
         return clone(obj);
     }
 
-    public static getEmptyDBObject = (DBOClass: string): DBObject => {
+    public static getEmptyDBObject = (DBOClass: string = undefined): DBObject => {
         let obj: DBObject = {
             DBOClass: DBOClass,
             id: -1,
             attributes: (DBOClass == undefined || DBOClass == "") ? [] : DBManager.getDBObjectDefinition(DBOClass).attributes,
             persistentAttributes: (DBOClass == undefined || DBOClass == "") ? [] : DBManager.getDBObjectDefinition(DBOClass).persistentAttributes,
             editedAttrs: [],
+            filesToUpload: [],
             isEdited: false
         }
 
@@ -83,6 +84,7 @@ export class DBManager {
             }),
             persistentAttributes: clone(DBObject.persistentAttributes),
             editedAttrs: [],
+            filesToUpload: [],
             isEdited: false
         }
 
@@ -125,6 +127,31 @@ export class DBManager {
 
     public static getDFComponentFromArrByKey(arr: Array<DFComponentDef>, key: string): DFComponentDef {
         return (DBManager.getAttrOrComponentFromArrByKey(arr, key, "DFComonentDef") as DFComponentDef);
+    }
+
+    protected static getAttrVal(key: string, dbObject: DBObject) {
+        if(dbObject.editedAttrs.findIndex((attr)=>{return attr.key == key}) > -1){ // Key is in EDITED attributes (has priority over not-edited attrs)
+            return DBManager.getAttrFromArrByKey(dbObject.editedAttrs, key).value
+        }else if(dbObject.attributes.findIndex((attr)=>{return attr.key == key}) > -1){ // Key is in attributes
+            return DBManager.getAttrFromArrByKey(dbObject.attributes, key).value
+        }else if(dbObject.persistentAttributes.findIndex((attr)=>{return attr.key == key}) > -1){ // Key is in persistent attributes
+            return DBManager.getAttrFromArrByKey(dbObject.persistentAttributes, key).value
+        }else{// else error?
+            
+        }
+    };
+    
+    public static substituteExpression(rawExpression: string, dbObject: DBObject): string{        
+        let rawExpressionSplitted = rawExpression.split(/@\[(.*?)\]/g);
+        let substituted = "";
+        for(let i = 0;i<rawExpressionSplitted.length;i++){
+            if(i%2 == 1){
+                substituted = substituted.concat(DBManager.getAttrVal(rawExpressionSplitted[i], dbObject));// remove @[attrKey] (=> val of attr of attrKey)
+            }else{
+                substituted = substituted.concat(rawExpressionSplitted[i]);
+            }
+        }
+        return substituted;
     }
 
     public static getAllDBObjectEntries = async (DBOClass: string, /*orderBy: OrderByDef,*/ condition: string = ""): Promise<Array<DBObject>> => {
@@ -173,8 +200,12 @@ export class DBManager {
     public static deleteInDB = async (body: any, reload: boolean = true): Promise<any> => {
         return await DBManager.fetchDB(body, "DELETE", reload);
     }
+    
     protected static fetchDB = async (body: any, method: string, reload: boolean = true): Promise<any> => {
-        const response = await fetch("/api/admin/data",
+        return await DBManager.callAPI("data", body, method, reload);
+    }
+    protected static callAPI = async (handlerName: string, body: any, method: string, reload: boolean = true): Promise<any> => {
+        const response = await fetch("/api/admin/" + handlerName,
             {
                 method,
                 mode: "same-origin",
@@ -195,6 +226,14 @@ export class DBManager {
                 return error.message;
             }
         }
+    }
+    
+    public static runServerMethod = async (methodName: string, params: Array<string>, reload: boolean = true): Promise<any> => {
+        let body = {
+            methodName,
+            params
+        }
+        return await DBManager.callAPI("runMethod", body, "POST", reload);
     }
 
     public static checkClassAttrs = (attrs: Array<any>, DBOClass: string, tolerateMissingPrimaryKey = false): { success: boolean, errorMsg: string } => {

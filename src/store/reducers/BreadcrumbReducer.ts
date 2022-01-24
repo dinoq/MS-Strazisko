@@ -9,13 +9,13 @@ const breadcrumbSlice = createSlice({
     name: "BreadcrumbSlice",
     initialState,
     reducers: {
-        addItemToBreadcrumb(state, action: PayloadAction<BreadcrumbItemDef>){
+        addItemToBreadcrumb(state: BreadcrumbState, action: PayloadAction<BreadcrumbItemDef>){
             if(state.items.length == 1 && !state.items[0].text.length){
                 //state.items.splice(0, 1);
             }
             state.items.push(action.payload);
         },
-        selectBreadcrumbItem(state, action: PayloadAction<number>){
+        selectBreadcrumbItem(state: BreadcrumbState, action: PayloadAction<number>){
             state.items.splice(action.payload);
         }
     }

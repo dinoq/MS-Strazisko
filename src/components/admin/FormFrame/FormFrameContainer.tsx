@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addItemToBreadcrumb } from "../../../store/reducers/BreadcrumbReducer";
 import { SagaActions } from "../../../store/sagas";
 import { setErrorMsg } from "../../../store/reducers/ErrorReducer";
+import { setDBObject, setNewDBObject, setNewEmptyDBObject } from "../../../store/reducers/DBObjectReducer";
 
 const FormFrameContainer: React.FC<{}> = (props) => {
     const dispatch = useDispatch();
@@ -17,7 +18,7 @@ const FormFrameContainer: React.FC<{}> = (props) => {
     let DBOClass = definition.DB.DBOClass;
     const breadcrumbItems: Array<BreadcrumbItemDef> = useSelector((state: RootState) => state.breadcrumb.items);
     const errorMsg = useSelector((state: RootState) => state.errorReducers.msg);
-    const setErrMsg = (msg: string)=>{
+    const setErrMsg = (msg: string) => {
         dispatch(setErrorMsg(msg));
     }
 
@@ -27,8 +28,10 @@ const FormFrameContainer: React.FC<{}> = (props) => {
     const [entries, setEntries] = useState([]);
 
 
-    const [DBObject, setDBObject]: [DBObject, any] = useState(DBManager.getEmptyDBObject(DBOClass));
-
+    //const [DBObject, setDBObject]: [DBObject, any] = useState(DBManager.getEmptyDBObject(DBOClass));
+    const DBObject = useSelector((state: RootState) => state.dbObject);
+    //dispatch(setNewEmptyDBObject(DBOClass));
+    console.log('DBObjectrrr2: ', DBObject);
 
     //const definition = DBManager.getFormDefinition(DBOClass);
 
@@ -43,30 +46,22 @@ const FormFrameContainer: React.FC<{}> = (props) => {
             };
             dispatch(addItemToBreadcrumb(newBItem))
         }
-        
+
         let detailItemCondition = "";
         if (breadcrumbItems.length) {
             let parentAttribute = DBManager.getEmptyDBObject(DBOClass)?.persistentAttributes[0];
-            
-            if (parentAttribute){
+
+            if (parentAttribute) {
                 let key: string = parentAttribute.key;
-                key = (key.startsWith("*"))? key.substring(1) : key;
+                key = (key.startsWith("*")) ? key.substring(1) : key;
                 detailItemCondition = `WHERE ${key}='${DBManager.getAttrFromArrByKey(breadcrumbItems[breadcrumbItems.length - 1].DBObject.attributes, parentAttribute.key).value}'`;
             }
         }
-        DBManager.getAllDBObjectEntries(DBOClass, /*definition.DB.orderBy, detailItemCondition*/detailItemCondition).then(entries => {
-            setEntries(entries);
+        DBManager.getAllDBObjectEntries(DBOClass, /*definition.DB.orderBy, detailItemCondition*/detailItemCondition).then(entrs => {
+            setEntries(entrs);
         })
 
-        setDBObject((prevDBObject: DBObject) => {
-            let emptyObj: DBObject = DBManager.getEmptyDBObject(DBOClass);
-            if (emptyObj && emptyObj.persistentAttributes && prevDBObject && prevDBObject.persistentAttributes && entries[0]) { // TODO entries[0] bere atributy i v opačném směru => když se jde z potomka výš. Zřejmě by to nikdy neměl být problém, ale chtělo by to opravit
-                for (const attr of emptyObj.persistentAttributes) {
-                    attr.value = DBManager.getAttrFromArrByKey(entries[0].attributes, attr.key).value;
-                }
-            }
-            return emptyObj;
-        });
+        dispatch(setNewDBObject({ DBOClass, parentEntry: (entries.length ? entries[0] : undefined) }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [DBOClass]);
 
@@ -83,7 +78,7 @@ const FormFrameContainer: React.FC<{}> = (props) => {
 
     const hideDetailFrame = () => {
         setDetailFrameVisible(false);
-        setDBObject(DBManager.getClearedDBObject(DBObject));
+        dispatch(setDBObject(DBManager.getClearedDBObject(DBObject)));
         setDetailFrameMode(DetailFrameMode.NEW_ENTRY);
     }
 
@@ -96,23 +91,11 @@ const FormFrameContainer: React.FC<{}> = (props) => {
             setSaveDialogVisible(true);
         } else {
             setDetailFrameMode(DetailFrameMode.EDITING_ENTRY);
-            setDBObject(item);
+            dispatch(setDBObject(item));
             (item as DBObject).editedAttrs = (item as DBObject).attributes.map(attr => { return { key: attr.key, value: attr.value } })
             console.log('item: ', item);
             showDetailFrame();
         }
-        /*if (isEmptyObject(DBObject.actual, shownLevel) || DBObject.actual == DBObject.edited) {
-        setDBObject(prevState => {
-          return { ...prevState, actual: item, edited: item }
-        });
-        setObjectManagerMode(ObjectManagerMode.EDITING_ENTRY);
-        showObjectManager();
-      } else {
-        setSaveDialogVisible(true);
-        setDBObject(prevState => {
-          return { ...prevState, toSet: item };
-        });
-      }*/
     }
 
 

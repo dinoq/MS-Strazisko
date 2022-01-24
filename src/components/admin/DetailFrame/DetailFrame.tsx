@@ -4,6 +4,7 @@ import { DBManager } from "../../../DBManager";
 import { DBObject, DetailFrameDef, FormDef } from "../../../types";
 import ErrorDialog from "../ErrorDialog";
 import FileChooser from "../formComponents/FileChooser/FileChooser";
+import FileChooserContainer from "../formComponents/FileChooser/FileChooserContainer";
 
 const DetailFrame: FC<{ DBOClass: string, DBObject: DBObject, definition: FormDef, mode: DetailFrameMode, hideDetailFrame: MouseEventHandler<HTMLInputElement>, formSubmitted: FormEventHandler<HTMLFormElement>, setErrorMsg: Function, updateDBObject: Function }> = (props) => {
     const getInput = (componentType: ComponentType, attrs) => {
@@ -44,7 +45,7 @@ const DetailFrame: FC<{ DBOClass: string, DBObject: DBObject, definition: FormDe
                                         id: component.attributeKey,
                                         placeholder: component.componentName,
                                         value,
-                                        onChange: props.updateDBObject.bind(this, component.attributeKey),
+                                        onChange: (e)=>props.updateDBObject(component.attributeKey, e.target.value),
                                         required: component.required,
                                         disabled
                                     })}
@@ -55,7 +56,7 @@ const DetailFrame: FC<{ DBOClass: string, DBObject: DBObject, definition: FormDe
                         return (
                             <div key={"input-" + i}>
                                 <div className="d-flex justify-content-center position-relative">
-                                    <select key={"selectbox-" + i} id={component.attributeKey} value={value} onChange={props.updateDBObject.bind(this, component.attributeKey)} disabled={disabled}>
+                                    <select key={"selectbox-" + i} id={component.attributeKey} value={value} onChange={(e)=>props.updateDBObject(component.attributeKey, e.target.value)} disabled={disabled}>
                                         {component.values.map((val, j) => {
                                             return <option key={"selectbox-" + i + "-option-" + j} value={val}>{val}</option>
                                         })}
@@ -66,7 +67,7 @@ const DetailFrame: FC<{ DBOClass: string, DBObject: DBObject, definition: FormDe
                         );
                     }  else if(component.componentType == ComponentType.FileChooser){
                         return (
-                            <FileChooser key={"input-" + i} id={component.attributeKey}/>
+                            <FileChooserContainer key={"input-" + i} id={component.attributeKey} onChange={props.updateDBObject}/>
                         )
                     } else {
                         throw new Error(`Neznámý typ komponenty (${component.componentType}) v DetailFramu!`);

@@ -1,33 +1,16 @@
 // eslint-disable-next-line
 //import classes from "./FileChooser.module.css";
 
-import { useState } from "react";
+import { ChangeEventHandler, FC, FormEventHandler, MouseEventHandler, useState } from "react";
+import { DetailFrameMode } from "../../../../constants";
+import { DBObject, FormDef } from "../../../../types";
 
-const FileChooser = (props) => {
-    const [fileLabel, setFileLabel] = useState("Vyberte soubor")
-    const [file, setFile] = useState(null);
-    const initFileName = "Název souboru";
-    const [fileName, setFileName] = useState(initFileName);
-    const [urlName, setUrlName] = useState("");
-
-    const fileChange = (event) => {
-        if (event?.target?.files[0]?.name?.length) {
-            const f = event.target.files[0];
-            setFile(f);
-            setUrlName(f.name);
-            let label = (event.target.files.length > 1)? `Více souborů (${event.target.files.length})` : f.name;
-            setFileLabel("Vybráno: " + label);
-            if (fileName === initFileName || fileName === "") {
-                setFileName(f.name);
-            }
-        }
-    }
-
+const FileChooser: FC<{ id: string, fileLabel: string,fileChange: ChangeEventHandler<HTMLInputElement> }> = (props) => {
   return (
     <div className={``}>
       <input
         type="file"
-        onChange={fileChange}
+        onChange={props.fileChange}
         name="file"
         id={props.id}
         className={"hidden-file-input"}
@@ -35,7 +18,7 @@ const FileChooser = (props) => {
       />
       <div className="d-flex justify-content-center">
         <label htmlFor={props.id} className="hidden-file-input-label">
-          {fileLabel}
+          {props.fileLabel}
         </label>
       </div>
     </div>

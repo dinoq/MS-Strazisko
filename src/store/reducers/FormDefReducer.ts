@@ -20,11 +20,11 @@ const defSlice = createSlice({
     name: "defSlice",
     initialState,
     reducers:{
-        loadFormDef(state, action: PayloadAction<FormDefs>){
+        loadFormDef(state: FormDefinitionsState, action: PayloadAction<FormDefs>){
             state.definitions = action.payload;
             state.definitionsLoaded = true;
         },
-        setActualFormDef(state, action: PayloadAction<string>){
+        setActualFormDef(state: FormDefinitionsState, action: PayloadAction<string>){
             state.actualFormDefinition = state.definitions[action.payload];
         }
     }

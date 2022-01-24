@@ -1,16 +1,18 @@
 import React, { FC, MouseEventHandler, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ComponentType, DetailFrameMode } from "../../../constants";
 import { DBManager } from "../../../DBManager";
+import { editDBObjectAttr } from "../../../store/reducers/DBObjectReducer";
 import { DBObject, DBObjectAttr, RootState } from "../../../types";
 import ErrorDialog from "../ErrorDialog";
 import DetailFrame from "./DetailFrame";
 
-const DetailFrameContainer: FC<{ DBObject: DBObject, mode: DetailFrameMode, hideDetailFrame: MouseEventHandler<HTMLInputElement>, setDBObject: Function, setErrorMsg: Function}> = (props) => {
+const DetailFrameContainer: FC<{ mode: DetailFrameMode, hideDetailFrame: MouseEventHandler<HTMLInputElement>, setErrorMsg: Function}> = (props) => {
     const formDefinition = useSelector((state: RootState) => state.formDefinitions).actualFormDefinition;
     const breadcrumbItems = useSelector((state: RootState) => state.breadcrumb.items);
-
+    const dispatch = useDispatch();
     let DBOClass = useSelector((state: RootState) => state.formDefinitions.actualFormDefinition.DB.DBOClass);
+    const DBObject = useSelector((state: RootState) => state.dbObject);
 
     const formSubmitted = async (event) => {
         event.preventDefault();
@@ -32,15 +34,15 @@ const DetailFrameContainer: FC<{ DBObject: DBObject, mode: DetailFrameMode, hide
             return;
         }
         let body: any = { className: DBOClass, attributes: {}};
-        props.DBObject.editedAttrs.forEach((attr, index, array) => {
+        DBObject.editedAttrs.forEach((attr, index, array) => {
             body.attributes[attr.key] = attr.value;
         })
         
-        props.DBObject.persistentAttributes.forEach((attr, index, array) => {
+        DBObject.persistentAttributes.forEach((attr, index, array) => {
             if(!attr.source)
                     body.attributes[attr.key] = attr.value;
         })
-        console.log('props.DBObject: ', props.DBObject);
+        console.log('props.DBObject: ', DBObject);
         if(props.mode == DetailFrameMode.NEW_ENTRY){ // set default values for selectboxes...
             formDefinition.detailFrame.components.forEach(component =>{
                 if(component.componentType == ComponentType.SelectBox && body.attributes[component.attributeKey] == undefined){
@@ -56,14 +58,14 @@ const DetailFrameContainer: FC<{ DBObject: DBObject, mode: DetailFrameMode, hide
         }*/
 
         console.log('body.attributes: ', body.attributes);
-        return;
         let resultErr = "";
+        let afterSaveMethod = formDefinition.detailFrame.afterSaveMethod;
         if(props.mode == DetailFrameMode.EDITING_ENTRY){
-            body["updateId"] = props.DBObject.id;
-            body["primaryKey"] = props.DBObject.attributes[0].key;
-            resultErr = await DBManager.updateInDB(body);
+            body["updateId"] = DBObject.id;
+            body["primaryKey"] = DBObject.attributes[0].key;
+            resultErr = await DBManager.updateInDB(body, !afterSaveMethod);
         }else {
-            resultErr = await DBManager.insertToDB(body);
+            resultErr = await DBManager.insertToDB(body, !afterSaveMethod);
         }
 
         if (resultErr && typeof resultErr == "string" && resultErr.length) {
@@ -72,25 +74,41 @@ const DetailFrameContainer: FC<{ DBObject: DBObject, mode: DetailFrameMode, hide
             }else{
                 props.setErrorMsg(resultErr);
             }
+        }else if(!resultErr){
+            if(afterSaveMethod){
+                let methodName = afterSaveMethod.substring(0, afterSaveMethod.indexOf("("));
+                console.log('methodName: ', methodName);
+                let rawParams = (afterSaveMethod.substring(methodName.length+1, afterSaveMethod.length-1)).split(",");
+                let params = [];
+                for(const rawParam of rawParams){
+                    let evaluated = DBManager.substituteExpression(rawParam, DBObject);
+                    params.push(evaluated);
+                }
+                
+                console.log('params: ', params);
+                resultErr = await DBManager.runServerMethod(methodName, params);
+                
+                if (resultErr && typeof resultErr == "string" && resultErr.length) {
+                    if(resultErr.includes("UNIQUE constraint failed")){
+                        props.setErrorMsg(formDefinition.detailFrame.uniqueConstraintFailed);
+                    }else{
+                        props.setErrorMsg(resultErr);
+                    }
+                }
+
+            }
         }
     };
 
-    const updateDBObject = (attrKey, e) => {
-        console.log('attrKey: ', attrKey, e.target);
-        props.setDBObject(prevState => {
-            //let editedAttrs = [...prevState.editedAttrs, {key: attrKey, value: e.target.value} as DBObjectAttr]
-            let editedAttrs: Array<DBObjectAttr> = prevState.editedAttrs || [];
-            if (editedAttrs.filter(editedAttr => { return editedAttr.key == attrKey }).length) { // Klíč je již přítomný
-                editedAttrs[editedAttrs.findIndex(editedAttr => editedAttr.key == attrKey)].value = e.target.value;
-            } else {
-                editedAttrs.push({ key: attrKey, value: e.target.value } as DBObjectAttr);
-            }
-            return { ...prevState, isEdited: true, };
-        })
+    const updateDBObject = (attrKey, value) => {
+        console.log('value: ', value);
+        console.log('attrKey: ', attrKey);
+
+        dispatch(editDBObjectAttr({attrKey, value}));
     }
 
     return (
-        <DetailFrame DBOClass={DBOClass} DBObject={props.DBObject} definition={formDefinition} mode={props.mode} hideDetailFrame={props.hideDetailFrame} formSubmitted={formSubmitted} setErrorMsg={props.setErrorMsg} updateDBObject={updateDBObject} />
+        <DetailFrame DBOClass={DBOClass} DBObject={DBObject} definition={formDefinition} mode={props.mode} hideDetailFrame={props.hideDetailFrame} formSubmitted={formSubmitted} setErrorMsg={props.setErrorMsg} updateDBObject={updateDBObject} />
     )
 }
 

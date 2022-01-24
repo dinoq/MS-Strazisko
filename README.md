@@ -1,6 +1,8 @@
 ############################################################################################
 TODO:
--kontroluje se při štení XML s defaultní definicí (myslím že ne)
+-eval nahradit složitým vyhodnocováním - EVAL je nebezpečný!
+-XML vzor (autocomplete+kontrola)
+-kontroluje se při štení XML s defaultní definicí (myslím že ne) - možná už není potřeba díky optional a required při čtení XML?
 - attributeKey v definici LF - ignorovat (místo toho je přímo hodnota). Pozor v DF je potřeba - je tím řečeno jaký atribut objektu se upravuje
 - cookieOptions-secure... na produkci...
 - funkce checkClassAttrs - odstranit parametr tolerování chybějícího primary key a místo toho vložit přímo do definic objektů (nikoli formulářů!) required (s tím že defaultně bude true...)

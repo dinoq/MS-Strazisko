@@ -8,7 +8,7 @@ const otherSlices = createSlice({
     name: "otherSlices",
     initialState,
     reducers:{
-        setDBOClass(state, action: PayloadAction<string>){
+        setDBOClass(state: OtherStates, action: PayloadAction<string>){
             //state.DBOClass = action.payload;
         }
     }

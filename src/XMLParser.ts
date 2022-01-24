@@ -151,6 +151,10 @@ export class XMLParser {
         "uniqueConstraintFailed",
         XMLDF
       );
+      def.detailFrame.afterSaveMethod = getOptionalAttrFromXML(
+        "afterSaveMethod",
+        XMLDF
+      );
 
       // LIST FRAME DEF
       let XMLLF = form.getElementsByTagName("ListFrame")[0];

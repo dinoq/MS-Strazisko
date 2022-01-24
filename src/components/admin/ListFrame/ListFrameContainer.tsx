@@ -10,10 +10,11 @@ import { SagaActions } from "../../../store/sagas";
 import { BreadcrumbItemDef, DBObject, DBObjectAttr, RootState } from "../../../types";
 import ListFrame from "./ListFrame";
 
-const ListFrameContainer: FC<{ DBObject: DBObject, editItemHandler: Function, entries: Array<DBObject> }> = (props) => {
+const ListFrameContainer: FC<{ editItemHandler: Function, entries: Array<DBObject> }> = (props) => {
     const dispatch = useDispatch();
     const formDefinition = useSelector((state: RootState) => state.formDefinitions.actualFormDefinition);
 
+    const DBObject = useSelector((state: RootState) => state.dbObject);
     let DBOClass = useSelector((state: RootState) => state.formDefinitions.actualFormDefinition.DB.DBOClass);
 
     let colspanNoData = -1;
@@ -29,7 +30,7 @@ const ListFrameContainer: FC<{ DBObject: DBObject, editItemHandler: Function, en
      const detailClickedHandler = async (itm) => {
         let item: DBObject = itm as DBObject;
 
-        let breadcrumbAttr = await DBManager.getBreadcrumbAttr(props.DBObject, formDefinition);
+        let breadcrumbAttr = await DBManager.getBreadcrumbAttr(DBObject, formDefinition);
         let objBreadcrumbAttr = DBManager.getAttrFromArrByKey(item.attributes, (await breadcrumbAttr).key);
 
         const newClass = formDefinition.listFrame.detailDBOClass;
@@ -63,7 +64,7 @@ const ListFrameContainer: FC<{ DBObject: DBObject, editItemHandler: Function, en
     }
     return (
         <>
-            {formDefinition && <ListFrame definition={formDefinition.listFrame} DBOClass={DBOClass} DBObject={props.DBObject} deleteItemHandler={deleteItemHandler} detailClickedHandler={detailClickedHandler} editItemHandler={props.editItemHandler} entries={props.entries} colspanNoData={colspanNoData} />}
+            {formDefinition && <ListFrame definition={formDefinition.listFrame} DBOClass={DBOClass} DBObject={DBObject} deleteItemHandler={deleteItemHandler} detailClickedHandler={detailClickedHandler} editItemHandler={props.editItemHandler} entries={props.entries} colspanNoData={colspanNoData} />}
         </>
     )
 }

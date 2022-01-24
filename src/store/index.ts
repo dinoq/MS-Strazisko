@@ -6,6 +6,7 @@ import BreadcrumbReducer from "./reducers/BreadcrumbReducer";
 import otherReducers from "./reducers/otherReducers";
 import rootSaga from "./sagas";
 import ErrorReducer from "./reducers/ErrorReducer";
+import DBObjectReducer from "./reducers/DBObjectReducer";
 
 let sagaMiddleware = createSagaMiddleware();
 //const middleware = [...getDefaultMiddleware({ thunk: false }), sagaMiddleware];
@@ -15,6 +16,7 @@ const store = configureStore({
         breadcrumb: BreadcrumbReducer,
         formDefinitions: FormDefReducer,
         errorReducers: ErrorReducer,
+        dbObject: DBObjectReducer,
         otherReducers: otherReducers
     },
     middleware: [sagaMiddleware]
