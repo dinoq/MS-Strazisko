@@ -22,7 +22,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "components/admin/TreeChoiceDialog.tsx", "components/admin/ListFrame.tsx"  ],
+, "foto copy.text", "src/components/admin/formComponents/FileChooser/FileChooser.tsx"  ],
   "exclude": [
     "node_modules"
   ]

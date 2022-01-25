@@ -1,0 +1,52 @@
+<Forms>
+    <Form FID="albumPasswords">
+        <DetailFrame createNewEntryText="Přidat školní rok" uniqueConstraintFailed="Při vkládání do databáze došlo k problému kvůli vkládání již existujícího unikátního klíče.&lt;br/&gt;Zřejmě se pokoušíte vložit školní rok, který již v databázi existuje!">
+            <Component attributeKey="id_albumPasswords" componentName="Školní rok" componentType="SelectBox" values="getYears" editable="false" />
+            <Component attributeKey="passwordHash" componentName="Heslo" componentType="TextField" constraints="[{&quot;condition&quot;:&quot;$.length >= 6&quot;,&quot;errMsgIfFail&quot;:&quot;Heslo musí obsahovat alespoň 6 znaků!&quot;}]" />
+        </DetailFrame>
+        <ListFrame detailDBOClass="albums" orderBy="id_albumPasswords" descending="true" cantDeleteItemMsg="Dané album obsahuje nějaké fotografie.&lt;br&gt;Nejprve musíte smazat je a až potom samotné album!">
+            <Component attributeKey="id_albumPasswords" componentName="Školní rok" componentType="TextField" transformation="@[id_albumPasswords]" isBreadcrumbKey="true" />
+            <Component attributeKey="passwordHash" componentName="Heslo" componentType="TextField" transformation="@[passwordHash]"/>
+        </ListFrame>
+    </Form>
+
+    <Form FID="albums">
+        <DetailFrame createNewEntryText="Přidat album" afterSaveMethod="createDirectoryIfNotExist(./img/albums/@[name])">
+            <Component attributeKey="id_album" componentName="ID alba" componentType="TextField" editable="false"/>
+            <Component attributeKey="date" componentName="Datum" componentType="DateField" />
+            <Component attributeKey="name" componentName="Název" componentType="TextField" />
+            <Component attributeKey="title" componentName="URL" componentType="TextField" />
+        </DetailFrame>
+        <ListFrame detailDBOClass="photos" orderBy="id_album" descending="true" cantDeleteItemMsg="Dané album obsahuje nějaké fotografie.&lt;br&gt;Nejprve musíte smazat je a až potom samotné album!">
+            <Component attributeKey="id_album" componentName="ID alba" componentType="TextField" transformation="@[id_album]"/>
+            <Component attributeKey="date" componentName="Datum" componentType="DateField" transformation="@[date]"/>
+            <Component attributeKey="name" componentName="Název" componentType="TextField" transformation="@[name]" isBreadcrumbKey="true"/>
+            <Component attributeKey="title" componentName="URL" componentType="TextField" transformation="@[title]"/>
+        </ListFrame>
+    </Form>
+
+    <Form FID="photos">
+        <DetailFrame createNewEntryText="Přidat Fotku/y">
+            <Component attributeKey="filename" componentName="Výběr souborů" componentType="FileChooser" />
+        </DetailFrame>
+        <ListFrame orderBy="id_photo" descending="true" actions="{&quot;edit&quot;:false}">
+            <Component attributeKey="id_photo" componentName="ID" componentType="TextField" transformation="@[id_photo]" isBreadcrumbKey="true"/>
+            <Component attributeKey="filename" componentName="URL" componentType="ImagePreview" transformation="@[albums.title]/@[filename]" />
+            <!-- <Component attributeKey="filename" transformation="@[albums.title]" /> -->
+        </ListFrame>
+    </Form>
+
+
+    <Form FID="ContactTexts">
+        <DetailFrame>
+            <Component attributeKey="contact_text_id" componentType="NumberField" editable="false"/>
+            <Component attributeKey="title" componentType="TextField" editable="false" />
+            <Component attributeKey="content" componentType="TextField"/>
+        </DetailFrame>
+        <ListFrame>
+            <Component attributeKey="contact_text_id" />
+            <Component attributeKey="title"  isBreadcrumbKey="true"/>
+            <Component attributeKey="content" />
+        </ListFrame>
+    </Form>
+</Forms>

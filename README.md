@@ -1,6 +1,17 @@
 ############################################################################################
 TODO:
+-eval nahradit složitým vyhodnocováním - EVAL je nebezpečný!
+-XML vzor (autocomplete+kontrola)
+-kontroluje se při štení XML s defaultní definicí (myslím že ne) - možná už není potřeba díky optional a required při čtení XML?
+- attributeKey v definici LF - ignorovat (místo toho je přímo hodnota). Pozor v DF je potřeba - je tím řečeno jaký atribut objektu se upravuje
 - cookieOptions-secure... na produkci...
+- funkce checkClassAttrs - odstranit parametr tolerování chybějícího primary key a místo toho vložit přímo do definic objektů (nikoli formulářů!) required (s tím že defaultně bude true...)
+- https://github.com/vvo/iron-session#session-wrappers
+- komentář "// check class..." v data.ts v POST 
+- ošetřit padavku, když se zadá neplatné jméno třídy jako detail LF
+- DBOClass - je potřeba ji posílat z FormFrame do potomků? Není možné ji vždy získat s aktuálního objeku?
+- primaryKey není potřeba posílat do data, může se vzít z definice objektu (první atribut)
+- definici objektů vytvářet přímo z databáze (bude to chtít nový handler a také tabulku mapování trida.atribut-> nazev atributu s diakritikou).
 - práci s databází a doubory do try-catch
 - db.close!!!
 - https://admin.ms-strazisko.cz/api/getYearAlbumsInfo?year=undefined ???
@@ -11,6 +22,7 @@ TODO:
 - Zkontrolovat prepared statements - není někde přiřazováno přímo??
 - admin - akruální záložka zvýraznit
 - Upravit albumPaswords v databázi tak, aby mělo id (číslo)
+- js > ts
 ############################################################################################
 
 
