@@ -36,16 +36,14 @@ const FormFrameContainer: React.FC<{}> = (props) => {
     //const definition = DBManager.getFormDefinition(DBOClass);
 
     useEffect(() => {
-
-        //TODO DBOClass.length==0 => return????
-        if (DBOClass.length && !breadcrumbItems.length) { // DBOClass is set, but there is no item in breadcrumb => add root item
+        /*if (DBOClass.length && !breadcrumbItems.length) { // DBOClass is set, but there is no item in breadcrumb => add root item
             const newClass = DBOClass;
             const newBItem: BreadcrumbItemDef = {
                 DBObject: DBObject,
                 text: ""
             };
             dispatch(addItemToBreadcrumb(newBItem))
-        }
+        }*/
 
         let detailItemCondition = "";
         if (breadcrumbItems.length) {

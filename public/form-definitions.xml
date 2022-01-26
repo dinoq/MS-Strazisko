@@ -11,7 +11,7 @@
     </Form>
 
     <Form FID="albums">
-        <DetailFrame createNewEntryText="Přidat album" afterSaveMethod="createDirectoryIfNotExist(./img/albums/@[name])">
+        <DetailFrame createNewEntryText="Přidat album" afterSaveMethod="createDirectoryIfNotExist(img/albums/@[title])">
             <Component attributeKey="id_album" componentName="ID alba" componentType="TextField" editable="false"/>
             <Component attributeKey="date" componentName="Datum" componentType="DateField" />
             <Component attributeKey="name" componentName="Název" componentType="TextField" />

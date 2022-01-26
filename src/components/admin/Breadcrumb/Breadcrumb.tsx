@@ -6,12 +6,19 @@ const Breadcrumb: FC<{ items: Array<BreadcrumbItemDef>, resetNav: MouseEventHand
 
     return (
         <div className={classes.breadcrumb}>
+            {props.items.length > 0 &&
+                <span className={classes.breadcrumbItemWrapper}>
+                    <span className={classes.breadcrumbItem + " link fw-normal"} onClick={props.itemClicked.bind(this, 0)}>
+                        🏠
+                    </span>
+                </span>
+            }
             {props.items.length > 0 && props.items.slice(0).map((item, index) => {
                 return (
                     <span key={"breadcrumb-item-" + index} className={classes.breadcrumbItemWrapper}>
-                        {index != 0 && " > "}
-                        <span className={classes.breadcrumbItem + " link" + (!item.text? " fw-normal" : "")} onClick={props.itemClicked.bind(this, index)}>
-                            {item.text? item.text : "🏠"}
+                        {" > "}
+                        <span className={classes.breadcrumbItem + " link" + (!item.text ? " fw-normal" : "")} onClick={props.itemClicked.bind(this, index)}>
+                            {item.text ? item.text : "???"}
                         </span>
                     </span>
                 )

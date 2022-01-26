@@ -24,7 +24,6 @@ const handler = async (req, res) => {
   const db = new Database("database/database.db", { verbose: console.log });
   if (req.method == "POST") {
     const methodName = req.body["methodName"];
-    console.log("methodName: ", methodName);
     const params: Array<any> = req.body["params"];
     if(!Array.isArray(params)){
         db.close();
@@ -32,7 +31,6 @@ const handler = async (req, res) => {
           .status(500)
           .send("ERROR - params for server method '" + methodName + "' are not sended as array!");
     }
-    console.log("params: ", params);
 
     // method check
     let success = false;
@@ -42,7 +40,7 @@ const handler = async (req, res) => {
             success = true;
         }
     }
-    
+
     if (!success) {
       db.close();
       return res
@@ -50,11 +48,10 @@ const handler = async (req, res) => {
         .send("ERROR - unknown server method '" + methodName + "' or bad param count!");
     }
 
-    if (methodName == knownMethods.createDirectoryIfNotExist) {
-      let dir = params[0];
+    if (methodName == knownMethods.createDirectoryIfNotExist.name) {
+      let dir = "./public/" + params[0];
       if (!fs.existsSync(dir)) {
-        let a = fs.mkdirSync(dir, { recursive: true });
-        console.log('a: ', a);
+        let newDirPath = fs.mkdirSync(dir, { recursive: true });
         return res
           .status(200).send("Directory created");
       }

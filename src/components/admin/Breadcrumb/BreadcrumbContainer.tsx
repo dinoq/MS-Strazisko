@@ -18,8 +18,8 @@ const BreadcrumbContainer: FC<{} > = (props) => {
     }
 
     const itemClicked = (index) => {
-        dispatch({type: SagaActions.SET_FORM_DEFINITIONS, FID: items[index+1].DBObject.DBOClass})
-        dispatch(selectBreadcrumbItem(index+1))
+        dispatch({type: SagaActions.SET_FORM_DEFINITIONS, FID: items[index].DBObject.DBOClass})
+        dispatch(selectBreadcrumbItem(index))
         //props.setItems(prevState => [...items.slice(0, index + 1)]);
     }
     return (
