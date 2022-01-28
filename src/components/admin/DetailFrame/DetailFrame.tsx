@@ -29,7 +29,7 @@ const DetailFrame: FC<{ DBOClass: string, DBObject: DBObject, definition: FormDe
     
     return (
         <div>
-            <form className="d-flex flex-column bordered p-2 mb-3" onSubmit={props.formSubmitted}>
+            <form className="d-flex flex-column bordered p-2 mb-3" onSubmit={props.formSubmitted} encType="multipart/form-data">
                 {props.definition.detailFrame.components.map(((component, i) => {
                     let disabled = false;
                     let value = DBManager.getAttrFromArrByKey(props.DBObject.editedAttrs, component.attributeKey)?.value || "";

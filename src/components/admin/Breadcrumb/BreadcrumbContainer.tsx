@@ -5,6 +5,7 @@ import Breadcrumb from "./Breadcrumb";
 import classes from "./Breadcrumb.module.scss";
 import { selectBreadcrumbItem } from "../../../store/reducers/BreadcrumbReducer";
 import { SagaActions } from "../../../store/sagas";
+import { setDBObject } from "../../../store/reducers/DBObjectReducer";
 
 const BreadcrumbContainer: FC<{} > = (props) => {
     const dispatch = useDispatch();
@@ -20,6 +21,7 @@ const BreadcrumbContainer: FC<{} > = (props) => {
     const itemClicked = (index) => {
         dispatch({type: SagaActions.SET_FORM_DEFINITIONS, FID: items[index].DBObject.DBOClass})
         dispatch(selectBreadcrumbItem(index))
+        dispatch(setDBObject(items[index].DBObject));
         //props.setItems(prevState => [...items.slice(0, index + 1)]);
     }
     return (

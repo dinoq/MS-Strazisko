@@ -5,6 +5,7 @@ import { FC, useEffect, useState } from "react";
 import { ComponentType } from "../../../constants";
 import { DBManager } from "../../../DBManager";
 import { DBObject, LFComponentDef, ListFrameDef } from "../../../types";
+import Image from "next/image"
 
 const ListFrame: FC<{ definition: ListFrameDef, DBOClass: string, DBObject: DBObject, detailClickedHandler: Function, deleteItemHandler: Function, editItemHandler: Function, entries: Array<DBObject>, colspanNoData: number }> = (props) => {
 
@@ -40,7 +41,9 @@ const ListFrame: FC<{ definition: ListFrameDef, DBOClass: string, DBObject: DBOb
 
                                     }else if(component.componentType == ComponentType.ImagePreview){
                                         value = (
-                                            <img src={"../img/albums/"+evaluated} className="ImagePreview"/>
+                                            <div className="ImagePreview">
+                                                <Image src={"/img/albums/"+evaluated} alt="Náhled obrázku" layout="fill" objectFit="contain"/>
+                                            </div>
                                         )
                                     }else if(component.componentType == ComponentType.DateField){
                                         let date = new Date(evaluated);

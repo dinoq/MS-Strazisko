@@ -28,12 +28,6 @@ function* setFormDefinitions(action){
 }
 
 function* rootSaga(){
-    //  yield fork(asd);
-    //  yield fork(qwe);
-    // yield all([
-    //     fork(qwe)
-    // ])
-
     yield takeLatest(SagaActions.SET_FORM_DEFINITIONS, setFormDefinitions);
 }
 

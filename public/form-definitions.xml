@@ -27,7 +27,7 @@
 
     <Form FID="photos">
         <DetailFrame createNewEntryText="Přidat Fotku/y">
-            <Component attributeKey="filename" componentName="Výběr souborů" componentType="FileChooser" />
+            <Component attributeKey="filename" componentName="Výběr souborů" componentType="FileChooser" path="img/albums/@[albums.title]/@[filename]"/>
         </DetailFrame>
         <ListFrame orderBy="id_photo" descending="true" actions="{&quot;edit&quot;:false}">
             <Component attributeKey="id_photo" componentName="ID" componentType="TextField" transformation="@[id_photo]" isBreadcrumbKey="true"/>

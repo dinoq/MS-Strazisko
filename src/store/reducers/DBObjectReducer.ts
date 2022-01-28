@@ -19,7 +19,11 @@ const DBObjectSlice = createSlice({
             let emptyObj: DBObject = DBManager.getEmptyDBObject(DBOClass);
             if (emptyObj && emptyObj.persistentAttributes && state && state.persistentAttributes && parentEntry) {
                 for (const attr of emptyObj.persistentAttributes) {
-                    attr.value = DBManager.getAttrFromArrByKey(parentEntry.attributes, attr.key).value;
+                    if(attr.source){
+                        //attr.value =  DBManager.substituteExpression(attr.source, parentEntry);
+                    }else{
+                        attr.value = DBManager.getAttrFromArrByKey(parentEntry.attributes, attr.key).value;
+                    }
                 }
             }
             console.log('NewDBObject (state): ', emptyObj);
@@ -31,6 +35,11 @@ const DBObjectSlice = createSlice({
             return DBObj;
         },
 
+        setPersistentAttrs: (state: DBObject, action: PayloadAction<Array<DBObjectAttr>>)=>{
+            const persistenAttrs = action.payload;
+            state.persistentAttributes = persistenAttrs;
+        },
+        
         editDBObjectAttr(state: DBObject, action: PayloadAction<{attrKey: string, value: any}>){
             const {attrKey, value} = action.payload;            
             let editedAttrs: Array<DBObjectAttr> = state.editedAttrs || [];
@@ -54,5 +63,5 @@ const DBObjectSlice = createSlice({
     }
 })
 
-export const {setNewEmptyDBObject, setNewDBObject, setDBObject, editDBObjectAttr, addFilesToUpload} = DBObjectSlice.actions;
+export const {setNewEmptyDBObject, setNewDBObject, setDBObject, setPersistentAttrs, editDBObjectAttr, addFilesToUpload} = DBObjectSlice.actions;
 export default DBObjectSlice.reducer;

@@ -74,6 +74,24 @@ const handler = async (req, res) => {
 	} else if (req.method == "POST") {
 		const className = req.body["className"];
 		const attrs = req.body["attributes"];
+        /*
+        
+return res.status(200).send("");
+        
+import formidable from "formidable";
+
+const form = new formidable.IncomingForm();
+form.parse(req, async function (err, fields, files) {
+  console.log('filesuuuuu: ', files);
+  console.log('fieldsuuuuu: ', fields);
+  let keys = Object.keys(files);
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i];
+    console.log('key: ', key);
+    //await saveFile(files[key], fields.path);
+    
+  }
+        */
 		if (!checkIfLettersSlashUnderscoreUndef(className) || !attrs || Array.isArray(attrs) || typeof attrs != "object") { // bezpečnostní pojistka
 			db.close();
 			return res.status(500).send("ERROR - wrong data className or attribute!");

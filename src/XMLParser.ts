@@ -115,12 +115,19 @@ export class XMLParser {
         component.componentType = mapToComponentType(
           getOptionalAttrFromXML("componentType", XMLcomponent)
         );
+        component.componentSpecificProps = {};
+        if (component.componentType == ComponentType.FileChooser) {
+          component.componentSpecificProps.path = getREQUIREDAttrFromXML(
+            "path",
+            XMLcomponent
+          );
+        }
         component.componentName = getOptionalAttrFromXML(
           "componentName",
           XMLcomponent
         );
-        if(!component.componentName.length){
-            component.componentName = component.attributeKey;
+        if (!component.componentName.length) {
+          component.componentName = component.attributeKey;
         }
         let constraints = getOptionalAttrFromXML(
           "constraints",
@@ -134,8 +141,12 @@ export class XMLParser {
         component.editable =
           getOptionalAttrFromXML("editable", XMLcomponent).toLowerCase() !=
           "false";
-        component.required = getOptionalAttrFromXML("required", XMLcomponent, "true").toLowerCase() !=
-        "false";
+        component.required =
+          getOptionalAttrFromXML(
+            "required",
+            XMLcomponent,
+            "true"
+          ).toLowerCase() != "false";
         let values = getOptionalAttrFromXML("values", XMLcomponent);
         if (values.length) {
           component.values = ValuesDefinitions[values]();
@@ -171,8 +182,8 @@ export class XMLParser {
           "componentName",
           XMLcomponent
         );
-        if(!component.componentName.length){
-            component.componentName = component.attributeKey;
+        if (!component.componentName.length) {
+          component.componentName = component.attributeKey;
         }
 
         component.componentType = mapToComponentType(

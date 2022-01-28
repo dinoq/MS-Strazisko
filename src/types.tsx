@@ -57,6 +57,9 @@ export type DFComponentDef = {
     constraints?: Array<FormAttrConstraintDef>,
     editable?: boolean,
     required?: boolean,
+    componentSpecificProps?: {
+        path?: string, // For FileChooser - where to save
+    }
 }
 
 

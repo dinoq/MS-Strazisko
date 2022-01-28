@@ -1,6 +1,6 @@
 import { withIronSessionApiRoute } from "iron-session/next";
 import Database from "better-sqlite3";
-import { checkIfLettersSlashUnderscore } from "../../../utils";
+import { checkIfLettersSlashUnderscoreUndef } from "../../../utils";
 
 
 const handler = async (req, res) => {
@@ -19,7 +19,7 @@ const handler = async (req, res) => {
 	if (req.method == "GET") {
 		const className: string = req.query["className"];
         
-		if (!checkIfLettersSlashUnderscore(className)) { // bezpečnostní pojistka
+		if (!checkIfLettersSlashUnderscoreUndef(className)) { // bezpečnostní pojistka
 			db.close();
 			return res.status(500).send("ERROR - wrong data className!");
 		}

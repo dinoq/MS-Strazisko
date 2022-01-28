@@ -130,24 +130,24 @@ export class DBManager {
     }
 
     protected static getAttrVal(key: string, dbObject: DBObject) {
-        if(dbObject.editedAttrs.findIndex((attr)=>{return attr.key == key}) > -1){ // Key is in EDITED attributes (has priority over not-edited attrs)
+        if (dbObject.editedAttrs.findIndex((attr) => { return attr.key == key }) > -1) { // Key is in EDITED attributes (has priority over not-edited attrs)
             return DBManager.getAttrFromArrByKey(dbObject.editedAttrs, key).value
-        }else if(dbObject.attributes.findIndex((attr)=>{return attr.key == key}) > -1){ // Key is in attributes
+        } else if (dbObject.attributes.findIndex((attr) => { return attr.key == key }) > -1) { // Key is in attributes
             return DBManager.getAttrFromArrByKey(dbObject.attributes, key).value
-        }else if(dbObject.persistentAttributes.findIndex((attr)=>{return attr.key == key}) > -1){ // Key is in persistent attributes
+        } else if (dbObject.persistentAttributes.findIndex((attr) => { return attr.key == key }) > -1) { // Key is in persistent attributes
             return DBManager.getAttrFromArrByKey(dbObject.persistentAttributes, key).value
-        }else{// else error?
-            
+        } else {// else error?
+
         }
     };
-    
-    public static substituteExpression(rawExpression: string, dbObject: DBObject): string{        
+
+    public static substituteExpression(rawExpression: string, dbObject: DBObject): string {
         let rawExpressionSplitted = rawExpression.split(/@\[(.*?)\]/g);
         let substituted = "";
-        for(let i = 0;i<rawExpressionSplitted.length;i++){
-            if(i%2 == 1){
+        for (let i = 0; i < rawExpressionSplitted.length; i++) {
+            if (i % 2 == 1) {
                 substituted = substituted.concat(DBManager.getAttrVal(rawExpressionSplitted[i], dbObject));// remove @[attrKey] (=> val of attr of attrKey)
-            }else{
+            } else {
                 substituted = substituted.concat(rawExpressionSplitted[i]);
             }
         }
@@ -172,9 +172,9 @@ export class DBManager {
                     for (const attrKey in attributes) {
                         if (entry.attributes.find(attr => attr.key == attrKey)) { // Nepersistent attribute
                             entry.attributes[entry.attributes.findIndex(attr => attr.key == attrKey)].value = attributes[attrKey];
-                        } else if (entry.persistentAttributes.find(attr => (attr.key == attrKey || attr.key == ("*"+attrKey)))) { // Persistent attribute
+                        } else if (entry.persistentAttributes.find(attr => (attr.key == attrKey || attr.key == ("*" + attrKey)))) { // Persistent attribute
                             let attrIndex = entry.persistentAttributes.findIndex(attr => attr.key == attrKey);
-                            attrIndex = (attrIndex == -1)? entry.persistentAttributes.findIndex(attr => attr.key == "*"+attrKey) : attrIndex;
+                            attrIndex = (attrIndex == -1) ? entry.persistentAttributes.findIndex(attr => attr.key == "*" + attrKey) : attrIndex;
                             entry.persistentAttributes[attrIndex].value = attributes[attrKey];
                         } else { // Error
                             throw new Error(`ERROR - From server (database) come attribute '${attrKey}' of class '${DBOClass}' which is not part of this class definition!`)
@@ -200,21 +200,26 @@ export class DBManager {
     public static deleteInDB = async (body: any, reload: boolean = true): Promise<any> => {
         return await DBManager.fetchDB(body, "DELETE", reload);
     }
-    
+
     protected static fetchDB = async (body: any, method: string, reload: boolean = true): Promise<any> => {
-        return await DBManager.callAPI("data", body, method, reload);
+        return await DBManager.callAPI("data", JSON.stringify(body), method, reload, "application/json");
     }
-    protected static callAPI = async (handlerName: string, body: any, method: string, reload: boolean = true): Promise<any> => {
-        const response = await fetch("/api/admin/" + handlerName,
-            {
-                method,
-                mode: "same-origin",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(body)
-            })
+
+    protected static callAPI = async (handlerName: string, body: any, method: string, reload: boolean, contentType: string = undefined): Promise<any> => {
+        let init: RequestInit =
+        {
+            method,
+            mode: "same-origin",
+            body
+        }
+        if (contentType && contentType.length) {
+            init["headers"] = { "Content-Type": contentType };
+        }
+
+        const response = await fetch("/api/admin/" + handlerName, init)
 
         if (response.status == 200) {
-            if (reload) {
+            if (reload && false) {
                 window.location.reload();
             }
         } else {
@@ -227,13 +232,23 @@ export class DBManager {
             }
         }
     }
-    
+
     public static runServerMethod = async (methodName: string, params: Array<string>, reload: boolean = true): Promise<any> => {
         let body = {
             methodName,
             params
         }
-        return await DBManager.callAPI("runMethod", body, "POST", reload);
+        return await DBManager.callAPI("runMethod", JSON.stringify(body), "POST", reload, "application/json");
+    }
+
+    public static sendFiles = async (files: Array<File>, path: string): Promise<any> => {
+        const body = new FormData();
+        let index = 0;
+        for (const file of files) {
+            body.append("file" + (index), file);
+            body.append("path" + (index++), path);
+        }
+        return await DBManager.callAPI("file", body, "POST", true);
     }
 
     public static checkClassAttrs = (attrs: Array<any>, DBOClass: string, tolerateMissingPrimaryKey = false): { success: boolean, errorMsg: string } => {

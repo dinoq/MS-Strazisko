@@ -65,7 +65,14 @@ const DetailFrameContainer: FC<{ mode: DetailFrameMode, hideDetailFrame: MouseEv
             body["primaryKey"] = DBObject.attributes[0].key;
             resultErr = await DBManager.updateInDB(body, !afterSaveMethod);
         }else {
-            resultErr = await DBManager.insertToDB(body, !afterSaveMethod);
+            resultErr = await DBManager.insertToDB(body, (!afterSaveMethod && !DBObject.filesToUpload.length));
+            if((!resultErr || !resultErr.length) && DBObject.filesToUpload.length){
+                const path = DBManager.substituteExpression(formDefinition.detailFrame.components[0].componentSpecificProps.path, DBObject);
+                if(DBObject.filesToUpload.length > 1){
+                    throw new Error("multiple files not implemented! Bude potreba vymyslet cesty...Asi by se měly do parametru filename nějak ukládat všechny nazvy souborů...")
+                }
+                resultErr = await DBManager.sendFiles(DBObject.filesToUpload, path);
+            }
         }
 
         if (resultErr && typeof resultErr == "string" && resultErr.length) {
@@ -77,7 +84,7 @@ const DetailFrameContainer: FC<{ mode: DetailFrameMode, hideDetailFrame: MouseEv
         }else if(!resultErr){
             if(afterSaveMethod){
                 let methodName = afterSaveMethod.substring(0, afterSaveMethod.indexOf("("));
-                console.log('methodName: ', methodName);
+                
                 let rawParams = (afterSaveMethod.substring(methodName.length+1, afterSaveMethod.length-1)).split(",");
                 let params = [];
                 for(const rawParam of rawParams){
