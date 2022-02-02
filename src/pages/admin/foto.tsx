@@ -14,8 +14,7 @@ const AdminPhotosPage: NextPage = (props: any) => {
 
     useEffect(() => {
         dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: "albumPasswords" });
-        /**/
-    }, [])
+    }, [dispatch])
 
     return (
         <div className={""}>

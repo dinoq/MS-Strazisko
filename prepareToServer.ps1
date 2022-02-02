@@ -1,29 +1,34 @@
 $ProjektDir = ((Get-Item ((Get-Location).ToString())).FullName) + "\"
 
-$serverFolder = "filesForServer"
-If (!(test-path $serverFolder)) {
-    New-Item -ItemType Directory -Force -Path . -Name $serverFolder
-    Write-Host "Creating folder"$serverFolder
+$Global:serverFolder = $ProjektDir+".filesForServer"
+If (!(test-path $Global:serverFolder)) {
+    New-Item -ItemType Directory -Force -Path $Global:serverFolder
+    Write-Host "Creating folder"$Global:serverFolder
 }
 
-$includedFilesAndDirectories = @(
-    #Dirs:
-    "components"
-    "pages"
-    "public"
-    "src"
-    "styles"
 
-    #Files:
-    "next.config.js"
-    "package.json"
-    "tsconfig.json"
-)
+Remove-Item $Global:serverFolder\* -Recurse -Force
+#TODO smazat ^, porovnávat hashe...
 
 $excludedFilesAndDirectories = @(
-    "\public\dokumenty"
-    "\public\navrh"
-    "\public\img\albums"
+    #Directories:
+    ".compress"
+    ".hidden"
+    ".next"
+    ".nginx"
+    ".vscode"
+    "database\database.db"
+    "filesForServer"
+    "node_modules"
+    "public\dokumenty"
+    "public\img\albums"
+    "public\navrh"
+
+    
+    #Files:
+    "next-env.d.ts"
+    "package-lock.json"
+    "prepareToServer.ps1"
 )
 
 function loopDirectory { 
@@ -36,40 +41,39 @@ function loopDirectory {
     }
     
     #Write-Host -ForegroundColor Yellow $relativePath
-
-    if ((Get-Item $path) -is [System.IO.DirectoryInfo] -and !$excludedFilesAndDirectories.Contains($relativePath)) {
-        $subItems = Get-ChildItem $path
-        
-        If (!(test-path $ProjektDir$serverFolder$relativePath)) {
-            [void](New-Item -ItemType Directory -Force -Path $ProjektDir$serverFolder -Name $relativePath)
-            Write-Host "Creating new Folder" $ProjektDir$serverFolder$relativePath
+    if(!$excludedFilesAndDirectories.Contains($relativePath.Substring((1)))){
+        if ((Get-Item $path) -is [System.IO.DirectoryInfo]) {
+            $subItems = Get-ChildItem $path
+            
+            If (!(test-path $Global:serverFolder$relativePath)) {
+                [void](New-Item -ItemType Directory -Force -Path $Global:serverFolder -Name $relativePath)
+                Write-Host "Creating new Folder" $Global:serverFolder$relativePath
+            }
+    
+            foreach ($subItem in $subItems) {
+                loopDirectory $subItem.FullName
+            }
         }
-
-        foreach ($subItem in $subItems) {
-            loopDirectory $subItem.FullName
-        }
-    }
-    elseif ((Get-Item $path) -is [System.IO.FileInfo] -and !$excludedFilesAndDirectories.Contains($relativePath)) {
-        $dest = $ProjektDir + $serverFolder + ($relativePath.substring(0, $relativePath.LastIndexOf('\')))
-        $serverFile = $ProjektDir+$serverFolder+$relativePath
-        #Write-Host -ForegroundColor Green $serverFile
-        If (!(test-path $ProjektDir$serverFolder$relativePath)) {
-            #New-Item -ItemType Directory -Force -Path $ProjektDir$serverFolder -Name $relativePath
-            #Write-Host "copy" (Get-FileHash $path).Hash
-            [void](Copy-Item $path -Destination $dest)
-            Write-Host "Copying new file"(Split-Path $relativePath -leaf)"into"$dest
-        }
-        else {
-            # Kontrola aktuálnosti souboru
-            if ((Get-FileHash $path).hash -ne (Get-FileHash $serverFile).hash) {
-                Write-Host "Actualizing file"(Split-Path $relativePath -leaf)" (destination:"$dest")"
+        elseif ((Get-Item $path) -is [System.IO.FileInfo]) {
+            $dest = $Global:serverFolder + ($relativePath.substring(0, $relativePath.LastIndexOf('\')))
+            $serverFile = $Global:serverFolder+$relativePath
+            If (!(test-path $Global:serverFolder$relativePath)) {
                 [void](Copy-Item $path -Destination $dest)
+                Write-Host "Copying new file"(Split-Path $relativePath -leaf)"into"$dest
+            }
+            else {
+                # Kontrola aktuálnosti souboru
+                if ((Get-FileHash $path).hash -eq (Get-FileHash $serverFile).hash) {
+                    Write-Host "Removing file"(Split-Path $relativePath -leaf)" (because it didn't change from last server update)"
+                    Remove-Item $Global:serverFolder\$relativePath
+                }else{
+                    Write-Host "Actualizing file"(Split-Path $relativePath -leaf)" (destination:"$dest")"
+                    [void](Copy-Item $path -Destination $dest)
+                }
             }
         }
     }
 }
 
 
-foreach ($dir in $includedFilesAndDirectories) {
-    loopDirectory $ProjektDir$dir
-}
+loopDirectory $ProjektDir

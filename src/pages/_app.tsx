@@ -28,11 +28,6 @@ function MyApp(props) {
     const router = useRouter();
     const definitions = useSelector((state: RootState) => state.formDefinitions);
 
-    useEffect(() => {
-        if (!definitions.definitionsLoaded) {
-            //store.dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: "albumPasswords" })
-        }
-    }, [])
     if (router.pathname === "/404") { // not index
         return (
             <div className="layout">

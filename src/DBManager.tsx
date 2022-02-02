@@ -4,6 +4,10 @@ import { DBObject, DBObjectAttr, DFComponentDef, FormDef, FormDefs, LFComponentD
 import clone from "clone";
 import { getApiURL } from "./utils";
 import { XMLParser } from "./XMLParser";
+import store from "./store"
+import { SagaActions } from "./store/sagas";
+import { setNewDBObject, setPersistentAttrs } from "./store/reducers/DBObjectReducer";
+import { setEntries } from "./store/reducers/EntryReducer";
 
 export class DBManager {
 
@@ -219,8 +223,28 @@ export class DBManager {
         const response = await fetch("/api/admin/" + handlerName, init)
 
         if (response.status == 200) {
-            if (reload && false) {
-                window.location.reload();
+            if (method != "GET" && reload && false) {
+                let breadcrumbItems = store.getState()?.breadcrumb?.items;
+                let state = store.getState();
+                let dbObject = store.getState()?.dbObject
+                //let def = store.getState()?.formDefinitions?.actualFormDefinition?.listFrame.;
+                if (breadcrumbItems.length) {
+
+                    let item: DBObject = breadcrumbItems[breadcrumbItems.length - 1].DBObject as DBObject;
+
+
+                    let detailItemCondition = `WHERE ${item.attributes[0].key}='${DBManager.getAttrFromArrByKey(breadcrumbItems[breadcrumbItems.length - 1].DBObject.attributes, item.attributes[0].key).value}'`;
+
+                    DBManager.getAllDBObjectEntries(dbObject.DBOClass, detailItemCondition).then(entrs => {
+                        console.log('NEW W entrs: ', entrs, entrs.length);
+                        store.dispatch(setEntries(entrs));
+                        store.dispatch(setPersistentAttrs(entrs.length ? entrs[0].persistentAttributes : []))
+                    })
+                    //store.dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: item.DBOClass })                    
+                    //store.dispatch(setNewDBObject({ DBOClass: item.DBOClass, parentEntry: item }));
+                } else {
+                    window.location.reload();
+                }
             }
         } else {
             let text = "";
