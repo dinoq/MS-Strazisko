@@ -1,4 +1,4 @@
-import { DBObject, RecursivePartial } from "../../src/types";
+import { DBObject, RecursivePartial } from "../../src/helpers/types";
 
 /**
  * SUBSTITUCE ATD:

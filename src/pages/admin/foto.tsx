@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { addItemToBreadcrumb } from '../../store/reducers/BreadcrumbReducer'
 import FormFrameContainer from '../../../src/components/admin/FormFrame/FormFrameContainer'
-import { DBManager } from '../../../src/DBManager'
+import { DBManager } from '../../../src/helpers/DBManager'
 import { SagaActions } from '../../store/sagas';
 
 

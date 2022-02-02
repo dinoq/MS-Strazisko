@@ -1,7 +1,7 @@
 import React, { FC, FormEventHandler, MouseEventHandler, useEffect, useState } from "react";
-import { ComponentType, DetailFrameMode } from "../../../constants";
-import { DBManager } from "../../../DBManager";
-import { DBObject, DetailFrameDef, FormDef } from "../../../types";
+import { ComponentType, DetailFrameMode } from "../../../helpers/constants";
+import { DBManager } from "../../../helpers/DBManager";
+import { DBObject, DetailFrameDef, FormDef } from "../../../helpers/types";
 import ErrorDialog from "../ErrorDialog";
 import FileChooser from "../formComponents/FileChooser/FileChooser";
 import FileChooserContainer from "../formComponents/FileChooser/FileChooserContainer";

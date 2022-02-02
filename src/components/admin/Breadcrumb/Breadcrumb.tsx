@@ -1,5 +1,5 @@
 import { FC, MouseEventHandler } from "react";
-import { BreadcrumbItemDef } from "../../../types";
+import { BreadcrumbItemDef } from "../../../helpers/types";
 import classes from "./Breadcrumb.module.scss";
 
 const Breadcrumb: FC<{ items: Array<BreadcrumbItemDef>, resetNav: MouseEventHandler<any>, itemClicked: MouseEventHandler<any> }> = (props) => {

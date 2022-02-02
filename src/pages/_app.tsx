@@ -7,7 +7,7 @@ import AdminPageLayout from "../components/admin/AdminPageLayout/AdminPageLayout
 import "../../styles/adminStyles.scss"
 import { useRouter } from 'next/router';
 import { Provider, useDispatch, useSelector } from "react-redux"
-import { RootState } from '../types';
+import { RootState } from '../helpers/types';
 import store from "../store";
 import { SagaActions } from '../store/sagas';
 import { useEffect } from 'react';

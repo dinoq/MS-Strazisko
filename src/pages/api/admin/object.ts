@@ -1,6 +1,6 @@
 import { withIronSessionApiRoute } from "iron-session/next";
 import Database from "better-sqlite3";
-import { checkIfLettersSlashUnderscoreUndef } from "../../../utils";
+import { checkIfLettersSlashUnderscoreUndef } from "../../../helpers/utils";
 
 
 const handler = async (req, res) => {

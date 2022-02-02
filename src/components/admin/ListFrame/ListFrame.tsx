@@ -2,9 +2,9 @@
 //import styles from "./ListFrame.module.css";
 
 import { FC, useEffect, useState } from "react";
-import { ComponentType } from "../../../constants";
-import { DBManager } from "../../../DBManager";
-import { DBObject, LFComponentDef, ListFrameDef } from "../../../types";
+import { ComponentType } from "../../../helpers/constants";
+import { DBManager } from "../../../helpers/DBManager";
+import { DBObject, LFComponentDef, ListFrameDef } from "../../../helpers/types";
 import Image from "next/image"
 
 const ListFrame: FC<{ definition: ListFrameDef, DBOClass: string, DBObject: DBObject, detailClickedHandler: Function, deleteItemHandler: Function, editItemHandler: Function, entries: Array<DBObject>, colspanNoData: number }> = (props) => {

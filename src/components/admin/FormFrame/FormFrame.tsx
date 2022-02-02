@@ -7,12 +7,12 @@ import React, { EventHandler, useEffect, useState } from "react";
 import ErrorDialog from "../ErrorDialog";
 import ListFrame from "../ListFrame/ListFrame";
 import TreeChoiceDialog from "../TreeChoiceDialog";
-import { DetailFrameMode } from "../../../constants";
-import { BreadcrumbItemDef, DBObject, FormDef } from "../../../types";
+import { DetailFrameMode } from "../../../helpers/constants";
+import { BreadcrumbItemDef, DBObject, FormDef } from "../../../helpers/types";
 import DetailFrameContainer from "../DetailFrame/DetailFrameContainer";
 import ListFrameContainer from "../ListFrame/ListFrameContainer";
 import BreadcrumbContainer from "../Breadcrumb/BreadcrumbContainer";
-import { DBManager } from "../../../DBManager";
+import { DBManager } from "../../../helpers/DBManager";
 
 const FormFrame: React.FC<{ errorMsg: string, detailFrameVisible: boolean, saveDialogVisible: boolean, entries: Array<DBObject>, detailFrameMode: DetailFrameMode, definition: FormDef, DBObject: DBObject, hideDetailFrame: EventHandler<any>, setDBObject: Function, editItemHandler: Function, showDetailFrame: Function, setSaveDialogVisible: Function, setErrorMsg: Function }> = (props) => {
 

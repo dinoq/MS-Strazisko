@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { BreadcrumbItemDef, RootState } from "../../../types";
+import { BreadcrumbItemDef, RootState } from "../../../helpers/types";
 import Breadcrumb from "./Breadcrumb";
 import classes from "./Breadcrumb.module.scss";
 import { selectBreadcrumbItem } from "../../../store/reducers/BreadcrumbReducer";

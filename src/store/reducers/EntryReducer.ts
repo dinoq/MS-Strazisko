@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction} from "@reduxjs/toolkit";
-import { DBObject } from "../../types";
+import { DBObject } from "../../helpers/types";
 
 const initialState=[];
 

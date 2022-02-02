@@ -2,7 +2,7 @@
 //import classes from "./foto.module.css";
 
 import Link from "next/link";
-import { getApiURL } from "../../utils";
+import { getApiURL } from "../../helpers/utils";
 
 const Dokumenty = (props) => {
     const documents: Array<any> = (props.docs)? props.docs : [];    

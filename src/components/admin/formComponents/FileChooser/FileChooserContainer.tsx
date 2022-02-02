@@ -3,7 +3,7 @@
 
 import { FC, useState } from "react";
 import { useDispatch } from "react-redux";
-import { ComponentType } from "../../../../constants";
+import { ComponentType } from "../../../../helpers/constants";
 import { addFilesToUpload } from "../../../../store/reducers/DBObjectReducer";
 import FileChooser from "./FileChooser";
 

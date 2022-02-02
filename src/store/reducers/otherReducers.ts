@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { OtherStates } from "../../types";
+import { OtherStates } from "../../helpers/types";
 
 let initialState: OtherStates = {
 }

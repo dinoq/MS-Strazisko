@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { DBManager } from "../../DBManager";
-import { DBObject, DBObjectAttr } from "../../types";
+import { DBManager } from "../../helpers/DBManager";
+import { DBObject, DBObjectAttr } from "../../helpers/types";
 
 
 const initialState: DBObject = DBManager.getEmptyDBObject();
@@ -26,7 +26,6 @@ const DBObjectSlice = createSlice({
                     }
                 }
             }
-            console.log('NewDBObject (state): ', emptyObj);
             return emptyObj;
         },
 

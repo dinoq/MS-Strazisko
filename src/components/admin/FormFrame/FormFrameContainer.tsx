@@ -2,16 +2,17 @@
 //import classes from "../styles/FormFrame.module.scss";
 
 import React, { useEffect, useState } from "react";
-import { DetailFrameMode } from "../../../constants";
-import { BreadcrumbItemDef, BreadcrumbState, DBObject, DBObjectAttr, RootState } from "../../../types";
+import { DetailFrameMode } from "../../../helpers/constants";
+import { BreadcrumbItemDef, BreadcrumbState, DBObject, DBObjectAttr, RootState } from "../../../helpers/types";
 import FormFrame from "./FormFrame";
-import { DBManager } from "../../../DBManager";
+import { DBManager } from "../../../helpers/DBManager";
 import { useDispatch, useSelector } from "react-redux";
 import { addItemToBreadcrumb } from "../../../store/reducers/BreadcrumbReducer";
 import { SagaActions } from "../../../store/sagas";
 import { setErrorMsg } from "../../../store/reducers/ErrorReducer";
 import { setDBObject, setNewDBObject, setNewEmptyDBObject, setPersistentAttrs } from "../../../store/reducers/DBObjectReducer";
 import { setEntries } from "../../../store/reducers/EntryReducer";
+import { getRawDBObjectDefinition } from "../../../../database/definitions/db-object-definitions";
 
 const FormFrameContainer: React.FC<{}> = (props) => {
     const dispatch = useDispatch();
@@ -28,42 +29,14 @@ const FormFrameContainer: React.FC<{}> = (props) => {
     const [detailFrameVisible, setDetailFrameVisible] = useState(false)
     const entries = useSelector((state: RootState) => state.entries);
 
-
-    //const [DBObject, setDBObject]: [DBObject, any] = useState(DBManager.getEmptyDBObject(DBOClass));
     const DBObject = useSelector((state: RootState) => state.dbObject);
-    //dispatch(setNewEmptyDBObject(DBOClass));
 
-    //const definition = DBManager.getFormDefinition(DBOClass);
 
     useEffect(() => {
-        /*if (DBOClass.length && !breadcrumbItems.length) { // DBOClass is set, but there is no item in breadcrumb => add root item
-            const newClass = DBOClass;
-            const newBItem: BreadcrumbItemDef = {
-                DBObject: DBObject,
-                text: ""
-            };
-            dispatch(addItemToBreadcrumb(newBItem))
-        }*/
-/*
-        let detailItemCondition = "";
-        if (breadcrumbItems.length) {
-            let parentAttribute = DBManager.getEmptyDBObject(DBOClass)?.persistentAttributes[0];
-
-            if (parentAttribute) {
-                let key: string = parentAttribute.key;
-                key = (key.startsWith("*")) ? key.substring(1) : key;
-                detailItemCondition = `WHERE ${key}='${DBManager.getAttrFromArrByKey(breadcrumbItems[breadcrumbItems.length - 1].DBObject.attributes, parentAttribute.key).value}'`;
-            }
-        }
-        DBManager.getAllDBObjectEntries(DBOClass, detailItemCondition).then(entrs => {
-            setEntries(entrs);
-        })
-
-        dispatch(setNewDBObject({ DBOClass, parentEntry: (entries.length ? entries[0] : undefined) }));*/
         
         let detailItemCondition = "";
+        let parentAttribute = DBManager.getEmptyDBObject(DBOClass)?.persistentAttributes[0];
         if (breadcrumbItems.length) {
-            let parentAttribute = DBManager.getEmptyDBObject(DBOClass)?.persistentAttributes[0];
 
             if (parentAttribute) {
                 let key: string = parentAttribute.key;
@@ -73,7 +46,7 @@ const FormFrameContainer: React.FC<{}> = (props) => {
         }
         DBManager.getAllDBObjectEntries(DBOClass, detailItemCondition).then(entrs => {
             dispatch(setEntries(entrs));
-            dispatch(setPersistentAttrs(entrs.length? entrs[0].persistentAttributes : []))
+            dispatch(setPersistentAttrs(getRawDBObjectDefinition(DBOClass)?.persistentAttributes ?? []))
         })
         if(DBObject.DBOClass == undefined && DBOClass.length){
             dispatch(setNewDBObject({ DBOClass, parentEntry: undefined }));
@@ -81,9 +54,6 @@ const FormFrameContainer: React.FC<{}> = (props) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [DBOClass]);
 
-    useEffect(() => {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [DBObject]);
 
     const showDetailFrame = () => {
         /*if (setEmptyObject) {

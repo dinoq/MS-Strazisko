@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { BreadcrumbItemDef, BreadcrumbState } from "../../types";
+import { BreadcrumbItemDef, BreadcrumbState } from "../../helpers/types";
 
 const initialState: BreadcrumbState = {
     items: []

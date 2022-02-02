@@ -1,9 +1,9 @@
 import React, { FC, MouseEventHandler, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ComponentType, DetailFrameMode } from "../../../constants";
-import { DBManager } from "../../../DBManager";
+import { ComponentType, DetailFrameMode } from "../../../helpers/constants";
+import { DBManager } from "../../../helpers/DBManager";
 import { editDBObjectAttr } from "../../../store/reducers/DBObjectReducer";
-import { DBObject, DBObjectAttr, RootState } from "../../../types";
+import { DBObject, DBObjectAttr, RootState } from "../../../helpers/types";
 import ErrorDialog from "../ErrorDialog";
 import DetailFrame from "./DetailFrame";
 

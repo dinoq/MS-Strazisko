@@ -1,8 +1,8 @@
 import { useDispatch } from 'react-redux';
 import { all, call, fork, put, putResolve, select, takeEvery, takeLatest,takeLeading } from 'redux-saga/effects'
 import { loadFormDef, setActualFormDef } from './reducers/FormDefReducer';
-import { DBManager } from '../DBManager';
-import { FormDefinitionsState, RootState } from '../types';
+import { DBManager } from '../helpers/DBManager';
+import { FormDefinitionsState, RootState } from '../helpers/types';
 
 export enum SagaActions {
     LOAD_FORM_DEFINITIONS = "LOAD_FORM_DEFINITIONS",

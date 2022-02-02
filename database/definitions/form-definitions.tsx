@@ -1,6 +1,6 @@
-import { ComponentType } from "../../src/constants";
-import { DBManager } from "../../src/DBManager";
-import { FormDef } from "../../src/types";
+import { ComponentType } from "../../src/helpers/constants";
+import { DBManager } from "../../src/helpers/DBManager";
+import { FormDef } from "../../src/helpers/types";
 import { getYears } from "./values-definitions";
 
 interface FormDefs {

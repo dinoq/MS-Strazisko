@@ -3,13 +3,13 @@
 
 import { FC, useState, } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { DBManager } from "../../../DBManager";
+import { DBManager } from "../../../helpers/DBManager";
 import { addItemToBreadcrumb } from "../../../store/reducers/BreadcrumbReducer";
 import { setNewDBObject } from "../../../store/reducers/DBObjectReducer";
 import { setEntries } from "../../../store/reducers/EntryReducer";
 import { setErrorMsg } from "../../../store/reducers/ErrorReducer";
 import { SagaActions } from "../../../store/sagas";
-import { BreadcrumbItemDef, DBObject, DBObjectAttr, RootState } from "../../../types";
+import { BreadcrumbItemDef, DBObject, DBObjectAttr, RootState } from "../../../helpers/types";
 import ListFrame from "./ListFrame";
 
 const ListFrameContainer: FC<{ editItemHandler: Function }> = (props) => {

@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { DBManager } from "../../DBManager";
-import { FormDef, FormDefinitionsState, FormDefs } from "../../types";
-import { XMLParser } from "../../XMLParser";
+import { DBManager } from "../../helpers/DBManager";
+import { FormDef, FormDefinitionsState, FormDefs } from "../../helpers/types";
+import { XMLParser } from "../../helpers/XMLParser";
 
 let initialState: FormDefinitionsState = {
     actualFormDefinition: XMLParser.createFullDef(XMLParser._defaultDefinition, {
