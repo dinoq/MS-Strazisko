@@ -80,6 +80,7 @@ const handler = async (req, res) => {
     } else if (req.method == "POST") {
         const className = req.body["className"];
         const attrs = req.body["attributes"];
+        console.log('attrs: ', attrs);
         
         if (!checkIfLettersSlashUnderscoreUndef(className) || !attrs || Array.isArray(attrs) || typeof attrs != "object") { // bezpečnostní pojistka
             db.close();

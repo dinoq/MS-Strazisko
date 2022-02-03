@@ -46,7 +46,8 @@ const FormFrameContainer: React.FC<{}> = (props) => {
         }
         DBManager.getAllDBObjectEntries(DBOClass, detailItemCondition).then(entrs => {
             dispatch(setEntries(entrs));
-            dispatch(setPersistentAttrs(getRawDBObjectDefinition(DBOClass)?.persistentAttributes ?? []))
+            let pa = getRawDBObjectDefinition(DBOClass)?.persistentAttributes ?? [];
+            dispatch(setPersistentAttrs(pa))
         })
         if(DBObject.DBOClass == undefined && DBOClass.length){
             dispatch(setNewDBObject({ DBOClass, parentEntry: undefined }));
