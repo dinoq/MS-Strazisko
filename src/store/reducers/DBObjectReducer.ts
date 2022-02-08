@@ -20,7 +20,10 @@ const DBObjectSlice = createSlice({
             if (emptyObj && emptyObj.persistentAttributes && state && state.persistentAttributes && parentEntry) {
                 for (const attr of emptyObj.persistentAttributes) {
                     if(attr.source){
-                        attr.value =  DBManager.substituteExpression(attr.source, parentEntry);
+                        const parentAttrKey = attr.source.substring(attr.source.indexOf(".") + 1, attr.source.indexOf("~"));
+                        const substitutionExpresion = `@[${parentAttrKey}]`;
+                        attr.value = DBManager.substituteExpression(substitutionExpresion, parentEntry);
+                        //attr.value =  DBManager.substituteExpression(attr.source, parentEntry);
                     }else{
                         attr.value = DBManager.getAttrFromArrByKey(parentEntry.attributes, attr.key).value;
                     }

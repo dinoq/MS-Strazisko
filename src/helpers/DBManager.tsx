@@ -145,6 +145,12 @@ export class DBManager {
         }
     };
 
+    /**
+     * Function converts expression to expression with values (converts all @[attrKey] to real value)
+     * @param rawExpression source expression to substitute
+     * @param dbObject Database object from where get data for substitution
+     * @returns substituted expression (with real values)
+     */
     public static substituteExpression(rawExpression: string, dbObject: DBObject): string {
         let rawExpressionSplitted = rawExpression.split(/@\[(.*?)\]/g);
         let substituted = "";
