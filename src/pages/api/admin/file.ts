@@ -1,6 +1,8 @@
 import { withIronSessionApiRoute } from "iron-session/next";
 import formidable from "formidable";
 import fs from "fs";
+import sharp from "sharp"
+
 
 export const config = {
     api: {
@@ -38,10 +40,25 @@ const handler = (req, res) => {
 
 
 const saveFile = async (file, url) => {
-    const data = await fs.readFileSync(file.path);
+    let data = await fs.readFileSync(file.path);
+    console.log('file.path: ', file.path);
     const fullPath = "./public" + (url.startsWith("/") ? "" : "/") + url;
-    const resultt = await fs.writeFileSync(fullPath, data);
-    console.log('resultt: ', resultt);
+
+    const minify = true;
+    if(minify){
+        data =
+            await sharp(data)
+                .resize({
+                    fit: sharp.fit.inside,
+                    width: 1920,
+                    height: 1080,
+                })
+                .webp({ quality: 80 })
+                .toFile(fullPath);
+    }else{
+        const resultt = await fs.writeFileSync(fullPath, data);
+    }
+    console.log('resultt: ', data);
     await fs.unlinkSync(file.path); // remove temp file
     return;
   };

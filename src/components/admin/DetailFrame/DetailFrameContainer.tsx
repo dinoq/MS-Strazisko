@@ -76,7 +76,7 @@ const DetailFrameContainer: FC<{ mode: DetailFrameMode, hideDetailFrame: MouseEv
         }
 
         if (resultErr && typeof resultErr == "string" && resultErr.length) {
-            if(resultErr.includes("UNIQUE constraint failed")){
+            if(resultErr.includes("UNIQUE constraint failed") && formDefinition?.detailFrame?.uniqueConstraintFailed?.length){
                 props.setErrorMsg(formDefinition.detailFrame.uniqueConstraintFailed);
             }else{
                 props.setErrorMsg(resultErr);

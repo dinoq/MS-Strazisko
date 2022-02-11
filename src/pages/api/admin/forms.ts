@@ -19,7 +19,7 @@ const handler = async (req: NextApiRequest, res)=> {
 
 	const db = new Database('database/database.db', { verbose: console.log });
 	if (req.method == "GET") {
-		let definitions = await fs.readFileSync("public/form-definitions.xml", 'utf8');
+		let definitions = await fs.readFileSync("database/definitions/form-definitions.xml", 'utf8');
 		return res.status(200).send(definitions);
 	} else {
 		db.close();

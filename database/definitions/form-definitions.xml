@@ -26,11 +26,12 @@
     </Form>
 
     <Form FID="photos">
-        <DetailFrame createNewEntryText="Přidat Fotku/y">
+        <DetailFrame createNewEntryText="Přidat Fotku/y" uniqueConstraintFailed="Při vkládání do databáze došlo k problému kvůli vkládání již existujícího unikátního klíče.&lt;br/&gt;Zřejmě se pokoušíte uložit soubor s název, který již v databázi existuje!">
             <Component attributeKey="filename" componentName="Výběr souborů" componentType="FileChooser" path="img/albums/@[albums.title]/@[filename]"/>
         </DetailFrame>
         <ListFrame orderBy="id_photo" descending="true" actions="{&quot;edit&quot;:false}">
-            <Component attributeKey="id_photo" componentName="ID" componentType="TextField" transformation="@[id_photo]" isBreadcrumbKey="true"/>
+            <Component attributeKey="id_photo" componentName="ID" componentType="TextField" transformation="@[id_photo]"/>
+            <Component attributeKey="filename" componentName="filename" componentType="TextField" transformation="@[filename]"/>
             <Component attributeKey="filename" componentName="URL" componentType="ImagePreview" transformation="@[albums.title]/@[filename]" />
             <!-- <Component attributeKey="filename" transformation="@[albums.title]" /> -->
         </ListFrame>

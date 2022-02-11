@@ -16,13 +16,17 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "incremental": true
   },
   "include": [
     "next-env.d.ts",
+    "next-env-custom.d.ts",
     "**/*.ts",
-    "**/*.tsx"
-, "foto copy.text", "src/components/admin/formComponents/FileChooser/FileChooser.tsx"  ],
+    "**/*.tsx",
+    "foto copy.text",
+    "src/components/admin/formComponents/FileChooser/FileChooser.tsx"
+  ],
   "exclude": [
     "node_modules"
   ]

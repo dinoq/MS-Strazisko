@@ -37,9 +37,7 @@ const handler = async (req, res) => {
         const sqlResults = stmt.all();
         let DBObjectDefinitionPersistentAttrs: Array<DBObjectAttr> = getRawDBObjectDefinition(className).persistentAttributes ?? [];
 
-        console.log('DBObjectDefinitionPersistentAttrsssssssssss: ', DBObjectDefinitionPersistentAttrs);
-        //console.log('sqlResults: ', sqlResults);
-        if (sqlResults?.length > 0) {
+        if (sqlResults?.length > 0) { // TODO: Tohle by nemělo být vázané na to, že už nějaký záznam existuje ne? Nebo to nevadí?
             console.log('sqlResults?: ', sqlResults);
             for (const attr of DBObjectDefinitionPersistentAttrs) {
                 if (attr.source) {
@@ -52,10 +50,6 @@ const handler = async (req, res) => {
                             let foreignAttrName = attr.source.substring(firstDotIndex + 1, tildaIndex);
                             let foreignConditionAttrName = attr.source.substring(tildaIndex + 1);
                             let sql = `SELECT ${foreignAttrName} FROM ${foreignClassName} WHERE ${foreignConditionAttrName}=${sqlResults[0][foreignConditionAttrName]};`;
-                            console.log('sqlResults: ', sqlResults);
-                            console.log('sqlResults[0]: ', sqlResults[0]);
-                            console.log('foreignConditionAttrName: ', foreignConditionAttrName);
-                            console.log('sqlResults[0][foreignConditionAttrName]: ', sqlResults[0][foreignConditionAttrName]);
                             const stmtBindedAttrs = db.prepare(sql);
                             const sqlResultsBindedAttrs = stmtBindedAttrs.all();
                             if (sqlResultsBindedAttrs?.length > 0) {

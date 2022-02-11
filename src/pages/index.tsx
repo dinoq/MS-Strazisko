@@ -3,13 +3,9 @@ import Image from 'next/image'
 import Link from "next/link"
 import SchoolFeature from '../../src/components/school-feature/SchoolFeature'
 
-import classes from "/styles/index.module.scss"
+import classes from "../../styles/index.module.scss"
 
 import toys from "../../public/img/toys.webp"
-import playIcon from "../../public/img/play-icon-optimal.svg"
-import treeIcon from "../../public/img/tree-icon-optimal.svg"
-import foodIcon from "../../public/img/food-icon-optimal.svg"
-import smileIcon from "../../public/img/smile-icon-optimal.svg"
 import Teacher from '../../src/components/teacher/Teacher'
 import EventCard from '../../src/components/event-card/EventCard'
 
@@ -56,10 +52,10 @@ export default function Home(props) {
     events: Array<{ imgSrc: string, title: string, date: string, description: string }>;
 
   features = [
-    { icon: playIcon, bgColor: "#0a58ca", alt: "Ikona herní konzole", title: "Zábava", description: "Školka vlastní mnoho různých hraček, kterými se vaše děti zabaví." },
-    { icon: treeIcon, bgColor: "#0aca10", alt: "Ikona přírody", title: "Krásná příroda", description: "Školka se nachází uprostřed krásné přírody." },
-    { icon: foodIcon, bgColor: "#ca3f0a", alt: "Ikona jídla (ovoce)", title: "Stravování", description: "Každý den jsou do školy dováženy obědy z nedaleké MŠ Ptení." },
-    { icon: smileIcon, bgColor: "#dbc506", alt: "Ikona úsměvu", title: "Příjemná atmosféra", description: "Vaše děti se u nás budou cítit jako doma." },
+    { icon: "/img/play-icon-optimal.svg", bgColor: "#0a58ca", alt: "Ikona herní konzole", title: "Zábava", description: "Školka vlastní mnoho různých hraček, kterými se vaše děti zabaví." },
+    { icon: "/img/tree-icon-optimal.svg", bgColor: "#0aca10", alt: "Ikona přírody", title: "Krásná příroda", description: "Školka se nachází uprostřed krásné přírody." },
+    { icon: "/img/food-icon-optimal.svg", bgColor: "#ca3f0a", alt: "Ikona jídla (ovoce)", title: "Stravování", description: "Každý den jsou do školy dováženy obědy z nedaleké MŠ Ptení." },
+    { icon: "/img/smile-icon-optimal.svg", bgColor: "#dbc506", alt: "Ikona úsměvu", title: "Příjemná atmosféra", description: "Vaše děti se u nás budou cítit jako doma." },
   ]
 
   teachers = [
@@ -68,11 +64,11 @@ export default function Home(props) {
     { imgSrc: "/img/photo.jpg", name: "Andrea Dedková", description: "Učitelka" },
     { imgSrc: "/img/photo.jpg", name: "Petra Kozáková", description: "Školnice, Výdej stravy" },
   ]
-/*
+
   events = [
     { imgSrc: "/navrh/unused/camping.jpg", title: "Schůzky", date: "19. 8. 2020", description: "<span style='color: red'>Ve čtvrtek 24.6</span> v 16:00 hodin se budou konat schůzky rodičů s pracovnicemi MŠ a se zřizovatelem MŠ. Prosím o aktivní účast VŠECH rodičů bez dětí." },
     { imgSrc: "/navrh/unused/camping.jpg", title: "Schůzky", date: "19. 8. 2020", description: "<span style='color: red'>Ve čtvrtek 24.6</span> v 16:00 hodin se budou konat schůzky rodičů s pracovnicemi MŠ a se zřizovatelem MŠ. Prosím o aktivní účast VŠECH rodičů bez dětí." },
-  ]*/
+  ]
   return (
     <>
       <Head>

@@ -13,7 +13,7 @@
     .rightSide {
       display: flex;
       align-items: center;
-      
+
       .span {
         padding: 15px;
         font-size: 1.5rem;
@@ -30,18 +30,30 @@
     .sider {
       background-color: #3a3a3a;
       //flex: 0 0 200px;
-      max-width: 200px;
+      max-width: 250px;
       //min-width: 200px;
       width: fit-content;
 
-      .menuItemsWrapper{
+      .menuItemsWrapper {
         display: flex;
         flex-direction: column;
         margin: 30px;
-        margin-left: 10px;        
+        margin-left: 20px;
 
-        a{
+        a {
           font-size: 1.25rem;
+        }
+        ul {
+          &:before {
+            content: attr(aria-label);
+            font-size: 120%;
+            font-weight: bold;
+            margin-left: -2rem;
+          }
+
+          li {
+            list-style: none;
+          }
         }
       }
     }

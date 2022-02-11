@@ -1,19 +1,16 @@
-import type { NextPage } from 'next'
-import { withIronSessionApiRoute, withIronSessionSsr  } from "iron-session/next";
+import { withIronSessionSsr } from "iron-session/next";
+import { NextPage } from "next";
 import Head from 'next/head'
-import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { addItemToBreadcrumb } from '../../store/reducers/BreadcrumbReducer'
-import FormFrameContainer from '../../../src/components/admin/FormFrame/FormFrameContainer'
-import { DBManager } from '../../../src/helpers/DBManager'
-import { SagaActions } from '../../store/sagas';
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import FormFrameContainer from "../../../components/admin/FormFrame/FormFrameContainer";
+import { SagaActions } from "../../../store/sagas";
 
-
-const AdminPhotosPage: NextPage = (props: any) => {
+const PhotosPage: NextPage = (props: any) =>{
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: "albumPasswords" });
+        dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: "publicPhotos" });
     }, [dispatch])
 
     return (
@@ -29,6 +26,7 @@ const AdminPhotosPage: NextPage = (props: any) => {
             </main>
         </div>
     )
+
 }
 
 export const getServerSideProps = withIronSessionSsr(
@@ -58,4 +56,4 @@ export const getServerSideProps = withIronSessionSsr(
     }
 );
 
-export default AdminPhotosPage;
+export default PhotosPage;
