@@ -20,7 +20,7 @@ const DetailFrameContainer: FC<{ mode: DetailFrameMode, hideDetailFrame: MouseEv
         formDefinition.detailFrame.components.forEach((component, index, array) => {
             if (component.constraints) {
                 component.constraints.forEach((constraint, index, array) => {
-                    let subtituted = constraint.condition.replaceAll("$", "props.DBObject.editedAttrs[props.DBObject.editedAttrs.findIndex(attr=>attr.key=='" + component.attributeKey + "')].value");
+                    let subtituted = constraint.condition.replaceAll("$", "DBObject.editedAttrs[DBObject.editedAttrs.findIndex(attr=>attr.key=='" + component.attributeKey + "')].value");
                     if (!eval(subtituted)) {
                         conditionError = constraint.errMsgIfFail;
                     }

@@ -26,18 +26,22 @@ export const getApiURL = (url: string) => {
 }
 
 export const checkIfLettersSlashUnderscoreUndef = (words: string | Array<string>) => {
+    const check = (w)=>{
+        const word = (typeof w == "number")? (w as number).toString() : w;
+        return word == undefined || typeof word == "string" && (word.match(/^[A-Za-z_/0-9]*$/) || word.length == 0);
+    }
     if(Array.isArray(words)){
         let error = false;
         words.forEach(word=>{
-            word = (typeof word == "number")? (word as number).toString() : word;
-            if(!(word == undefined || typeof word == "string" && (word.match(/^[A-Za-z_/0-9]*$/) || word.length == 0))){
+            if(!check(word)){
+                console.log('word fail: ', word);
                 error = true;
             }
         })
         return !error;
     }else{
-        const word = (typeof words == "number")? (words as number).toString() : words;
-        return word == undefined || typeof word == "string" && (word.match(/^[A-Za-z_/0-9]*$/) || word.length == 0);
+        const word = words;
+        return check(word)
     }
 };
 

@@ -26,16 +26,16 @@ const DetailFrame: FC<{ DBOClass: string, DBObject: DBObject, definition: FormDe
                 );
         }
     }
-    
+
     return (
         <div>
             <form className="d-flex flex-column bordered p-2 mb-3" onSubmit={props.formSubmitted} encType="multipart/form-data">
                 {props.definition.detailFrame.components.map(((component, i) => {
                     let disabled = false;
                     let value = DBManager.getAttrFromArrByKey(props.DBObject.editedAttrs, component.attributeKey)?.value || "";
-                    //if (props.mode == DetailFrameMode.EDITING_ENTRY) {
-                        disabled = !component.editable;
-                    //}
+                    if (props.mode == DetailFrameMode.EDITING_ENTRY) {
+                        disabled = i == 0;//!component.editable;
+                    }
 
                     if (component.componentType == ComponentType.TextField || component.componentType == ComponentType.DateField) {
                         return (
@@ -45,7 +45,7 @@ const DetailFrame: FC<{ DBOClass: string, DBObject: DBObject, definition: FormDe
                                         id: component.attributeKey,
                                         placeholder: component.componentName,
                                         value,
-                                        onChange: (e)=>props.updateDBObject(component.attributeKey, e.target.value),
+                                        onChange: (e) => props.updateDBObject(component.attributeKey, e.target.value),
                                         required: component.required,
                                         disabled
                                     })}
@@ -56,7 +56,7 @@ const DetailFrame: FC<{ DBOClass: string, DBObject: DBObject, definition: FormDe
                         return (
                             <div key={"input-" + i}>
                                 <div className="d-flex justify-content-center position-relative">
-                                    <select key={"selectbox-" + i} id={component.attributeKey} value={value} onChange={(e)=>props.updateDBObject(component.attributeKey, e.target.value)} disabled={disabled}>
+                                    <select key={"selectbox-" + i} id={component.attributeKey} value={value} onChange={(e) => props.updateDBObject(component.attributeKey, e.target.value)} disabled={disabled}>
                                         {component.values.map((val, j) => {
                                             return <option key={"selectbox-" + i + "-option-" + j} value={val}>{val}</option>
                                         })}
@@ -65,9 +65,9 @@ const DetailFrame: FC<{ DBOClass: string, DBObject: DBObject, definition: FormDe
                                 </div>
                             </div>
                         );
-                    }  else if(component.componentType == ComponentType.FileChooser){
+                    } else if (component.componentType == ComponentType.FileChooser) {
                         return (
-                            <FileChooserContainer key={"input-" + i} id={component.attributeKey} onChange={props.updateDBObject}/>
+                            <FileChooserContainer key={"input-" + i} id={component.attributeKey} onChange={props.updateDBObject} />
                         )
                     } else {
                         throw new Error(`Neznámý typ komponenty (${component.componentType}) v DetailFramu!`);

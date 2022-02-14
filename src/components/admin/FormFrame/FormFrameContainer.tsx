@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addItemToBreadcrumb } from "../../../store/reducers/BreadcrumbReducer";
 import { SagaActions } from "../../../store/sagas";
 import { setErrorMsg } from "../../../store/reducers/ErrorReducer";
-import { setDBObject, setNewDBObject, setNewEmptyDBObject, setPersistentAttrs } from "../../../store/reducers/DBObjectReducer";
+import { setDBObject, setEditedAttrs, setNewDBObject, setNewEmptyDBObject, setPersistentAttrs } from "../../../store/reducers/DBObjectReducer";
 import { setEntries } from "../../../store/reducers/EntryReducer";
 import { getRawDBObjectDefinition } from "../../../../database/definitions/db-object-definitions";
 
@@ -77,10 +77,10 @@ const FormFrameContainer: React.FC<{}> = (props) => {
             setSaveDialogVisible(true);
         } else {
             setDetailFrameMode(DetailFrameMode.EDITING_ENTRY);
+            console.log('(item as DBObject).editedAttrs: ', item.editedAttrs);
             dispatch(setDBObject(item));
-            console.log('item: ', item);
-            //item = {...item, editedAttrs: [...(item as DBObject).attributes.map(attr => { return { key: attr.key, value: attr.value } })]}
-            (item as DBObject).editedAttrs = [];//(item as DBObject).attributes.map(attr => { return { key: attr.key, value: attr.value } })
+            dispatch(setEditedAttrs((item as DBObject).attributes.map(attr => { return { key: attr.key, value: attr.value } })));
+            //item.editedAttrs = [];//(item as DBObject).attributes.map(attr => { return { key: attr.key, value: attr.value } });
             showDetailFrame();
         }
     }

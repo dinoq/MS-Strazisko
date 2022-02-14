@@ -37,6 +37,11 @@ const DBObjectSlice = createSlice({
             return DBObj;
         },
 
+        setEditedAttrs(state: DBObject, action: PayloadAction<Array<DBObjectAttr>>){
+            const dBObjectEditedAttrs = action.payload;
+            state.editedAttrs = dBObjectEditedAttrs;
+        },
+
         setPersistentAttrs: (state: DBObject, action: PayloadAction<Array<DBObjectAttr>>)=>{
             const persistenAttrs = action.payload;
             state.persistentAttributes = persistenAttrs;
@@ -65,5 +70,5 @@ const DBObjectSlice = createSlice({
     }
 })
 
-export const {setNewEmptyDBObject, setNewDBObject, setDBObject, setPersistentAttrs, editDBObjectAttr, addFilesToUpload} = DBObjectSlice.actions;
+export const {setNewEmptyDBObject, setNewDBObject, setDBObject, setEditedAttrs, setPersistentAttrs, editDBObjectAttr, addFilesToUpload} = DBObjectSlice.actions;
 export default DBObjectSlice.reducer;

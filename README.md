@@ -1,5 +1,7 @@
 ############################################################################################
 TODO:
+-zrevidovat klíče (attributeKey v LF by možná nemuselo dávat smysl...)
+-odstranit atribut editable- needitovatelné jsou pouze primarní klíče v editaci a ty jsou vždy první...
 -eval nahradit složitým vyhodnocováním - EVAL je nebezpečný!
 -XML vzor (autocomplete+kontrola)
 -kontroluje se při štení XML s defaultní definicí (myslím že ne) - možná už není potřeba díky optional a required při čtení XML?

@@ -94,6 +94,19 @@ const DBObjectDefinitions: RecursivePartial<DBOBjectDefs> = {
     }, 
 
 
+    PublicPhoto: {
+        DBOClass: "PublicPhoto",
+        attributes: [
+            {
+                key: "id_public_photo",
+            },
+            {
+                key: "filename",
+            }
+        ]
+    }, 
+
+
 
     ContactTexts: {
         DBOClass: "ContactTexts",

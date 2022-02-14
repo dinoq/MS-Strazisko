@@ -39,11 +39,38 @@
 
     <Form FID="teacher">
         <DetailFrame createNewEntryText="Přidat Učitele(/ku)">
+            <Component attributeKey="id_teacher" componentName="ID učitele" componentType="TextField" transformation="@[id_teacher]"/>
+            <Component attributeKey="name" componentName="Jméno" componentType="TextField" />
+            <Component attributeKey="job" componentName="Funkce" componentType="TextField" />
         </DetailFrame>
         <ListFrame orderBy="id_teacher" descending="true">
             <Component attributeKey="id_teacher" componentName="ID" componentType="TextField" transformation="@[id_teacher]"/>
-            <Component attributeKey="filename" componentName="Jméno" componentType="TextField" transformation="@[name]"/>
-            <Component attributeKey="filename" componentName="Funkce" componentType="TextField" transformation="@[job]" />
+            <Component attributeKey="name" componentName="Jméno" componentType="TextField" transformation="@[name]"/>
+            <Component attributeKey="job" componentName="Funkce" componentType="TextField" transformation="@[job]" />
+        </ListFrame>
+    </Form>
+
+    <Form FID="PublicPhoto">
+        <DetailFrame createNewEntryText="Přidat veřejné foto">
+            <Component attributeKey="id_public_photo" componentName="ID Fotky" componentType="TextField" transformation="@[id_public_photo]"/>
+            <Component attributeKey="filename" componentName="Výběr souborů" componentType="FileChooser" path="img/albums/other/public/@[filename]"/>
+        </DetailFrame>
+        <ListFrame orderBy="id_teacher" descending="true">
+            <Component attributeKey="id_public_photo" componentName="ID" componentType="TextField" transformation="@[id_public_photo]"/>
+            <Component attributeKey="filename" componentName="URL" componentType="ImagePreview" transformation="@[albums.title]/other/public/@[filename]" />
+        </ListFrame>
+    </Form>
+
+    <Form FID="Events">
+        <DetailFrame createNewEntryText="Přidat Učitele(/ku)">
+            <Component attributeKey="id_event" componentName="ID Události" componentType="TextField" transformation="@[id_event]"/>
+            <Component attributeKey="img_url" componentName="ID Události" componentType="TextField" transformation="@[id_event]"/>
+            <Component attributeKey="id_event" componentName="ID Události" componentType="TextField" transformation="@[id_event]"/>
+        </DetailFrame>
+        <ListFrame orderBy="id_teacher" descending="true">
+            <Component attributeKey="id_teacher" componentName="ID" componentType="TextField" transformation="@[id_teacher]"/>
+            <Component attributeKey="name" componentName="Jméno" componentType="TextField" transformation="@[name]"/>
+            <Component attributeKey="job" componentName="Funkce" componentType="TextField" transformation="@[job]" />
             <!-- <Component attributeKey="filename" transformation="@[albums.title]" /> -->
         </ListFrame>
     </Form>

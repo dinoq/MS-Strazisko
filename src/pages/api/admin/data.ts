@@ -113,6 +113,8 @@ const handler = async (req, res) => {
         const primaryKey: string = req.body["primaryKey"];
 
         if (!checkIfLettersSlashUnderscoreUndef([className, updateId, primaryKey]) || !attrs || Array.isArray(attrs) || typeof attrs != "object") { // bezpečnostní pojistka
+            console.log('attrs: ', attrs);
+            console.log('className, updateId, primaryKey: ', className, updateId, primaryKey);
             db.close();
             return res.status(500).send("ERROR - wrong data className, updateId, primaryKey or attrs!");
         }
