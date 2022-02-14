@@ -10,7 +10,7 @@ const TeacherPage: NextPage = (props: any) =>{
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: "teachers" });
+        dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: "teacher" });
     }, [dispatch])
 
     return (

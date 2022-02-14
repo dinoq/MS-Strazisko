@@ -21,7 +21,6 @@ const DetailFrameContainer: FC<{ mode: DetailFrameMode, hideDetailFrame: MouseEv
             if (component.constraints) {
                 component.constraints.forEach((constraint, index, array) => {
                     let subtituted = constraint.condition.replaceAll("$", "props.DBObject.editedAttrs[props.DBObject.editedAttrs.findIndex(attr=>attr.key=='" + component.attributeKey + "')].value");
-                    console.log('subtituted: ', subtituted);
                     if (!eval(subtituted)) {
                         conditionError = constraint.errMsgIfFail;
                     }
@@ -92,7 +91,6 @@ const DetailFrameContainer: FC<{ mode: DetailFrameMode, hideDetailFrame: MouseEv
                     params.push(evaluated);
                 }
                 
-                console.log('params: ', params);
                 resultErr = await DBManager.runServerMethod(methodName, params);
                 
                 if (resultErr && typeof resultErr == "string" && resultErr.length) {
@@ -108,9 +106,6 @@ const DetailFrameContainer: FC<{ mode: DetailFrameMode, hideDetailFrame: MouseEv
     };
 
     const updateDBObject = (attrKey, value) => {
-        console.log('value: ', value);
-        console.log('attrKey: ', attrKey);
-
         dispatch(editDBObjectAttr({attrKey, value}));
     }
 

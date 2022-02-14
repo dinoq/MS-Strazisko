@@ -73,14 +73,14 @@ const FormFrameContainer: React.FC<{}> = (props) => {
      * Položka byla přepnuta do editace
      */
     const editItemHandler = (item) => {
-        console.log('item: ', item);
         if (DBObject.isEdited) {
             setSaveDialogVisible(true);
         } else {
             setDetailFrameMode(DetailFrameMode.EDITING_ENTRY);
             dispatch(setDBObject(item));
-            (item as DBObject).editedAttrs = (item as DBObject).attributes.map(attr => { return { key: attr.key, value: attr.value } })
             console.log('item: ', item);
+            //item = {...item, editedAttrs: [...(item as DBObject).attributes.map(attr => { return { key: attr.key, value: attr.value } })]}
+            (item as DBObject).editedAttrs = [];//(item as DBObject).attributes.map(attr => { return { key: attr.key, value: attr.value } })
             showDetailFrame();
         }
     }

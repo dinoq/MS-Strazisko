@@ -35,7 +35,6 @@ const ListFrame: FC<{ definition: ListFrameDef, DBOClass: string, DBObject: DBOb
 
                                     let evaluated = DBManager.substituteExpression(component.transformation, entry);
                                     
-                                    //console.log("evaluated",evaluated, eval(evaluated));
                                     if(component.componentType == ComponentType.TextField){
                                         value = evaluated;
 

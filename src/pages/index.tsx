@@ -187,23 +187,3 @@ export default function Home(props) {
     </>
   )
 }
-/*
-export async function getStaticProps(context) {
-    let data;
-    console.log("start");
-    await(
-         new Promise((res, rej) =>{
-            setTimeout(() => {
-                data=new Date().toLocaleString();
-                res(data);
-            }, 5000);
-        })
-    )
-    console.log('data: ', data);
-  
-  
-    return {
-      props: { data }, // will be passed to the page component as props
-      revalidate: 10, // In seconds
-    }
-  }*/

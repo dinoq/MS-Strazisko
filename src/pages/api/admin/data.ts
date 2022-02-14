@@ -38,7 +38,6 @@ const handler = async (req, res) => {
         let DBObjectDefinitionPersistentAttrs: Array<DBObjectAttr> = getRawDBObjectDefinition(className).persistentAttributes ?? [];
 
         if (sqlResults?.length > 0) { // TODO: Tohle by nemělo být vázané na to, že už nějaký záznam existuje ne? Nebo to nevadí?
-            console.log('sqlResults?: ', sqlResults);
             for (const attr of DBObjectDefinitionPersistentAttrs) {
                 if (attr.source) {
                     let firstDotIndex = attr.source.indexOf(".");

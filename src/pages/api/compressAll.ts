@@ -27,9 +27,7 @@ async function handler(req, res) {
     for (const file of result) {
 
         let imageBuffer = fs.readFileSync(file);
-        console.log('file: ', file);
         const fname ="public/img/albums/compressed90/"+Math.random()+".webp";
-        console.log('fname: ', fname);
         imageBuffer =
             await sharp(imageBuffer)
                 .resize({

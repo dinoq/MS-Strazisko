@@ -78,6 +78,23 @@ const DBObjectDefinitions: RecursivePartial<DBOBjectDefs> = {
 
 
 
+    teacher: {
+        DBOClass: "teacher",
+        attributes: [
+            {
+                key: "id_teacher",
+            },
+            {
+                key: "name",
+            },
+            {
+                key: "job",
+            }
+        ]
+    }, 
+
+
+
     ContactTexts: {
         DBOClass: "ContactTexts",
         attributes: [
