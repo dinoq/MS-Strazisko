@@ -51,7 +51,7 @@ async function handler(req, res) {
                 console.log('sqlResults: ', sqlResults);
                 data[tbl] = sqlResults;
             }
-            console.log("cccccccccccccccccccccc");
+            
             db.close();
             res.status(200).send(data);
         }

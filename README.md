@@ -1,5 +1,6 @@
 ############################################################################################
 TODO:
+-Pokračovat - index page tahání eventů (použít map podobně jako u teachers...)
 -zrevidovat klíče (attributeKey v LF by možná nemuselo dávat smysl...)
 -odstranit atribut editable- needitovatelné jsou pouze primarní klíče v editaci a ty jsou vždy první...
 -eval nahradit složitým vyhodnocováním - EVAL je nebezpečný!

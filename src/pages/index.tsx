@@ -47,18 +47,16 @@ export default function Home(props) {
         },
     ];
 
-    let
-        features: Array<{ icon: any, bgColor: string, alt: string, title: string, description: string }>,
-
-        events: Array<{ imgSrc: string, title: string, date: string, description: string }>;
-
+    const [features, setFeatures]: [Array<{ icon: any, bgColor: string, alt: string, title: string, description: string }>, any] = useState([]);
     const [teachers, setTeachers]: [Array<{ imgSrc: string, name: string, job: string }>, any] = useState([]);
-    features = [
+    const [events, setEvents]: [Array<{ imgSrc: string, title: string, date: string, description: string }>, any] = useState([]);
+
+    setFeatures([
         { icon: "/img/play-icon-optimal.svg", bgColor: "#0a58ca", alt: "Ikona herní konzole", title: "Zábava", description: "Školka vlastní mnoho různých hraček, kterými se vaše děti zabaví." },
         { icon: "/img/tree-icon-optimal.svg", bgColor: "#0aca10", alt: "Ikona přírody", title: "Krásná příroda", description: "Školka se nachází uprostřed krásné přírody." },
         { icon: "/img/food-icon-optimal.svg", bgColor: "#ca3f0a", alt: "Ikona jídla (ovoce)", title: "Stravování", description: "Každý den jsou do školy dováženy obědy z nedaleké MŠ Ptení." },
         { icon: "/img/smile-icon-optimal.svg", bgColor: "#dbc506", alt: "Ikona úsměvu", title: "Příjemná atmosféra", description: "Vaše děti se u nás budou cítit jako doma." },
-    ]
+    ])
     /*
       teachers = [
         { imgSrc: "/img/photo.jpg", name: "Mgr. Eva Výmolová", job: "Ředitelka školky" },
@@ -76,9 +74,9 @@ export default function Home(props) {
         fetch("/api/data?table=events;teachers").then((data) => {
             data.json().then(json => {
                 console.log('json: ', json);
-                events = json.events;
+                setEvents(json.events);
                 setTeachers(json.teachers.map((teacher) => {
-                    return { imgSrc: (teacher.filename ? "/img/albums/other/teacher-photos/"+teacher.filename : "/img/photo.jpg"), name: teacher.name, job: teacher.job }
+                    return { imgSrc: (teacher.filename ? "/img/albums/other/teacher-photos/" + teacher.filename : "/img/photo.jpg"), name: teacher.name, job: teacher.job }
                 }))
 
             })
