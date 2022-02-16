@@ -1,4 +1,4 @@
-import React, { FC, FormEventHandler, MouseEventHandler, useEffect, useState } from "react";
+import React, { FC, FormEventHandler, MouseEventHandler, useEffect, useRef, useState } from "react";
 import { ComponentType, DetailFrameMode } from "../../../helpers/constants";
 import { DBManager } from "../../../helpers/DBManager";
 import { DBObject, DetailFrameDef, FormDef } from "../../../helpers/types";
@@ -67,7 +67,58 @@ const DetailFrame: FC<{ DBOClass: string, DBObject: DBObject, definition: FormDe
                         );
                     } else if (component.componentType == ComponentType.FileChooser) {
                         return (
-                            <FileChooserContainer key={"input-" + i} id={component.attributeKey} onChange={props.updateDBObject} />
+                            <FileChooserContainer key={"input-" + i} id={component.attributeKey} onChange={props.updateDBObject} initLabel={component.componentName} />
+                        )
+                    } else if (component.componentType == ComponentType.RichTextField) {
+                        const inputRef = useRef<HTMLTextAreaElement>();
+
+                        const substituteTags = (text, toRegular)=>{
+                            if(toRegular){
+                                text = text.replaceAll("<TUCNE>", "<b>");
+                                text = text.replaceAll("</TUCNE>", "</b>");
+                                text = text.replaceAll("<CERVENE>", '<span style="color: red">');
+                                text = text.replaceAll("</CERVENE>", '</span>');
+                            }else{
+                                text = text.replaceAll("<b>", "<TUCNE>");
+                                text = text.replaceAll("</b>", "</TUCNE>");
+                                text = text.replaceAll('<span style="color: red">', "<CERVENE>");
+                                text = text.replaceAll('</span>', "</CERVENE>");
+                            }
+                            return text;
+                        }
+                        const insertTags = (tag) => {
+                            const opening = `<${tag}>`;
+                            const closing = `</${tag}>`;
+                            const cursorPosStart = inputRef?.current.selectionStart;
+                            const cursorPosEnd = inputRef?.current.selectionEnd;
+                            const selectionLength = cursorPosEnd - cursorPosStart;
+                            const inputText = inputRef?.current.value;
+                            const textBefCursor = inputText.substring(0, cursorPosStart);
+                            const textBetweenCursor = inputText.substring(cursorPosStart, cursorPosEnd);
+                            const textAfCursor = inputText.substring(cursorPosEnd, inputText.length);
+                            const result = `${textBefCursor}${opening}${textBetweenCursor}${closing}${textAfCursor}`;
+                            inputRef.current.value = result;
+                            inputRef?.current.focus();
+                            inputRef.current.selectionStart = cursorPosStart + opening.length;
+                            inputRef.current.selectionEnd = cursorPosStart + opening.length + selectionLength;
+                            props.updateDBObject(component.attributeKey, substituteTags(inputRef.current.value, true) );
+                        }
+
+                        
+                        return (
+                            <div key={"input-" + i}>
+                                <div className="d-flex justify-content-center">
+
+                                    <div className="richtextEditContainer">
+                                        <textarea cols={45} rows={5} ref={inputRef} id={component.attributeKey} placeholder={component.componentName} onChange={(e) => props.updateDBObject(component.attributeKey, e.target.value)} required={component.required} disabled={disabled} value={substituteTags(value, false)} />
+                                        <label className="label" htmlFor={component.attributeKey}>{component.componentName}</label>
+                                        <div className="richtextEditBtns">
+                                            <a type="button" className="richtextEdit button" onClick={(e) => { insertTags("TUCNE") }}><b>tučně</b></a>
+                                            <a type="button" className="richtextEdit button" onClick={(e) => { insertTags("CERVENE") }}><span style={{color: "red"}}>červeně</span></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         )
                     } else {
                         throw new Error(`Neznámý typ komponenty (${component.componentType}) v DetailFramu!`);

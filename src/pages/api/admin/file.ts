@@ -44,17 +44,21 @@ const saveFile = async (file, url) => {
     console.log('file.path: ', file.path);
     const fullPath = "./public" + (url.startsWith("/") ? "" : "/") + url;
 
-    const minify = true;
+    const minify = false;
     if(minify){
+        console.log("BEFF");
         data =
             await sharp(data)
                 .resize({
                     fit: sharp.fit.inside,
                     width: 1920,
                     height: 1080,
-                })
-                .webp({ quality: 80 })
+                });
+                console.log("BEFF2");
+             
+        data = await sharp(data).webp({ quality: 80 })
                 .toFile(fullPath);
+                console.log("AF");
     }else{
         const resultt = await fs.writeFileSync(fullPath, data);
     }

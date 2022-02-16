@@ -51,7 +51,7 @@ async function handler(req, res) {
   let db;
   try {
     db = new Database('database/database.db', { verbose: console.log });
-    /*const sql = "select photos.filename, albumPasswords.passwordHash from photos inner join albums on photos.id_album=albums.id_album inner join albumPasswords on albums.id_albumPasswords=albumPasswords.id_albumPasswords";
+    /*const sql = "select photos.filename, albumPasswords.password_hash from photos inner join Album on photos.id_album=Album.id_album inner join Year on Album.id_year=albumPasswords.id_year";
     const stmt = db.prepare(sql);
     const sqlResults: Array<any> = stmt.all();
     if (sqlResults.length == 1) {

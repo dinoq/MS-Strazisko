@@ -43,7 +43,7 @@ const saveToDB = (name, url) => {
 
   const db = new Database('database/database.db', { verbose: console.log });
 
-  const stmt = db.prepare('INSERT INTO documents (name, url) VALUES (?, ?)');
+  const stmt = db.prepare('INSERT INTO Document (name, url) VALUES (?, ?)');
   const info = stmt.run(name, url);
   db.close();
 }

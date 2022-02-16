@@ -6,7 +6,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     let docs = [];
     const db = new Database('database/database.db', { verbose: console.log });
 
-    const stmt = db.prepare("SELECT id_documents, name, url FROM documents;")
+    const stmt = db.prepare("SELECT id_document, name, url FROM Document;")
     const sqlResults = stmt.all();
 
     for (const sqlResult of sqlResults) {

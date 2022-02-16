@@ -6,7 +6,8 @@ export enum ComponentType {
     DateField,
     NumberField,
     ImagePreview,
-    FileChooser
+    FileChooser,
+    RichTextField
 }
 
 export enum DetailFrameMode {

@@ -79,8 +79,8 @@ const FormFrameContainer: React.FC<{}> = (props) => {
             setDetailFrameMode(DetailFrameMode.EDITING_ENTRY);
             console.log('(item as DBObject).editedAttrs: ', item.editedAttrs);
             dispatch(setDBObject(item));
-            dispatch(setEditedAttrs((item as DBObject).attributes.map(attr => { return { key: attr.key, value: attr.value } })));
-            //item.editedAttrs = [];//(item as DBObject).attributes.map(attr => { return { key: attr.key, value: attr.value } });
+            const editedAttrs = (item as DBObject).attributes.map(attr => { return { key: attr.key, value: attr.value } })
+            dispatch(setEditedAttrs(editedAttrs));
             showDetailFrame();
         }
     }

@@ -1,23 +1,23 @@
 <Forms>
-    <Form FID="albumPasswords">
+    <Form FID="Year">
         <DetailFrame createNewEntryText="Přidat školní rok" uniqueConstraintFailed="Při vkládání do databáze došlo k problému kvůli vkládání již existujícího unikátního klíče.&lt;br/&gt;Zřejmě se pokoušíte vložit školní rok, který již v databázi existuje!">
-            <Component attributeKey="id_albumPasswords" componentName="Školní rok" componentType="SelectBox" values="getYears" editable="false" />
-            <Component attributeKey="passwordHash" componentName="Heslo" componentType="TextField" constraints="[{&quot;condition&quot;:&quot;$.length >= 6&quot;,&quot;errMsgIfFail&quot;:&quot;Heslo musí obsahovat alespoň 6 znaků!&quot;}]" />
+            <Component attributeKey="id_year" componentName="Školní rok" componentType="SelectBox" values="getYears" editable="false" />
+            <Component attributeKey="password_hash" componentName="Heslo" componentType="TextField" constraints="[{&quot;condition&quot;:&quot;$.length >= 6&quot;,&quot;errMsgIfFail&quot;:&quot;Heslo musí obsahovat alespoň 6 znaků!&quot;}]" />
         </DetailFrame>
-        <ListFrame detailDBOClass="albums" orderBy="id_albumPasswords" descending="true" cantDeleteItemMsg="Dané album obsahuje nějaké fotografie.&lt;br&gt;Nejprve musíte smazat je a až potom samotné album!">
-            <Component attributeKey="id_albumPasswords" componentName="Školní rok" componentType="TextField" transformation="@[id_albumPasswords]" isBreadcrumbKey="true" />
-            <Component attributeKey="passwordHash" componentName="Heslo" componentType="TextField" transformation="@[passwordHash]"/>
+        <ListFrame detailDBOClass="Album" orderBy="id_year" descending="true" cantDeleteItemMsg="Dané album obsahuje nějaké fotografie.&lt;br&gt;Nejprve musíte smazat je a až potom samotné album!">
+            <Component attributeKey="id_year" componentName="Školní rok" componentType="TextField" transformation="@[id_year]" isBreadcrumbKey="true" />
+            <Component attributeKey="password_hash" componentName="Heslo" componentType="TextField" transformation="@[password_hash]"/>
         </ListFrame>
     </Form>
 
-    <Form FID="albums">
+    <Form FID="Album">
         <DetailFrame createNewEntryText="Přidat album" afterSaveMethod="createDirectoryIfNotExist(img/albums/@[title])">
             <Component attributeKey="id_album" componentName="ID alba" componentType="TextField" editable="false"/>
             <Component attributeKey="date" componentName="Datum" componentType="DateField" />
             <Component attributeKey="name" componentName="Název" componentType="TextField" />
             <Component attributeKey="title" componentName="URL" componentType="TextField" />
         </DetailFrame>
-        <ListFrame detailDBOClass="photos" orderBy="id_album" descending="true" cantDeleteItemMsg="Dané album obsahuje nějaké fotografie.&lt;br&gt;Nejprve musíte smazat je a až potom samotné album!">
+        <ListFrame detailDBOClass="PrivatePhoto" orderBy="id_album" descending="true" cantDeleteItemMsg="Dané album obsahuje nějaké fotografie.&lt;br&gt;Nejprve musíte smazat je a až potom samotné album!">
             <Component attributeKey="id_album" componentName="ID alba" componentType="TextField" transformation="@[id_album]"/>
             <Component attributeKey="date" componentName="Datum" componentType="DateField" transformation="@[date]"/>
             <Component attributeKey="name" componentName="Název" componentType="TextField" transformation="@[name]" isBreadcrumbKey="true"/>
@@ -25,67 +25,79 @@
         </ListFrame>
     </Form>
 
-    <Form FID="photos">
+    <Form FID="PrivatePhoto">
         <DetailFrame createNewEntryText="Přidat Fotku/y" uniqueConstraintFailed="Při vkládání do databáze došlo k problému kvůli vkládání již existujícího unikátního klíče.&lt;br/&gt;Zřejmě se pokoušíte uložit soubor s název, který již v databázi existuje!">
             <Component attributeKey="filename" componentName="Výběr souborů" componentType="FileChooser" path="img/albums/@[albums.title]/@[filename]"/>
         </DetailFrame>
-        <ListFrame orderBy="id_photo" descending="true" actions="{&quot;edit&quot;:false}">
-            <Component attributeKey="id_photo" componentName="ID" componentType="TextField" transformation="@[id_photo]"/>
+        <ListFrame orderBy="id_private_photo" descending="true" actions="{&quot;edit&quot;:false}">
+            <Component attributeKey="id_private_photo" componentName="ID" componentType="TextField" transformation="@[id_private_photo]"/>
             <Component attributeKey="filename" componentName="filename" componentType="TextField" transformation="@[filename]"/>
-            <Component attributeKey="filename" componentName="URL" componentType="ImagePreview" transformation="@[albums.title]/@[filename]" />
+            <Component attributeKey="filename" componentName="URL" componentType="ImagePreview" transformation="img/albums/@[albums.title]/@[filename]" />
             <!-- <Component attributeKey="filename" transformation="@[albums.title]" /> -->
         </ListFrame>
     </Form>
 
-    <Form FID="teacher">
+    <Form FID="Teacher">
         <DetailFrame createNewEntryText="Přidat Učitele(/ku)">
-            <Component attributeKey="id_teacher" componentName="ID učitele" componentType="TextField" transformation="@[id_teacher]"/>
             <Component attributeKey="name" componentName="Jméno" componentType="TextField" />
             <Component attributeKey="job" componentName="Funkce" componentType="TextField" />
+            <Component attributeKey="filename" componentName="Výběr fotky" componentType="FileChooser" path="img/albums/other/teacher-photos/@[filename]"/>
         </DetailFrame>
         <ListFrame orderBy="id_teacher" descending="true">
             <Component attributeKey="id_teacher" componentName="ID" componentType="TextField" transformation="@[id_teacher]"/>
             <Component attributeKey="name" componentName="Jméno" componentType="TextField" transformation="@[name]"/>
-            <Component attributeKey="job" componentName="Funkce" componentType="TextField" transformation="@[job]" />
+            <Component attributeKey="job" componentName="Funkce" componentType="TextField" transformation="@[job]" /><Component attributeKey="filename" componentName="URL" componentType="ImagePreview" transformation="img/albums/other/teacher-photos/@[filename]" />
         </ListFrame>
     </Form>
 
     <Form FID="PublicPhoto">
         <DetailFrame createNewEntryText="Přidat veřejné foto">
-            <Component attributeKey="id_public_photo" componentName="ID Fotky" componentType="TextField" transformation="@[id_public_photo]"/>
-            <Component attributeKey="filename" componentName="Výběr souborů" componentType="FileChooser" path="img/albums/other/public/@[filename]"/>
+            <Component attributeKey="filename" componentName="Výběr souborů" componentType="FileChooser" path="img/albums/other/public-photos/@[filename]"/>
         </DetailFrame>
         <ListFrame orderBy="id_teacher" descending="true">
             <Component attributeKey="id_public_photo" componentName="ID" componentType="TextField" transformation="@[id_public_photo]"/>
-            <Component attributeKey="filename" componentName="URL" componentType="ImagePreview" transformation="@[albums.title]/other/public/@[filename]" />
+            <Component attributeKey="filename" componentName="URL" componentType="ImagePreview" transformation="img/albums/other/public-photos/@[filename]" />
         </ListFrame>
     </Form>
 
-    <Form FID="Events">
-        <DetailFrame createNewEntryText="Přidat Učitele(/ku)">
-            <Component attributeKey="id_event" componentName="ID Události" componentType="TextField" transformation="@[id_event]"/>
-            <Component attributeKey="img_url" componentName="ID Události" componentType="TextField" transformation="@[id_event]"/>
-            <Component attributeKey="id_event" componentName="ID Události" componentType="TextField" transformation="@[id_event]"/>
+    <Form FID="Event">
+        <DetailFrame createNewEntryText="Přidat Událost">
+            <Component attributeKey="img_url" componentName="Výběr fotky" componentType="FileChooser" path="img/albums/other/event-photos/@[img_url]"/>
+            <Component attributeKey="title" componentName="Název" componentType="TextField" transformation="@[title]"/>
+            <Component attributeKey="date" componentName="Datum" componentType="DateField" transformation="@[date]"/>
+            <Component attributeKey="description" componentName="Popis" componentType="RichTextField" transformation="@[description]"/>
         </DetailFrame>
         <ListFrame orderBy="id_teacher" descending="true">
-            <Component attributeKey="id_teacher" componentName="ID" componentType="TextField" transformation="@[id_teacher]"/>
-            <Component attributeKey="name" componentName="Jméno" componentType="TextField" transformation="@[name]"/>
-            <Component attributeKey="job" componentName="Funkce" componentType="TextField" transformation="@[job]" />
-            <!-- <Component attributeKey="filename" transformation="@[albums.title]" /> -->
+            <Component attributeKey="id_event" componentName="ID" componentType="TextField" transformation="@[id_event]"/>
+            <Component attributeKey="img_url" componentName="Náhled obrázku" componentType="ImagePreview" transformation="img/albums/other/event-photos/@[img_url]" />
+            <Component attributeKey="title" componentName="Název" componentType="TextField" transformation="@[title]"/>
+            <Component attributeKey="date" componentName="Datum" componentType="TextField" transformation="@[date]"/>
+            <Component attributeKey="description" componentName="Popis" componentType="RichTextField" transformation="@[description]"/>
         </ListFrame>
     </Form>
 
 
-    <Form FID="ContactTexts">
+    <Form FID="IntroText">
         <DetailFrame>
-            <Component attributeKey="contact_text_id" componentType="NumberField" editable="false"/>
-            <Component attributeKey="title" componentType="TextField" editable="false" />
-            <Component attributeKey="content" componentType="TextField"/>
+            <Component attributeKey="title" componentName="Název" componentType="TextField" editable="false" />
+            <Component attributeKey="content" componentName="Text" componentType="RichTextField"/>
         </DetailFrame>
-        <ListFrame>
-            <Component attributeKey="contact_text_id" />
-            <Component attributeKey="title"  isBreadcrumbKey="true"/>
-            <Component attributeKey="content" />
+        <ListFrame actions="{&quot;delete&quot;:false}">
+            <Component attributeKey="id_intro_text" componentName="ID" transformation="@[id_intro_text]" componentType="TextField" />
+            <Component attributeKey="title" componentName="Nadpis" transformation="@[title]" componentType="TextField" />
+            <Component attributeKey="content" componentName="Text" transformation="@[content]" componentType="RichTextField" />
+        </ListFrame>
+    </Form>
+
+    <Form FID="ContactText">
+        <DetailFrame>
+            <Component attributeKey="title" componentName="Název" componentType="TextField" editable="false" />
+            <Component attributeKey="content" componentName="Obsah" componentType="TextField"/>
+        </DetailFrame>
+        <ListFrame actions="{&quot;delete&quot;:false}">
+            <Component attributeKey="id_contact_text" componentName="ID" transformation="@[id_contact_text]" componentType="TextField" />
+            <Component attributeKey="title" componentName="Název" transformation="@[title]" componentType="TextField" />
+            <Component attributeKey="content" componentName="Text" transformation="@[content]" componentType="TextField" />
         </ListFrame>
     </Form>
 </Forms>

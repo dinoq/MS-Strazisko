@@ -23,8 +23,8 @@ const AdminDocumentsPage: NextPage = (props: any) => {
         setFileManagerVisible(false)
     }
 
-    const deleteDocumentConfirmation = (name, id_documents) => {
-        setDeletedDocumentID(id_documents);
+    const deleteDocumentConfirmation = (name, id_document) => {
+        setDeletedDocumentID(id_document);
         setDeletedDocumentName("\"" + name + "\"");
         setModalVisible(true);
     }
@@ -66,7 +66,7 @@ const AdminDocumentsPage: NextPage = (props: any) => {
                 items: [
                     { content: doc.name, className: "word-break-all" },
                     { content: (<Link href={"/dokumenty/" + url}><a target="_blank" className={"link"}>{"/dokumenty/" + url}</a></Link>), className: "word-break-all" },
-                    { className: "actions", content: (<><span className={"link-danger"} onClick={deleteDocumentConfirmation.bind(this, doc.name, doc.id_documents)}>Smazat</span><span className={"link"}>Přejmenovat</span></>) }
+                    { className: "actions", content: (<><span className={"link-danger"} onClick={deleteDocumentConfirmation.bind(this, doc.name, doc.id_document)}>Smazat</span><span className={"link"}>Přejmenovat</span></>) }
                 ]
             })
 

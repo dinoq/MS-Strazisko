@@ -6,6 +6,7 @@ import { ComponentType } from "../../../helpers/constants";
 import { DBManager } from "../../../helpers/DBManager";
 import { DBObject, LFComponentDef, ListFrameDef } from "../../../helpers/types";
 import Image from "next/image"
+import DOMPurify from "dompurify";
 
 const ListFrame: FC<{ definition: ListFrameDef, DBOClass: string, DBObject: DBObject, detailClickedHandler: Function, deleteItemHandler: Function, editItemHandler: Function, entries: Array<DBObject>, colspanNoData: number }> = (props) => {
 
@@ -35,20 +36,25 @@ const ListFrame: FC<{ definition: ListFrameDef, DBOClass: string, DBObject: DBOb
 
                                     let evaluated = DBManager.substituteExpression(component.transformation, entry);
                                     
-                                    if(component.componentType == ComponentType.TextField){
+                                    if(component.componentType == ComponentType.TextField || component.componentType == ComponentType.RichTextField){
                                         value = evaluated;
 
                                     }else if(component.componentType == ComponentType.ImagePreview){
+                                        evaluated = evaluated.startsWith("/")? evaluated : "/" + evaluated;
                                         value = (
                                             <div className="ImagePreview">
-                                                <Image src={"/img/albums/"+evaluated} alt="Náhled obrázku" layout="fill" objectFit="contain"/>
+                                                <Image src={evaluated} alt="Náhled obrázku" layout="fill" objectFit="contain"/>
                                             </div>
                                         )
                                     }else if(component.componentType == ComponentType.DateField){
                                         let date = new Date(evaluated);
                                         value = date.getDate() + ". " + (date.getMonth()+1) + ". " + date.getFullYear();
                                     }
-                                    return <td key={"tbtrtd-" + index}>{value}</td>;
+                                    if(component.componentType == ComponentType.RichTextField){
+                                        return <td key={"tbtrtd-" + index} dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(value)}}></td>;
+                                    }else{
+                                        return <td key={"tbtrtd-" + index}>{value}</td>;
+                                    }
                                 })}
                             {props.definition?.actions && <td className={"actions"}>
                                 {props.definition?.actions.delete && <span className={"link link-danger"} onClick={props.deleteItemHandler.bind(this, entry)}>Smazat</span>}

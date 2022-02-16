@@ -16,7 +16,6 @@ TODO:
 - definici objektů vytvářet přímo z databáze (bude to chtít nový handler a také tabulku mapování trida.atribut-> nazev atributu s diakritikou).
 - práci s databází a doubory do try-catch
 - db.close!!!
-- https://admin.ms-strazisko.cz/api/getYearAlbumsInfo?year=undefined ???
 - https na produkci
 - rel="noreferrer" - je potřeba? a co to je? (ám to v odkazu v galerii)
 - Learning - zapat i Linuxové příkazy (velikost paměti, nginx...)
@@ -27,7 +26,10 @@ TODO:
 - js > ts
 ############################################################################################
 
+Známé chyby:
+TypeError: Cannot assign to read only property 'editedAttrs' of object '#<Object>' - při pokusu o změně objektu, který je v redux store. Nutné vždy upravovat pomocí dispatch...
 
+############################################################################################
 -----------
 Odstranění dev dependencies:
 npm prune --production

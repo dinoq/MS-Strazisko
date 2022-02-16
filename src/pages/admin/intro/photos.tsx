@@ -10,7 +10,7 @@ const PhotosPage: NextPage = (props: any) =>{
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: "publicPhotos" });
+        dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: "PublicPhoto" });
     }, [dispatch])
 
     return (

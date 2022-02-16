@@ -7,8 +7,8 @@ import { ComponentType } from "../../../../helpers/constants";
 import { addFilesToUpload } from "../../../../store/reducers/DBObjectReducer";
 import FileChooser from "./FileChooser";
 
-const FileChooserContainer: FC<{id: string, onChange: Function}> = (props) => {
-    const [fileLabel, setFileLabel] = useState("Vyberte soubor")
+const FileChooserContainer: FC<{id: string, onChange: Function, initLabel: string}> = (props) => {
+    const [fileLabel, setFileLabel] = useState(props.initLabel);
     const [file, setFile] = useState(null);
     const initFileName = "Název souboru";
     const [fileName, setFileName] = useState(initFileName);

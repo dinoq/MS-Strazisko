@@ -11,15 +11,15 @@ interface DBOBjectDefs {
 }
 
 const DBObjectDefinitions: RecursivePartial<DBOBjectDefs> = {
-    albumPasswords: {
-        DBOClass: "albumPasswords",
+    Year: {
+        DBOClass: "Year",
         attributes: [
             {
-                key: "id_albumPasswords",
+                key: "id_year",
                 //name: "Školní rok"
             },
             {
-                key: "passwordHash",
+                key: "password_hash",
                 //name: "Heslo"
             }
         ]
@@ -46,16 +46,16 @@ const DBObjectDefinitions: RecursivePartial<DBOBjectDefs> = {
         ],
         persistentAttributes: [
             {
-                key: "id_albumPasswords",
+                key: "id_year",
                 //name: "Heslo"
             },
         ],
     }, 
-    photos: {
-        DBOClass: "photos",
+    PrivatePhoto: {
+        DBOClass: "PrivatePhoto",
         attributes: [
             {
-                key: "id_photo",
+                key: "id_private_photo",
                 //name: "ID"
             },
             {
@@ -78,8 +78,8 @@ const DBObjectDefinitions: RecursivePartial<DBOBjectDefs> = {
 
 
 
-    teacher: {
-        DBOClass: "teacher",
+    Teacher: {
+        DBOClass: "Teacher",
         attributes: [
             {
                 key: "id_teacher",
@@ -89,6 +89,9 @@ const DBObjectDefinitions: RecursivePartial<DBOBjectDefs> = {
             },
             {
                 key: "job",
+            },
+            {
+                key: "filename",
             }
         ]
     }, 
@@ -107,12 +110,49 @@ const DBObjectDefinitions: RecursivePartial<DBOBjectDefs> = {
     }, 
 
 
-
-    ContactTexts: {
-        DBOClass: "ContactTexts",
+    Event: {
+        DBOClass: "Event",
         attributes: [
             {
-                key: "contact_text_id",
+                key: "id_event",
+            },
+            {
+                key: "img_url",
+            },
+            {
+                key: "title",
+            },
+            {
+                key: "date",
+            },
+            {
+                key: "description",
+            }
+        ]
+    }, 
+
+    IntroText: {
+        DBOClass: "IntroText",
+        attributes: [
+            {
+                key: "id_intro_text",
+            },
+            {
+                key: "title",
+            },
+            {
+                key: "content",
+            }
+        ]
+    }, 
+
+
+
+    ContactText: {
+        DBOClass: "ContactText",
+        attributes: [
+            {
+                key: "id_contact_text",
                 //name: "ID textu"
             },
             {

@@ -152,6 +152,7 @@ export class DBManager {
      * @returns substituted expression (with real values)
      */
     public static substituteExpression(rawExpression: string, dbObject: DBObject): string {
+        console.log('rawExpression: ', rawExpression, dbObject);
         let rawExpressionSplitted = rawExpression.split(/@\[(.*?)\]/g);
         let substituted = "";
         for (let i = 0; i < rawExpressionSplitted.length; i++) {

@@ -10,7 +10,7 @@ const EventsPage: NextPage = (props: any) =>{
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: "events" });
+        dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: "Event" });
     }, [dispatch])
 
     return (

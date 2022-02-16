@@ -21,7 +21,7 @@ const handler = async (req, res) => {
   let db;
   try {
     db = new Database('database/database.db', { verbose: console.log });
-    let stmt = db.prepare("SELECT url from documents where id_documents=" + id)
+    let stmt = db.prepare("SELECT url from Document where id_document=" + id)
     const sqlResults = stmt.all();
     const url = sqlResults[0]?.url;
     if(url == undefined){
@@ -29,7 +29,7 @@ const handler = async (req, res) => {
       return;
     }
 
-    const sql = "DELETE FROM documents WHERE id_documents=?";
+    const sql = "DELETE FROM Document WHERE id_document=?";
     stmt = db.prepare(sql);
     stmt.run(parseInt(id));
     

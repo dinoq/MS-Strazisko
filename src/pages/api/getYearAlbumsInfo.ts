@@ -15,14 +15,14 @@ const handler = async (req, res) => {
 
   let albums = [];
   const db = new Database('database/database.db', { verbose: console.log });
-  const sqlAlbums = "SELECT id_album, name, title, date FROM albums WHERE id_albumPasswords='" + pageYear + "'";
+  const sqlAlbums = "SELECT id_album, name, title, date FROM Album WHERE id_year='" + pageYear + "'";
   const stmtAlbums = db.prepare(sqlAlbums);
   const sqlResultsAlbums: Array<any> = stmtAlbums.all();
   if (sqlResultsAlbums.length > 0) {
     for (const resAlbum of sqlResultsAlbums) {
       let albumPhotos = [];
       const limitQuery = (limit && limit.length)? " LIMIT " + limit : "";
-      const sql = "SELECT albums.title||'/'||photos.filename AS URL FROM photos INNER JOIN albums ON photos.id_album=albums.id_album WHERE albums.id_album=" + resAlbum.id_album + limitQuery;
+      const sql = "SELECT Album.title||'/'||photos.filename AS URL FROM photos INNER JOIN Album ON photos.id_album=Album.id_album WHERE Album.id_album=" + resAlbum.id_album + limitQuery;
       const stmt = db.prepare(sql);
       const sqlResults: Array<any> = stmt.all();
       for (const res of sqlResults) {

@@ -18,7 +18,6 @@ function* setFormDefinitions(action){
             yield putResolve(loadFormDef(definitions))    
         }
         formDefinitions = yield select((state: RootState)=>state.formDefinitions);
-        console.log('formDefinitions.definitions[action.FID]: ', action.FID, formDefinitions.definitions[action.FID]);
         if(formDefinitions.definitions[action.FID]){
             yield put(setActualFormDef(action.FID))   
         }     

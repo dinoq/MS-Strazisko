@@ -34,6 +34,11 @@ const AdminPageLayout = (props) => {
 
                                 <ul aria-label="Úvodní strana">
                                     <li>
+                                        <Link href="/admin/intro/intro">
+                                            <a className={"link"}>Úvodní text</a>
+                                        </Link>
+                                    </li>
+                                    <li>
                                         <Link href="/admin/intro/teachers">
                                             <a className={"link"}>Učitelé</a>
                                         </Link>

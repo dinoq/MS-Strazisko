@@ -1,0 +1,79 @@
+import { withIronSessionApiRoute } from "iron-session/next";
+import Database from "better-sqlite3";
+import { checkIfLettersSlashUnderscoreUndef, checkIfNotDangerSQL } from "../../helpers/utils";
+
+const fakeTables = ["events", "teachers"];
+const realTables = ["Event", "Teacher"];
+
+const mapTables = (table: string, toReal: boolean)=>{
+    if(toReal){
+        return realTables[fakeTables.indexOf(table)];
+    }else{
+        return fakeTables[realTables.indexOf(table)];
+    }
+}
+
+const mapConditions = (table) =>{
+    if(table == "Event"){
+        return " WHERE date>date('now');";
+    }
+    return "";
+}
+async function handler(req, res) {
+    let tablesString: string = req?.query?.table;
+
+    if (!tablesString) {
+        res.status(404).send("Table not specified!");
+        return;
+    }
+
+
+    let data = {};
+    let db;
+    try {
+        db = new Database('database/database.db', { verbose: console.log });
+
+        if (req.method == "GET") {
+            let tables = tablesString.split(";");
+
+            for(const tbl of tables){
+                const table =  mapTables(tbl, true);
+                
+                if (!checkIfLettersSlashUnderscoreUndef(table) || !checkIfNotDangerSQL(table)) { // bezpečnostní pojistka
+                    db.close();
+                    return res.status(500).send("ERROR - wrong data className, condition or order!");
+                }
+
+                const sql=`SELECT * FROM ${table}${mapConditions(table)}`;
+
+                const stmt = db.prepare(sql);
+                const sqlResults = stmt.all();
+                console.log('sqlResults: ', sqlResults);
+                data[tbl] = sqlResults;
+            }
+            console.log("cccccccccccccccccccccc");
+            db.close();
+            res.status(200).send(data);
+        }
+        else {
+            db.close();
+            return res.status(500).send("ERROR - unknown HTTP method '" + req.method + "'");
+        }
+
+    } catch (error) {
+        res.status(500).send("Internal Server Error! Error in database!");
+        return;
+    } finally {
+        db.close();
+    }
+
+
+}
+
+export default withIronSessionApiRoute(handler, {
+    cookieName: "myapp_cookiename",
+    cookieOptions: {
+        secure: process.env.NODE_ENV === "production" ? true : false
+    },
+    password: "P5hBP4iHlvp6obqtWK0mNuMrZow5x6DQV61W3EUG",
+});
