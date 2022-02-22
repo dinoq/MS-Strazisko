@@ -2,8 +2,8 @@ import { withIronSessionApiRoute } from "iron-session/next";
 import Database from "better-sqlite3";
 import { checkIfLettersSlashUnderscoreUndef, checkIfNotDangerSQL } from "../../helpers/utils";
 
-const fakeTables = ["events", "teachers"];
-const realTables = ["Event", "Teacher"];
+const fakeTables = ["events", "teachers", "public_images", "contact_texts", "food"];
+const realTables = ["Event", "Teacher", "PublicPhoto", "ContactText", "Food"];
 
 const mapTables = (table: string, toReal: boolean)=>{
     if(toReal){
@@ -13,9 +13,9 @@ const mapTables = (table: string, toReal: boolean)=>{
     }
 }
 
-const mapConditions = (table) =>{
+const mapConditionsAndOrder = (table) =>{
     if(table == "Event"){
-        return " WHERE date>date('now');";
+        return " WHERE date>date('now') ORDER BY date;";
     }
     return "";
 }
@@ -44,7 +44,7 @@ async function handler(req, res) {
                     return res.status(500).send("ERROR - wrong data className, condition or order!");
                 }
 
-                const sql=`SELECT * FROM ${table}${mapConditions(table)}`;
+                const sql=`SELECT * FROM ${table}${mapConditionsAndOrder(table)}`;
 
                 const stmt = db.prepare(sql);
                 const sqlResults = stmt.all();

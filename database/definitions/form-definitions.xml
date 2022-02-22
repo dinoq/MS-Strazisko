@@ -43,7 +43,7 @@
             <Component attributeKey="job" componentName="Funkce" componentType="TextField" />
             <Component attributeKey="filename" componentName="Výběr fotky" componentType="FileChooser" path="img/albums/other/teacher-photos/@[filename]"/>
         </DetailFrame>
-        <ListFrame orderBy="id_teacher" descending="true">
+        <ListFrame orderBy="id_teacher">
             <Component attributeKey="id_teacher" componentName="ID" componentType="TextField" transformation="@[id_teacher]"/>
             <Component attributeKey="name" componentName="Jméno" componentType="TextField" transformation="@[name]"/>
             <Component attributeKey="job" componentName="Funkce" componentType="TextField" transformation="@[job]" /><Component attributeKey="filename" componentName="URL" componentType="ImagePreview" transformation="img/albums/other/teacher-photos/@[filename]" />
@@ -54,7 +54,7 @@
         <DetailFrame createNewEntryText="Přidat veřejné foto">
             <Component attributeKey="filename" componentName="Výběr souborů" componentType="FileChooser" path="img/albums/other/public-photos/@[filename]"/>
         </DetailFrame>
-        <ListFrame orderBy="id_teacher" descending="true">
+        <ListFrame orderBy="id_public_photo">
             <Component attributeKey="id_public_photo" componentName="ID" componentType="TextField" transformation="@[id_public_photo]"/>
             <Component attributeKey="filename" componentName="URL" componentType="ImagePreview" transformation="img/albums/other/public-photos/@[filename]" />
         </ListFrame>
@@ -67,7 +67,7 @@
             <Component attributeKey="date" componentName="Datum" componentType="DateField" transformation="@[date]"/>
             <Component attributeKey="description" componentName="Popis" componentType="RichTextField" transformation="@[description]"/>
         </DetailFrame>
-        <ListFrame orderBy="id_teacher" descending="true">
+        <ListFrame orderBy="date">
             <Component attributeKey="id_event" componentName="ID" componentType="TextField" transformation="@[id_event]"/>
             <Component attributeKey="img_url" componentName="Náhled obrázku" componentType="ImagePreview" transformation="img/albums/other/event-photos/@[img_url]" />
             <Component attributeKey="title" componentName="Název" componentType="TextField" transformation="@[title]"/>
@@ -86,6 +86,17 @@
             <Component attributeKey="id_intro_text" componentName="ID" transformation="@[id_intro_text]" componentType="TextField" />
             <Component attributeKey="title" componentName="Nadpis" transformation="@[title]" componentType="TextField" />
             <Component attributeKey="content" componentName="Text" transformation="@[content]" componentType="RichTextField" />
+        </ListFrame>
+    </Form>
+
+    <Form FID="Food">
+        <DetailFrame>
+            <Component attributeKey="id_food" componentName="Název" componentType="TextField" editable="false" />
+            <Component attributeKey="img_url" componentName="URL" componentType="TextField"/>
+        </DetailFrame>
+        <ListFrame actions="{&quot;delete&quot;:false}">
+            <Component attributeKey="id_food" componentName="ID" transformation="@[id_food]" componentType="TextField" />
+            <Component attributeKey="img_url" componentName="URL" transformation="@[img_url]" componentType="TextField" />
         </ListFrame>
     </Form>
 

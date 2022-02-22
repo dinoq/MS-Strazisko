@@ -1,4 +1,4 @@
-import React, { FC, FormEventHandler, MouseEventHandler, useEffect, useRef, useState } from "react";
+import React, { createRef, FC, FormEventHandler, MouseEventHandler, useEffect, useRef, useState } from "react";
 import { ComponentType, DetailFrameMode } from "../../../helpers/constants";
 import { DBManager } from "../../../helpers/DBManager";
 import { DBObject, DetailFrameDef, FormDef } from "../../../helpers/types";
@@ -70,7 +70,7 @@ const DetailFrame: FC<{ DBOClass: string, DBObject: DBObject, definition: FormDe
                             <FileChooserContainer key={"input-" + i} id={component.attributeKey} onChange={props.updateDBObject} initLabel={component.componentName} />
                         )
                     } else if (component.componentType == ComponentType.RichTextField) {
-                        const inputRef = useRef<HTMLTextAreaElement>();
+                        const inputRef = createRef<HTMLTextAreaElement>();
 
                         const substituteTags = (text, toRegular)=>{
                             if(toRegular){

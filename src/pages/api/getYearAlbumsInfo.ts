@@ -4,11 +4,12 @@ import Database from "better-sqlite3";
 
 const handler = async (req, res) => {
   console.log("process.env.NODE_ENV:", process.env.NODE_ENV );
-  const pageYear = req.query["year"];
+  const pageYear = req.query["year"].replace("_", "/");
   const limit = req.query["limit"];
 
   const loggedForYears: Array<any> = await req.session.loggedForYears;
   if (!loggedForYears || !loggedForYears.length || !loggedForYears.includes(pageYear)) {
+      console.log('loggedForYears: ', loggedForYears);
     res.status(401).send("Unauthorized!");
     return;
   }
@@ -22,7 +23,7 @@ const handler = async (req, res) => {
     for (const resAlbum of sqlResultsAlbums) {
       let albumPhotos = [];
       const limitQuery = (limit && limit.length)? " LIMIT " + limit : "";
-      const sql = "SELECT Album.title||'/'||photos.filename AS URL FROM photos INNER JOIN Album ON photos.id_album=Album.id_album WHERE Album.id_album=" + resAlbum.id_album + limitQuery;
+      const sql = "SELECT Album.title||'/'||PrivatePhoto.filename AS URL FROM PrivatePhoto INNER JOIN Album ON PrivatePhoto.id_album=Album.id_album WHERE Album.id_album=" + resAlbum.id_album + limitQuery;
       const stmt = db.prepare(sql);
       const sqlResults: Array<any> = stmt.all();
       for (const res of sqlResults) {

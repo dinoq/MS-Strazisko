@@ -165,14 +165,14 @@ export class DBManager {
         return substituted;
     }
 
-    public static getAllDBObjectEntries = async (DBOClass: string, /*orderBy: OrderByDef,*/ condition: string = ""): Promise<Array<DBObject>> => {
+    public static getAllDBObjectEntries = async (DBOClass: string, orderBy: OrderByDef, condition: string = ""): Promise<Array<DBObject>> => {
         if (DBOClass == undefined || DBOClass == "") {
             return [];
         } else {
             let order = "";
-            /*if (orderBy.attr) {
+            if (orderBy.attr) {
                 order = "&order=" + orderBy.attr + "|" + (orderBy.descending ? "DESC" : "ASC");
-            }*/
+            }
             const resp = await fetch("/api/admin/data?className=" + DBOClass + (condition ? "&condition=" + condition : "") + order);
             if (resp.status == 200) {
                 let entries = [];
@@ -243,7 +243,7 @@ export class DBManager {
 
                     let detailItemCondition = `WHERE ${item.attributes[0].key}='${DBManager.getAttrFromArrByKey(breadcrumbItems[breadcrumbItems.length - 1].DBObject.attributes, item.attributes[0].key).value}'`;
 
-                    DBManager.getAllDBObjectEntries(dbObject.DBOClass, detailItemCondition).then(entrs => {
+                    DBManager.getAllDBObjectEntries(dbObject.DBOClass, state.formDefinitions.actualFormDefinition.DB.orderBy, detailItemCondition).then(entrs => {
                         store.dispatch(setEntries(entrs));
                         //store.dispatch(setPersistentAttrs(entrs.length ? entrs[0].persistentAttributes : []))
                     })

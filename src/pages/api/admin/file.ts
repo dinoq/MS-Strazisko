@@ -62,7 +62,6 @@ const saveFile = async (file, url) => {
     }else{
         const resultt = await fs.writeFileSync(fullPath, data);
     }
-    console.log('resultt: ', data);
     await fs.unlinkSync(file.path); // remove temp file
     return;
   };

@@ -61,6 +61,11 @@ const AdminPageLayout = (props) => {
                                 </Link>
                             </li>
                             <li>
+                                <Link href="/admin/food">
+                                    <a className={"link"}>Jídelníček</a>
+                                </Link>
+                            </li>
+                            <li>
                                 <Link href="/admin/dokumenty">
                                     <a className={"link"}>Dokumenty</a>
                                 </Link>

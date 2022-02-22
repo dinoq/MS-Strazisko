@@ -12,51 +12,12 @@ import { useEffect, useState } from 'react'
 
 export default function Home(props) {
     const a = "/navrh/unused/camping.jpg";
-    const images = [
-        {
-            original: 'https://picsum.photos/id/1018/1000/600/',
-            thumbnail: 'https://picsum.photos/id/1018/250/150/',
-        },
-        {
-            original: 'https://picsum.photos/id/1015/1000/600/',
-            thumbnail: 'https://picsum.photos/id/1015/250/150/',
-        },
-        {
-            original: 'https://picsum.photos/id/1019/1000/600/',
-            thumbnail: 'https://picsum.photos/id/1019/250/150/',
-        },
-        {
-            original: 'https://picsum.photos/id/1018/1000/600/',
-            thumbnail: 'https://picsum.photos/id/1018/250/150/',
-        },
-        {
-            original: 'https://picsum.photos/id/1015/1000/600/',
-            thumbnail: 'https://picsum.photos/id/1015/250/150/',
-        },
-        {
-            original: 'https://picsum.photos/id/1019/1000/600/',
-            thumbnail: 'https://picsum.photos/id/1019/250/150/',
-        },
-        {
-            original: 'https://picsum.photos/id/1015/1000/600/',
-            thumbnail: 'https://picsum.photos/id/1015/250/150/',
-        },
-        {
-            original: 'https://picsum.photos/id/1019/1000/600/',
-            thumbnail: 'https://picsum.photos/id/1019/250/150/',
-        },
-    ];
-
     const [features, setFeatures]: [Array<{ icon: any, bgColor: string, alt: string, title: string, description: string }>, any] = useState([]);
     const [teachers, setTeachers]: [Array<{ imgSrc: string, name: string, job: string }>, any] = useState([]);
+    console.log('teachers: ', teachers);
     const [events, setEvents]: [Array<{ imgSrc: string, title: string, date: string, description: string }>, any] = useState([]);
+    const [publicImages, setPublicImages]: [Array<{ original: string, thumbnail: string }>, any] = useState([]);
 
-    setFeatures([
-        { icon: "/img/play-icon-optimal.svg", bgColor: "#0a58ca", alt: "Ikona herní konzole", title: "Zábava", description: "Školka vlastní mnoho různých hraček, kterými se vaše děti zabaví." },
-        { icon: "/img/tree-icon-optimal.svg", bgColor: "#0aca10", alt: "Ikona přírody", title: "Krásná příroda", description: "Školka se nachází uprostřed krásné přírody." },
-        { icon: "/img/food-icon-optimal.svg", bgColor: "#ca3f0a", alt: "Ikona jídla (ovoce)", title: "Stravování", description: "Každý den jsou do školy dováženy obědy z nedaleké MŠ Ptení." },
-        { icon: "/img/smile-icon-optimal.svg", bgColor: "#dbc506", alt: "Ikona úsměvu", title: "Příjemná atmosféra", description: "Vaše děti se u nás budou cítit jako doma." },
-    ])
     /*
       teachers = [
         { imgSrc: "/img/photo.jpg", name: "Mgr. Eva Výmolová", job: "Ředitelka školky" },
@@ -71,16 +32,62 @@ export default function Home(props) {
       ]*/
 
     useEffect(() => {
-        fetch("/api/data?table=events;teachers").then((data) => {
+        fetch("/api/data?table=events;teachers;public_images").then((data) => {
             data.json().then(json => {
                 console.log('json: ', json);
-                setEvents(json.events);
+                setEvents(json.events.map((event) => {
+                    return { imgSrc: (event.img_url ? "/img/albums/other/event-photos/" + event.img_url : "/img/albums/other/no-photo.jpg"), title: event.title, date: new Date(event.date).toLocaleDateString("cs-CZ", { weekday: undefined, year: 'numeric', month: 'short', day: 'numeric' }), description: event.description }
+                }));
                 setTeachers(json.teachers.map((teacher) => {
-                    return { imgSrc: (teacher.filename ? "/img/albums/other/teacher-photos/" + teacher.filename : "/img/photo.jpg"), name: teacher.name, job: teacher.job }
+                    return { imgSrc: (teacher.filename ? "/img/albums/other/teacher-photos/" + teacher.filename : "/img/albums/other/photo.jpg"), name: teacher.name, job: teacher.job }
+                }))
+                setPublicImages(json.public_images.map((publicImage) => {
+                    return { original: "/img/albums/other/public-photos/" + publicImage.filename, thumbnail: "/img/albums/other/public-photos/" + publicImage.filename + "?minify=true" }
                 }))
 
             })
         })
+        setFeatures([
+            { icon: "/img/play-icon-optimal.svg", bgColor: "#0a58ca", alt: "Ikona herní konzole", title: "Zábava", description: "Školka vlastní mnoho různých hraček, kterými se vaše děti zabaví." },
+            { icon: "/img/tree-icon-optimal.svg", bgColor: "#0aca10", alt: "Ikona přírody", title: "Krásná příroda", description: "Školka se nachází uprostřed krásné přírody." },
+            { icon: "/img/food-icon-optimal.svg", bgColor: "#ca3f0a", alt: "Ikona jídla (ovoce)", title: "Stravování", description: "Každý den jsou do školy dováženy obědy z nedaleké MŠ Ptení." },
+            { icon: "/img/smile-icon-optimal.svg", bgColor: "#dbc506", alt: "Ikona úsměvu", title: "Příjemná atmosféra", description: "Vaše děti se u nás budou cítit jako doma." },
+        ])
+        /*
+                setPublicImages([
+                    {
+                        original: 'https://picsum.photos/id/1018/1000/600/',
+                        thumbnail: 'https://picsum.photos/id/1018/250/150/',
+                    },
+                    {
+                        original: 'https://picsum.photos/id/1015/1000/600/',
+                        thumbnail: 'https://picsum.photos/id/1015/250/150/',
+                    },
+                    {
+                        original: 'https://picsum.photos/id/1019/1000/600/',
+                        thumbnail: 'https://picsum.photos/id/1019/250/150/',
+                    },
+                    {
+                        original: 'https://picsum.photos/id/1018/1000/600/',
+                        thumbnail: 'https://picsum.photos/id/1018/250/150/',
+                    },
+                    {
+                        original: 'https://picsum.photos/id/1015/1000/600/',
+                        thumbnail: 'https://picsum.photos/id/1015/250/150/',
+                    },
+                    {
+                        original: 'https://picsum.photos/id/1019/1000/600/',
+                        thumbnail: 'https://picsum.photos/id/1019/250/150/',
+                    },
+                    {
+                        original: 'https://picsum.photos/id/1015/1000/600/',
+                        thumbnail: 'https://picsum.photos/id/1015/250/150/',
+                    },
+                    {
+                        original: 'https://picsum.photos/id/1019/1000/600/',
+                        thumbnail: 'https://picsum.photos/id/1019/250/150/',
+                    },
+                ])*/
     }, [])
     return (
         <>
@@ -161,12 +168,15 @@ export default function Home(props) {
                             <div className="row"><h2>Foto školy</h2></div>
                             <div className="h5">(Pro více fotek přejděte z menu na <Link href="/foto"><a>Foto</a></Link>)</div>
                             <div className={classes["gallery-container"] + " row justify-content-center"}>
-                                {images.map((img, index) =>
-                                    <div key={"img-thumbnail-" + index} className={classes["image-frame"] + " col-4"}>
-                                        <div className={classes["image-container"] + " position-relative"}>
-                                            <Image src={img.thumbnail} alt="Fotka školky" layout="fill" />
+                                {publicImages.map((img, index) => {
+                                    return (
+                                        <div key={"img-thumbnail-" + index} className={classes["image-frame"] + " col-4"}>
+                                            <div className={classes["image-container"] + " position-relative"}>
+                                                <Image src={img.thumbnail} alt="Fotka školky" layout="fill" />
+                                            </div>
                                         </div>
-                                    </div>
+                                    )
+                                }
                                 )}
                             </div>
                         </div>
@@ -190,7 +200,8 @@ export default function Home(props) {
                             <div className={" row"}>
                                 <div className={classes["mapouter"]}>
                                     <div className={classes["gmap_canvas"]}>
-                                        <iframe width="800" height="400" id="gmap_canvas" src="https://maps.google.com/maps?q=M%C5%A0%20Stra%C5%BEisko&t=&z=13&ie=UTF8&iwloc=&output=embed" scrolling="no"></iframe>
+                                        {/* <iframe width="800" height="400" id="gmap_canvas" src="https://maps.google.com/maps?q=M%C5%A0%20Stra%C5%BEisko&t=&z=13&ie=UTF8&iwloc=&output=embed" scrolling="no"></iframe> */}
+                                        <div style={{ width: "100%" }}><iframe width="100%" height="600" frameBorder="0" scrolling="no" marginHeight={0} marginWidth={0} src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=M%C5%A1%20stra%C5%BEisko%2025+(M%C5%A0%20Stra%C5%BEisko)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"><a href="https://www.gps.ie/truck-gps/">transport gps</a></iframe></div>
                                     </div>
                                 </div>
                             </div>

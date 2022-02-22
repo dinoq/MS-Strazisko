@@ -7,7 +7,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     let years = [];
     const db = new Database('database/database.db', { verbose: console.log });
 
-    const stmt = db.prepare("SELECT date FROM Album INNER JOIN photos ON Album.id_album=photos.id_album ORDER BY date;")
+    const stmt = db.prepare("SELECT date FROM Album INNER JOIN PrivatePhoto ON Album.id_album=PrivatePhoto.id_album ORDER BY date;")
     const sqlResults = stmt.all();
     
     for (const sqlResult of sqlResults) {

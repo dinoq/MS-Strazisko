@@ -76,6 +76,18 @@ const DBObjectDefinitions: RecursivePartial<DBOBjectDefs> = {
         ],
     }, 
 
+    Food: {
+        DBOClass: "Food",
+        attributes: [
+            {
+                key: "id_food",
+            },
+            {
+                key: "img_url",
+            }
+        ]
+    },
+
 
 
     Teacher: {

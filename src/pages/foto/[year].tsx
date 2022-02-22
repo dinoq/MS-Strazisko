@@ -113,13 +113,13 @@ const Gallery = (props) => {
             return (
               <div key={"album-" + index}>
                 <div className="text-blue text-center h4 my-3">
-                  <Link href={"/foto/" + props.year + "/" + album.title}>
+                  <Link href={"/foto/" + props.year.replace("/", "_") + "/" + album.title}>
                     <a>
                       {date + " - " + album.name}
                     </a>
                   </Link>
                 </div>
-                <Link href={"/foto/" + props.year + "/" + album.title}>
+                <Link href={"/foto/" + props.year.replace("/", "_") + "/" + album.title}>
                   <a>
                     <div className={classes["overlay"] + " col-12"}>
                       <div>Více &gt;&gt;</div>
