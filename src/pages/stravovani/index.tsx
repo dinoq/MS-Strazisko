@@ -28,9 +28,9 @@ const Stravovani: React.FC<{ propname: any }> = (props) => {
                         <div className={classes.allergens + " position-relative"}>
                             <Link href={allergens.src}><a target="_blank"><Image src={allergens} alt="Seznam alergenů" layout="fill" objectFit="contain" /></a></Link>
                         </div>
-                        {imgUrls.map(img=>{
+                        {imgUrls.map((img, index)=>{
                             return (
-                                <div className={classes.food + " position-relative"}>
+                                <div key={"food-"+index} className={classes.food + " position-relative"}>
                                     <Link href={img.img_url}><a target="_blank"><Image src={img.img_url} alt="Seznam alergenů" layout="fill" objectFit="contain" /></a></Link>
                                 </div>
                             )
