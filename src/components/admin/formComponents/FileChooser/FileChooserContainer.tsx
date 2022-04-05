@@ -2,18 +2,17 @@
 //import classes from "./FileChooser.module.css";
 
 import { FC, useState } from "react";
-import { useDispatch } from "react-redux";
-import { ComponentType } from "../../../../helpers/constants";
-import { addFilesToUpload } from "../../../../store/reducers/DBObjectReducer";
+import { useAppDispatch } from "../../../../hooks";
+import { addFilesToUpload } from "../../../../store/reducers/DBObjectSlice";
 import FileChooser from "./FileChooser";
 
-const FileChooserContainer: FC<{id: string, onChange: Function, initLabel: string}> = (props) => {
-    const [fileLabel, setFileLabel] = useState(props.initLabel);
-    const [file, setFile] = useState(null);
+const FileChooserContainer: FC<{id: string, onChange: Function, initLabel: string | undefined}> = (props) => {
+    const [fileLabel, setFileLabel] = useState(props.initLabel ?? "");
+    const [file, setFile] = useState<File | undefined>(undefined);
     const initFileName = "Název souboru";
-    const [fileName, setFileName] = useState(initFileName);
+    const [fileName, setFileName]: [any, any] = useState(initFileName);
     const [urlName, setUrlName] = useState("");
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     
     const fileChange = (event) => {
         if (event?.target?.files[0]?.name?.length) {

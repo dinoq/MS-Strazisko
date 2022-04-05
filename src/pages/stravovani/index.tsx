@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 
 const Stravovani: React.FC<{ propname: any }> = (props) => {
 
-    const [imgUrls, setImgUrls] = useState([]);
+    const [imgUrls, setImgUrls] = useState<Array<{img_url: string}>>([]);
     useEffect(() => {
         fetch("/api/data?table=food").then((data) => {
 

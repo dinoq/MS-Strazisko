@@ -34,7 +34,7 @@ const Login: React.FC<{ year: any }> = (props) => {
     setUnknownErrorOccured(false);
     const year = props.year;
 
-    let pwd = pwdRef.current.value;
+    let pwd = pwdRef?.current?.value;
     let resp = await fetch("/api/loginForYear", {
       method: "POST",
       mode: "same-origin",
@@ -79,7 +79,7 @@ const Login: React.FC<{ year: any }> = (props) => {
 };
 
 const Gallery = (props) => {
-  const [albums, setAlbums] = useState([]);
+  const [albums, setAlbums] = useState<any>([]);
 
   useEffect(() => {
     fetch("/api/getYearAlbumsInfo?year=" + props.year + "&limit=" + 6).then((resp) => {
@@ -162,9 +162,15 @@ const Gallery = (props) => {
 
 export const getServerSideProps = withIronSessionSsr(
   async ({ req, res }) => {
+      if(!req.url){
+          
+        return {
+            props: { logged: false },
+        };
+      }
     const fotoIndex = req.url.indexOf("foto/") + 5;
     const pageYear = req.url.substring(fotoIndex, fotoIndex + 9).replace("_", "/");
-    const loggedForYears: Array<any> = req.session.loggedForYears;
+    const loggedForYears: Array<string> | undefined = req.session.loggedForYears;
 
     if (
       loggedForYears &&

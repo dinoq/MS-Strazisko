@@ -6,7 +6,6 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 
 const Footer: React.FC<{}> = (props) => {
-    const footer = useRef<HTMLDivElement>();
     const router = useRouter();
 
     const [contactText, setContactText] = useState({tel: "", email: ""});
@@ -27,7 +26,7 @@ const Footer: React.FC<{}> = (props) => {
 
     }, [])
     return (
-        <div ref={footer} className={classes["footer"] + " pt-4 container-fluid "/* + offsetClass*/}>
+        <div className={classes["footer"] + " pt-4 container-fluid "/* + offsetClass*/}>
             <div className={" row justify-content-center text-center text-white"}>
                 <div className="col-10 p-4 d-flex flex-column justify-content-center">
                     <div className="row"><h2>Kontakty</h2></div>

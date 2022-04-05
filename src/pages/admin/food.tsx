@@ -1,14 +1,14 @@
 import type { NextPage } from 'next'
-import { withIronSessionApiRoute, withIronSessionSsr } from "iron-session/next";
+import { withIronSessionSsr } from "iron-session/next";
 import Head from 'next/head'
 import FormFrameContainer from '../../components/admin/FormFrame/FormFrameContainer'
 import styles from './pages.module.scss'
-import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { SagaActions } from '../../store/sagas';
+import { useAppDispatch } from '../../hooks';
 
 const AdminFoodPage: NextPage = (props: any) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: "Food" });
@@ -31,7 +31,7 @@ const AdminFoodPage: NextPage = (props: any) => {
 
 export const getServerSideProps = withIronSessionSsr(
     async ({ req, res }) => {
-        const adminLogged: boolean = req.session.adminLogged;
+        const adminLogged: boolean | undefined = req.session.adminLogged;
 
         if (adminLogged
         ) {

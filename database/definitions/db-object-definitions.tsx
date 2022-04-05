@@ -1,4 +1,5 @@
-import { DBObject, RecursivePartial } from "../../src/helpers/types";
+import { DBManager } from "../../src/helpers/DBManager";
+import { DBObjectType, DBOClassType, RecursivePartial } from "../../src/helpers/types";
 
 /**
  * SUBSTITUCE ATD:
@@ -7,7 +8,7 @@ import { DBObject, RecursivePartial } from "../../src/helpers/types";
  *  - albums.title~id_album -  atribut 'title' ze třídy 'albums' přes vazbu 'id_album' (WHERE albums.id_album = id_album)
  */
 interface DBOBjectDefs {
-    [key: string]: DBObject;
+    [key: string]: DBObjectType;
 }
 
 const DBObjectDefinitions: RecursivePartial<DBOBjectDefs> = {
@@ -179,6 +180,6 @@ const DBObjectDefinitions: RecursivePartial<DBOBjectDefs> = {
     }
 }
 
-export const getRawDBObjectDefinition = (DBOClass: string): DBObject => {
-    return (DBObjectDefinitions[DBOClass] as DBObject);
+export const getRawDBObjectDefinition = (DBOClass: DBOClassType): DBObjectType => {
+    return (DBObjectDefinitions[DBOClass] as DBObjectType);
   }

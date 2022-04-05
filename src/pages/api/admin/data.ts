@@ -1,12 +1,11 @@
 import { withIronSessionApiRoute } from "iron-session/next";
 import Database from "better-sqlite3";
-import { DBObject, DBObjectAttr } from "../../../helpers/types";
+import { DBObjectType, DBObjectAttr } from "../../../helpers/types";
 import { checkIfLettersSlashUnderscoreUndef, checkIfNotDangerSQL } from "../../../helpers/utils";
 import { getRawDBObjectDefinition } from "../../../../database/definitions/db-object-definitions";
 
 
 const handler = async (req, res) => {
-    console.log('req.method: ', req.method);
     const adminLogged: boolean = await req.session.adminLogged;
     if (!adminLogged) {
         res.status(401).send("Unauthorized!");

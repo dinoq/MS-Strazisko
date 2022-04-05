@@ -1,12 +1,12 @@
 import React, { createRef, FC, FormEventHandler, MouseEventHandler, useEffect, useRef, useState } from "react";
 import { ComponentType, DetailFrameMode } from "../../../helpers/constants";
 import { DBManager } from "../../../helpers/DBManager";
-import { DBObject, DetailFrameDef, FormDef } from "../../../helpers/types";
+import { DBObjectType, DetailFrameDef, FormDef } from "../../../helpers/types";
 import ErrorDialog from "../ErrorDialog";
 import FileChooser from "../formComponents/FileChooser/FileChooser";
 import FileChooserContainer from "../formComponents/FileChooser/FileChooserContainer";
 
-const DetailFrame: FC<{ DBOClass: string, DBObject: DBObject, definition: FormDef, mode: DetailFrameMode, hideDetailFrame: MouseEventHandler<HTMLInputElement>, formSubmitted: FormEventHandler<HTMLFormElement>, setErrorMsg: Function, updateDBObject: Function }> = (props) => {
+const DetailFrame: FC<{ DBObject: DBObjectType, definition: FormDef, mode: DetailFrameMode, hideDetailFrame: MouseEventHandler<HTMLInputElement>, formSubmitted: FormEventHandler<HTMLFormElement>, setErrorMsg: Function, updateDBObject: Function }> = (props) => {
     const getInput = (componentType: ComponentType, attrs) => {
         switch (componentType) {
             case ComponentType.DateField:
@@ -57,7 +57,7 @@ const DetailFrame: FC<{ DBOClass: string, DBObject: DBObject, definition: FormDe
                             <div key={"input-" + i}>
                                 <div className="d-flex justify-content-center position-relative">
                                     <select key={"selectbox-" + i} id={component.attributeKey} value={value} onChange={(e) => props.updateDBObject(component.attributeKey, e.target.value)} disabled={disabled}>
-                                        {component.values.map((val, j) => {
+                                        {component?.values?.map((val, j) => {
                                             return <option key={"selectbox-" + i + "-option-" + j} value={val}>{val}</option>
                                         })}
                                     </select>
@@ -87,18 +87,21 @@ const DetailFrame: FC<{ DBOClass: string, DBObject: DBObject, definition: FormDe
                             return text;
                         }
                         const insertTags = (tag) => {
+                            if(inputRef === undefined || inputRef.current == null){
+                                return;
+                            }
                             const opening = `<${tag}>`;
                             const closing = `</${tag}>`;
-                            const cursorPosStart = inputRef?.current.selectionStart;
-                            const cursorPosEnd = inputRef?.current.selectionEnd;
+                            const cursorPosStart = inputRef.current.selectionStart;
+                            const cursorPosEnd = inputRef.current.selectionEnd;
                             const selectionLength = cursorPosEnd - cursorPosStart;
-                            const inputText = inputRef?.current.value;
+                            const inputText = inputRef.current.value;
                             const textBefCursor = inputText.substring(0, cursorPosStart);
                             const textBetweenCursor = inputText.substring(cursorPosStart, cursorPosEnd);
                             const textAfCursor = inputText.substring(cursorPosEnd, inputText.length);
                             const result = `${textBefCursor}${opening}${textBetweenCursor}${closing}${textAfCursor}`;
                             inputRef.current.value = result;
-                            inputRef?.current.focus();
+                            inputRef.current.focus();
                             inputRef.current.selectionStart = cursorPosStart + opening.length;
                             inputRef.current.selectionEnd = cursorPosStart + opening.length + selectionLength;
                             props.updateDBObject(component.attributeKey, substituteTags(inputRef.current.value, true) );

@@ -53,7 +53,7 @@ export default AdminLoginPage
 export const getServerSideProps = withIronSessionSsr(
   async ({ req, res }) => {
 
-    const adminLogged: boolean = req.session.adminLogged;
+    const adminLogged: boolean | undefined = req.session.adminLogged;
 
     if (!adminLogged
     ) {

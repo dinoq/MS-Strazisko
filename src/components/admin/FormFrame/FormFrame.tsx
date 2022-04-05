@@ -8,20 +8,20 @@ import ErrorDialog from "../ErrorDialog";
 import ListFrame from "../ListFrame/ListFrame";
 import TreeChoiceDialog from "../TreeChoiceDialog";
 import { DetailFrameMode } from "../../../helpers/constants";
-import { BreadcrumbItemDef, DBObject, FormDef } from "../../../helpers/types";
+import { BreadcrumbItemDef, DBObjectType, FormDef } from "../../../helpers/types";
 import DetailFrameContainer from "../DetailFrame/DetailFrameContainer";
 import ListFrameContainer from "../ListFrame/ListFrameContainer";
 import BreadcrumbContainer from "../Breadcrumb/BreadcrumbContainer";
 import { DBManager } from "../../../helpers/DBManager";
 
-const FormFrame: React.FC<{ errorMsg: string, detailFrameVisible: boolean, saveDialogVisible: boolean, entries: Array<DBObject>, detailFrameMode: DetailFrameMode, definition: FormDef, DBObject: DBObject, hideDetailFrame: EventHandler<any>, setDBObject: Function, editItemHandler: Function, showDetailFrame: Function, setSaveDialogVisible: Function, setErrorMsg: Function }> = (props) => {
+const FormFrame: React.FC<{ errorMsg: string, detailFrameVisible: boolean, saveDialogVisible: boolean, entries: Array<DBObjectType>, detailFrameMode: DetailFrameMode, definition: FormDef, DBObject: DBObjectType, hideDetailFrame: EventHandler<any>, setDBObject: Function, editItemHandler: Function, showDetailFrame: Function, setSaveDialogVisible: Function, setErrorMsg: Function }> = (props) => {
 
     return (
         <>
             <BreadcrumbContainer />
 
             <div className={"form-wrapper"}>
-                {(props.definition.detailFrame.createNewEntryText.length != 0 && !props.detailFrameVisible) && <span className={"link " + "add-document-btn mb-3"} onClick={props.showDetailFrame.bind(this, true)}>{props.definition.detailFrame.createNewEntryText}</span>}
+                {(props?.definition?.detailFrame?.createNewEntryText?.length !== 0 && !props.detailFrameVisible) && <span className={"link " + "add-document-btn mb-3"} onClick={props.showDetailFrame.bind(this, true)}>{props.definition.detailFrame.createNewEntryText}</span>}
                 {props.detailFrameVisible &&
                     <DetailFrameContainer setErrorMsg={props.setErrorMsg} mode={props.detailFrameMode} hideDetailFrame={props.hideDetailFrame} />}
                 {<ListFrameContainer editItemHandler={props.editItemHandler} />}

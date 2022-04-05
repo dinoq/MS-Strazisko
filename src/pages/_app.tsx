@@ -6,11 +6,10 @@ import Footer from "../components/footer/Footer";
 import AdminPageLayout from "../components/admin/AdminPageLayout/AdminPageLayout"
 import "../../styles/adminStyles.scss"
 import { useRouter } from 'next/router';
-import { Provider, useDispatch, useSelector } from "react-redux"
+import { Provider, useSelector } from "react-redux";
 import { RootState } from '../helpers/types';
 import store from "../store";
-import { SagaActions } from '../store/sagas';
-import { useEffect } from 'react';
+import { useAppDispatch } from '../hooks';
 
 function MyAppWrapper({ Component, pageProps }) {
 
@@ -24,7 +23,7 @@ function MyAppWrapper({ Component, pageProps }) {
 }
 
 function MyApp(props) {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const router = useRouter();
     const definitions = useSelector((state: RootState) => state.formDefinitions);
 

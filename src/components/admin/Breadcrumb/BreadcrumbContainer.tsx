@@ -1,14 +1,14 @@
 import { FC } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { BreadcrumbItemDef, RootState } from "../../../helpers/types";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../helpers/types";
 import Breadcrumb from "./Breadcrumb";
-import classes from "./Breadcrumb.module.scss";
-import { selectBreadcrumbItem } from "../../../store/reducers/BreadcrumbReducer";
+import { selectBreadcrumbItem } from "../../../store/reducers/BreadcrumbSlice";
 import { SagaActions } from "../../../store/sagas";
-import { setDBObject } from "../../../store/reducers/DBObjectReducer";
+import { setDBObject } from "../../../store/reducers/DBObjectSlice";
+import { useAppDispatch } from "../../../hooks";
 
 const BreadcrumbContainer: FC<{} > = (props) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const items = useSelector((state: RootState) => state.breadcrumb.items)
     //let items: Array<BreadcrumbItemDef> = props.items ? props.items : [];
 

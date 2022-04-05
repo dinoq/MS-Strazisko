@@ -30,7 +30,7 @@ const handler = async (req, res) => {
 
 		const stmt = db.prepare("SELECT * FROM " + className + " limit 1;")
 		const sqlResults = stmt.all();
-        let attributes = [];
+        let attributes: Array<{key: string, name: string, value: string}> = [];
         if(sqlResults.length){
             for(const columnName in sqlResults[0]){
                 const stmtName = db.prepare("SELECT attrName FROM attributes WHERE attrKey = ?;")

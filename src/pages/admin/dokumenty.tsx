@@ -107,7 +107,7 @@ const AdminDocumentsPage: NextPage = (props: any) => {
 
 const NewDocumentManager = (props) => {
     const [fileLabel, setFileLabel] = useState("Vyberte soubor")
-    const [file, setFile] = useState(null);
+    const [file, setFile] = useState(undefined);
     const initFileName = "Název souboru";
     const [fileName, setFileName] = useState(initFileName);
     const [urlName, setUrlName] = useState("");
@@ -126,6 +126,9 @@ const NewDocumentManager = (props) => {
 
     const uploadToServer = async (event) => {
         event.preventDefault();
+        if(file == undefined){
+            throw new Error("file is undefined!");
+        }
         const body = new FormData();
         body.append("document", file);
         body.append("url", urlName);
@@ -192,7 +195,7 @@ const Modal = (props) => {
 
 export const getServerSideProps = withIronSessionSsr(
     async ({ req, res }) => {
-        const adminLogged: boolean = req.session.adminLogged;
+        const adminLogged: boolean | undefined = req.session.adminLogged;
 
         if (adminLogged
         ) {

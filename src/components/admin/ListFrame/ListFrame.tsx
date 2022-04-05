@@ -4,18 +4,18 @@
 import { FC, useEffect, useState } from "react";
 import { ComponentType } from "../../../helpers/constants";
 import { DBManager } from "../../../helpers/DBManager";
-import { DBObject, LFComponentDef, ListFrameDef } from "../../../helpers/types";
+import { DBObjectType, LFComponentDef, ListFrameDef } from "../../../helpers/types";
 import Image from "next/image"
 import DOMPurify from "dompurify";
 
-const ListFrame: FC<{ definition: ListFrameDef, DBOClass: string, DBObject: DBObject, detailClickedHandler: Function, deleteItemHandler: Function, editItemHandler: Function, entries: Array<DBObject>, colspanNoData: number }> = (props) => {
+const ListFrame: FC<{ definition: ListFrameDef, DBObject: DBObjectType, detailClickedHandler: Function, deleteItemHandler: Function, editItemHandler: Function, entries: Array<DBObjectType>, colspanNoData: number }> = (props) => {
 
     return (
         <>
             <table className={""}>
                 <thead>
                     <tr className={""}>
-                        {props.definition?.detailDBOClass.length > 0 && <th className={""}>Detail</th>}
+                        {(props.definition?.detailDBOClass?.length ?? 0) > 0 && <th className={""}>Detail</th>}
                         {props.definition?.components.map((item, index, array) => {
                             return <th key={"thtrtd-" + index} className={""}>{item.componentName}</th>
                         })}
@@ -25,7 +25,7 @@ const ListFrame: FC<{ definition: ListFrameDef, DBOClass: string, DBObject: DBOb
                 <tbody>
                     {props.entries.map((entry, index, array) => {
                         return <tr key={"tbtr-" + index} className={(props.DBObject.id == entry.id) ? "selected-row" : ""}>
-                            {props.definition?.detailDBOClass.length > 0 &&
+                            {(props.definition?.detailDBOClass?.length ?? 0) > 0 &&
                                 <td className={""}>
                                     <span className="link" onClick={props.detailClickedHandler.bind(this, entry)}>Detail</span>
                                 </td>}

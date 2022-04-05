@@ -1,13 +1,13 @@
 import { getRawDBObjectDefinition } from "../../database/definitions/db-object-definitions";
 import { ComponentType } from "./constants";
-import { DBObject, DBObjectAttr, DFComponentDef, FormDef, FormDefs, LFComponentDef, OrderByDef, RecursivePartial, RootState } from "./types";
+import { DBObjectType, DBObjectAttr, DBOClassType, DFComponentDef, FormDef, FormDefs, LFComponentDef, OrderByDef, RecursivePartial, RootState } from "./types";
 import clone from "clone";
 import { getApiURL } from "./utils";
 import { XMLParser } from "./XMLParser";
 import store from "../store"
 import { SagaActions } from "../store/sagas";
-import { setNewDBObject, setPersistentAttrs } from "../store/reducers/DBObjectReducer";
-import { setEntries } from "../store/reducers/EntryReducer";
+import { setNewDBObject, setPersistentAttrs } from "../store/reducers/DBObjectSlice";
+import { setEntries } from "../store/reducers/EntrySlice";
 
 export class DBManager {
 
@@ -35,8 +35,13 @@ export class DBManager {
     }
 
 
-    public static getDBObjectDefinition = (DBOClass: string): DBObject => {
-        let obj: DBObject = getRawDBObjectDefinition(DBOClass);
+    public static getDBObjectDefinition = (DBOClass: DBOClassType): DBObjectType => {
+        let obj: DBObjectType;
+        if(DBOClass === undefined)
+            obj = DBManager.getEmptyDBObject(undefined);
+        else
+            obj = getRawDBObjectDefinition(DBOClass);
+            
         if (obj == undefined) {
             throw new Error("Error: Class '" + DBOClass + "' has not object defined!");
         }
@@ -62,8 +67,8 @@ export class DBManager {
         return clone(obj);
     }
 
-    public static getEmptyDBObject = (DBOClass: string = undefined): DBObject => {
-        let obj: DBObject = {
+    public static getEmptyDBObject = (DBOClass: DBOClassType): DBObjectType => {
+        let obj: DBObjectType = {
             DBOClass: DBOClass,
             id: -1,
             attributes: (DBOClass == undefined || DBOClass == "") ? [] : DBManager.getDBObjectDefinition(DBOClass).attributes,
@@ -76,8 +81,8 @@ export class DBManager {
         return clone(obj);
     }
 
-    public static getClearedDBObject = (DBObject: DBObject): DBObject => {
-        let obj: DBObject = {
+    public static getClearedDBObject = (DBObject: DBObjectType): DBObjectType => {
+        let obj: DBObjectType = {
             DBOClass: DBObject.DBOClass,
             id: -1,
             attributes: DBObject.attributes.map(attr => {
@@ -133,7 +138,7 @@ export class DBManager {
         return (DBManager.getAttrOrComponentFromArrByKey(arr, key, "DFComonentDef") as DFComponentDef);
     }
 
-    protected static getAttrVal(key: string, dbObject: DBObject) {
+    protected static getAttrVal(key: string, dbObject: DBObjectType) {
         if (dbObject.editedAttrs.findIndex((attr) => { return attr.key == key }) > -1) { // Key is in EDITED attributes (has priority over not-edited attrs)
             return DBManager.getAttrFromArrByKey(dbObject.editedAttrs, key).value
         } else if (dbObject.attributes.findIndex((attr) => { return attr.key == key }) > -1) { // Key is in attributes
@@ -151,7 +156,9 @@ export class DBManager {
      * @param dbObject Database object from where get data for substitution
      * @returns substituted expression (with real values)
      */
-    public static substituteExpression(rawExpression: string, dbObject: DBObject): string {
+    public static substituteExpression(rawExpression: string | undefined, dbObject: DBObjectType): string {
+        if (rawExpression === undefined)
+            return "";
         console.log('rawExpression: ', rawExpression, dbObject);
         let rawExpressionSplitted = rawExpression.split(/@\[(.*?)\]/g);
         let substituted = "";
@@ -165,17 +172,18 @@ export class DBManager {
         return substituted;
     }
 
-    public static getAllDBObjectEntries = async (DBOClass: string, orderBy: OrderByDef, condition: string = ""): Promise<Array<DBObject>> => {
+    public static getAllDBObjectEntries = async (DBOClass: DBOClassType, orderBy: OrderByDef | undefined, condition: string = ""): Promise<Array<DBObjectType>> => {
         if (DBOClass == undefined || DBOClass == "") {
             return [];
         } else {
             let order = "";
-            if (orderBy.attr) {
+            console.log('orderBy: ', orderBy);
+            if (orderBy !== undefined && orderBy.attr) {
                 order = "&order=" + orderBy.attr + "|" + (orderBy.descending ? "DESC" : "ASC");
             }
             const resp = await fetch("/api/admin/data?className=" + DBOClass + (condition ? "&condition=" + condition : "") + order);
             if (resp.status == 200) {
-                let entries = [];
+                let entries: Array<DBObjectType> = [];
                 let json = await resp.json();
                 for (const attributes of json) {
                     let entry = DBManager.getEmptyDBObject(DBOClass);
@@ -195,6 +203,7 @@ export class DBManager {
                 }
                 return entries;
             } else {
+                debugger;
                 let text = await resp.text();
                 console.log('text: ', text);
                 throw new Error("Error: database return no object data. Msg from server: " + text);
@@ -217,7 +226,7 @@ export class DBManager {
         return await DBManager.callAPI("data", JSON.stringify(body), method, reload, "application/json");
     }
 
-    protected static callAPI = async (handlerName: string, body: any, method: string, reload: boolean, contentType: string = undefined): Promise<any> => {
+    protected static callAPI = async (handlerName: string, body: any, method: string, reload: boolean, contentType: string | undefined): Promise<any> => {
         let init: RequestInit =
         {
             method,
@@ -238,12 +247,12 @@ export class DBManager {
                 //let def = store.getState()?.formDefinitions?.actualFormDefinition?.listFrame.;
                 if (breadcrumbItems.length) {
 
-                    let item: DBObject = breadcrumbItems[breadcrumbItems.length - 1].DBObject as DBObject;
+                    let item: DBObjectType = breadcrumbItems[breadcrumbItems.length - 1].DBObject as DBObjectType;
 
 
                     let detailItemCondition = `WHERE ${item.attributes[0].key}='${DBManager.getAttrFromArrByKey(breadcrumbItems[breadcrumbItems.length - 1].DBObject.attributes, item.attributes[0].key).value}'`;
 
-                    DBManager.getAllDBObjectEntries(dbObject.DBOClass, state.formDefinitions.actualFormDefinition.DB.orderBy, detailItemCondition).then(entrs => {
+                    DBManager.getAllDBObjectEntries(dbObject.DBOClass, state.formDefinitions.actualFormDefinition.DB?.orderBy, detailItemCondition).then(entrs => {
                         store.dispatch(setEntries(entrs));
                         //store.dispatch(setPersistentAttrs(entrs.length ? entrs[0].persistentAttributes : []))
                     })
@@ -279,14 +288,19 @@ export class DBManager {
             body.append("file" + (index), file);
             body.append("path" + (index++), path);
         }
-        return await DBManager.callAPI("file", body, "POST", true);
+        return await DBManager.callAPI("file", body, "POST", true, undefined);
     }
 
-    public static checkClassAttrs = (attrs: Array<any>, DBOClass: string, tolerateMissingPrimaryKey = false): { success: boolean, errorMsg: string } => {
+    public static checkClassAttrs = (attrs: Array<any>, DBOClass: DBOClassType, tolerateMissingPrimaryKey = false): { success: boolean, errorMsg: string } => {
         let check = {
             success: true,
             errorMsg: ""
         }
+
+        if(DBOClass == undefined){
+            throw new Error("Cannot check class attrs, because class is undefined!");
+        }
+
         try {
             const DBObjectDefinitionAttrs: Array<DBObjectAttr> = DBManager.getDBObjectDefinition(DBOClass).attributes;
             const DBObjectDefinitionPersistentAttrs: Array<DBObjectAttr> = DBManager.getDBObjectDefinition(DBOClass).persistentAttributes;
@@ -311,7 +325,7 @@ export class DBManager {
         return check;
     }
 
-    public static getBreadcrumbAttr = (DBObject: DBObject, formDefinition: FormDef): DBObjectAttr => {
+    public static getBreadcrumbAttr = (DBObject: DBObjectType, formDefinition: FormDef): DBObjectAttr => {
         const breadcrumbComponent = formDefinition.listFrame.components.find(component => component.isBreadcrumbKey);
         if (breadcrumbComponent == undefined) {
             throw new Error("ERROR - No breadcrumb item set in form definitions");

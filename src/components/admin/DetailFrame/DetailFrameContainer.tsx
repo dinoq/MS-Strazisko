@@ -1,17 +1,17 @@
-import React, { FC, MouseEventHandler, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { FC, MouseEventHandler } from "react";
+import { useSelector } from "react-redux";
 import { ComponentType, DetailFrameMode } from "../../../helpers/constants";
 import { DBManager } from "../../../helpers/DBManager";
-import { editDBObjectAttr } from "../../../store/reducers/DBObjectReducer";
-import { DBObject, DBObjectAttr, RootState } from "../../../helpers/types";
-import ErrorDialog from "../ErrorDialog";
+import { editDBObjectAttr } from "../../../store/reducers/DBObjectSlice";
+import { RootState } from "../../../helpers/types";
 import DetailFrame from "./DetailFrame";
+import { useAppDispatch } from "../../../hooks";
 
 const DetailFrameContainer: FC<{ mode: DetailFrameMode, hideDetailFrame: MouseEventHandler<HTMLInputElement>, setErrorMsg: Function}> = (props) => {
     const formDefinition = useSelector((state: RootState) => state.formDefinitions).actualFormDefinition;
     const breadcrumbItems = useSelector((state: RootState) => state.breadcrumb.items);
-    const dispatch = useDispatch();
-    let DBOClass = useSelector((state: RootState) => state.formDefinitions.actualFormDefinition.DB.DBOClass);
+    const dispatch = useAppDispatch();
+    let DBOClass = useSelector((state: RootState) => state.formDefinitions.actualFormDefinition.DB?.DBOClass);
     const DBObject = useSelector((state: RootState) => state.dbObject);
 
     const formSubmitted = async (event) => {
@@ -45,7 +45,7 @@ const DetailFrameContainer: FC<{ mode: DetailFrameMode, hideDetailFrame: MouseEv
         if(props.mode == DetailFrameMode.NEW_ENTRY){ // set default values for selectboxes...
             formDefinition.detailFrame.components.forEach(component =>{
                 if(component.componentType == ComponentType.SelectBox && body.attributes[component.attributeKey] == undefined){
-                    body.attributes[component.attributeKey] = component.values[0]; // set only body, not DBObject.editedAttrs!
+                    body.attributes[component.attributeKey] = component.values?.[0]; // set only body, not DBObject.editedAttrs!
                 }
             })    
         }
@@ -67,7 +67,7 @@ const DetailFrameContainer: FC<{ mode: DetailFrameMode, hideDetailFrame: MouseEv
             resultErr = await DBManager.insertToDB(body, (!afterSaveMethod && !DBObject.filesToUpload.length));
             if((!resultErr || !resultErr.length) && DBObject.filesToUpload.length){
                 let notSubstitutedPathComponent = formDefinition.detailFrame.components.find(c=>c.componentSpecificProps?.path)
-                const path = DBManager.substituteExpression(notSubstitutedPathComponent.componentSpecificProps.path, DBObject);
+                const path = DBManager.substituteExpression(notSubstitutedPathComponent?.componentSpecificProps?.path, DBObject);
                 if(DBObject.filesToUpload.length > 1){
                     throw new Error("multiple files not implemented! Bude potreba vymyslet cesty...Asi by se měly do parametru filename nějak ukládat všechny nazvy souborů...")
                 }
@@ -86,7 +86,7 @@ const DetailFrameContainer: FC<{ mode: DetailFrameMode, hideDetailFrame: MouseEv
                 let methodName = afterSaveMethod.substring(0, afterSaveMethod.indexOf("("));
                 
                 let rawParams = (afterSaveMethod.substring(methodName.length+1, afterSaveMethod.length-1)).split(",");
-                let params = [];
+                let params: Array<string> = [];
                 for(const rawParam of rawParams){
                     let evaluated = DBManager.substituteExpression(rawParam, DBObject);
                     params.push(evaluated);
@@ -111,7 +111,7 @@ const DetailFrameContainer: FC<{ mode: DetailFrameMode, hideDetailFrame: MouseEv
     }
 
     return (
-        <DetailFrame DBOClass={DBOClass} DBObject={DBObject} definition={formDefinition} mode={props.mode} hideDetailFrame={props.hideDetailFrame} formSubmitted={formSubmitted} setErrorMsg={props.setErrorMsg} updateDBObject={updateDBObject} />
+        <DetailFrame DBObject={DBObject} definition={formDefinition} mode={props.mode} hideDetailFrame={props.hideDetailFrame} formSubmitted={formSubmitted} setErrorMsg={props.setErrorMsg} updateDBObject={updateDBObject} />
     )
 }
 

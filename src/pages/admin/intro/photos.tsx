@@ -2,12 +2,12 @@ import { withIronSessionSsr } from "iron-session/next";
 import { NextPage } from "next";
 import Head from 'next/head'
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 import FormFrameContainer from "../../../components/admin/FormFrame/FormFrameContainer";
+import { useAppDispatch } from "../../../hooks";
 import { SagaActions } from "../../../store/sagas";
 
 const PhotosPage: NextPage = (props: any) =>{
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: "PublicPhoto" });
@@ -31,7 +31,7 @@ const PhotosPage: NextPage = (props: any) =>{
 
 export const getServerSideProps = withIronSessionSsr(
     async ({ req, res }) => {
-        const adminLogged: boolean = req.session.adminLogged;
+        const adminLogged: boolean | undefined = req.session.adminLogged;
 
         if (adminLogged
         ) {

@@ -3,21 +3,20 @@
 
 import React, { useEffect, useState } from "react";
 import { DetailFrameMode } from "../../../helpers/constants";
-import { BreadcrumbItemDef, BreadcrumbState, DBObject, DBObjectAttr, RootState } from "../../../helpers/types";
+import { BreadcrumbItemDef, DBObjectType, RootState } from "../../../helpers/types";
 import FormFrame from "./FormFrame";
 import { DBManager } from "../../../helpers/DBManager";
-import { useDispatch, useSelector } from "react-redux";
-import { addItemToBreadcrumb } from "../../../store/reducers/BreadcrumbReducer";
-import { SagaActions } from "../../../store/sagas";
-import { setErrorMsg } from "../../../store/reducers/ErrorReducer";
-import { setDBObject, setEditedAttrs, setNewDBObject, setNewEmptyDBObject, setPersistentAttrs } from "../../../store/reducers/DBObjectReducer";
-import { setEntries } from "../../../store/reducers/EntryReducer";
+import { useSelector } from "react-redux";
+import { setErrorMsg } from "../../../store/reducers/ErrorSlice";
+import { setDBObject, setEditedAttrs, setNewDBObject } from "../../../store/reducers/DBObjectSlice";
+import { setEntries } from "../../../store/reducers/EntrySlice";
 import { getRawDBObjectDefinition } from "../../../../database/definitions/db-object-definitions";
+import { useAppDispatch } from "../../../hooks";
 
 const FormFrameContainer: React.FC<{}> = (props) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const definition = useSelector((state: RootState) => state.formDefinitions.actualFormDefinition);
-    let DBOClass = definition.DB.DBOClass;
+    let DBOClass = definition?.DB?.DBOClass ?? undefined;
     const breadcrumbItems: Array<BreadcrumbItemDef> = useSelector((state: RootState) => state.breadcrumb.items);
     const errorMsg = useSelector((state: RootState) => state.errorReducers.msg);
     const setErrMsg = (msg: string) => {
@@ -44,12 +43,12 @@ const FormFrameContainer: React.FC<{}> = (props) => {
                 detailItemCondition = `WHERE ${key}='${DBManager.getAttrFromArrByKey(breadcrumbItems[breadcrumbItems.length - 1].DBObject.attributes, parentAttribute.key).value}'`;
             }
         }
-        DBManager.getAllDBObjectEntries(DBOClass, definition.DB.orderBy,detailItemCondition).then(entrs => {
+        DBManager.getAllDBObjectEntries(DBOClass, definition?.DB?.orderBy,detailItemCondition).then(entrs => {
             dispatch(setEntries(entrs));
             let pa = getRawDBObjectDefinition(DBOClass)?.persistentAttributes ?? [];
             //dispatch(setPersistentAttrs(pa))
         })
-        if(DBObject.DBOClass == undefined && DBOClass.length){
+        if(DBObject.DBOClass == undefined && DBOClass !== undefined && DBOClass.length){
             dispatch(setNewDBObject({ DBOClass, parentEntry: undefined }));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -79,7 +78,7 @@ const FormFrameContainer: React.FC<{}> = (props) => {
             setDetailFrameMode(DetailFrameMode.EDITING_ENTRY);
             console.log('(item as DBObject).editedAttrs: ', item.editedAttrs);
             dispatch(setDBObject(item));
-            const editedAttrs = (item as DBObject).attributes.map(attr => { return { key: attr.key, value: attr.value } })
+            const editedAttrs = (item as DBObjectType).attributes.map(attr => { return { key: attr.key, value: attr.value } })
             dispatch(setEditedAttrs(editedAttrs));
             showDetailFrame();
         }

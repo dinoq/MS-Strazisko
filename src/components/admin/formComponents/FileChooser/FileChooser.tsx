@@ -3,7 +3,7 @@
 
 import { ChangeEventHandler, FC, FormEventHandler, MouseEventHandler, useState } from "react";
 import { DetailFrameMode } from "../../../../helpers/constants";
-import { DBObject, FormDef } from "../../../../helpers/types";
+import { DBObjectType, FormDef } from "../../../../helpers/types";
 
 const FileChooser: FC<{ id: string, fileLabel: string,fileChange: ChangeEventHandler<HTMLInputElement> }> = (props) => {
   return (

@@ -3,7 +3,7 @@ import Database from "better-sqlite3";
 
 // Získání školních roků z databáze - není vyžadováno přihlášení
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-    let docs = [];
+    let docs: Array<string> = [];
     const db = new Database('database/database.db', { verbose: console.log });
 
     const stmt = db.prepare("SELECT id_document, name, url FROM Document;")

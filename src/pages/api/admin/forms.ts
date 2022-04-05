@@ -6,7 +6,7 @@ import { NextApiHandler, NextApiRequest } from "next";
 import { IncomingMessage } from "http";
 
 const handler = async (req: NextApiRequest, res)=> {
-	const adminLogged: boolean = await req.session.adminLogged;
+	const adminLogged: boolean | undefined = await req.session.adminLogged;
 	if (!adminLogged) {
 		res.status(401).send("Unauthorized!");
 		return;

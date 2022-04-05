@@ -4,7 +4,7 @@ import Database from "better-sqlite3";
 // TODO - zde se získávají data jednotlivých fotek a později se z nich složitě skládají školní roky. Nebylo by lepší se prostě dotázat na záznamy albumPasswords?
 // Získání školních roků z databáze - není vyžadováno přihlášení
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-    let years = [];
+    let years: Array<string> = [];
     const db = new Database('database/database.db', { verbose: console.log });
 
     const stmt = db.prepare("SELECT date FROM Album INNER JOIN PrivatePhoto ON Album.id_album=PrivatePhoto.id_album ORDER BY date;")

@@ -6,9 +6,9 @@ import store from "../store"
  * DBObject
  * ########
  */
-export type DBObject = {
+export type DBObjectType = {
     id: number,
-    DBOClass: string,
+    DBOClass: DBOClassType,
     attributes: Array<DBObjectAttr>,
     persistentAttributes: Array<DBObjectAttr>,
     editedAttrs: Array<DBObjectAttr>,
@@ -32,10 +32,12 @@ export type FormDef = {
     listFrame: ListFrameDef,
     DB?: {
         orderBy?: OrderByDef,
-        DBOClass: string,
+        DBOClass: DBOClassType,
     }
-    //DBOClass: string,???? - bude bez toho vedet co "tahat"??
+    //DBOClass: DBOClassType,???? - bude bez toho vedet co "tahat"??
 }
+
+export type DBOClassType = string | undefined;
 
 export type FormDefs = {
     [key: string]: FormDef;
@@ -92,7 +94,7 @@ export type OrderByDef = {
 }
 
 export type BreadcrumbItemDef = {
-    DBObject: DBObject,
+    DBObject: DBObjectType,
     text: string
 }
 
