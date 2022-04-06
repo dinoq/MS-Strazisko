@@ -1,5 +1,5 @@
 import { getEmptyValues } from "../../database/definitions/values-definitions";
-import { ComponentType } from "./constants";
+import { DetailFrameComponentType, ListFrameComponentType } from "./constants";
 import {
     DFComponentDef,
     FormDef,
@@ -14,7 +14,7 @@ export class XMLParser {
         detailFrame: {
             components: [
                 {
-                    componentType: ComponentType.TextField,
+                    componentType: DetailFrameComponentType.TextField,
                     componentName: "??",
                     values: getEmptyValues(),
                     editable: true,
@@ -38,7 +38,7 @@ export class XMLParser {
             },
             components: [
                 {
-                    componentType: ComponentType.TextField,
+                    componentType: ListFrameComponentType.TextField,
                     componentName: "??",
                     isBreadcrumbKey: false,
                     transformation: "",
@@ -81,16 +81,16 @@ export class XMLParser {
 
         let mapToComponentType = (type: string) => {
             if (type == "") {
-                return ComponentType.TextField;
+                return DetailFrameComponentType.TextField;
             }
 
-            if (ComponentType[type] == undefined) {
+            if (DetailFrameComponentType[type] == undefined) {
                 throw new Error(
                     "Uknown componentType ('" + type + "') in form definition!"
                 );
-                return ComponentType.UNKNOWN;
+                return DetailFrameComponentType.UNKNOWN;
             }
-            return ComponentType[type];
+            return DetailFrameComponentType[type];
         };
 
         let defs = {};
@@ -116,7 +116,7 @@ export class XMLParser {
                     getOptionalAttrFromXML("componentType", XMLcomponent)
                 );
                 component.componentSpecificProps = {};
-                if (component.componentType == ComponentType.FileChooser) {
+                if (component.componentType == DetailFrameComponentType.FileChooser) {
                     component.componentSpecificProps.path = getREQUIREDAttrFromXML(
                         "path",
                         XMLcomponent

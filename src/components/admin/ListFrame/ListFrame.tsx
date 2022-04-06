@@ -2,7 +2,7 @@
 //import styles from "./ListFrame.module.css";
 
 import { FC, useEffect, useState } from "react";
-import { ComponentType } from "../../../helpers/constants";
+import { ListFrameComponentType } from "../../../helpers/constants";
 import { DBManager } from "../../../helpers/DBManager";
 import { DBObjectType, LFComponentDef, ListFrameDef } from "../../../helpers/types";
 import Image from "next/image"
@@ -36,21 +36,21 @@ const ListFrame: FC<{ definition: ListFrameDef, DBObject: DBObjectType, detailCl
 
                                     let evaluated = DBManager.substituteExpression(component.transformation, entry);
                                     
-                                    if(component.componentType == ComponentType.TextField || component.componentType == ComponentType.RichTextField){
+                                    if(component.componentType == ListFrameComponentType.TextField || component.componentType == ListFrameComponentType.RichTextField){
                                         value = evaluated;
 
-                                    }else if(component.componentType == ComponentType.ImagePreview){
+                                    }else if(component.componentType == ListFrameComponentType.ImagePreview){
                                         evaluated = evaluated.startsWith("/")? evaluated : "/" + evaluated;
                                         value = (
                                             <div className="ImagePreview">
                                                 <Image src={evaluated} alt="Náhled obrázku" layout="fill" objectFit="contain"/>
                                             </div>
                                         )
-                                    }else if(component.componentType == ComponentType.DateField){
+                                    }else if(component.componentType == ListFrameComponentType.DateField){
                                         let date = new Date(evaluated);
                                         value = date.getDate() + ". " + (date.getMonth()+1) + ". " + date.getFullYear();
                                     }
-                                    if(component.componentType == ComponentType.RichTextField){
+                                    if(component.componentType == ListFrameComponentType.RichTextField){
                                         return <td key={"tbtrtd-" + index} dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(value)}}></td>;
                                     }else{
                                         return <td key={"tbtrtd-" + index}>{value}</td>;

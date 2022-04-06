@@ -1,5 +1,5 @@
 import React, { createRef, FC, FormEventHandler, MouseEventHandler, useEffect, useRef, useState } from "react";
-import { ComponentType, DetailFrameMode } from "../../../helpers/constants";
+import { DetailFrameComponentType, DetailFrameMode } from "../../../helpers/constants";
 import { DBManager } from "../../../helpers/DBManager";
 import { DBObjectType, DetailFrameDef, FormDef } from "../../../helpers/types";
 import ErrorDialog from "../ErrorDialog";
@@ -7,16 +7,16 @@ import FileChooser from "../formComponents/FileChooser/FileChooser";
 import FileChooserContainer from "../formComponents/FileChooser/FileChooserContainer";
 
 const DetailFrame: FC<{ DBObject: DBObjectType, definition: FormDef, mode: DetailFrameMode, hideDetailFrame: MouseEventHandler<HTMLInputElement>, formSubmitted: FormEventHandler<HTMLFormElement>, setErrorMsg: Function, updateDBObject: Function }> = (props) => {
-    const getInput = (componentType: ComponentType, attrs) => {
+    const getInput = (componentType: DetailFrameComponentType, attrs) => {
         switch (componentType) {
-            case ComponentType.DateField:
+            case DetailFrameComponentType.DateField:
                 return (
                     <div className="position-relative">
                         <input type="date" {...attrs} />
                         <label className="label" htmlFor={attrs.id}>{attrs.placeholder}</label>
                     </div>
                 );
-            case ComponentType.TextField:
+            case DetailFrameComponentType.TextField:
             default:
                 return (
                     <div className="position-relative">
@@ -37,7 +37,7 @@ const DetailFrame: FC<{ DBObject: DBObjectType, definition: FormDef, mode: Detai
                         disabled = i == 0;//!component.editable;
                     }
 
-                    if (component.componentType == ComponentType.TextField || component.componentType == ComponentType.DateField) {
+                    if (component.componentType == DetailFrameComponentType.TextField || component.componentType == DetailFrameComponentType.DateField) {
                         return (
                             <div key={"input-" + i}>
                                 <div className="d-flex justify-content-center">
@@ -52,7 +52,7 @@ const DetailFrame: FC<{ DBObject: DBObjectType, definition: FormDef, mode: Detai
                                 </div>
                             </div>
                         );
-                    } else if (component.componentType == ComponentType.SelectBox) {
+                    } else if (component.componentType == DetailFrameComponentType.SelectBox) {
                         return (
                             <div key={"input-" + i}>
                                 <div className="d-flex justify-content-center position-relative">
@@ -65,11 +65,11 @@ const DetailFrame: FC<{ DBObject: DBObjectType, definition: FormDef, mode: Detai
                                 </div>
                             </div>
                         );
-                    } else if (component.componentType == ComponentType.FileChooser) {
+                    } else if (component.componentType == DetailFrameComponentType.FileChooser) {
                         return (
                             <FileChooserContainer key={"input-" + i} id={component.attributeKey} onChange={props.updateDBObject} initLabel={component.componentName} />
                         )
-                    } else if (component.componentType == ComponentType.RichTextField) {
+                    } else if (component.componentType == DetailFrameComponentType.RichTextField) {
                         const inputRef = createRef<HTMLTextAreaElement>();
 
                         const substituteTags = (text, toRegular)=>{

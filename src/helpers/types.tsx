@@ -1,4 +1,4 @@
-import { ComponentType } from "./constants"
+import { DetailFrameComponentType, ListFrameComponentType } from "./constants"
 import store from "../store"
 
 /**
@@ -6,7 +6,7 @@ import store from "../store"
  * DBObject
  * ########
  */
-export type DBObjectType = {
+export interface DBObjectType {
     id: number,
     DBOClass: DBOClassType,
     attributes: Array<DBObjectAttr>,
@@ -16,7 +16,7 @@ export type DBObjectType = {
     isEdited: boolean
 }
 
-export type DBObjectAttr = {
+export interface DBObjectAttr {
     key: string,
     value: any,
     source?: string
@@ -27,7 +27,7 @@ export type DBObjectAttr = {
  * FORM DEFINITION
  * ###############
  */
-export type FormDef = {
+export interface FormDef {
     detailFrame: DetailFrameDef,
     listFrame: ListFrameDef,
     DB?: {
@@ -37,24 +37,23 @@ export type FormDef = {
     //DBOClass: DBOClassType,???? - bude bez toho vedet co "tahat"??
 }
 
-export type DBOClassType = string | undefined;
-
-export type FormDefs = {
+export interface FormDefs {
     [key: string]: FormDef;
 }
 
+export type DBOClassType = string | undefined;
 
-export type DetailFrameDef = {
+export interface DetailFrameDef {
     components: Array<DFComponentDef>,
     createNewEntryText?: string,
     uniqueConstraintFailed?: string,
     afterSaveMethod?: string,
 }
 
-export type DFComponentDef = {
+export interface DFComponentDef {
     attributeKey: string,
     componentName?: string,
-    componentType?: ComponentType,
+    componentType?: DetailFrameComponentType,
     values?: Array<any>,
     constraints?: Array<FormAttrConstraintDef>,
     editable?: boolean,
@@ -65,12 +64,12 @@ export type DFComponentDef = {
 }
 
 
-export type FormAttrConstraintDef = {
+export interface FormAttrConstraintDef {
     condition: string,
     errMsgIfFail: string
 }
 
-export type ListFrameDef = {
+export interface ListFrameDef {
     components: Array<LFComponentDef>,
     detailDBOClass?: string,
     actions?: {
@@ -80,20 +79,20 @@ export type ListFrameDef = {
     cantDeleteItemMsg?: string
 }
 
-export type LFComponentDef = {
+export interface LFComponentDef {
     attributeKey: string,
     componentName?: string,
-    componentType?: ComponentType,
+    componentType?: ListFrameComponentType,
     transformation?: string
     isBreadcrumbKey?: boolean,
 }
 
-export type OrderByDef = {
+export interface OrderByDef {
     attr: string,
     descending?: boolean
 }
 
-export type BreadcrumbItemDef = {
+export interface BreadcrumbItemDef {
     DBObject: DBObjectType,
     text: string
 }
@@ -114,9 +113,6 @@ export interface FormDefinitionsState {
     definitions: FormDefs,
     actualFormDefinition: FormDef,
     definitionsLoaded: boolean
-}
-
-export interface OtherStates {
 }
 
 /**

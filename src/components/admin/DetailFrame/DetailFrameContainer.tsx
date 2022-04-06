@@ -1,6 +1,6 @@
 import { FC, MouseEventHandler } from "react";
 import { useSelector } from "react-redux";
-import { ComponentType, DetailFrameMode } from "../../../helpers/constants";
+import { DetailFrameComponentType, DetailFrameMode } from "../../../helpers/constants";
 import { DBManager } from "../../../helpers/DBManager";
 import { editDBObjectAttr } from "../../../store/reducers/DBObjectSlice";
 import { RootState } from "../../../helpers/types";
@@ -44,7 +44,7 @@ const DetailFrameContainer: FC<{ mode: DetailFrameMode, hideDetailFrame: MouseEv
         console.log('props.DBObject: ', DBObject);
         if(props.mode == DetailFrameMode.NEW_ENTRY){ // set default values for selectboxes...
             formDefinition.detailFrame.components.forEach(component =>{
-                if(component.componentType == ComponentType.SelectBox && body.attributes[component.attributeKey] == undefined){
+                if(component.componentType == DetailFrameComponentType.SelectBox && body.attributes[component.attributeKey] == undefined){
                     body.attributes[component.attributeKey] = component.values?.[0]; // set only body, not DBObject.editedAttrs!
                 }
             })    

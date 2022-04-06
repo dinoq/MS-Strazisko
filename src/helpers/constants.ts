@@ -1,13 +1,19 @@
 
-export enum ComponentType {
+export enum DetailFrameComponentType {
     TextField,
     SelectBox,
-    UNKNOWN,
     DateField,
-    NumberField,
-    ImagePreview,
     FileChooser,
-    RichTextField
+    RichTextField,
+    UNKNOWN,
+}
+
+export enum ListFrameComponentType {
+    TextField,
+    DateField,
+    ImagePreview,
+    RichTextField,
+    UNKNOWN,
 }
 
 export enum DetailFrameMode {

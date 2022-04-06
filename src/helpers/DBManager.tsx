@@ -1,5 +1,5 @@
 import { getRawDBObjectDefinition } from "../../database/definitions/db-object-definitions";
-import { ComponentType } from "./constants";
+import { DetailFrameComponentType } from "./constants";
 import { DBObjectType, DBObjectAttr, DBOClassType, DFComponentDef, FormDef, FormDefs, LFComponentDef, OrderByDef, RecursivePartial, RootState } from "./types";
 import clone from "clone";
 import { getApiURL } from "./utils";
@@ -119,7 +119,7 @@ export class DBManager {
         if (type == "LFComponentDef") {
             return (attr as LFComponentDef) || { attributeKey: "", transformation: "", isBreadcrumbKey: false };
         } else if (type == "DFComponentDef") {
-            return (attr as DFComponentDef) || { attributeKey: "", componentType: ComponentType.UNKNOWN, values: [], constraints: [], editable: true };
+            return (attr as DFComponentDef) || { attributeKey: "", componentType: DetailFrameComponentType.UNKNOWN, values: [], constraints: [], editable: true };
         } else {
             return (attr as DBObjectAttr) || { key: "", value: "" };
         }
