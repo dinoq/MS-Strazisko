@@ -1,5 +1,6 @@
 ############################################################################################
 TODO:
+-Patička se při změnšení okna (na telefonu) vykresluje divně (dát ty 3 seznamy nějak pod sebe do středu)
 -zrevidovat klíče (attributeKey v LF by možná nemuselo dávat smysl...)
 -odstranit atribut editable- needitovatelné jsou pouze primarní klíče v editaci a ty jsou vždy první...
 -eval nahradit složitým vyhodnocováním - EVAL je nebezpečný!

@@ -1,6 +1,7 @@
 // eslint-disable-next-line
 import Image from "next/image";
 import classes from "./EventCard.module.scss";
+import DOMPurify from "dompurify";
 
 const EventCard: React.FC<{ imgSrc: string, title: string, description: string, date: string }> = ({ imgSrc, title, description, date }) => {
 
@@ -16,7 +17,7 @@ const EventCard: React.FC<{ imgSrc: string, title: string, description: string, 
                                 {date}
                             </div>
                             <h5 className="card-title fw-bold">{title}</h5>
-                            <p className="card-text" dangerouslySetInnerHTML={{ __html: `${description}` }}></p>
+                            <p className="card-text" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(description) }}></p>
                             {/* <p className="card-text"><small className="text-muted">Naposledy editováno...</small></p> */}
                         </div>
                     </div>

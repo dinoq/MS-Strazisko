@@ -4,7 +4,7 @@
     & > div {
         background-color: #2f375c;
     }
-    a {
+    a, .link {
         color: #83c3ff;
     }
 
@@ -20,6 +20,11 @@
 
     ul {
         list-style-type: none;
+        &.with-title:before {
+          content: attr(aria-label);
+          font-weight: bold;
+          margin-left: -1rem;
+        }
 
         &.left-items {
             text-align: left;
