@@ -79,18 +79,18 @@ export class XMLParser {
             return XML.getAttribute(attrName);
         };
 
-        let mapToComponentType = (type: string) => {
+        let mapToComponentType = (type: string, typeset: typeof DetailFrameComponentType | typeof ListFrameComponentType) => {
             if (type == "") {
-                return DetailFrameComponentType.TextField;
+                return typeset.TextField;
             }
 
-            if (DetailFrameComponentType[type] == undefined) {
+            if (typeset[type] == undefined) {
                 throw new Error(
                     "Uknown componentType ('" + type + "') in form definition!"
                 );
-                return DetailFrameComponentType.UNKNOWN;
+                return typeset.UNKNOWN;
             }
-            return DetailFrameComponentType[type];
+            return typeset[type];
         };
 
         let defs = {};
@@ -113,7 +113,7 @@ export class XMLParser {
                     XMLcomponent
                 );
                 component.componentType = mapToComponentType(
-                    getOptionalAttrFromXML("componentType", XMLcomponent)
+                    getOptionalAttrFromXML("componentType", XMLcomponent), DetailFrameComponentType
                 );
                 component.componentSpecificProps = {};
                 if (component.componentType == DetailFrameComponentType.FileChooser) {
@@ -187,7 +187,7 @@ export class XMLParser {
                 }
 
                 component.componentType = mapToComponentType(
-                    getOptionalAttrFromXML("componentType", XMLcomponent)
+                    getOptionalAttrFromXML("componentType", XMLcomponent), ListFrameComponentType
                 );
                 component.isBreadcrumbKey =
                     getOptionalAttrFromXML(

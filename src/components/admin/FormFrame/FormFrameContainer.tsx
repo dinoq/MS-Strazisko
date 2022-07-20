@@ -43,6 +43,7 @@ const FormFrameContainer: React.FC<{}> = (props) => {
                 detailItemCondition = `WHERE ${key}='${DBManager.getAttrFromArrByKey(breadcrumbItems[breadcrumbItems.length - 1].DBObject.attributes, parentAttribute.key).value}'`;
             }
         }
+        console.log('DBOClassssssssssss: ', DBOClass);
         DBManager.getAllDBObjectEntries(DBOClass, definition?.DB?.orderBy,detailItemCondition).then(entrs => {
             dispatch(setEntries(entrs));
             let pa = getRawDBObjectDefinition(DBOClass)?.persistentAttributes ?? [];

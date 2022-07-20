@@ -159,7 +159,6 @@ export class DBManager {
     public static substituteExpression(rawExpression: string | undefined, dbObject: DBObjectType): string {
         if (rawExpression === undefined)
             return "";
-        console.log('rawExpression: ', rawExpression, dbObject);
         let rawExpressionSplitted = rawExpression.split(/@\[(.*?)\]/g);
         let substituted = "";
         for (let i = 0; i < rawExpressionSplitted.length; i++) {
@@ -177,11 +176,11 @@ export class DBManager {
             return [];
         } else {
             let order = "";
-            console.log('orderBy: ', orderBy);
             if (orderBy !== undefined && orderBy.attr) {
                 order = "&order=" + orderBy.attr + "|" + (orderBy.descending ? "DESC" : "ASC");
             }
             const resp = await fetch("/api/admin/data?className=" + DBOClass + (condition ? "&condition=" + condition : "") + order);
+            console.log("???", "/api/admin/data?className=" + DBOClass + (condition ? "&condition=" + condition : "") + order);
             if (resp.status == 200) {
                 let entries: Array<DBObjectType> = [];
                 let json = await resp.json();

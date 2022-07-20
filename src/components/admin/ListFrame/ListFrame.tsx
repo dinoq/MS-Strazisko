@@ -40,6 +40,7 @@ const ListFrame: FC<{ definition: ListFrameDef, DBObject: DBObjectType, detailCl
                                         value = evaluated;
 
                                     }else if(component.componentType == ListFrameComponentType.ImagePreview){
+                                        console.log('component.componentType ListFrameComponentType.ImagePreview: ', component.componentType);
                                         evaluated = evaluated.startsWith("/")? evaluated : "/" + evaluated;
                                         value = (
                                             <div className="ImagePreview">

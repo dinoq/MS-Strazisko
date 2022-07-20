@@ -12,6 +12,10 @@ import { useEffect, useState } from 'react'
 
 export default function Home(props) {
     const a = "/navrh/unused/camping.jpg";
+
+    const [introText, setIntroText]: [{ title: string, content: string }, any] = useState({ title: "", content: "" });
+    console.log('introText: ', introText);
+
     const [features, setFeatures]: [Array<{ icon: any, bgColor: string, alt: string, title: string, description: string }>, any] = useState([]);
     const [teachers, setTeachers]: [Array<{ imgSrc: string, name: string, job: string }>, any] = useState([]);
     console.log('teachers: ', teachers);
@@ -32,18 +36,26 @@ export default function Home(props) {
       ]*/
 
     useEffect(() => {
-        fetch("/api/data?table=events;teachers;public_images").then((data) => {
+        fetch("/api/data?table=events;teachers;public_images;intro").then((data) => {
             data.json().then(json => {
                 console.log('json: ', json);
                 setEvents(json.events.map((event) => {
                     return { imgSrc: (event.img_url ? "/img/albums/other/event-photos/" + event.img_url : "/img/albums/other/no-photo.jpg"), title: event.title, date: new Date(event.date).toLocaleDateString("cs-CZ", { weekday: undefined, year: 'numeric', month: 'short', day: 'numeric' }), description: event.description }
                 }));
+
                 setTeachers(json.teachers.map((teacher) => {
                     return { imgSrc: (teacher.filename ? "/img/albums/other/teacher-photos/" + teacher.filename : "/img/albums/other/photo.jpg"), name: teacher.name, job: teacher.job }
                 }))
+
                 setPublicImages(json.public_images.map((publicImage) => {
                     return { original: "/img/albums/other/public-photos/" + publicImage.filename, thumbnail: "/img/albums/other/public-photos/" + publicImage.filename + "?minify=true" }
                 }))
+
+                setIntroText({
+                    title: json.intro.title,
+                    content: json.intro.content
+                });
+                console.log('json.intro.title: ', json.intro.title);
 
             })
         })
@@ -110,10 +122,8 @@ export default function Home(props) {
                             <Image src={toys} layout="responsive" sizes="33vw" alt="Hračky" placeholder="blur" id={classes["toys-img"]} />
                         </div>
                         <div className="col-10 col-lg-4">
-                            <h1 className="fw-bold">O naší mateřské školce</h1>
-                            <p>
-                                Mateřská školka se nachází v malé vesničce Stražisko na Konicku uprostřed malebné přírody, obklopené lesy.
-                            </p>
+                            <h1 className="fw-bold">{introText.title}</h1>
+                            <p>{introText.content}</p>
                         </div>
                     </div>
 

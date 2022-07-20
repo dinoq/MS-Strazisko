@@ -3,9 +3,9 @@ import { DBObjectType, DBOClassType, RecursivePartial } from "../../src/helpers/
 
 /**
  * SUBSTITUCE ATD:
- * *albums.title~id_album" 
+ * *Album.title~id_album" 
  *  - * znamená, že pro všechny získané hodnoty bude mít stejnou hodnotu (zejm. protože se ta hodnota bere ze společného předka)
- *  - albums.title~id_album -  atribut 'title' ze třídy 'albums' přes vazbu 'id_album' (WHERE albums.id_album = id_album)
+ *  - Album.title~id_album -  atribut 'title' ze třídy 'Album' přes vazbu 'id_album' (WHERE Album.id_album = id_album)
  */
 interface DBOBjectDefs {
     [key: string]: DBObjectType;
@@ -25,8 +25,8 @@ const DBObjectDefinitions: RecursivePartial<DBOBjectDefs> = {
             }
         ]
     }, 
-    albums: {
-        DBOClass: "albums",
+    Album: {
+        DBOClass: "Album",
         attributes: [
             {
                 key: "id_album",
@@ -70,8 +70,8 @@ const DBObjectDefinitions: RecursivePartial<DBOBjectDefs> = {
                 //name: "..."
             },
             {
-                key: "albums.title", 
-                source: "*albums.title~id_album" // attribute 'title' from class 'albums' via constraint 'id_album' (WHERE albums.id_album = id_album)
+                key: "Album.title", 
+                source: "*Album.title~id_album" // attribute 'title' from class 'Album' via constraint 'id_album' (WHERE Album.id_album = id_album)
                 //name: "nameee"
             },
         ],

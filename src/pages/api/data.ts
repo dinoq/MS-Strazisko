@@ -2,8 +2,8 @@ import { withIronSessionApiRoute } from "iron-session/next";
 import Database from "better-sqlite3";
 import { checkIfLettersSlashUnderscoreUndef, checkIfNotDangerSQL } from "../../helpers/utils";
 
-const fakeTables = ["events", "teachers", "public_images", "contact_texts", "food"];
-const realTables = ["Event", "Teacher", "PublicPhoto", "ContactText", "Food"];
+const fakeTables = ["events", "teachers", "public_images", "contact_texts", "food", "intro"];
+const realTables = ["Event", "Teacher", "PublicPhoto", "ContactText", "Food", "IntroText"];
 
 const mapTables = (table: string, toReal: boolean)=>{
     if(toReal){
