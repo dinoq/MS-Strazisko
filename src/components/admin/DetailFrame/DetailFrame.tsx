@@ -38,6 +38,9 @@ const DetailFrame: FC<{ DBObject: DBObjectType, definition: FormDef, mode: Detai
                     }
 
                     if (component.componentType == DetailFrameComponentType.TextField || component.componentType == DetailFrameComponentType.DateField) {
+                        if(component.wide){
+                            
+                        }
                         return (
                             <div key={"input-" + i}>
                                 <div className="d-flex justify-content-center">
@@ -47,7 +50,8 @@ const DetailFrame: FC<{ DBObject: DBObjectType, definition: FormDef, mode: Detai
                                         value,
                                         onChange: (e) => props.updateDBObject(component.attributeKey, e.target.value),
                                         required: component.required,
-                                        disabled
+                                        disabled,
+                                        className: component.wide? "wide": ""
                                     })}
                                 </div>
                             </div>
@@ -72,20 +76,6 @@ const DetailFrame: FC<{ DBObject: DBObjectType, definition: FormDef, mode: Detai
                     } else if (component.componentType == DetailFrameComponentType.RichTextField) {
                         const inputRef = createRef<HTMLTextAreaElement>();
 
-                        const substituteTags = (text, toRegular)=>{
-                            if(toRegular){
-                                text = text.replaceAll("<TUCNE>", "<b>");
-                                text = text.replaceAll("</TUCNE>", "</b>");
-                                text = text.replaceAll("<CERVENE>", '<span style="color: red">');
-                                text = text.replaceAll("</CERVENE>", '</span>');
-                            }else{
-                                text = text.replaceAll("<b>", "<TUCNE>");
-                                text = text.replaceAll("</b>", "</TUCNE>");
-                                text = text.replaceAll('<span style="color: red">', "<CERVENE>");
-                                text = text.replaceAll('</span>', "</CERVENE>");
-                            }
-                            return text;
-                        }
                         const insertTags = (tag) => {
                             if(inputRef === undefined || inputRef.current == null){
                                 return;
@@ -104,7 +94,7 @@ const DetailFrame: FC<{ DBObject: DBObjectType, definition: FormDef, mode: Detai
                             inputRef.current.focus();
                             inputRef.current.selectionStart = cursorPosStart + opening.length;
                             inputRef.current.selectionEnd = cursorPosStart + opening.length + selectionLength;
-                            props.updateDBObject(component.attributeKey, substituteTags(inputRef.current.value, true) );
+                            props.updateDBObject(component.attributeKey, DBManager.substituteTags(inputRef.current.value, true) );
                         }
 
                         
@@ -113,7 +103,7 @@ const DetailFrame: FC<{ DBObject: DBObjectType, definition: FormDef, mode: Detai
                                 <div className="d-flex justify-content-center">
 
                                     <div className="richtextEditContainer">
-                                        <textarea cols={45} rows={5} ref={inputRef} id={component.attributeKey} placeholder={component.componentName} onChange={(e) => props.updateDBObject(component.attributeKey, e.target.value)} required={component.required} disabled={disabled} value={substituteTags(value, false)} />
+                                        <textarea cols={45} rows={5} ref={inputRef} id={component.attributeKey} placeholder={component.componentName} onChange={(e) => props.updateDBObject(component.attributeKey, e.target.value)} required={component.required} disabled={disabled} value={DBManager.substituteTags(value, false)} />
                                         <label className="label" htmlFor={component.attributeKey}>{component.componentName}</label>
                                         <div className="richtextEditBtns">
                                             <a type="button" className="richtextEdit button" onClick={(e) => { insertTags("TUCNE") }}><b>tučně</b></a>

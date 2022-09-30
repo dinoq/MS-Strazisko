@@ -151,6 +151,10 @@ export class XMLParser {
                 if (values.length) {
                     component.values = ValuesDefinitions[values]();
                 }
+                
+                component.wide =
+                getOptionalAttrFromXML("wide", XMLcomponent, undefined).toLowerCase() ==
+                "true";
 
                 def.detailFrame.components.push(component);
             }

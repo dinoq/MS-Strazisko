@@ -91,8 +91,8 @@
 
     <Form FID="Food">
         <DetailFrame>
-            <Component attributeKey="id_food" componentName="Název" componentType="TextField" editable="false" />
-            <Component attributeKey="img_url" componentName="URL" componentType="TextField"/>
+            <Component attributeKey="id_food" componentName="Název" componentType="TextField" editable="false" wide="true" />
+            <Component attributeKey="img_url" componentName="URL" componentType="TextField" wide="true" />
         </DetailFrame>
         <ListFrame actions="{&quot;delete&quot;:false}">
             <Component attributeKey="id_food" componentName="ID" transformation="@[id_food]" componentType="TextField" />

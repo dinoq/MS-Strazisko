@@ -63,18 +63,21 @@ const DetailFrameContainer: FC<{ mode: DetailFrameMode, hideDetailFrame: MouseEv
             body["updateId"] = DBObject.id;
             body["primaryKey"] = DBObject.attributes[0].key;
             resultErr = await DBManager.updateInDB(body, !afterSaveMethod);
+            
+
         }else {
             resultErr = await DBManager.insertToDB(body, (!afterSaveMethod && !DBObject.filesToUpload.length));
-            if((!resultErr || !resultErr.length) && DBObject.filesToUpload.length){
-                let notSubstitutedPathComponent = formDefinition.detailFrame.components.find(c=>c.componentSpecificProps?.path)
-                const path = DBManager.substituteExpression(notSubstitutedPathComponent?.componentSpecificProps?.path, DBObject);
-                if(DBObject.filesToUpload.length > 1){
-                    throw new Error("multiple files not implemented! Bude potreba vymyslet cesty...Asi by se měly do parametru filename nějak ukládat všechny nazvy souborů...")
-                }
-                resultErr = await DBManager.sendFiles(DBObject.filesToUpload, path);
-            }
         }
 
+        if((!resultErr || !resultErr.length) && DBObject.filesToUpload.length){
+            let notSubstitutedPathComponent = formDefinition.detailFrame.components.find(c=>c.componentSpecificProps?.path)
+            const path = DBManager.substituteExpression(notSubstitutedPathComponent?.componentSpecificProps?.path, DBObject);
+            if(DBObject.filesToUpload.length > 1){
+                throw new Error("multiple files not implemented! Bude potreba vymyslet cesty...Asi by se měly do parametru filename nějak ukládat všechny nazvy souborů...")
+            }
+            resultErr = await DBManager.sendFiles(DBObject.filesToUpload, path);
+        }
+        
         if (resultErr && typeof resultErr == "string" && resultErr.length) {
             if(resultErr.includes("UNIQUE constraint failed") && formDefinition?.detailFrame?.uniqueConstraintFailed?.length){
                 props.setErrorMsg(formDefinition.detailFrame.uniqueConstraintFailed);

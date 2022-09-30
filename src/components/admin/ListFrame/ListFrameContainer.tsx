@@ -1,7 +1,7 @@
 // eslint-disable-next-line
 //import styles from "./ListFrame.module.css";
 
-import { FC, } from "react";
+import { FC, useState, } from "react";
 import { useSelector } from "react-redux";
 import { DBManager } from "../../../helpers/DBManager";
 import { addItemToBreadcrumb } from "../../../store/reducers/BreadcrumbSlice";
@@ -11,6 +11,7 @@ import { SagaActions } from "../../../store/sagas";
 import { BreadcrumbItemDef, DBObjectType, RootState } from "../../../helpers/types";
 import ListFrame from "./ListFrame";
 import { useAppDispatch } from "../../../hooks";
+import Dialog from "../TwoChoiceDialog";
 
 const ListFrameContainer: FC<{ editItemHandler: Function }> = (props) => {
     const dispatch = useAppDispatch();
@@ -18,6 +19,8 @@ const ListFrameContainer: FC<{ editItemHandler: Function }> = (props) => {
     const DBObject = useSelector((state: RootState) => state.dbObject);
     const entries = useSelector((state: RootState) => state.entries);
     const breadcrumbItems = useSelector((state: RootState) => state.breadcrumb.items);
+    const [showDialog, setShowDialog] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState(undefined)
 
     let colspanNoData = -1;
     if (!entries || !entries.length) {
@@ -50,11 +53,12 @@ const ListFrameContainer: FC<{ editItemHandler: Function }> = (props) => {
 
     
 
-    const deleteItemHandler = async (item: DBObjectType) => {
+    const deleteItemHandler = async (item: DBObjectType, forceDelete: boolean = false) => {
         let body = {
             className: item.DBOClass,
             deleteId: item.id,
-            primaryKey: item.attributes[0].key
+            primaryKey: item.attributes[0].key,
+            forceDelete
         };
         if (formDefinition.listFrame.detailDBOClass) {
             body["detailClass"] = formDefinition.listFrame.detailDBOClass;
@@ -63,14 +67,30 @@ const ListFrameContainer: FC<{ editItemHandler: Function }> = (props) => {
             body["cantDeleteItemMsg"] = formDefinition.listFrame.cantDeleteItemMsg;
         }
         let resultErr = await DBManager.deleteInDB(body);
+        console.log('resultErr: ', resultErr);
 
         if (resultErr && typeof resultErr == "string" && resultErr.length) {
-            dispatch(setErrorMsg(resultErr));
+            setShowDialog(true);
+            //dispatch(setErrorMsg(resultErr));
         }
     }
+
+
+    const cancelForceDeleteDialog = ()=>{
+        setShowDialog(false);
+        setItemToDelete(undefined);
+    }
+
+    const confirmForceDeleteDialog = () => {
+        setShowDialog(false);
+        deleteItemHandler(itemToDelete, true);
+        setItemToDelete(undefined);
+    }
+
     return (
         <>
             {formDefinition && <ListFrame definition={formDefinition.listFrame} DBObject={DBObject} deleteItemHandler={deleteItemHandler} detailClickedHandler={detailClickedHandler} editItemHandler={props.editItemHandler} entries={entries} colspanNoData={colspanNoData} />}
+            {showDialog && <Dialog msg="asdf" onYes={confirmForceDeleteDialog} onNo={cancelForceDeleteDialog}/>}
         </>
     )
 }

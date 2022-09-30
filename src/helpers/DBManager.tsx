@@ -37,11 +37,11 @@ export class DBManager {
 
     public static getDBObjectDefinition = (DBOClass: DBOClassType): DBObjectType => {
         let obj: DBObjectType;
-        if(DBOClass === undefined)
+        if (DBOClass === undefined)
             obj = DBManager.getEmptyDBObject(undefined);
         else
             obj = getRawDBObjectDefinition(DBOClass);
-            
+
         if (obj == undefined) {
             throw new Error("Error: Class '" + DBOClass + "' has not object defined!");
         }
@@ -171,6 +171,24 @@ export class DBManager {
         return substituted;
     }
 
+
+    public static substituteTags = (text, toRegular) => {
+        if (toRegular) {
+            text = text.replaceAll("<TUCNE>", "<b>");
+            text = text.replaceAll("</TUCNE>", "</b>");
+            text = text.replaceAll("<CERVENE>", '<span style="color: red">');
+            text = text.replaceAll("</CERVENE>", '</span>');
+            console.log('text: ', text);
+        } else {
+            text = text.replaceAll("<b>", "<TUCNE>");
+            text = text.replaceAll("</b>", "</TUCNE>");
+            text = text.replaceAll('<span style="color: red">', "<CERVENE>");
+            text = text.replaceAll('</span>', "</CERVENE>");
+            console.log('text2: ', text);
+        }
+        return text;
+    }
+
     public static getAllDBObjectEntries = async (DBOClass: DBOClassType, orderBy: OrderByDef | undefined, condition: string = ""): Promise<Array<DBObjectType>> => {
         if (DBOClass == undefined || DBOClass == "") {
             return [];
@@ -180,7 +198,6 @@ export class DBManager {
                 order = "&order=" + orderBy.attr + "|" + (orderBy.descending ? "DESC" : "ASC");
             }
             const resp = await fetch("/api/admin/data?className=" + DBOClass + (condition ? "&condition=" + condition : "") + order);
-            console.log("???", "/api/admin/data?className=" + DBOClass + (condition ? "&condition=" + condition : "") + order);
             if (resp.status == 200) {
                 let entries: Array<DBObjectType> = [];
                 let json = await resp.json();
@@ -215,6 +232,7 @@ export class DBManager {
         return await DBManager.fetchDB(body, "POST", reload);
     }
     public static updateInDB = async (body: any, reload: boolean = true): Promise<any> => {
+        console.log('body: ', body);
         return await DBManager.fetchDB(body, "PATCH", reload);
     }
     public static deleteInDB = async (body: any, reload: boolean = true): Promise<any> => {
@@ -226,6 +244,7 @@ export class DBManager {
     }
 
     protected static callAPI = async (handlerName: string, body: any, method: string, reload: boolean, contentType: string | undefined): Promise<any> => {
+        console.log('body: ', body);
         let init: RequestInit =
         {
             method,
@@ -296,7 +315,7 @@ export class DBManager {
             errorMsg: ""
         }
 
-        if(DBOClass == undefined){
+        if (DBOClass == undefined) {
             throw new Error("Cannot check class attrs, because class is undefined!");
         }
 

@@ -9,6 +9,7 @@ import toys from "../../public/img/toys.webp"
 import Teacher from '../../src/components/teacher/Teacher'
 import EventCard from '../../src/components/event-card/EventCard'
 import { useEffect, useState } from 'react'
+import { DBManager } from '../helpers/DBManager'
 
 export default function Home(props) {
     const a = "/navrh/unused/camping.jpg";
@@ -52,11 +53,9 @@ export default function Home(props) {
                 }))
 
                 setIntroText({
-                    title: json.intro.title,
-                    content: json.intro.content
-                });
-                console.log('json.intro.title: ', json.intro.title);
-
+                    title: json.intro[0].title,
+                    content: DBManager.substituteTags(json.intro[0].content, true)
+                });                
             })
         })
         setFeatures([
@@ -123,7 +122,7 @@ export default function Home(props) {
                         </div>
                         <div className="col-10 col-lg-4">
                             <h1 className="fw-bold">{introText.title}</h1>
-                            <p>{introText.content}</p>
+                            <p dangerouslySetInnerHTML={{__html: introText.content}}></p>
                         </div>
                     </div>
 

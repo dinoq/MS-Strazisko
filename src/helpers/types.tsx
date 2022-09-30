@@ -61,6 +61,7 @@ export interface DFComponentDef {
     componentSpecificProps?: {
         path?: string, // For FileChooser - where to save
     }
+    wide?: boolean
 }
 
 

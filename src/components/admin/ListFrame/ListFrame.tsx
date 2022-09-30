@@ -52,13 +52,14 @@ const ListFrame: FC<{ definition: ListFrameDef, DBObject: DBObjectType, detailCl
                                         value = date.getDate() + ". " + (date.getMonth()+1) + ". " + date.getFullYear();
                                     }
                                     if(component.componentType == ListFrameComponentType.RichTextField){
+                                        value = DBManager.substituteTags(value, true);
                                         return <td key={"tbtrtd-" + index} dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(value)}}></td>;
                                     }else{
                                         return <td key={"tbtrtd-" + index}>{value}</td>;
                                     }
                                 })}
                             {props.definition?.actions && <td className={"actions"}>
-                                {props.definition?.actions.delete && <span className={"link link-danger"} onClick={props.deleteItemHandler.bind(this, entry)}>Smazat</span>}
+                                {props.definition?.actions.delete && <span className={"link link-danger"} onClick={props.deleteItemHandler.bind(this, entry, false)}>Smazat</span>}
                                 {props.definition?.actions.edit && <span className={"link"} onClick={props.editItemHandler.bind(this, entry)}>Editovat</span>}
                             </td>}
 
