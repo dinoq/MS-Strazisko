@@ -4,20 +4,20 @@
             <Component attributeKey="id_year" componentName="Školní rok" componentType="SelectBox" values="getYears" editable="false" />
             <Component attributeKey="password_hash" componentName="Heslo" componentType="TextField" constraints="[{&quot;condition&quot;:&quot;$.length >= 6&quot;,&quot;errMsgIfFail&quot;:&quot;Heslo musí obsahovat alespoň 6 znaků!&quot;}]" />
         </DetailFrame>
-        <ListFrame detailDBOClass="Album" orderBy="id_year" descending="true" cantDeleteItemMsg="Dané album obsahuje nějaké fotografie.&lt;br&gt;Nejprve musíte smazat je a až potom samotné album!">
+        <ListFrame detailDBOClass="Album" orderBy="id_year" descending="true" forceDeleteItemMsg="Dané album (rok) obsahuje nějaká alba.&lt;br&gt;Opravdu chcete celé album i s podřízenými alby smazat?">
             <Component attributeKey="id_year" componentName="Školní rok" componentType="TextField" transformation="@[id_year]" isBreadcrumbKey="true" />
             <Component attributeKey="password_hash" componentName="Heslo" componentType="TextField" transformation="@[password_hash]"/>
         </ListFrame>
     </Form>
 
     <Form FID="Album">
-        <DetailFrame createNewEntryText="Přidat album" afterSaveMethod="createDirectoryIfNotExist(img/albums/@[title])">
-            <Component attributeKey="id_album" componentName="ID alba" componentType="TextField" editable="false"/>
+        <DetailFrame createNewEntryText="Přidat album" afterSaveMethod="createDirectoryIfNotExist(img/albums/@[title])" uniqueConstraintFailed="Při vkládání do databáze došlo k problému kvůli vkládání již existujícího unikátního klíče.&lt;br/&gt;Zřejmě se pokoušíte uložit album s ID, které již v databázi existuje!">
+            <!-- <Component attributeKey="id_album" componentName="ID alba" componentType="TextField" editable="false"/> -->
             <Component attributeKey="date" componentName="Datum" componentType="DateField" />
             <Component attributeKey="name" componentName="Název" componentType="TextField" />
             <Component attributeKey="title" componentName="URL" componentType="TextField" />
         </DetailFrame>
-        <ListFrame detailDBOClass="PrivatePhoto" orderBy="id_album" descending="true" cantDeleteItemMsg="Dané album obsahuje nějaké fotografie.&lt;br&gt;Nejprve musíte smazat je a až potom samotné album!">
+        <ListFrame detailDBOClass="PrivatePhoto" orderBy="id_album" descending="true" forceDeleteItemMsg="Dané album obsahuje nějaké fotografie.&lt;br&gt;Opravdu chcete celé album i s fotografiemi smazat?" afterDeleteMethod="deleteDirectory(img/albums/@[title])">
             <Component attributeKey="id_album" componentName="ID alba" componentType="TextField" transformation="@[id_album]"/>
             <Component attributeKey="date" componentName="Datum" componentType="DateField" transformation="@[date]"/>
             <Component attributeKey="name" componentName="Název" componentType="TextField" transformation="@[name]" isBreadcrumbKey="true"/>
@@ -26,8 +26,9 @@
     </Form>
 
     <Form FID="PrivatePhoto">
-        <DetailFrame createNewEntryText="Přidat Fotku/y" uniqueConstraintFailed="Při vkládání do databáze došlo k problému kvůli vkládání již existujícího unikátního klíče.&lt;br/&gt;Zřejmě se pokoušíte uložit soubor s název, který již v databázi existuje!">
+        <DetailFrame createNewEntryText="Přidat Fotku/y" uniqueConstraintFailed="Při vkládání do databáze došlo k problému kvůli vkládání již existujícího unikátního klíče.&lt;br/&gt;Zřejmě se pokoušíte uložit soubor s názvem, který již v databázi existuje!">
             <Component attributeKey="filename" componentName="Výběr souborů" componentType="FileChooser" path="img/albums/@[Album.title]/@[filename]"/>
+            <Component attributeKey="filename" componentName="Název souboru" componentType="TextField"/>
         </DetailFrame>
         <ListFrame orderBy="id_private_photo" descending="true" actions="{&quot;edit&quot;:false}">
             <Component attributeKey="id_private_photo" componentName="ID" componentType="TextField" transformation="@[id_private_photo]"/>

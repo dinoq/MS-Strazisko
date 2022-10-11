@@ -60,6 +60,7 @@ const ListFrame: FC<{ definition: ListFrameDef, DBObject: DBObjectType, detailCl
                                 })}
                             {props.definition?.actions && <td className={"actions"}>
                                 {props.definition?.actions.delete && <span className={"link link-danger"} onClick={props.deleteItemHandler.bind(this, entry, false)}>Smazat</span>}
+                                {console.log('entry: ', entry)}
                                 {props.definition?.actions.edit && <span className={"link"} onClick={props.editItemHandler.bind(this, entry)}>Editovat</span>}
                             </td>}
 

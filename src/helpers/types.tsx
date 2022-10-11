@@ -77,7 +77,8 @@ export interface ListFrameDef {
         delete?: boolean,
         edit?: boolean
     },
-    cantDeleteItemMsg?: string
+    forceDeleteItemMsg?: string,
+    afterDeleteMethod?: string,
 }
 
 export interface LFComponentDef {

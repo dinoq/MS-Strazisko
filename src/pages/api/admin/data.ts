@@ -140,7 +140,9 @@ const handler = async (req, res) => {
         const detailClass: string = req.body["detailClass"];
         const primaryKey: string = req.body["primaryKey"];
         const deleteId: string = req.body["deleteId"].toString();
-        const cantDeleteItemMsg: string = req.body["cantDeleteItemMsg"];
+        const forceDelete: boolean = req.body["forceDelete"];
+        console.log('forceDelete: ', forceDelete);
+        const forceDeleteItemMsg: string = req.body["forceDeleteItemMsg"];
         if (!checkIfLettersSlashUnderscoreUndef([className, detailClass, primaryKey, deleteId])) { // bezpečnostní pojistka
             return res.status(500).send("ERROR - wrong data className, detailClass, primaryKey or deleteId!");
         }
@@ -150,14 +152,25 @@ const handler = async (req, res) => {
         }
 
         try {
-            if (detailClass) {
-                const stmtChildren = db.prepare("SELECT * FROM " + detailClass + " WHERE " + primaryKey + "=?");
-                const sqlChildrenResults = stmtChildren.all(deleteId);
-                if (sqlChildrenResults.length) {// Nemuze se smazat zatnam, pokud obsahuje nejaka podrizena data (v podrizene tabulce)
-                    db.close();
-                    let msg = (typeof cantDeleteItemMsg == "string" && cantDeleteItemMsg.length) ? cantDeleteItemMsg : "Chyba! Daný záznam zřejmě obsahuje nějaká podřízená data.<br>Nejprve musíte smazat je a až potom tento záznam!";
-                    return res.status(500).send(msg);
+            if(detailClass){
+                if (!forceDelete) { // Pokud neni forceDelete
+                    const stmtChildren = db.prepare("SELECT * FROM " + detailClass + " WHERE " + primaryKey + "=?");
+                    const sqlChildrenResults = stmtChildren.all(deleteId);
+                    if (sqlChildrenResults.length) {// Nemuze se smazat zatnam, pokud obsahuje nejaka podrizena data (v podrizene tabulce)
+                        db.close();
+                        let msg = (typeof forceDeleteItemMsg == "string" && forceDeleteItemMsg.length) ? forceDeleteItemMsg : "Chyba! Daný záznam zřejmě obsahuje nějaká podřízená data.<br>Nejprve musíte smazat je a až potom tento záznam!";
+                        console.log('msg: ', msg);
+                        return res.status(500).send(msg);
+                    }
+                }else{
+                    const stmtChildren = db.prepare("SELECT * FROM " + detailClass + " WHERE " + primaryKey + "=?");
+                    console.log('stmtChildren: ', stmtChildren);
+                    const sqlChildrenResults = stmtChildren.all(deleteId);
+                    console.log('deleteId: ', deleteId);
+                    console.log('sqlChildrenResults: ', sqlChildrenResults);
+
                 }
+
             }
 
             const stmt = db.prepare("DELETE FROM " + className + " WHERE " + primaryKey + "=?");

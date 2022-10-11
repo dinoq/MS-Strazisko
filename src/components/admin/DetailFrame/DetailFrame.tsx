@@ -1,4 +1,5 @@
 import React, { createRef, FC, FormEventHandler, MouseEventHandler, useEffect, useRef, useState } from "react";
+import { getRawDBObjectDefinition } from "../../../../database/definitions/db-object-definitions";
 import { DetailFrameComponentType, DetailFrameMode } from "../../../helpers/constants";
 import { DBManager } from "../../../helpers/DBManager";
 import { DBObjectType, DetailFrameDef, FormDef } from "../../../helpers/types";
@@ -34,7 +35,9 @@ const DetailFrame: FC<{ DBObject: DBObjectType, definition: FormDef, mode: Detai
                     let disabled = false;
                     let value = DBManager.getAttrFromArrByKey(props.DBObject.editedAttrs, component.attributeKey)?.value || "";
                     if (props.mode == DetailFrameMode.EDITING_ENTRY) {
-                        disabled = i == 0;//!component.editable;
+                        disabled = !component.editable;
+                        //disabled = i == 0;
+                        //disabled = getRawDBObjectDefinition(props.definition.DB.DBOClass).attributes[0].key == component.attributeKey
                     }
 
                     if (component.componentType == DetailFrameComponentType.TextField || component.componentType == DetailFrameComponentType.DateField) {

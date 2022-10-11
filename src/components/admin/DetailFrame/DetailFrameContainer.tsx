@@ -56,7 +56,7 @@ const DetailFrameContainer: FC<{ mode: DetailFrameMode, hideDetailFrame: MouseEv
             body.attributes[parentAttribute.key] = parentAttribute.value;
         }*/
 
-        console.log('body.attributes: ', body.attributes);
+        
         let resultErr = "";
         let afterSaveMethod = formDefinition.detailFrame.afterSaveMethod;
         if(props.mode == DetailFrameMode.EDITING_ENTRY){
@@ -66,6 +66,7 @@ const DetailFrameContainer: FC<{ mode: DetailFrameMode, hideDetailFrame: MouseEv
             
 
         }else {
+            console.log('body: ', body);
             resultErr = await DBManager.insertToDB(body, (!afterSaveMethod && !DBObject.filesToUpload.length));
         }
 
@@ -106,6 +107,8 @@ const DetailFrameContainer: FC<{ mode: DetailFrameMode, hideDetailFrame: MouseEv
                 }
 
             }
+            props.hideDetailFrame(undefined);
+            
         }
     };
 

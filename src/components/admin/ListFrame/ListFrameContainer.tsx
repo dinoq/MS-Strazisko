@@ -54,6 +54,7 @@ const ListFrameContainer: FC<{ editItemHandler: Function }> = (props) => {
     
 
     const deleteItemHandler = async (item: DBObjectType, forceDelete: boolean = false) => {
+        console.log('item: ', item);
         let body = {
             className: item.DBOClass,
             deleteId: item.id,
@@ -63,15 +64,36 @@ const ListFrameContainer: FC<{ editItemHandler: Function }> = (props) => {
         if (formDefinition.listFrame.detailDBOClass) {
             body["detailClass"] = formDefinition.listFrame.detailDBOClass;
         }
-        if (formDefinition.listFrame.cantDeleteItemMsg) {
-            body["cantDeleteItemMsg"] = formDefinition.listFrame.cantDeleteItemMsg;
+        if (formDefinition.listFrame.forceDeleteItemMsg) {
+            body["forceDeleteItemMsg"] = formDefinition.listFrame.forceDeleteItemMsg;
         }
         let resultErr = await DBManager.deleteInDB(body);
         console.log('resultErr: ', resultErr);
 
         if (resultErr && typeof resultErr == "string" && resultErr.length) {
             setShowDialog(true);
+            setItemToDelete(item);
             //dispatch(setErrorMsg(resultErr));
+        }else{
+            
+        let afterDeleteMethod = formDefinition.listFrame.afterDeleteMethod;
+        console.log('afterDeleteMethod: ', afterDeleteMethod);
+            if(afterDeleteMethod){
+                let methodName = afterDeleteMethod.substring(0, afterDeleteMethod.indexOf("("));
+                    
+                let rawParams = (afterDeleteMethod.substring(methodName.length+1, afterDeleteMethod.length-1)).split(",");
+                let params: Array<string> = [];
+                for(const rawParam of rawParams){
+                    let evaluated = DBManager.substituteExpression(rawParam, item);
+                    params.push(evaluated);
+                }
+                console.log('DBObject: ', item);
+                
+                console.log('methodName, params: ', methodName, params);
+                resultErr = await DBManager.runServerMethod(methodName, params);
+
+            }
+            
         }
     }
 
@@ -83,6 +105,7 @@ const ListFrameContainer: FC<{ editItemHandler: Function }> = (props) => {
 
     const confirmForceDeleteDialog = () => {
         setShowDialog(false);
+        console.log('itemToDelete: ', itemToDelete);
         deleteItemHandler(itemToDelete, true);
         setItemToDelete(undefined);
     }
@@ -90,7 +113,7 @@ const ListFrameContainer: FC<{ editItemHandler: Function }> = (props) => {
     return (
         <>
             {formDefinition && <ListFrame definition={formDefinition.listFrame} DBObject={DBObject} deleteItemHandler={deleteItemHandler} detailClickedHandler={detailClickedHandler} editItemHandler={props.editItemHandler} entries={entries} colspanNoData={colspanNoData} />}
-            {showDialog && <Dialog msg="asdf" onYes={confirmForceDeleteDialog} onNo={cancelForceDeleteDialog}/>}
+            {showDialog && <Dialog msg={formDefinition.listFrame.forceDeleteItemMsg} onYes={confirmForceDeleteDialog} onNo={cancelForceDeleteDialog}/>}
         </>
     )
 }

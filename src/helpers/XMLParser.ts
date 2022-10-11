@@ -44,7 +44,7 @@ export class XMLParser {
                     transformation: "",
                 },
             ],
-            cantDeleteItemMsg:
+            forceDeleteItemMsg:
                 "Chyba! Daný záznam zřejmě obsahuje nějaká podřízená data.<br>Nejprve musíte smazat je a až potom tento záznam!",
         },
         DB: {
@@ -214,10 +214,11 @@ export class XMLParser {
             def.listFrame.actions = actions.length
                 ? { ...def.listFrame.actions, ...JSON.parse(actions) }
                 : def.listFrame.actions;
-            def.listFrame.cantDeleteItemMsg = getOptionalAttrFromXML(
-                "cantDeleteItemMsg",
+            def.listFrame.forceDeleteItemMsg = getOptionalAttrFromXML(
+                "forceDeleteItemMsg",
                 XMLLF
             );
+            
             let orderByAttr = getOptionalAttrFromXML(
                 "orderBy",
                 form.getElementsByTagName("ListFrame")[0]
@@ -225,6 +226,12 @@ export class XMLParser {
             let orderByDESC = getOptionalAttrFromXML(
                 "descending",
                 form.getElementsByTagName("ListFrame")[0]
+            );
+
+            
+            def.listFrame.afterDeleteMethod = getOptionalAttrFromXML(
+                "afterDeleteMethod",
+                XMLLF
             );
 
             let formName = form.getAttribute("FID") ?? undefined;
