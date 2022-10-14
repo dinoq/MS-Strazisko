@@ -15,7 +15,7 @@
             <!-- <Component attributeKey="id_album" componentName="ID alba" componentType="TextField" editable="false"/> -->
             <Component attributeKey="date" componentName="Datum" componentType="DateField" />
             <Component attributeKey="name" componentName="Název" componentType="TextField" />
-            <Component attributeKey="title" componentName="URL" componentType="TextField" />
+            <Component attributeKey="title" componentName="URL" componentType="TextField" editable="false" />
         </DetailFrame>
         <ListFrame detailDBOClass="PrivatePhoto" orderBy="id_album" descending="true" forceDeleteItemMsg="Dané album obsahuje nějaké fotografie.&lt;br&gt;Opravdu chcete celé album i s fotografiemi smazat?" afterDeleteMethod="deleteDirectory(img/albums/@[title])">
             <Component attributeKey="id_album" componentName="ID alba" componentType="TextField" transformation="@[id_album]"/>

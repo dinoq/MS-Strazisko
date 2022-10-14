@@ -113,6 +113,7 @@ const DetailFrameContainer: FC<{ mode: DetailFrameMode, hideDetailFrame: MouseEv
     };
 
     const updateDBObject = (attrKey, value) => {
+        console.log('attrKey, valueeeeeeee: ', attrKey, value);
         dispatch(editDBObjectAttr({attrKey, value}));
     }
 

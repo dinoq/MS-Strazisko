@@ -1,6 +1,5 @@
 ############################################################################################
 TODO:
--Při vkládání souboru umožnit měnit název
 -multivýběr souborů na nahrátí
 -smazání podřízených položek na disku i v databázi při forceDelete
 -Patička se při změnšení okna (na telefonu) vykresluje divně (dát ty 3 seznamy nějak pod sebe do středu)
