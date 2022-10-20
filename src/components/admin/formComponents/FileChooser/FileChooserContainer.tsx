@@ -8,30 +8,40 @@ import FileChooser from "./FileChooser";
 
 const FileChooserContainer: FC<{id: string, onChange: Function, initLabel: string | undefined}> = (props) => {
     const [fileLabel, setFileLabel] = useState(props.initLabel ?? "");
-    const [file, setFile] = useState<File | undefined>(undefined);
+    const [files, setFiles] = useState<File[] | undefined>(undefined);
     const initFileName = "Název souboru";
     const [fileName, setFileName]: [any, any] = useState(initFileName);
     const [urlName, setUrlName] = useState("");
     const dispatch = useAppDispatch();
     
     const fileChange = (event) => {
-        if (event?.target?.files[0]?.name?.length) {
-            console.log('fileChange event: ', event);
-            const f:File = event.target.files[0];
-            setFile(f);
-            dispatch(addFilesToUpload(f));
-            props.onChange(props.id,f.name);
-            setUrlName(f.name);
-            let label = (event.target.files.length > 1)? `Více souborů (${event.target.files.length})` : f.name;
-            setFileLabel("Vybráno: " + label);
-            if (fileName === initFileName || fileName === "") {
-                setFileName(f.name);
+        let files = event?.target?.files;
+        console.log('files: ', files);
+        let filesCount = files?.length;
+        console.log('filesCount: ', filesCount);
+        if (filesCount) {
+            console.log('filesCount: ', filesCount);
+            if(filesCount == 1){
+                const f:File = files[0];
+                setFiles([f]);
+                dispatch(addFilesToUpload(f));
+                props.onChange(props.id,f.name);
+                setUrlName(f.name);
+                let label = (files.length > 1)? `Více souborů (${files.length})` : f.name;
+                setFileLabel("Vybráno: " + label);
+                if (fileName === initFileName || fileName === "") {
+                    setFileName(f.name);
+                }
+            }else{
+                console.log('Array.isArray(files): ', Array.isArray(Array.from(files)));
+                console.log('files: ', files);
+                console.log('Array.from(files): ', Array.from(files));
             }
         }
     }
 
   return (
-      <FileChooser id={props.id} fileLabel={fileLabel} fileChange={fileChange}/>
+      <FileChooser id={props.id} fileLabel={fileLabel} fileChange={fileChange} files={files}/>
   );
 };
 

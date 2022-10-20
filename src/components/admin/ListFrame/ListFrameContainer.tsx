@@ -1,7 +1,7 @@
 // eslint-disable-next-line
 //import styles from "./ListFrame.module.css";
 
-import { FC, useState, } from "react";
+import { FC, MouseEventHandler, useState, } from "react";
 import { useSelector } from "react-redux";
 import { DBManager } from "../../../helpers/DBManager";
 import { addItemToBreadcrumb } from "../../../store/reducers/BreadcrumbSlice";
@@ -13,7 +13,7 @@ import ListFrame from "./ListFrame";
 import { useAppDispatch } from "../../../hooks";
 import Dialog from "../TwoChoiceDialog";
 
-const ListFrameContainer: FC<{ editItemHandler: Function }> = (props) => {
+const ListFrameContainer: FC<{ editItemHandler: Function, hideDetailFrame: MouseEventHandler<HTMLInputElement> }> = (props) => {
     const dispatch = useAppDispatch();
     const formDefinition = useSelector((state: RootState) => state.formDefinitions.actualFormDefinition);
     const DBObject = useSelector((state: RootState) => state.dbObject);
@@ -33,6 +33,8 @@ const ListFrameContainer: FC<{ editItemHandler: Function }> = (props) => {
      * Bylo kliknuto na položku, změní se úroveň
      */
      const detailClickedHandler = async (itm) => {
+        props.hideDetailFrame(undefined);
+
         let item: DBObjectType = itm as DBObjectType;
 
         let definitionBreadcrumbAttr = await DBManager.getBreadcrumbAttr(DBObject, formDefinition);

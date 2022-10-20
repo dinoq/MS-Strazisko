@@ -136,6 +136,11 @@
     padding: 5px 25px;
     margin: 10px 0;
     width: fit-content;
+
+    &.disabled{
+        background-color: #616161;
+        cursor: not-allowed;
+    }
   }
 
   .modal-window {
