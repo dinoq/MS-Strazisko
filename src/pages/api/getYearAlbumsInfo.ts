@@ -3,13 +3,11 @@ import Database from "better-sqlite3";
 
 
 const handler = async (req, res) => {
-  console.log("process.env.NODE_ENV:", process.env.NODE_ENV );
   const pageYear = req.query["year"].replace("_", "/");
   const limit = req.query["limit"];
 
   const loggedForYears: Array<any> = await req.session.loggedForYears;
   if (!loggedForYears || !loggedForYears.length || !loggedForYears.includes(pageYear)) {
-      console.log('loggedForYears: ', loggedForYears);
     res.status(401).send("Unauthorized!");
     return;
   }

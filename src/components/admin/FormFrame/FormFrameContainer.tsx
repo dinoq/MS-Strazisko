@@ -45,7 +45,6 @@ const FormFrameContainer: React.FC<{}> = (props) => {
         }
         DBManager.getAllDBObjectEntries(DBOClass, definition?.DB?.orderBy,detailItemCondition).then(entrs => {
             dispatch(setEntries(entrs));
-            console.log('entrs: ', entrs);
             let pa = getRawDBObjectDefinition(DBOClass)?.persistentAttributes ?? [];
             //dispatch(setPersistentAttrs(pa))
         })
@@ -77,7 +76,6 @@ const FormFrameContainer: React.FC<{}> = (props) => {
             setSaveDialogVisible(true);
         } else {
             setDetailFrameMode(DetailFrameMode.EDITING_ENTRY);
-            console.log('(item as DBObject).editedAttrs: ', item.editedAttrs);
             dispatch(setDBObject(item));
             const editedAttrs = (item as DBObjectType).attributes.map(attr => { return { key: attr.key, value: attr.value } })
             dispatch(setEditedAttrs(editedAttrs));

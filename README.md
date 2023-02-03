@@ -1,5 +1,8 @@
 ############################################################################################
 TODO:
+Prioritně:
+-Nahrátí fotky učitele nefunguje
+Další:
 -files a další v FileChooserContaineru předělat do reduxu
 -multivýběr souborů na nahrátí
 -smazání podřízených položek na disku i v databázi při forceDelete

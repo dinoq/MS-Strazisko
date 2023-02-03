@@ -72,7 +72,6 @@ const handler = async (req, res) => {
     } else if (req.method == "POST") {
         const className = req.body["className"];
         const attrs = req.body["attributes"];
-        console.log('attrs: ', attrs);
         
         if (!checkIfLettersSlashUnderscoreUndef(className) || !attrs || Array.isArray(attrs) || typeof attrs != "object") { // bezpečnostní pojistka
             db.close();
@@ -141,7 +140,6 @@ const handler = async (req, res) => {
         const primaryKey: string = req.body["primaryKey"];
         const deleteId: string = req.body["deleteId"].toString();
         const forceDelete: boolean = req.body["forceDelete"];
-        console.log('forceDelete: ', forceDelete);
         const forceDeleteItemMsg: string = req.body["forceDeleteItemMsg"];
         if (!checkIfLettersSlashUnderscoreUndef([className, detailClass, primaryKey, deleteId])) { // bezpečnostní pojistka
             return res.status(500).send("ERROR - wrong data className, detailClass, primaryKey or deleteId!");
@@ -159,15 +157,11 @@ const handler = async (req, res) => {
                     if (sqlChildrenResults.length) {// Nemuze se smazat zatnam, pokud obsahuje nejaka podrizena data (v podrizene tabulce)
                         db.close();
                         let msg = (typeof forceDeleteItemMsg == "string" && forceDeleteItemMsg.length) ? forceDeleteItemMsg : "Chyba! Daný záznam zřejmě obsahuje nějaká podřízená data.<br>Nejprve musíte smazat je a až potom tento záznam!";
-                        console.log('msg: ', msg);
                         return res.status(500).send(msg);
                     }
                 }else{
                     const stmtChildren = db.prepare("SELECT * FROM " + detailClass + " WHERE " + primaryKey + "=?");
-                    console.log('stmtChildren: ', stmtChildren);
                     const sqlChildrenResults = stmtChildren.all(deleteId);
-                    console.log('deleteId: ', deleteId);
-                    console.log('sqlChildrenResults: ', sqlChildrenResults);
 
                 }
 

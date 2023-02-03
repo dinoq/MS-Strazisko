@@ -72,9 +72,10 @@ const DetailFrame: FC<{ DBObject: DBObjectType, definition: FormDef, mode: Detai
                                 </div>
                             </div>
                         );
-                    } else if (component.componentType == DetailFrameComponentType.FileChooser) {
+                    } else if (component.componentType == DetailFrameComponentType.FileChooser) {                        
+                        let initLabel = DBManager.getAttrFromArrByKey(props.DBObject.attributes, component.attributeKey)?.value || "";
                         return (
-                            <FileChooserContainer key={"input-" + i} id={component.attributeKey} onChange={props.updateDBObject} initLabel={component.componentName} />
+                            <FileChooserContainer key={"input-" + i} id={component.attributeKey} onChange={props.updateDBObject} initLabel={initLabel} />
                         )
                     } else if (component.componentType == DetailFrameComponentType.RichTextField) {
                         const inputRef = createRef<HTMLTextAreaElement>();

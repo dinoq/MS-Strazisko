@@ -138,8 +138,8 @@ export class DBManager {
         return (DBManager.getAttrOrComponentFromArrByKey(arr, key, "DFComonentDef") as DFComponentDef);
     }
 
-    protected static getAttrVal(key: string, dbObject: DBObjectType) {
-        if (dbObject.editedAttrs.findIndex((attr) => { return attr.key == key }) > -1) { // Key is in EDITED attributes (has priority over not-edited attrs)
+    protected static getAttrVal(key: string, dbObject: DBObjectType, fromOriginalAttrValues: boolean = false) {
+        if (!fromOriginalAttrValues && dbObject.editedAttrs.findIndex((attr) => { return attr.key == key }) > -1) { // Key is in EDITED attributes (has priority over not-edited attrs)
             return DBManager.getAttrFromArrByKey(dbObject.editedAttrs, key).value
         } else if (dbObject.attributes.findIndex((attr) => { return attr.key == key }) > -1) { // Key is in attributes
             return DBManager.getAttrFromArrByKey(dbObject.attributes, key).value
@@ -156,14 +156,14 @@ export class DBManager {
      * @param dbObject Database object from where get data for substitution
      * @returns substituted expression (with real values)
      */
-    public static substituteExpression(rawExpression: string | undefined, dbObject: DBObjectType): string {
+    public static substituteExpression(rawExpression: string | undefined, dbObject: DBObjectType, fromOriginalAttrValues: boolean = false): string {
         if (rawExpression === undefined)
             return "";
         let rawExpressionSplitted = rawExpression.split(/@\[(.*?)\]/g);
         let substituted = "";
         for (let i = 0; i < rawExpressionSplitted.length; i++) {
             if (i % 2 == 1) {
-                substituted = substituted.concat(DBManager.getAttrVal(rawExpressionSplitted[i], dbObject));// remove @[attrKey] (=> val of attr of attrKey)
+                substituted = substituted.concat(DBManager.getAttrVal(rawExpressionSplitted[i], dbObject, fromOriginalAttrValues));// remove @[attrKey] (=> val of attr of attrKey)
             } else {
                 substituted = substituted.concat(rawExpressionSplitted[i]);
             }
@@ -178,13 +178,11 @@ export class DBManager {
             text = text.replaceAll("</TUCNE>", "</b>");
             text = text.replaceAll("<CERVENE>", '<span style="color: red">');
             text = text.replaceAll("</CERVENE>", '</span>');
-            console.log('text: ', text);
         } else {
             text = text.replaceAll("<b>", "<TUCNE>");
             text = text.replaceAll("</b>", "</TUCNE>");
             text = text.replaceAll('<span style="color: red">', "<CERVENE>");
             text = text.replaceAll('</span>', "</CERVENE>");
-            console.log('text2: ', text);
         }
         return text;
     }
@@ -221,7 +219,6 @@ export class DBManager {
             } else {
                 debugger;
                 let text = await resp.text();
-                console.log('text: ', text);
                 throw new Error("Error: database return no object data. Msg from server: " + text);
             }
         }
@@ -232,7 +229,6 @@ export class DBManager {
         return await DBManager.fetchDB(body, "POST", reload);
     }
     public static updateInDB = async (body: any, reload: boolean = true): Promise<any> => {
-        console.log('body: ', body);
         return await DBManager.fetchDB(body, "PATCH", reload);
     }
     public static deleteInDB = async (body: any, reload: boolean = true): Promise<any> => {
@@ -244,7 +240,6 @@ export class DBManager {
     }
 
     protected static callAPI = async (handlerName: string, body: any, method: string, reload: boolean, contentType: string | undefined): Promise<any> => {
-        console.log('body: ', body);
         let init: RequestInit =
         {
             method,

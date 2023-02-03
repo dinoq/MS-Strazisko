@@ -1,3 +1,6 @@
+import { DetailFrameComponentType, ListFrameComponentType } from "./constants";
+import { DetailFrameDef, LFComponentDef, ListFrameDef } from "./types";
+
 var os = require("os");
 var hostname = os.hostname();
 
@@ -58,3 +61,15 @@ export const checkIfNotDangerSQL = (words: string | Array<string>) => {
         return typeof words == "string" && !words.includes(";") && !words.toLowerCase().includes("delete");
     }
 };
+
+
+export const getFileComponents = (LFDefinition: ListFrameDef): LFComponentDef[] => {
+    let fileComponents = [];
+
+    for(const c of LFDefinition.components){
+        if(c.componentType == ListFrameComponentType.ImagePreview){
+            fileComponents.push(c);
+        }
+    }
+    return fileComponents;
+}

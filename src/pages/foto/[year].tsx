@@ -90,7 +90,6 @@ const Gallery = (props) => {
         });
       } else {
         resp.text().then((value) => {
-          console.log("tvalue: ", value);
         });
       }
     });

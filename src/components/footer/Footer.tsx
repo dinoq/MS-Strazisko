@@ -13,7 +13,6 @@ const Footer: React.FC<{}> = (props) => {
     useEffect(() => {
         fetch("/api/data?table=contact_texts").then((data) => {
             data.json().then(json => {
-                console.log('json: ', json);
 
                 const email = (json.contact_texts.find((text) => { return text.title == "Email" })).content;
                 const tel = (json.contact_texts.find((text) => { return text.title == "Telefon" })).content;

@@ -63,10 +63,8 @@ const DBObjectSlice = createSlice({
         addFilesToUpload(state: DBObjectType, action: PayloadAction<File | File[]>){
             const files = action.payload;
             if(Array.isArray(files)){
-                console.log('Array.isArray(files): ', Array.isArray(files));
                 throw new Error("TODO addFilesToUpload ARRAY");
             }else{
-                console.log('files: ', files);
                 state.filesToUpload.push(files);
             }
         },

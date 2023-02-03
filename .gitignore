@@ -34,3 +34,4 @@ yarn-error.log*
 .vercel
 
 /.filesForServer
+public/img/albums/other/*

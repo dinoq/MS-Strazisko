@@ -83,7 +83,6 @@ const AdminDocumentsPage: NextPage = (props: any) => {
         }]
     })*/
 
-    console.log('bodyRows: ', bodyRows);
     return (
         <div className={""}>
             <Head>

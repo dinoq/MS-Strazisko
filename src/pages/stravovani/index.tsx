@@ -14,7 +14,6 @@ const Stravovani: React.FC<{ propname: any }> = (props) => {
         fetch("/api/data?table=food").then((data) => {
 
             data.json().then(json => {
-                console.log('json: ', json);
                 setImgUrls(json.food);
             })
         })

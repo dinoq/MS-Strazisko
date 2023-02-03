@@ -63,12 +63,13 @@ const handler = async (req, res) => {
             break;
             case knownMethods.deleteDirectory:
                 path = "./public/" + params[0];
-                console.log('dir: ', path);
-                console.log('fs.existsSync(dir): ', fs.existsSync(path));
                 if (fs.existsSync(path)) {
                     let result = fs.rmdirSync(path, { recursive: true });
                     return res
                         .status(200).send("Directory removed.");
+                }else{
+                    return res
+                        .status(404).send("Directory not found!");
                 }
             break;
             case knownMethods.deleteFile:
@@ -78,6 +79,8 @@ const handler = async (req, res) => {
                     return res
                         .status(200).send("File deleted.");
                 }
+                return res
+                    .status(404).send("File not found!");
             break;
             default:
                 return res

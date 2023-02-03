@@ -57,7 +57,6 @@ const AlbumDetail: React.FC<{ logged: boolean }> = (props) => {
         });
       } else {
         resp.text().then((value) => {
-          console.log("tvalue: ", value);
         });
       }
     });

@@ -12,6 +12,7 @@ import { BreadcrumbItemDef, DBObjectType, RootState } from "../../../helpers/typ
 import ListFrame from "./ListFrame";
 import { useAppDispatch } from "../../../hooks";
 import Dialog from "../TwoChoiceDialog";
+import { getFileComponents } from "../../../helpers/utils";
 
 const ListFrameContainer: FC<{ editItemHandler: Function, hideDetailFrame: MouseEventHandler<HTMLInputElement> }> = (props) => {
     const dispatch = useAppDispatch();
@@ -48,15 +49,10 @@ const ListFrameContainer: FC<{ editItemHandler: Function, hideDetailFrame: Mouse
         dispatch(addItemToBreadcrumb(newBItem))
         dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: newClass })
 
-        
-
         dispatch(setNewDBObject({ DBOClass: newClass ?? undefined, parentEntry: item }));
     }
 
-    
-
     const deleteItemHandler = async (item: DBObjectType, forceDelete: boolean = false) => {
-        console.log('item: ', item);
         let body = {
             className: item.DBOClass,
             deleteId: item.id,
@@ -79,7 +75,6 @@ const ListFrameContainer: FC<{ editItemHandler: Function, hideDetailFrame: Mouse
         }else{
             
         let afterDeleteMethod = formDefinition.listFrame.afterDeleteMethod;
-        console.log('afterDeleteMethod: ', afterDeleteMethod);
             if(afterDeleteMethod){
                 let methodName = afterDeleteMethod.substring(0, afterDeleteMethod.indexOf("("));
                     
@@ -89,10 +84,15 @@ const ListFrameContainer: FC<{ editItemHandler: Function, hideDetailFrame: Mouse
                     let evaluated = DBManager.substituteExpression(rawParam, item);
                     params.push(evaluated);
                 }
-                console.log('DBObject: ', item);
                 
-                console.log('methodName, params: ', methodName, params);
                 resultErr = await DBManager.runServerMethod(methodName, params);
+
+            }
+            let fileComponents = getFileComponents(formDefinition.listFrame);
+            if(fileComponents.length){
+                let evaluated = DBManager.substituteExpression(fileComponents[0].transformation, item);
+
+                resultErr = await DBManager.runServerMethod("deleteFile", [evaluated]);
 
             }
             
@@ -107,7 +107,6 @@ const ListFrameContainer: FC<{ editItemHandler: Function, hideDetailFrame: Mouse
 
     const confirmForceDeleteDialog = () => {
         setShowDialog(false);
-        console.log('itemToDelete: ', itemToDelete);
         deleteItemHandler(itemToDelete, true);
         setItemToDelete(undefined);
     }

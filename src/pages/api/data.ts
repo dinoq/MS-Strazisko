@@ -15,7 +15,7 @@ const mapTables = (table: string, toReal: boolean)=>{
 
 const mapConditionsAndOrder = (table) =>{
     if(table == "Event"){
-        return " WHERE date>date('now') ORDER BY date;";
+        return " WHERE date>=date('now') ORDER BY date;";
     }
     return "";
 }
@@ -48,7 +48,6 @@ async function handler(req, res) {
 
                 const stmt = db.prepare(sql);
                 const sqlResults = stmt.all();
-                console.log('sqlResults: ', sqlResults);
                 data[tbl] = sqlResults;
             }
             

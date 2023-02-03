@@ -15,11 +15,9 @@ export default function Home(props) {
     const a = "/navrh/unused/camping.jpg";
 
     const [introText, setIntroText]: [{ title: string, content: string }, any] = useState({ title: "", content: "" });
-    console.log('introText: ', introText);
 
     const [features, setFeatures]: [Array<{ icon: any, bgColor: string, alt: string, title: string, description: string }>, any] = useState([]);
     const [teachers, setTeachers]: [Array<{ imgSrc: string, name: string, job: string }>, any] = useState([]);
-    console.log('teachers: ', teachers);
     const [events, setEvents]: [Array<{ imgSrc: string, title: string, date: string, description: string }>, any] = useState([]);
     const [publicImages, setPublicImages]: [Array<{ original: string, thumbnail: string }>, any] = useState([]);
 
@@ -39,7 +37,6 @@ export default function Home(props) {
     useEffect(() => {
         fetch("/api/data?table=events;teachers;public_images;intro").then((data) => {
             data.json().then(json => {
-                console.log('json: ', json);
                 setEvents(json.events.map((event) => {
                     return { imgSrc: (event.img_url ? "/img/albums/other/event-photos/" + event.img_url : "/img/albums/other/no-photo.jpg"), title: event.title, date: new Date(event.date).toLocaleDateString("cs-CZ", { weekday: undefined, year: 'numeric', month: 'short', day: 'numeric' }), description: event.description }
                 }));
@@ -142,9 +139,8 @@ export default function Home(props) {
                     <div className={classes["teachers"] + " row my-4 mb-5 justify-content-center text-center"}>
                         <div className="col-10 d-flex flex-column justify-content-center">
                             <div className="row"><h2>Personál MŠ</h2></div>
-                            <div className="row w-100 justify-content-center justify-content-lg-between">
+                            <div className="row w-100 justify-content-center justify-content-lg-evenly">
                                 {teachers.map((teacher, index) => {
-                                    console.log('teacher.imgSrc: ', teacher.imgSrc);
                                     return (
                                         <div key={"teacher-" + index} className="col-12 col-md-6 col-lg-3 mt-5 mt-lg-2 mb-5">
                                             <Teacher imgSrc={teacher.imgSrc} name={teacher.name} description={teacher.job} />
@@ -165,8 +161,8 @@ export default function Home(props) {
                                         <EventCard imgSrc={event.imgSrc} title={event.title} date={event.date} description={event.description} />
                                     </div>
                                 )}
-                                {!events &&
-                                    <div className="my-3">Je nám líto, ale žádné nadcházející události nebyly nalezeny!</div>
+                                {(!events || events.length == 0) &&
+                                    <div className="my-3">Je nám líto, ale žádné nadcházející události nebyly nalezeny...</div>
                                 }
                             </div>
                         </div>
@@ -178,12 +174,17 @@ export default function Home(props) {
                             <div className="h5">(Pro více fotek přejděte z menu na <Link href="/foto"><a>Foto</a></Link>)</div>
                             <div className={classes["gallery-container"] + " row justify-content-center"}>
                                 {publicImages.map((img, index) => {
+                                    let col = (publicImages.length % 4 == 0)? "col-3" : "col-4";
+                                    
                                     return (
-                                        <div key={"img-thumbnail-" + index} className={classes["image-frame"] + " col-4"}>
+                                        <div className={"d-flex justify-content-center " + col}>
+                                        <div key={"img-thumbnail-" + index} className={classes["image-frame"] + " " + col}>
                                             <div className={classes["image-container"] + " position-relative"}>
-                                                <Image src={img.thumbnail} alt="Fotka školky" layout="fill" />
+                                                <Image src={img.thumbnail} alt="Fotka školky" layout="fill" objectFit='contain'/>
                                             </div>
                                         </div>
+                                            </div>
+                                            
                                     )
                                 }
                                 )}
@@ -195,7 +196,7 @@ export default function Home(props) {
                         <div className="col-10 p-4 d-flex flex-column justify-content-center">
                             <div className="row"><h2>Chcete svoje dítě přihlásit do naší MŠ?</h2></div>
                             <div className="row mt-4 justify-content-center align-items-center">
-                                <Link href="/prihlasky"><a><button>Informace k přihláškám</button></a></Link>
+                                <Link href="/dokumenty"><a><button>Informace k přihláškám</button></a></Link>
                                 <div className={classes["pen-image-container"] + " position-relative d-none d-sm-block"}>
                                     <Image src="/img/pen.png" alt="Fotka školky" layout="fill" />
                                 </div>

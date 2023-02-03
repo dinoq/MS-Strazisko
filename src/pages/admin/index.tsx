@@ -13,7 +13,7 @@ const AdminHomePage: NextPage = (props: any)  => {
       </Head>
 
       <main className={styles.main}>
-        Uvod
+        <p>Vlevo vyberte kategorii k editaci.</p>
       </main>
     </div>
   )

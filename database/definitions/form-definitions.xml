@@ -68,11 +68,11 @@
             <Component attributeKey="date" componentName="Datum" componentType="DateField" transformation="@[date]"/>
             <Component attributeKey="description" componentName="Popis" componentType="RichTextField" transformation="@[description]"/>
         </DetailFrame>
-        <ListFrame orderBy="date">
+        <ListFrame orderBy="date" descending="true">
             <Component attributeKey="id_event" componentName="ID" componentType="TextField" transformation="@[id_event]"/>
             <Component attributeKey="img_url" componentName="Náhled obrázku" componentType="ImagePreview" transformation="img/albums/other/event-photos/@[img_url]" />
             <Component attributeKey="title" componentName="Název" componentType="TextField" transformation="@[title]"/>
-            <Component attributeKey="date" componentName="Datum" componentType="TextField" transformation="@[date]"/>
+            <Component attributeKey="date" componentName="Datum" componentType="DateField" transformation="@[date]"/>
             <Component attributeKey="description" componentName="Popis" componentType="RichTextField" transformation="@[description]"/>
         </ListFrame>
     </Form>
