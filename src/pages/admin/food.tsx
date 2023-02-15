@@ -1,19 +1,11 @@
-import type { NextPage } from 'next'
 import { withIronSessionSsr } from "iron-session/next";
-import Head from 'next/head'
-import FormFrameContainer from '../../components/admin/FormFrame/FormFrameContainer'
-import styles from './pages.module.scss'
-import { useEffect } from 'react';
-import { SagaActions } from '../../store/sagas';
-import { useAppDispatch } from '../../hooks';
+import type { NextPage } from 'next';
+import Head from 'next/head';
+import FormFrameContainer from '../../components/admin/FormFrame/FormFrameContainer';
+import withAdminPage from "../../helpers/withAdminPage";
+import styles from './pages.module.scss';
 
 const AdminFoodPage: NextPage = (props: any) => {
-    const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: "Food" });
-    }, [dispatch])
-
     return (
         <div className={styles.container}>
             <Head>
@@ -56,4 +48,4 @@ export const getServerSideProps = withIronSessionSsr(
     }
 );
 
-export default AdminFoodPage
+export default withAdminPage(AdminFoodPage, "Food");

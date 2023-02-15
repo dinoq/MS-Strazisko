@@ -2,7 +2,7 @@
 //import classes from "./FileChooser.module.css";
 
 import { FC, useEffect, useState } from "react";
-import { useAppDispatch } from "../../../../hooks";
+import useAppDispatch from "../../../../hooks/useAppDispatch";
 import { addFilesToUpload } from "../../../../store/reducers/DBObjectSlice";
 import FileChooser from "./FileChooser";
 

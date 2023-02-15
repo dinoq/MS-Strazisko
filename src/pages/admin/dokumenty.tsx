@@ -1,11 +1,11 @@
-import type { NextPage } from 'next'
-import { withIronSessionApiRoute, withIronSessionSsr  } from "iron-session/next";
-import Head from 'next/head'
-import Link from 'next/link'
-import { useState } from 'react'
-import AppTable from '../../../src/components/Table/Table'
-import { getApiURL } from '../../../src/helpers/utils'
-import classes from "./dokumenty.module.scss"
+import { withIronSessionSsr } from "iron-session/next";
+import type { NextPage } from 'next';
+import Head from 'next/head';
+import Link from 'next/link';
+import { useState } from 'react';
+import AppTable from '../../../src/components/Table/Table';
+import { getApiURL } from '../../../src/helpers/utils';
+import classes from "./dokumenty.module.scss";
 
 
 const AdminDocumentsPage: NextPage = (props: any) => {

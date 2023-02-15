@@ -9,7 +9,6 @@ import { useRouter } from 'next/router';
 import { Provider, useSelector } from "react-redux";
 import { RootState } from '../helpers/types';
 import store from "../store";
-import { useAppDispatch } from '../hooks';
 
 function MyAppWrapper({ Component, pageProps }) {
 
@@ -23,7 +22,6 @@ function MyAppWrapper({ Component, pageProps }) {
 }
 
 function MyApp(props) {
-    const dispatch = useAppDispatch();
     const router = useRouter();
     const definitions = useSelector((state: RootState) => state.formDefinitions);
 

@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import Link from "next/link";
 import classes from "./AdminPageLayout.module.scss";
 

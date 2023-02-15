@@ -1,19 +1,10 @@
-import type { NextPage } from 'next'
 import { withIronSessionSsr } from "iron-session/next";
-import Head from 'next/head'
-import { useEffect } from 'react';
-import FormFrameContainer from '../../../src/components/admin/FormFrame/FormFrameContainer'
-import { SagaActions } from '../../store/sagas';
-import { useAppDispatch } from '../../hooks';
-
+import type { NextPage } from 'next';
+import Head from 'next/head';
+import FormFrameContainer from '../../../src/components/admin/FormFrame/FormFrameContainer';
+import withAdminPage from "../../helpers/withAdminPage";
 
 const AdminPhotosPage: NextPage = (props: any) => {
-    const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: "Year" });
-    }, [dispatch])
-
     return (
         <div className={""}>
             <Head>
@@ -56,4 +47,4 @@ export const getServerSideProps = withIronSessionSsr(
     }
 );
 
-export default AdminPhotosPage;
+export default withAdminPage(AdminPhotosPage, "Year");

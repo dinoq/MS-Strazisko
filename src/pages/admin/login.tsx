@@ -1,8 +1,9 @@
-import type { NextPage } from 'next'
-import { withIronSessionApiRoute, withIronSessionSsr  } from "iron-session/next";;
-import Head from 'next/head'
+import { withIronSessionSsr } from "iron-session/next";
+import type { NextPage } from 'next';
+import Head from 'next/head';
 import { useState } from 'react';
-import styles from './login.module.scss'
+import styles from './login.module.scss';
+;
 
 const AdminLoginPage: NextPage = (props: any)  => {
   const [username, setUsername] = useState("");

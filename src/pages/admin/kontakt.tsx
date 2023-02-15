@@ -3,17 +3,10 @@ import { withIronSessionSsr } from "iron-session/next";
 import Head from 'next/head'
 import FormFrameContainer from '../../components/admin/FormFrame/FormFrameContainer'
 import styles from './pages.module.scss'
-import { useEffect } from 'react';
-import { SagaActions } from '../../store/sagas';
-import { useAppDispatch } from '../../hooks';
+import withAdminPage from '../../helpers/withAdminPage';
 
 const AdminContactsPage: NextPage = (props: any) => {
-    const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: "ContactText" });
-    }, [dispatch])
-
+    
     return (
         <div className={styles.container}>
             <Head>
@@ -56,4 +49,4 @@ export const getServerSideProps = withIronSessionSsr(
     }
 );
 
-export default AdminContactsPage
+export default withAdminPage(AdminContactsPage, "ContactText");

@@ -3,16 +3,10 @@ import { NextPage } from "next";
 import Head from 'next/head'
 import { useEffect } from "react";
 import FormFrameContainer from "../../../components/admin/FormFrame/FormFrameContainer";
-import { useAppDispatch } from "../../../hooks";
+import withAdminPage from "../../../helpers/withAdminPage";
 import { SagaActions } from "../../../store/sagas";
 
 const EventsPage: NextPage = (props: any) =>{
-    const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: "IntroText" });
-    }, [dispatch])
-
     return (
         <div className={""}>
             <Head>
@@ -56,4 +50,4 @@ export const getServerSideProps = withIronSessionSsr(
     }
 );
 
-export default EventsPage;
+export default withAdminPage(EventsPage, "IntroText");

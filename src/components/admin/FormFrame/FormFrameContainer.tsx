@@ -11,7 +11,7 @@ import { setErrorMsg } from "../../../store/reducers/ErrorSlice";
 import { setDBObject, setEditedAttrs, setNewDBObject } from "../../../store/reducers/DBObjectSlice";
 import { setEntries } from "../../../store/reducers/EntrySlice";
 import { getRawDBObjectDefinition } from "../../../../database/definitions/db-object-definitions";
-import { useAppDispatch } from "../../../hooks";
+import useAppDispatch from "../../../hooks/useAppDispatch";
 
 const FormFrameContainer: React.FC<{}> = (props) => {
     const dispatch = useAppDispatch();

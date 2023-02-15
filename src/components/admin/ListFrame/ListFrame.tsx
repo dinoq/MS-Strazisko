@@ -1,12 +1,12 @@
 // eslint-disable-next-line
 //import styles from "./ListFrame.module.css";
 
-import { FC, useEffect, useState } from "react";
+import DOMPurify from "dompurify";
+import Image from "next/image";
+import { FC } from "react";
 import { ListFrameComponentType } from "../../../helpers/constants";
 import { DBManager } from "../../../helpers/DBManager";
 import { DBObjectType, LFComponentDef, ListFrameDef } from "../../../helpers/types";
-import Image from "next/image"
-import DOMPurify from "dompurify";
 
 const ListFrame: FC<{ definition: ListFrameDef, DBObject: DBObjectType, detailClickedHandler: Function, deleteItemHandler: Function, editItemHandler: Function, entries: Array<DBObjectType>, colspanNoData: number }> = (props) => {
 

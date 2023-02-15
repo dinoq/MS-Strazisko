@@ -1,10 +1,7 @@
-import React, { createRef, FC, FormEventHandler, MouseEventHandler, useEffect, useRef, useState } from "react";
-import { getRawDBObjectDefinition } from "../../../../database/definitions/db-object-definitions";
+import { createRef, FC, FormEventHandler, MouseEventHandler } from "react";
 import { DetailFrameComponentType, DetailFrameMode } from "../../../helpers/constants";
 import { DBManager } from "../../../helpers/DBManager";
-import { DBObjectType, DetailFrameDef, FormDef } from "../../../helpers/types";
-import ErrorDialog from "../ErrorDialog";
-import FileChooser from "../formComponents/FileChooser/FileChooser";
+import { DBObjectType, FormDef } from "../../../helpers/types";
 import FileChooserContainer from "../formComponents/FileChooser/FileChooserContainer";
 
 const DetailFrame: FC<{ DBObject: DBObjectType, definition: FormDef, mode: DetailFrameMode, hideDetailFrame: MouseEventHandler<HTMLInputElement>, formSubmitted: FormEventHandler<HTMLFormElement>, setErrorMsg: Function, updateDBObject: Function }> = (props) => {

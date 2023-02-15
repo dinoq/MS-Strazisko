@@ -5,8 +5,8 @@ import { DBManager } from "../../../helpers/DBManager";
 import { editDBObjectAttr } from "../../../store/reducers/DBObjectSlice";
 import { RootState } from "../../../helpers/types";
 import DetailFrame from "./DetailFrame";
-import { useAppDispatch } from "../../../hooks";
 import { getFileComponents } from "../../../helpers/utils";
+import useAppDispatch from "../../../hooks/useAppDispatch";
 
 const DetailFrameContainer: FC<{ mode: DetailFrameMode, hideDetailFrame: MouseEventHandler<HTMLInputElement>, setErrorMsg: Function }> = (props) => {
     const formDefinition = useSelector((state: RootState) => state.formDefinitions).actualFormDefinition;

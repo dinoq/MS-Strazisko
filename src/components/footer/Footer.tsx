@@ -1,9 +1,9 @@
 // eslint-disable-next-line
-import classes from "./Footer.module.scss";
-import Image from 'next/image'
-import Link from "next/link"
-import { useEffect, useRef, useState } from "react";
+import Image from 'next/image';
+import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import classes from "./Footer.module.scss";
 
 const Footer: React.FC<{}> = (props) => {
     const router = useRouter();
@@ -29,7 +29,7 @@ const Footer: React.FC<{}> = (props) => {
             <div className={" row justify-content-center text-center text-white"}>
                 <div className="col-10 p-4 d-flex flex-column justify-content-center">
                     <div className="row my-2"><h2>Kontakty</h2></div>
-                    <div className="row d-flex flex-row justify-content-around align-items-center my-2">
+                    <div className="row d-flex flex-row justify-content-evenly align-items-center my-2">
                         <div className={classes["contact-container"] + " d-flex align-items-center my-3"}>
                             <div className={classes["icon-container"] + " position-relative mx-5"}>
                                 <Image src="/img/icons/phone.png" alt="Fotka školky" layout="fill" />

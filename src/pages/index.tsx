@@ -52,7 +52,7 @@ export default function Home(props) {
                 setIntroText({
                     title: json.intro[0].title,
                     content: DBManager.substituteTags(json.intro[0].content, true)
-                });                
+                });
             })
         })
         setFeatures([
@@ -119,7 +119,7 @@ export default function Home(props) {
                         </div>
                         <div className="col-10 col-lg-4">
                             <h1 className="fw-bold">{introText.title}</h1>
-                            <p dangerouslySetInnerHTML={{__html: introText.content}}></p>
+                            <p dangerouslySetInnerHTML={{ __html: introText.content }}></p>
                         </div>
                     </div>
 
@@ -174,17 +174,17 @@ export default function Home(props) {
                             <div className="h5">(Pro více fotek přejděte z menu na <Link href="/foto"><a>Foto</a></Link>)</div>
                             <div className={classes["gallery-container"] + " row justify-content-center"}>
                                 {publicImages.map((img, index) => {
-                                    let col = (publicImages.length % 4 == 0)? "col-3" : "col-4";
-                                    
+                                    let col = (publicImages.length % 4 == 0) ? "col-3" : "col-4";
+
                                     return (
-                                        <div className={"d-flex justify-content-center " + col}>
-                                        <div key={"img-thumbnail-" + index} className={classes["image-frame"] + " " + col}>
-                                            <div className={classes["image-container"] + " position-relative"}>
-                                                <Image src={img.thumbnail} alt="Fotka školky" layout="fill" objectFit='contain'/>
+                                        <div key={"img-thumbnail-" + index} className={"d-flex justify-content-center " + col}>
+                                            <div className={classes["image-frame"] + " " + col}>
+                                                <div className={classes["image-container"] + " position-relative"}>
+                                                    <Image src={img.thumbnail} alt="Fotka školky" layout="fill" objectFit='contain' />
+                                                </div>
                                             </div>
                                         </div>
-                                            </div>
-                                            
+
                                     )
                                 }
                                 )}

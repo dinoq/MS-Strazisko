@@ -1,18 +1,14 @@
 // eslint-disable-next-line
 //import classes from "../styles/FormFrame.module.scss";
 
-import { url } from "inspector";
-import { title } from "process";
-import React, { EventHandler, useEffect, useState } from "react";
-import ErrorDialog from "../ErrorDialog";
-import ListFrame from "../ListFrame/ListFrame";
-import TreeChoiceDialog from "../TreeChoiceDialog";
+import React, { EventHandler } from "react";
 import { DetailFrameMode } from "../../../helpers/constants";
-import { BreadcrumbItemDef, DBObjectType, FormDef } from "../../../helpers/types";
-import DetailFrameContainer from "../DetailFrame/DetailFrameContainer";
-import ListFrameContainer from "../ListFrame/ListFrameContainer";
+import { DBObjectType, FormDef } from "../../../helpers/types";
 import BreadcrumbContainer from "../Breadcrumb/BreadcrumbContainer";
-import { DBManager } from "../../../helpers/DBManager";
+import DetailFrameContainer from "../DetailFrame/DetailFrameContainer";
+import ErrorDialog from "../ErrorDialog";
+import ListFrameContainer from "../ListFrame/ListFrameContainer";
+import TreeChoiceDialog from "../TreeChoiceDialog";
 
 const FormFrame: React.FC<{ errorMsg: string, detailFrameVisible: boolean, saveDialogVisible: boolean, entries: Array<DBObjectType>, detailFrameMode: DetailFrameMode, definition: FormDef, DBObject: DBObjectType, hideDetailFrame: EventHandler<any>, setDBObject: Function, editItemHandler: Function, showDetailFrame: Function, setSaveDialogVisible: Function, setErrorMsg: Function }> = (props) => {
 

@@ -1,6 +1,7 @@
-import type { NextPage } from 'next'
-import { withIronSessionApiRoute, withIronSessionSsr  } from "iron-session/next";;
-import Head from 'next/head'
+import { withIronSessionSsr } from "iron-session/next";
+import type { NextPage } from 'next';
+import Head from 'next/head';
+;
 //import styles from '../styles/Home.module.css'
 const styles:any = {};
 const AdminHomePage: NextPage = (props: any)  => {

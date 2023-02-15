@@ -1,9 +1,7 @@
 // eslint-disable-next-line
 //import classes from "./FileChooser.module.css";
 
-import { ChangeEventHandler, FC, FormEventHandler, MouseEventHandler, useState } from "react";
-import { DetailFrameMode } from "../../../../helpers/constants";
-import { DBObjectType, FormDef } from "../../../../helpers/types";
+import { ChangeEventHandler, FC } from "react";
 
 const FileChooser: FC<{ id: string, fileLabel: string, files: File[], fileChange: ChangeEventHandler<HTMLInputElement> }> = (props) => {
 

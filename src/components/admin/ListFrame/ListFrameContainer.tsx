@@ -1,18 +1,17 @@
 // eslint-disable-next-line
 //import styles from "./ListFrame.module.css";
 
-import { FC, MouseEventHandler, useState, } from "react";
+import { FC, MouseEventHandler, useState } from "react";
 import { useSelector } from "react-redux";
 import { DBManager } from "../../../helpers/DBManager";
+import { BreadcrumbItemDef, DBObjectType, RootState } from "../../../helpers/types";
+import { getFileComponents } from "../../../helpers/utils";
+import useAppDispatch from "../../../hooks/useAppDispatch";
 import { addItemToBreadcrumb } from "../../../store/reducers/BreadcrumbSlice";
 import { setNewDBObject } from "../../../store/reducers/DBObjectSlice";
-import { setErrorMsg } from "../../../store/reducers/ErrorSlice";
 import { SagaActions } from "../../../store/sagas";
-import { BreadcrumbItemDef, DBObjectType, RootState } from "../../../helpers/types";
-import ListFrame from "./ListFrame";
-import { useAppDispatch } from "../../../hooks";
 import Dialog from "../TwoChoiceDialog";
-import { getFileComponents } from "../../../helpers/utils";
+import ListFrame from "./ListFrame";
 
 const ListFrameContainer: FC<{ editItemHandler: Function, hideDetailFrame: MouseEventHandler<HTMLInputElement> }> = (props) => {
     const dispatch = useAppDispatch();
