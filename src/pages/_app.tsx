@@ -9,16 +9,10 @@ import { useRouter } from 'next/router';
 import { Provider, useSelector } from "react-redux";
 import { RootState } from '../helpers/types';
 import store from "../store";
+import withPageStoreProvider from '../hoc/withStoreProvider';
 
 function MyAppWrapper({ Component, pageProps }) {
-
-    return (
-        <Provider store={store}>
-            <MyApp>
-                <Component {...pageProps} />
-            </MyApp>
-        </Provider>
-    )
+    return withPageStoreProvider(MyApp, store)
 }
 
 function MyApp(props) {
@@ -61,4 +55,4 @@ function MyApp(props) {
     )
 }
 
-export default MyAppWrapper;
+export default withPageStoreProvider(MyApp, store);

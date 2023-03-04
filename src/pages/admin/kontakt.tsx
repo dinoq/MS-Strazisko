@@ -3,7 +3,7 @@ import { withIronSessionSsr } from "iron-session/next";
 import Head from 'next/head'
 import FormFrameContainer from '../../components/admin/FormFrame/FormFrameContainer'
 import styles from './pages.module.scss'
-import withAdminPage from '../../helpers/withAdminPage';
+import withAdminPage from '../../hoc/withAdminPage';
 
 const AdminContactsPage: NextPage = (props: any) => {
     

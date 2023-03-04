@@ -2,6 +2,7 @@
 TODO:
 Prioritně:
 -Nahrátí fotky učitele nefunguje
+-Použití nextauth
 Další:
 -files a další v FileChooserContaineru předělat do reduxu
 -multivýběr souborů na nahrátí
@@ -105,3 +106,15 @@ Zaloha deps:
     "webp-loader": "^0.6.0"
   }
 }
+
+
+
+TECHNOLOGY STACK
+React
+Nextjs
+SASS (+ modules)
+Redux (+Redux Toolkit, Redux Saga)
+SQL (SQLite)
+Bootstrap
+REST
+NextAuth?

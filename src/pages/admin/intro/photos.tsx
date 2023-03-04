@@ -2,7 +2,7 @@ import { withIronSessionSsr } from "iron-session/next";
 import { NextPage } from "next";
 import Head from 'next/head';
 import FormFrameContainer from "../../../components/admin/FormFrame/FormFrameContainer";
-import withAdminPage from "../../../helpers/withAdminPage";
+import withAdminPage from "../../../hoc/withAdminPage";
 
 const PhotosPage: NextPage = (props: any) =>{
     return (

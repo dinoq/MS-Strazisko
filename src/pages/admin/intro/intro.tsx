@@ -1,10 +1,8 @@
 import { withIronSessionSsr } from "iron-session/next";
 import { NextPage } from "next";
-import Head from 'next/head'
-import { useEffect } from "react";
+import Head from 'next/head';
 import FormFrameContainer from "../../../components/admin/FormFrame/FormFrameContainer";
-import withAdminPage from "../../../helpers/withAdminPage";
-import { SagaActions } from "../../../store/sagas";
+import withAdminPage from "../../../hoc/withAdminPage";
 
 const EventsPage: NextPage = (props: any) =>{
     return (

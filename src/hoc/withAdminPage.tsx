@@ -5,7 +5,9 @@ import { SagaActions } from "../store/sagas";
 
 export default (Page: NextPage, formID: string) => {    
 
+    console.log("CCC");
     return (props) => {  
+        console.log("BBBB");
         const dispatch = useAppDispatch();
     
         useEffect(() => {

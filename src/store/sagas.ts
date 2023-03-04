@@ -11,6 +11,7 @@ export enum SagaActions {
 
 function* setFormDefinitions(action){
     try {
+        console.log("AAAAAAAAAAAAAAAAAAA");
         let formDefinitions: FormDefinitionsState = yield select((state: RootState)=>state.formDefinitions);
         if(!formDefinitions.definitionsLoaded){
             const definitions = yield call(DBManager.fetchFormDefinitions);
