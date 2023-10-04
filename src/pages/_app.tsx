@@ -10,12 +10,10 @@ import { Provider, useSelector } from "react-redux";
 import { RootState } from '../helpers/types';
 import store from "../store";
 import withPageStoreProvider from '../hoc/withStoreProvider';
+import { AppProps } from 'next/app';
 
-function MyAppWrapper({ Component, pageProps }) {
-    return withPageStoreProvider(MyApp, store)
-}
 
-function MyApp(props) {
+function MyApp({ Component, pageProps }: AppProps) {
     const router = useRouter();
     const definitions = useSelector((state: RootState) => state.formDefinitions);
 
@@ -23,7 +21,7 @@ function MyApp(props) {
         return (
             <div className="layout">
                 <Header noBackground={true} />
-                {props.children}
+                <Component {...pageProps} />
             </div>
         )
     }
@@ -32,14 +30,14 @@ function MyApp(props) {
         if (router.pathname.includes("login")) {
             return (
                 <div className="admin">
-                    {props.children}
+                    <Component {...pageProps} />
                 </div>
             )
         } else {
             return (
                 <div className="admin">
                     <AdminPageLayout>
-                        {props.children}
+                    <Component {...pageProps} />
                     </AdminPageLayout>
                 </div>
             )
@@ -49,10 +47,11 @@ function MyApp(props) {
     return (
         <div className="layout">
             <Header />
-            {props.children}
+            <Component {...pageProps} />
             <Footer />
         </div>
     )
 }
 
 export default withPageStoreProvider(MyApp, store);
+
