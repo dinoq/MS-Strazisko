@@ -56,10 +56,10 @@ export default function Home(props) {
             })
         })
         setFeatures([
-            { icon: "/img/play-icon-optimal.svg", bgColor: "#0a58ca", alt: "Ikona herní konzole", title: "Zábava", description: "Školka vlastní mnoho různých hraček, kterými se vaše děti zabaví." },
-            { icon: "/img/tree-icon-optimal.svg", bgColor: "#0aca10", alt: "Ikona přírody", title: "Krásná příroda", description: "Školka se nachází uprostřed krásné přírody." },
-            { icon: "/img/food-icon-optimal.svg", bgColor: "#ca3f0a", alt: "Ikona jídla (ovoce)", title: "Stravování", description: "Každý den jsou do školy dováženy obědy z nedaleké MŠ Ptení." },
-            { icon: "/img/smile-icon-optimal.svg", bgColor: "#dbc506", alt: "Ikona úsměvu", title: "Příjemná atmosféra", description: "Vaše děti se u nás budou cítit jako doma." },
+            { icon: "/img/play-icon-optimal.svg", bgColor: "#0a58ca", alt: "Ikona herní konzole", title: "Hravé učení", description: "Podporujeme hravý a kreativní přístup k učení. Děti se u nás učí prostřednictvím her, pohybu, hudby a umění." },
+            { icon: "/img/tree-icon-optimal.svg", bgColor: "#0aca10", alt: "Ikona přírody", title: "Krásná příroda", description: "Jsme obklopeni krásnou přírodou, kterou využíváme k výukovým aktivitám a dobrodružstvím ve volné přírodě." },
+            { icon: "/img/food-icon-optimal.svg", bgColor: "#ca3f0a", alt: "Ikona jídla (ovoce)", title: "Kvalitní strava", description: "Spolupracujeme s nedalekou Mateřskou školou Ptení, která nám dodává chutné a vyvážené obědy." },
+            { icon: "/img/smile-icon-optimal.svg", bgColor: "#dbc506", alt: "Ikona úsměvu", title: "Sociální interakce", description: "Učíme děti důležité dovednosti sociální interakce a spolupráce, aby se cítily v naší školce jako součást kamarádské komunity." },
         ])
         /*
                 setPublicImages([

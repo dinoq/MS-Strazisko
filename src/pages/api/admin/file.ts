@@ -15,7 +15,7 @@ const handler = async (req, res) => {
         const form = new formidable.IncomingForm();
         try {
             await form.parse(req, async function (err, fields, files) {
-                
+
                 let keys = Object.keys(files);
                 for (let i = 0; i < keys.length; i++) {
                     const key = keys[i];
@@ -37,19 +37,24 @@ const handler = async (req, res) => {
 };
 
 const saveFile = async (file, url) => {
-    let data = await fs.readFileSync(file.path);
+    let data: any = await fs.readFileSync(file.path);
     const fullPath = "./public" + (url.startsWith("/") ? "" : "/") + url;
+    const directory = fullPath.substring(0, fullPath.lastIndexOf("/"));
+    if (!(await fs.existsSync(directory))) {
+        await fs.mkdirSync(directory, { recursive: true });
+    }
+    console.log('directory: ', directory);
 
     const minify = true;
     if (file?.type?.includes("image") && minify) {
-        data =
         await (sharp(data)
-        .resize({
-            fit: sharp.fit.inside,
-            width: 1920,
-            height: 1080,
-        }).webp({ quality: 80 })
-        .toFile(fullPath));
+            .resize({
+                fit: sharp.fit.inside,
+                width: 1920,
+                height: 1080,
+            }).webp({ quality: 80 })
+            .toFile(fullPath));
+        console.log('fullPath: ', fullPath);
     } else {
         const resultt = await fs.writeFileSync(fullPath, data);
     }

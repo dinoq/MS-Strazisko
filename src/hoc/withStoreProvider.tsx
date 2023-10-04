@@ -1,6 +1,7 @@
 import { Provider } from "react-redux";
 
-export default (Component, store) => {
+const withStoreProvider = (Component, store) => {
+    // eslint-disable-next-line react/display-name
     return (props)=>{
         return (
             <Provider store={store}>
@@ -9,3 +10,5 @@ export default (Component, store) => {
         )
     }
 }
+
+export default withStoreProvider;

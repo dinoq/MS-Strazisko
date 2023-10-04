@@ -3,11 +3,9 @@ import { useEffect } from "react";
 import useAppDispatch from "../hooks/useAppDispatch";
 import { SagaActions } from "../store/sagas";
 
-export default (Page: NextPage, formID: string) => {    
-
-    console.log("CCC");
-    return (props) => {  
-        console.log("BBBB");
+const withAdminPage = (Page: NextPage, formID: string) => {    
+    // eslint-disable-next-line react/display-name
+    return (props: any) => {  
         const dispatch = useAppDispatch();
     
         useEffect(() => {
@@ -18,3 +16,7 @@ export default (Page: NextPage, formID: string) => {
     }
 
 }
+
+withAdminPage.displayName = "awithAdminPage";
+
+export default withAdminPage;

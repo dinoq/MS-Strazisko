@@ -80,7 +80,7 @@
 
     <Form FID="IntroText">
         <DetailFrame>
-            <Component attributeKey="title" componentName="Název" componentType="TextField" editable="false" />
+            <Component attributeKey="title" componentName="Název" componentType="TextField" editable="true" />
             <Component attributeKey="content" componentName="Text" componentType="RichTextField"/>
         </DetailFrame>
         <ListFrame actions="{&quot;delete&quot;:false}">

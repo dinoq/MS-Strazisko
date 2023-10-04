@@ -16,10 +16,10 @@ const nextConfig = {
         permanent: true,
       },
     ];
-  },
-  api: {
-    bodyParser: false,
-  },
+   },
+//   api: {
+//     bodyParser: false,
+//   },
 };
 
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
