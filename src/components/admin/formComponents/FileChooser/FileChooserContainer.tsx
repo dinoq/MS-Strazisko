@@ -7,8 +7,19 @@ import { addFilesToUpload } from "../../../../store/reducers/DBObjectSlice";
 import FileChooser from "./FileChooser";
 
 const INIT_LABEL = "Výběr fotky";
-const FileChooserContainer: FC<{id: string, onChange: Function, initLabel: string | undefined}> = (props) => {
-    const [fileLabel, setFileLabel] = useState(props.initLabel || INIT_LABEL);
+
+type FileChooserContainerProps = {
+    id: string, 
+    onChange: Function, 
+    initLabel: string | undefined
+}
+
+const FileChooserContainer: FC<FileChooserContainerProps> = ({
+    id, 
+    onChange, 
+    initLabel
+}) => {
+    const [fileLabel, setFileLabel] = useState(initLabel || INIT_LABEL);
     const [files, setFiles] = useState<File[] | undefined>(undefined);
     const initFileName = "Název souboru";
     const [fileName, setFileName]: [any, any] = useState(initFileName);
@@ -16,8 +27,8 @@ const FileChooserContainer: FC<{id: string, onChange: Function, initLabel: strin
     const dispatch = useAppDispatch();
     
     useEffect(() => {
-        setFileLabel(props.initLabel || INIT_LABEL);    
-    }, [props.initLabel])
+        setFileLabel(initLabel || INIT_LABEL);    
+    }, [initLabel])
     
 
     const fileChange = (event) => {
@@ -28,7 +39,7 @@ const FileChooserContainer: FC<{id: string, onChange: Function, initLabel: strin
                 const f:File = files[0];
                 setFiles([f]);
                 dispatch(addFilesToUpload(f));
-                props.onChange(props.id,f.name);
+                onChange(id,f.name);
                 setUrlName(f.name);
                 let label = (files.length > 1)? `Více souborů (${files.length})` : f.name;
                 setFileLabel("Vybráno: " + label);
@@ -44,7 +55,7 @@ const FileChooserContainer: FC<{id: string, onChange: Function, initLabel: strin
     }
 
   return (
-      <FileChooser id={props.id} fileLabel={fileLabel} fileChange={fileChange} files={files}/>
+      <FileChooser id={id} fileLabel={fileLabel} fileChange={fileChange} files={files}/>
   );
 };
 

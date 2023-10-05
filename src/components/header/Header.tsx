@@ -1,11 +1,17 @@
 // eslint-disable-next-line
 import classes from "./Header.module.scss";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 
 import { useRouter } from "next/router";
 
-const Header = (props) => {
+type HeaderProps = {
+    noBackground: boolean
+}
+
+const Header: FC<HeaderProps> = ({
+    noBackground
+}) => {
     const [scrollY, setScrollY] = useState(0);
     const [headerExpanded, setHeaderExpanded] = useState(false);
     const [menuExpanded, setMenuExpanded] = useState(false);
@@ -61,7 +67,7 @@ const Header = (props) => {
     useEffect(() => {
         const root = document.documentElement;
         root?.style.setProperty(
-            "--navbar-items-count", links.length
+            "--navbar-items-count", links.length.toString()
         );
     }, [links.length]);
 
@@ -90,7 +96,7 @@ const Header = (props) => {
                     </nav>
                 </div>
             </div>
-            {!props.noBackground &&
+            {!noBackground &&
                 <div className="container-fluid">
                     <div className="row mb-4">
                         <div className={classes.hero + " col-12 " + (!isHomePage? classes.shifted : "")}>

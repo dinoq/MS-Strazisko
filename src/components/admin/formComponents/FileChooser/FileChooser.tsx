@@ -3,23 +3,35 @@
 
 import { ChangeEventHandler, FC } from "react";
 
-const FileChooser: FC<{ id: string, fileLabel: string, files: File[], fileChange: ChangeEventHandler<HTMLInputElement> }> = (props) => {
+type FileChooserProps = { 
+    id: string, 
+    fileLabel: string, 
+    files: File[], 
+    fileChange: ChangeEventHandler<HTMLInputElement> 
+}
 
-    let fileChooserDisabled = props.files && props.files.length > 0;
+const FileChooser: FC<FileChooserProps> = ({ 
+    id, 
+    fileLabel, 
+    files, 
+    fileChange
+}) => {
+
+    let fileChooserDisabled = files && files.length > 0;
     return (
         <div className={``}>
             <input
                 type="file"
-                onChange={props.fileChange}
+                onChange={fileChange}
                 name="file"
-                id={props.id}
+                id={id}
                 className={"hidden-file-input"}
                 multiple={true}
                 disabled={fileChooserDisabled}
             />
             <div className="d-flex justify-content-center">
-                <label htmlFor={props.id} className={"hidden-file-input-label" + (fileChooserDisabled ? " disabled" : "")}>
-                    {props.fileLabel}
+                <label htmlFor={id} className={"hidden-file-input-label" + (fileChooserDisabled ? " disabled" : "")}>
+                    {fileLabel}
                 </label>
             </div>
         </div>

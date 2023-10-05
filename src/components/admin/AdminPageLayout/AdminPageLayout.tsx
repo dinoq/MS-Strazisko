@@ -1,7 +1,13 @@
+import { FC } from "react";
 import Link from "next/link";
 import classes from "./AdminPageLayout.module.scss";
 
-const AdminPageLayout = (props) => {
+type AdminPageLayoutProps = {
+    children: any
+}
+const AdminPageLayout: FC<AdminPageLayoutProps> = ({
+    children
+}) => {
     const logout = async () => {
         const result = await fetch("/api/admin/logoutAdmin", {
             method: "POST",
@@ -80,7 +86,7 @@ const AdminPageLayout = (props) => {
                         </Link>
                     </div>
                 </div>
-                <div className={classes.content + " "}>{props.children}</div>
+                <div className={classes.content + " "}>{children}</div>
             </div>
         </div>
     );

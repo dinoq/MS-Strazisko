@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from "next/link"
-import SchoolFeature from '../../src/components/school-feature/SchoolFeature'
+import IconFeature from '../components/school-feature/IconFeature'
 
 import classes from "../../styles/index.module.scss"
 
@@ -129,7 +129,7 @@ export default function Home(props) {
                             <div className="row">
                                 {features.map((feature, index) =>
                                     <div key={"feature-" + index} className="col-6 col-md-3">
-                                        <SchoolFeature icon={feature.icon} bgColor={feature.bgColor} alt={feature.alt} title={feature.title} description={feature.description} />
+                                        <IconFeature icon={feature.icon} bgColor={feature.bgColor} alt={feature.alt} title={feature.title} description={feature.description} />
                                     </div>
                                 )}
                             </div>

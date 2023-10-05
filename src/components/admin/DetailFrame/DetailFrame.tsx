@@ -4,7 +4,25 @@ import { DBManager } from "../../../helpers/DBManager";
 import { DBObjectType, FormDef } from "../../../helpers/types";
 import FileChooserContainer from "../formComponents/FileChooser/FileChooserContainer";
 
-const DetailFrame: FC<{ DBObject: DBObjectType, definition: FormDef, mode: DetailFrameMode, hideDetailFrame: MouseEventHandler<HTMLInputElement>, formSubmitted: FormEventHandler<HTMLFormElement>, setErrorMsg: Function, updateDBObject: Function }> = (props) => {
+type DetailFrameProps = { 
+    DBObject: DBObjectType, 
+    definition: FormDef
+	mode: DetailFrameMode
+	hideDetailFrame: MouseEventHandler<HTMLInputElement>
+	formSubmitted: FormEventHandler<HTMLFormElement>
+	setErrorMsg: Function
+	updateDBObject: Function 
+}
+
+const DetailFrame: FC<DetailFrameProps> = ({ 
+    DBObject, 
+    definition,
+	mode,
+	hideDetailFrame,
+	formSubmitted,
+	setErrorMsg,
+	updateDBObject
+}) => {
     const getInput = (componentType: DetailFrameComponentType, attrs) => {
         switch (componentType) {
             case DetailFrameComponentType.DateField:
@@ -27,14 +45,14 @@ const DetailFrame: FC<{ DBObject: DBObjectType, definition: FormDef, mode: Detai
 
     return (
         <div>
-            <form className="d-flex flex-column bordered p-2 mb-3" onSubmit={props.formSubmitted} encType="multipart/form-data">
-                {props.definition.detailFrame.components.map(((component, i) => {
+            <form className="d-flex flex-column bordered p-2 mb-3" onSubmit={formSubmitted} encType="multipart/form-data">
+                {definition.detailFrame.components.map(((component, i) => {
                     let disabled = false;
-                    let value = DBManager.getAttrFromArrByKey(props.DBObject.editedAttrs, component.attributeKey)?.value || "";
-                    if (props.mode == DetailFrameMode.EDITING_ENTRY) {
+                    let value = DBManager.getAttrFromArrByKey(DBObject.editedAttrs, component.attributeKey)?.value || "";
+                    if (mode == DetailFrameMode.EDITING_ENTRY) {
                         disabled = !component.editable;
                         //disabled = i == 0;
-                        //disabled = getRawDBObjectDefinition(props.definition.DB.DBOClass).attributes[0].key == component.attributeKey
+                        //disabled = getRawDBObjectDefinition(definition.DB.DBOClass).attributes[0].key == component.attributeKey
                     }
 
                     if (component.componentType == DetailFrameComponentType.TextField || component.componentType == DetailFrameComponentType.DateField) {
@@ -48,7 +66,7 @@ const DetailFrame: FC<{ DBObject: DBObjectType, definition: FormDef, mode: Detai
                                         id: component.attributeKey,
                                         placeholder: component.componentName,
                                         value,
-                                        onChange: (e) => props.updateDBObject(component.attributeKey, e.target.value),
+                                        onChange: (e) => updateDBObject(component.attributeKey, e.target.value),
                                         required: component.required,
                                         disabled,
                                         className: component.wide? "wide": ""
@@ -60,7 +78,7 @@ const DetailFrame: FC<{ DBObject: DBObjectType, definition: FormDef, mode: Detai
                         return (
                             <div key={"input-" + i}>
                                 <div className="d-flex justify-content-center position-relative">
-                                    <select key={"selectbox-" + i} id={component.attributeKey} value={value} onChange={(e) => props.updateDBObject(component.attributeKey, e.target.value)} disabled={disabled}>
+                                    <select key={"selectbox-" + i} id={component.attributeKey} value={value} onChange={(e) => updateDBObject(component.attributeKey, e.target.value)} disabled={disabled}>
                                         {component?.values?.map((val, j) => {
                                             return <option key={"selectbox-" + i + "-option-" + j} value={val}>{val}</option>
                                         })}
@@ -70,9 +88,9 @@ const DetailFrame: FC<{ DBObject: DBObjectType, definition: FormDef, mode: Detai
                             </div>
                         );
                     } else if (component.componentType == DetailFrameComponentType.FileChooser) {                        
-                        let initLabel = DBManager.getAttrFromArrByKey(props.DBObject.attributes, component.attributeKey)?.value || "";
+                        let initLabel = DBManager.getAttrFromArrByKey(DBObject.attributes, component.attributeKey)?.value || "";
                         return (
-                            <FileChooserContainer key={"input-" + i} id={component.attributeKey} onChange={props.updateDBObject} initLabel={initLabel} />
+                            <FileChooserContainer key={"input-" + i} id={component.attributeKey} onChange={updateDBObject} initLabel={initLabel} />
                         )
                     } else if (component.componentType == DetailFrameComponentType.RichTextField) {
                         const inputRef = createRef<HTMLTextAreaElement>();
@@ -95,7 +113,7 @@ const DetailFrame: FC<{ DBObject: DBObjectType, definition: FormDef, mode: Detai
                             inputRef.current.focus();
                             inputRef.current.selectionStart = cursorPosStart + opening.length;
                             inputRef.current.selectionEnd = cursorPosStart + opening.length + selectionLength;
-                            props.updateDBObject(component.attributeKey, DBManager.substituteTags(inputRef.current.value, true) );
+                            updateDBObject(component.attributeKey, DBManager.substituteTags(inputRef.current.value, true) );
                         }
 
                         
@@ -104,7 +122,7 @@ const DetailFrame: FC<{ DBObject: DBObjectType, definition: FormDef, mode: Detai
                                 <div className="d-flex justify-content-center">
 
                                     <div className="richtextEditContainer">
-                                        <textarea cols={45} rows={5} ref={inputRef} id={component.attributeKey} placeholder={component.componentName} onChange={(e) => props.updateDBObject(component.attributeKey, e.target.value)} required={component.required} disabled={disabled} value={DBManager.substituteTags(value, false)} />
+                                        <textarea cols={45} rows={5} ref={inputRef} id={component.attributeKey} placeholder={component.componentName} onChange={(e) => updateDBObject(component.attributeKey, e.target.value)} required={component.required} disabled={disabled} value={DBManager.substituteTags(value, false)} />
                                         <label className="label" htmlFor={component.attributeKey}>{component.componentName}</label>
                                         <div className="richtextEditBtns">
                                             <a type="button" className="richtextEdit button" onClick={(e) => { insertTags("TUCNE") }}><b>tučně</b></a>
@@ -121,7 +139,7 @@ const DetailFrame: FC<{ DBObject: DBObjectType, definition: FormDef, mode: Detai
 
                 <div className="d-flex justify-content-center">
                     <input className="button" type="submit" value="Uložit" />
-                    <input className="button button-danger" onClick={props.hideDetailFrame} type="button" value="Zrušit" />
+                    <input className="button button-danger" onClick={hideDetailFrame} type="button" value="Zrušit" />
                 </div>
             </form>
         </div>

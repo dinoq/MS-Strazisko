@@ -3,8 +3,16 @@
 
 import { EventHandler, FC } from "react";
 
-const ErrorDialog: FC<{ msg: string, onOk: EventHandler<any> }> = (props) => {
-    let errorMsgs = props.msg.split(/(<br ?\/?>)/g).filter(msg => !msg.match(/(<br ?\/?>)/g)); // Rozdělí zprávu podle znaků <br>(příp. i <br/> a <br />)
+type ErrorDialogProps = { 
+    msg: string, 
+    onOk: EventHandler<any> 
+}
+
+const ErrorDialog: FC<ErrorDialogProps> = ({ 
+    msg, 
+    onOk
+}) => {
+    let errorMsgs = msg.split(/(<br ?\/?>)/g).filter(msg => !msg.match(/(<br ?\/?>)/g)); // Rozdělí zprávu podle znaků <br>(příp. i <br/> a <br />)
 
     return (
         <div className="dialog">
@@ -18,7 +26,7 @@ const ErrorDialog: FC<{ msg: string, onOk: EventHandler<any> }> = (props) => {
                     })}
                 </div>
                 <div className="btns-group">
-                    <div className="save-btn btn btn-primary" onClick={props.onOk}>OK</div>
+                    <div className="save-btn btn btn-primary" onClick={onOk}>OK</div>
                 </div>
             </div>
         </div >

@@ -3,8 +3,18 @@
 
 import { EventHandler, FC } from "react";
 
-const Dialog: FC<{ msg: string, onYes: EventHandler<any>, onNo: EventHandler<any> }> = (props) => {
-    let errorMsgs = props.msg.split(/(<br ?\/?>)/g).filter(msg => !msg.match(/(<br ?\/?>)/g)); // Rozdělí zprávu podle znaků <br>(příp. i <br/> a <br />)
+type DialogProps = { 
+    msg: string, 
+    onYes: EventHandler<any>, 
+    onNo: EventHandler<any> 
+}
+
+const Dialog: FC<DialogProps> = ({ 
+    msg, 
+    onYes, 
+    onNo 
+}) => {
+    let errorMsgs = msg.split(/(<br ?\/?>)/g).filter(msg => !msg.match(/(<br ?\/?>)/g)); // Rozdělí zprávu podle znaků <br>(příp. i <br/> a <br />)
 
     return (
         <div className="dialog">
@@ -18,8 +28,8 @@ const Dialog: FC<{ msg: string, onYes: EventHandler<any>, onNo: EventHandler<any
                     })}
                 </div>
                 <div className="btns-group">
-                    <div className="save-btn btn btn-primary" onClick={props.onYes}>Ano</div>
-                    <div className="save-btn btn btn-primary" onClick={props.onNo}>Ne</div>
+                    <div className="save-btn btn btn-primary" onClick={onYes}>Ano</div>
+                    <div className="save-btn btn btn-primary" onClick={onNo}>Ne</div>
                 </div>
             </div>
         </div >

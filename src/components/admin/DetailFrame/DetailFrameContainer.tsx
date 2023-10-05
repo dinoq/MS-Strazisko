@@ -8,7 +8,17 @@ import DetailFrame from "./DetailFrame";
 import { getFileComponents } from "../../../helpers/utils";
 import useAppDispatch from "../../../hooks/useAppDispatch";
 
-const DetailFrameContainer: FC<{ mode: DetailFrameMode, hideDetailFrame: MouseEventHandler<HTMLInputElement>, setErrorMsg: Function }> = (props) => {
+type DetailFrameContainerProps = { 
+    mode: DetailFrameMode, 
+    hideDetailFrame: MouseEventHandler<HTMLInputElement>, 
+    setErrorMsg: Function 
+}
+
+const DetailFrameContainer: FC<DetailFrameContainerProps> = ({ 
+    mode, 
+    hideDetailFrame, 
+    setErrorMsg
+}) => {
     const formDefinition = useSelector((state: RootState) => state.formDefinitions).actualFormDefinition;
     const breadcrumbItems = useSelector((state: RootState) => state.breadcrumb.items);
     const dispatch = useAppDispatch();
@@ -30,7 +40,7 @@ const DetailFrameContainer: FC<{ mode: DetailFrameMode, hideDetailFrame: MouseEv
         })
 
         if (conditionError) {
-            props.setErrorMsg(conditionError);
+            setErrorMsg(conditionError);
             return;
         }
         let body: any = { className: DBOClass, attributes: {} };
@@ -42,7 +52,7 @@ const DetailFrameContainer: FC<{ mode: DetailFrameMode, hideDetailFrame: MouseEv
             if (!attr.source)
                 body.attributes[attr.key] = attr.value;
         })
-        if (props.mode == DetailFrameMode.NEW_ENTRY) { // set default values for selectboxes...
+        if (mode == DetailFrameMode.NEW_ENTRY) { // set default values for selectboxes...
             formDefinition.detailFrame.components.forEach(component => {
                 if (component.componentType == DetailFrameComponentType.SelectBox && body.attributes[component.attributeKey] == undefined) {
                     body.attributes[component.attributeKey] = component.values?.[0]; // set only body, not DBObject.editedAttrs!
@@ -59,7 +69,7 @@ const DetailFrameContainer: FC<{ mode: DetailFrameMode, hideDetailFrame: MouseEv
 
         let resultErr = "";
         let afterSaveMethod = formDefinition.detailFrame.afterSaveMethod;
-        if (props.mode == DetailFrameMode.EDITING_ENTRY) {
+        if (mode == DetailFrameMode.EDITING_ENTRY) {
             body["updateId"] = DBObject.id;
             body["primaryKey"] = DBObject.attributes[0].key;
             resultErr = await DBManager.updateInDB(body, (!afterSaveMethod && !DBObject.filesToUpload.length));
@@ -76,7 +86,7 @@ const DetailFrameContainer: FC<{ mode: DetailFrameMode, hideDetailFrame: MouseEv
             }
             resultErr = await DBManager.sendFiles(DBObject.filesToUpload, path);
 
-            if (props.mode == DetailFrameMode.EDITING_ENTRY) {
+            if (mode == DetailFrameMode.EDITING_ENTRY) {
                 let fileComponents = getFileComponents(formDefinition.listFrame);
                 if (fileComponents.length) {
                     let evaluated = DBManager.substituteExpression(fileComponents[0].transformation, DBObject, true);
@@ -88,9 +98,9 @@ const DetailFrameContainer: FC<{ mode: DetailFrameMode, hideDetailFrame: MouseEv
 
         if (resultErr && typeof resultErr == "string" && resultErr.length) {
             if (resultErr.includes("UNIQUE constraint failed") && formDefinition?.detailFrame?.uniqueConstraintFailed?.length) {
-                props.setErrorMsg(formDefinition.detailFrame.uniqueConstraintFailed);
+                setErrorMsg(formDefinition.detailFrame.uniqueConstraintFailed);
             } else {
-                props.setErrorMsg(resultErr);
+                setErrorMsg(resultErr);
             }
         } else if (!resultErr) {
             if (afterSaveMethod) {
@@ -107,14 +117,14 @@ const DetailFrameContainer: FC<{ mode: DetailFrameMode, hideDetailFrame: MouseEv
 
                 if (resultErr && typeof resultErr == "string" && resultErr.length) {
                     if (resultErr.includes("UNIQUE constraint failed")) {
-                        props.setErrorMsg(formDefinition.detailFrame.uniqueConstraintFailed);
+                        setErrorMsg(formDefinition.detailFrame.uniqueConstraintFailed);
                     } else {
-                        props.setErrorMsg(resultErr);
+                        setErrorMsg(resultErr);
                     }
                 }
 
             }
-            props.hideDetailFrame(undefined);
+            hideDetailFrame(undefined);
 
         }
     };
@@ -124,7 +134,7 @@ const DetailFrameContainer: FC<{ mode: DetailFrameMode, hideDetailFrame: MouseEv
     }
 
     return (
-        <DetailFrame DBObject={DBObject} definition={formDefinition} mode={props.mode} hideDetailFrame={props.hideDetailFrame} formSubmitted={formSubmitted} setErrorMsg={props.setErrorMsg} updateDBObject={updateDBObject} />
+        <DetailFrame DBObject={DBObject} definition={formDefinition} mode={mode} hideDetailFrame={hideDetailFrame} formSubmitted={formSubmitted} setErrorMsg={setErrorMsg} updateDBObject={updateDBObject} />
     )
 }
 

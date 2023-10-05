@@ -12,6 +12,7 @@ import { setNewDBObject } from "../../../store/reducers/DBObjectSlice";
 import { SagaActions } from "../../../store/sagas";
 import Dialog from "../TwoChoiceDialog";
 import ListFrame from "./ListFrame";
+import { setEntries } from "../../../store/reducers/EntrySlice";
 
 const ListFrameContainer: FC<{ editItemHandler: Function, hideDetailFrame: MouseEventHandler<HTMLInputElement> }> = (props) => {
     const dispatch = useAppDispatch();
@@ -46,9 +47,9 @@ const ListFrameContainer: FC<{ editItemHandler: Function, hideDetailFrame: Mouse
             text: objBreadcrumbAttr.value
         };
         dispatch(addItemToBreadcrumb(newBItem))
-        dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: newClass })
-
+        dispatch(setEntries([]));// TODO smazat tento řádek -> předělat volání dispatch(setNewDBObject) níže na saga action tak, že fetchne entries a nastaví je => až po nastavení v této sage volat níže uvedené 'dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: newClass })' (rovnez v ale v sage a odsud odstranit)... DUVOD - Při přechodu mezi formuláři (minimálně u photo) se děje to, že se nejprve změní objekt ve storu=>následně se nahraje nový formulář a až opožděně se nastaví entries v reakci na dispatch(setNewDBObject) v FormFrameContainer v useeffect (zřejmě se toto useeffect volá až po 'dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: newClass })', protože kdyý jsem vložil 'dispatch(setEntries([]))', tak to nepomohlo)
         dispatch(setNewDBObject({ DBOClass: newClass ?? undefined, parentEntry: item }));
+        dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: newClass })
     }
 
     const deleteItemHandler = async (item: DBObjectType, forceDelete: boolean = false) => {
@@ -112,7 +113,7 @@ const ListFrameContainer: FC<{ editItemHandler: Function, hideDetailFrame: Mouse
 
     return (
         <>
-            {formDefinition && <ListFrame definition={formDefinition.listFrame} DBObject={DBObject} deleteItemHandler={deleteItemHandler} detailClickedHandler={detailClickedHandler} editItemHandler={props.editItemHandler} entries={entries} colspanNoData={colspanNoData} />}
+            {formDefinition && <ListFrame components={formDefinition?.listFrame?.components} actions={formDefinition?.listFrame?.actions} DBObject={DBObject} deleteItemHandler={deleteItemHandler} detailClickedHandler={detailClickedHandler} editItemHandler={props.editItemHandler} entries={entries} colspanNoData={colspanNoData} detailDBOClassLen={formDefinition?.listFrame?.detailDBOClass?.length ?? 0} />}
             {showDialog && <Dialog msg={formDefinition.listFrame.forceDeleteItemMsg} onYes={confirmForceDeleteDialog} onNo={cancelForceDeleteDialog}/>}
         </>
     )

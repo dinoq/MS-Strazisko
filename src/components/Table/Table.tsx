@@ -1,8 +1,15 @@
 import React, { FC, useState } from "react";
 
-const AppTable: FC<{headerItems: Array<any>, bodyRows: Array<any>}> = (props) => {
-  let headerItems = (props.headerItems)? props.headerItems : [];
-  let rows = (props.bodyRows)? props.bodyRows : [];
+type AppTableProps = {
+    headerItems: Array<any>, 
+    bodyRows: Array<any>
+}
+
+const AppTable: FC<AppTableProps> = ({
+    headerItems, 
+    bodyRows
+}) => {
+  let rows = (bodyRows)? bodyRows : [];
   //return (<div></div>)
   return (
     <>

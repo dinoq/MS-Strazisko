@@ -46,7 +46,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
     return (
         <div className="layout">
-            <Header />
+            <Header noBackground={false} />
             <Component {...pageProps} />
             <Footer />
         </div>

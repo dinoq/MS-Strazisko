@@ -31,8 +31,7 @@ const FormFrameContainer: React.FC<{}> = (props) => {
     const DBObject = useSelector((state: RootState) => state.dbObject);
 
 
-    useEffect(() => {
-        
+    useEffect(() => {        
         let detailItemCondition = "";
         let parentAttribute = DBManager.getEmptyDBObject(DBOClass)?.persistentAttributes[0];
         if (breadcrumbItems.length) {
@@ -86,7 +85,7 @@ const FormFrameContainer: React.FC<{}> = (props) => {
 
     return (
         <>
-            <FormFrame errorMsg={errorMsg} detailFrameVisible={detailFrameVisible} saveDialogVisible={saveDialogVisible} entries={entries} detailFrameMode={detailFrameMode} definition={definition} DBObject={DBObject} hideDetailFrame={hideDetailFrame} setDBObject={setDBObject} editItemHandler={editItemHandler} showDetailFrame={showDetailFrame} setSaveDialogVisible={setSaveDialogVisible} setErrorMsg={setErrMsg} />
+            <FormFrame errorMsg={errorMsg} detailFrameVisible={detailFrameVisible} saveDialogVisible={saveDialogVisible} entries={entries} detailFrameMode={detailFrameMode} definition={definition} DBObject={DBObject} hideDetailFrame={hideDetailFrame} setDBObject={setDBObject} editItemHandler={editItemHandler} showDetailFrame={showDetailFrame} setSaveDialogVisible={setSaveDialogVisible} setErrorMsg={setErrMsg} createEntryText={definition.detailFrame.createNewEntryText} />
         </>
     )
 }

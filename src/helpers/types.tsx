@@ -73,14 +73,15 @@ export interface FormAttrConstraintDef {
 export interface ListFrameDef {
     components: Array<LFComponentDef>,
     detailDBOClass?: string,
-    actions?: {
-        delete?: boolean,
-        edit?: boolean
-    },
+    actions?: ListFrameActionsDef,
     forceDeleteItemMsg?: string,
     afterDeleteMethod?: string,
 }
 
+export interface ListFrameActionsDef {
+    delete?: boolean,
+    edit?: boolean
+}
 export interface LFComponentDef {
     attributeKey: string,
     componentName?: string,
@@ -123,7 +124,7 @@ export interface FormDefinitionsState {
  * #########
  */
 export type RecursivePartial<T> = {
-    [P in keyof T]?: T[P] | RecursivePartial<T[P]>;
+    [K in keyof T]?: T[K] | RecursivePartial<T[K]>;
 };
 
 declare module "iron-session" {
