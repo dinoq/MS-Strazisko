@@ -7,32 +7,31 @@ import { FC } from "react";
 import { ListFrameComponentType } from "../../../helpers/constants";
 import { DBManager } from "../../../helpers/DBManager";
 import { DBObjectType, LFComponentDef, ListFrameActionsDef, ListFrameDef } from "../../../helpers/types";
+import LFComponentContainer from "./LFTextField/LFComponentContainer";
 
-type ListFrameProps = { 
+type ListFrameProps = {
     components: Array<LFComponentDef>,
     actions: ListFrameActionsDef,
     detailDBOClassLen: number,
-    DBObject: DBObjectType, 
-    detailClickedHandler: Function, 
-    deleteItemHandler: Function, 
-    editItemHandler: Function, 
-    entries: Array<DBObjectType>, 
-    colspanNoData: number 
+    DBObject: DBObjectType,
+    detailClickedHandler: Function,
+    deleteItemHandler: Function,
+    editItemHandler: Function,
+    entries: Array<DBObjectType>,
+    colspanNoData: number
 }
 
-const ListFrame: FC<ListFrameProps> = ({ 
+const ListFrame: FC<ListFrameProps> = ({
     components,
     actions,
     detailDBOClassLen,
-    DBObject, 
-    detailClickedHandler, 
-    deleteItemHandler, 
-    editItemHandler, 
-    entries, 
-    colspanNoData 
+    DBObject,
+    detailClickedHandler,
+    deleteItemHandler,
+    editItemHandler,
+    entries,
+    colspanNoData
 }) => {
-    console.log('components: ', components);
-
     return (
         <>
             <table className={""}>
@@ -54,31 +53,7 @@ const ListFrame: FC<ListFrameProps> = ({
                                 </td>}
                             {
                                 components.map((component: LFComponentDef, index, array) => {
-
-                                    let value: any = "";
-
-                                    let evaluated = DBManager.substituteExpression(component.transformation, entry);
-
-                                    if (component.componentType == ListFrameComponentType.TextField || component.componentType == ListFrameComponentType.RichTextField) {
-                                        value = evaluated;
-
-                                    } else if (component.componentType == ListFrameComponentType.ImagePreview) {
-                                        evaluated = evaluated.startsWith("/") ? evaluated : "/" + evaluated;
-                                        value = (
-                                            <div className="ImagePreview">
-                                                <Image src={evaluated} alt="Náhled obrázku" layout="fill" objectFit="contain" />
-                                            </div>
-                                        )
-                                    } else if (component.componentType == ListFrameComponentType.DateField) {
-                                        let date = new Date(evaluated);
-                                        value = date.getDate() + ". " + (date.getMonth() + 1) + ". " + date.getFullYear();
-                                    }
-                                    if (component.componentType == ListFrameComponentType.RichTextField) {
-                                        value = DBManager.substituteTags(value, true);
-                                        return <td key={"tbtrtd-" + index} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(value) }}></td>;
-                                    } else {
-                                        return <td key={"tbtrtd-" + index}>{value}</td>;
-                                    }
+                                    return <td key={"tbtrtd-" + index}><LFComponentContainer componentType={component.componentType} entry={entry} transformation={component.transformation} /></td>
                                 })}
                             {actions && <td className={"actions"}>
                                 {actions.delete && <span className={"link link-danger"} onClick={deleteItemHandler.bind(this, entry, false)}>Smazat</span>}
