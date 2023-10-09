@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev2": "cross-env NODE_OPTIONS='--inspect' next dev",
+    "devBasic": "next dev",
     "dev": "set APP_PORT=3000&& next dev -p 3000",
     "devDebug": "set APP_PORT=3000&&cross-env NODE_OPTIONS='--inspect' next dev -p 3000",
     "dev80": "set APP_PORT=80&& next dev -p 80",

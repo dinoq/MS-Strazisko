@@ -62,13 +62,13 @@ const AdminDocumentsPage: NextPage = (props: any) => {
     const bodyRows: Array<any> =
         documents.map((doc, index) => {
             const url = (doc?.url?.startsWith("/")) ? doc.url.substring(1) : doc.url;
-            return ({
+            return {
                 items: [
                     { content: doc.name, className: "word-break-all" },
-                    { content: (<Link href={"/dokumenty/" + url}><a target="_blank" className={"link"}>{"/dokumenty/" + url}</a></Link>), className: "word-break-all" },
+                    { content: (<Link href={"/dokumenty/" + url} target="_blank" className={"link"}>{"/dokumenty/" + url}</Link>), className: "word-break-all" },
                     { className: "actions", content: (<><span className={"link-danger"} onClick={deleteDocumentConfirmation.bind(this, doc.name, doc.id_document)}>Smazat</span><span className={"link"}>Přejmenovat</span></>) }
                 ]
-            })
+            };
 
         })
 /*

@@ -39,50 +39,50 @@ const AdminPageLayout: FC<AdminPageLayoutProps> = ({
 
                                 <ul aria-label="Úvodní strana">
                                     <li>
-                                        <Link href="/admin/intro/intro">
-                                            <a className={"link"}>Úvodní text</a>
+                                        <Link href="/admin/intro/intro" className={"link"}>
+                                            Úvodní text
                                         </Link>
                                     </li>
                                     <li>
-                                        <Link href="/admin/intro/teachers">
-                                            <a className={"link"}>Učitelé</a>
+                                        <Link href="/admin/intro/teachers" className={"link"}>
+                                            Učitelé
                                         </Link>
                                     </li>
                                     <li>
-                                        <Link href="/admin/intro/events">
-                                            <a className={"link"}>Události</a>
+                                        <Link href="/admin/intro/events" className={"link"}>
+                                            Události
                                         </Link>
                                     </li>
                                     <li>
-                                        <Link href="/admin/intro/photos">
-                                            <a className={"link"}>Foto</a>
+                                        <Link href="/admin/intro/photos" className={"link"}>
+                                            Foto
                                         </Link>
                                     </li>
                                 </ul>
                             </li>
                             <li>
-                                <Link href="/admin/foto">
-                                    <a className={"link"}>Fotoalbum</a>
+                                <Link href="/admin/foto" className={"link"}>
+                                    Fotoalbum
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/admin/food">
-                                    <a className={"link"}>Jídelníček</a>
+                                <Link href="/admin/food" className={"link"}>
+                                    Jídelníček
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/admin/dokumenty">
-                                    <a className={"link"}>Dokumenty</a>
+                                <Link href="/admin/dokumenty" className={"link"}>
+                                    Dokumenty
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/admin/kontakt">
-                                    <a className={"link"}>Kontakt</a>
+                                <Link href="/admin/kontakt" className={"link"}>
+                                    Kontakt
                                 </Link>
                             </li>
                         </ul>
-                        <Link href="/">
-                            <a className={"link"}>&lt; Zpět na web</a>
+                        <Link href="/" className={"link"}>
+                            &lt; Zpět na web
                         </Link>
                     </div>
                 </div>

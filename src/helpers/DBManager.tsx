@@ -217,7 +217,6 @@ export class DBManager {
                 }
                 return entries;
             } else {
-                debugger;
                 let text = await resp.text();
                 throw new Error("Error: database return no object data. Msg from server: " + text);
             }

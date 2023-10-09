@@ -61,18 +61,18 @@ const Footer: React.FC<{}> = (props) => {
                         </div>
                         <div className="w-fit-content my-2">
                             <ul aria-label="Zajímavé odkazy" className={classes["right-items"] + " " + classes["with-title"]}>
-                                <li><Link href="/admin"><a>Administrace</a></Link></li>
-                                <li><Link href="/pristupnost"><a>Informace o přístupnosti</a></Link></li>
-                                <li><Link href="/"><a>Informace o zpracování osobních údajů</a></Link></li>
+                                <li><Link href="/admin">Administrace</Link></li>
+                                <li><Link href="/pristupnost">Informace o přístupnosti</Link></li>
+                                <li><Link href="/">Informace o zpracování osobních údajů</Link></li>
                                 {/* <li><Link href="/"><a>Tvorba webových stránek</a></Link></li> */}
                             </ul>
                         </div>
                     </div>
-                    <div className={classes["copyright"] + " row my-2"}><span>Copyright © 2021{new Date().getFullYear() > 2021 ? " - " + new Date().getFullYear() : ""} <Link href="/"><a>Petr Marek</a></Link>. Všechna práva vyhrazena.</span></div>
+                    <div className={classes["copyright"] + " row my-2"}><span>Copyright © 2021{new Date().getFullYear() > 2021 ? " - " + new Date().getFullYear() : ""} <Link href="/">Petr Marek</Link>. Všechna práva vyhrazena.</span></div>
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
 export default Footer;

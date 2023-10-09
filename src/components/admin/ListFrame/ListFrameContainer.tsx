@@ -75,6 +75,7 @@ const ListFrameContainer: FC<{ editItemHandler: Function, hideDetailFrame: Mouse
         }else{
             
         let afterDeleteMethod = formDefinition.listFrame.afterDeleteMethod;
+        console.log('afterDeleteMethod: ', afterDeleteMethod);
             if(afterDeleteMethod){
                 let methodName = afterDeleteMethod.substring(0, afterDeleteMethod.indexOf("("));
                     

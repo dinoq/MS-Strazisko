@@ -97,128 +97,126 @@ export default function Home(props) {
                     },
                 ])*/
     }, [])
-    return (
-        <>
-            <Head>
-                <title>MŠ stražisko</title>
-                <meta name="description" content="Stránky Mateřské školky Stražisko" />
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
+    return <>
+        <Head>
+            <title>MŠ stražisko</title>
+            <meta name="description" content="Stránky Mateřské školky Stražisko" />
+            <link rel="icon" href="/favicon.ico" />
+        </Head>
 
-            <main>
-                <div className="container-fluid">
-                    {/*
-          <div className="row mb-4">
-            <div className={classes.hero + " col-12"}>
-            </div>
-          </div> */}
+        <main>
+            <div className="container-fluid">
+                {/*
+      <div className="row mb-4">
+        <div className={classes.hero + " col-12"}>
+        </div>
+      </div> */}
 
-                    <div className={classes.about + " row my-4 justify-content-center align-items-center"}>
-                        <div className="d-none d-lg-block col-lg-4 position-relative">
-                            <Image src={toys} layout="responsive" sizes="33vw" alt="Hračky" placeholder="blur" id={classes["toys-img"]} />
-                        </div>
-                        <div className="col-10 col-lg-4">
-                            <h1 className="fw-bold">{introText.title}</h1>
-                            <p dangerouslySetInnerHTML={{ __html: introText.content }}></p>
-                        </div>
+                <div className={classes.about + " row my-4 justify-content-center align-items-center"}>
+                    <div className="d-none d-lg-block col-lg-4 position-relative">
+                        <Image src={toys} layout="responsive" sizes="33vw" alt="Hračky" placeholder="blur" id={classes["toys-img"]} />
                     </div>
+                    <div className="col-10 col-lg-4">
+                        <h1 className="fw-bold">{introText.title}</h1>
+                        <p dangerouslySetInnerHTML={{ __html: introText.content }}></p>
+                    </div>
+                </div>
 
-                    <div className={classes["school-features"] + " row my-4 text-white text-center justify-content-center"}>
-                        <div className="col-10 p-4 d-flex flex-column justify-content-center">
-                            <div className="row"><h2>Zázemí</h2></div>
-                            <div className="row">
-                                {features.map((feature, index) =>
-                                    <div key={"feature-" + index} className="col-6 col-md-3">
-                                        <IconFeature icon={feature.icon} bgColor={feature.bgColor} alt={feature.alt} title={feature.title} description={feature.description} />
+                <div className={classes["school-features"] + " row my-4 text-white text-center justify-content-center"}>
+                    <div className="col-10 p-4 d-flex flex-column justify-content-center">
+                        <div className="row"><h2>Zázemí</h2></div>
+                        <div className="row">
+                            {features.map((feature, index) =>
+                                <div key={"feature-" + index} className="col-6 col-md-3">
+                                    <IconFeature icon={feature.icon} bgColor={feature.bgColor} alt={feature.alt} title={feature.title} description={feature.description} />
+                                </div>
+                            )}
+                        </div>
+
+                    </div>
+                </div>
+                <div className={classes["teachers"] + " row my-4 mb-5 justify-content-center text-center"}>
+                    <div className="col-10 d-flex flex-column justify-content-center">
+                        <div className="row"><h2>Personál MŠ</h2></div>
+                        <div className="row w-100 justify-content-center justify-content-lg-evenly">
+                            {teachers.map((teacher, index) => {
+                                return (
+                                    <div key={"teacher-" + index} className="col-12 col-md-6 col-lg-3 mt-5 mt-lg-2 mb-5">
+                                        <Teacher imgSrc={teacher.imgSrc} name={teacher.name} description={teacher.job} />
                                     </div>
-                                )}
-                            </div>
-
+                                )
+                            }
+                            )}
                         </div>
                     </div>
-                    <div className={classes["teachers"] + " row my-4 mb-5 justify-content-center text-center"}>
-                        <div className="col-10 d-flex flex-column justify-content-center">
-                            <div className="row"><h2>Personál MŠ</h2></div>
-                            <div className="row w-100 justify-content-center justify-content-lg-evenly">
-                                {teachers.map((teacher, index) => {
-                                    return (
-                                        <div key={"teacher-" + index} className="col-12 col-md-6 col-lg-3 mt-5 mt-lg-2 mb-5">
-                                            <Teacher imgSrc={teacher.imgSrc} name={teacher.name} description={teacher.job} />
-                                        </div>
-                                    )
-                                }
-                                )}
-                            </div>
+                </div>
+
+                <div className={classes["events"] + " row my-4  text-center text-blue align-items-center justify-content-center"}>
+                    <div className="col-10 p-4 d-flex flex-column justify-content-center">
+                        <div className="row"><h2>Nadcházející události</h2></div>
+                        <div className="row justify-content-center">
+                            {events && events.map((event, index) =>
+                                <div key={"event-" + index} className="col-12 col-md-8 col-lg-6">
+                                    <EventCard imgSrc={event.imgSrc} title={event.title} date={event.date} description={event.description} />
+                                </div>
+                            )}
+                            {(!events || events.length == 0) &&
+                                <div className="my-3">Je nám líto, ale žádné nadcházející události nebyly nalezeny...</div>
+                            }
                         </div>
                     </div>
+                </div>
 
-                    <div className={classes["events"] + " row my-4  text-center text-blue align-items-center justify-content-center"}>
-                        <div className="col-10 p-4 d-flex flex-column justify-content-center">
-                            <div className="row"><h2>Nadcházející události</h2></div>
-                            <div className="row justify-content-center">
-                                {events && events.map((event, index) =>
-                                    <div key={"event-" + index} className="col-12 col-md-8 col-lg-6">
-                                        <EventCard imgSrc={event.imgSrc} title={event.title} date={event.date} description={event.description} />
-                                    </div>
-                                )}
-                                {(!events || events.length == 0) &&
-                                    <div className="my-3">Je nám líto, ale žádné nadcházející události nebyly nalezeny...</div>
-                                }
-                            </div>
-                        </div>
-                    </div>
+                <div className={classes["gallery"] + " row my-4 justify-content-center text-center"}>
+                    <div className="col-10">
+                        <div className="row"><h2>Foto školy</h2></div>
+                        <div className="h5">(Pro více fotek přejděte z menu na <Link href="/foto">Foto</Link>)</div>
+                        <div className={classes["gallery-container"] + " row justify-content-center"}>
+                            {publicImages.map((img, index) => {
+                                let col = (publicImages.length % 4 == 0) ? "col-3" : "col-4";
 
-                    <div className={classes["gallery"] + " row my-4 justify-content-center text-center"}>
-                        <div className="col-10">
-                            <div className="row"><h2>Foto školy</h2></div>
-                            <div className="h5">(Pro více fotek přejděte z menu na <Link href="/foto"><a>Foto</a></Link>)</div>
-                            <div className={classes["gallery-container"] + " row justify-content-center"}>
-                                {publicImages.map((img, index) => {
-                                    let col = (publicImages.length % 4 == 0) ? "col-3" : "col-4";
-
-                                    return (
-                                        <div key={"img-thumbnail-" + index} className={"d-flex justify-content-center " + col}>
-                                            <div className={classes["image-frame"] + " " + col}>
-                                                <div className={classes["image-container"] + " position-relative"}>
-                                                    <Image src={img.thumbnail} alt="Fotka školky" layout="fill" objectFit='contain' />
-                                                </div>
+                                return (
+                                    <div key={"img-thumbnail-" + index} className={"d-flex justify-content-center " + col}>
+                                        <div className={classes["image-frame"] + " " + col}>
+                                            <div className={classes["image-container"] + " position-relative"}>
+                                                <Image src={img.thumbnail} alt="Fotka školky" layout="fill" objectFit='contain' />
                                             </div>
                                         </div>
-
-                                    )
-                                }
-                                )}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className={classes["enrollment"] + " row my-4 justify-content-center text-center text-white"}>
-                        <div className="col-10 p-4 d-flex flex-column justify-content-center">
-                            <div className="row"><h2>Chcete svoje dítě přihlásit do naší MŠ?</h2></div>
-                            <div className="row mt-4 justify-content-center align-items-center">
-                                <Link href="/dokumenty"><a><button>Informace k přihláškám</button></a></Link>
-                                <div className={classes["pen-image-container"] + " position-relative d-none d-sm-block"}>
-                                    <Image src="/img/pen.png" alt="Fotka školky" layout="fill" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className={classes["map"] + " row my-4 justify-content-center text-center"}>
-                        <div className="col-10">
-                            <div className="row"><h2>Jak se k nám dostanete?</h2></div>
-                            <div className={" row"}>
-                                <div className={classes["mapouter"]}>
-                                    <div className={classes["gmap_canvas"]}>
-                                        {/* <iframe width="800" height="400" id="gmap_canvas" src="https://maps.google.com/maps?q=M%C5%A0%20Stra%C5%BEisko&t=&z=13&ie=UTF8&iwloc=&output=embed" scrolling="no"></iframe> */}
-                                        <div style={{ width: "100%" }}><iframe width="100%" height="600" frameBorder="0" scrolling="no" marginHeight={0} marginWidth={0} src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=M%C5%A1%20stra%C5%BEisko%2025+(M%C5%A0%20Stra%C5%BEisko)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"><a href="https://www.gps.ie/truck-gps/">transport gps</a></iframe></div>
                                     </div>
+
+                                )
+                            }
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                <div className={classes["enrollment"] + " row my-4 justify-content-center text-center text-white"}>
+                    <div className="col-10 p-4 d-flex flex-column justify-content-center">
+                        <div className="row"><h2>Chcete svoje dítě přihlásit do naší MŠ?</h2></div>
+                        <div className="row mt-4 justify-content-center align-items-center">
+                            <Link href="/dokumenty"><button>Informace k přihláškám</button></Link>
+                            <div className={classes["pen-image-container"] + " position-relative d-none d-sm-block"}>
+                                <Image src="/img/pen.png" alt="Fotka školky" layout="fill" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className={classes["map"] + " row my-4 justify-content-center text-center"}>
+                    <div className="col-10">
+                        <div className="row"><h2>Jak se k nám dostanete?</h2></div>
+                        <div className={" row"}>
+                            <div className={classes["mapouter"]}>
+                                <div className={classes["gmap_canvas"]}>
+                                    {/* <iframe width="800" height="400" id="gmap_canvas" src="https://maps.google.com/maps?q=M%C5%A0%20Stra%C5%BEisko&t=&z=13&ie=UTF8&iwloc=&output=embed" scrolling="no"></iframe> */}
+                                    <div style={{ width: "100%" }}><iframe width="100%" height="600" frameBorder="0" scrolling="no" marginHeight={0} marginWidth={0} src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=M%C5%A1%20stra%C5%BEisko%2025+(M%C5%A0%20Stra%C5%BEisko)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe></div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </main>
-        </>
-    )
+            </div>
+        </main>
+    </>;
 }

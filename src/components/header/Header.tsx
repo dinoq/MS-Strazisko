@@ -32,7 +32,7 @@ const Header: FC<HeaderProps> = ({
         if(router.asPath === link[0] || router.asPath.includes(link[0] + "/")){
             className = classes.active;
         }
-        return <Link key={"menu-link-" + index} href={link[0]}><a><li onClick={toggleHamburgerMenu} className={className}>{link[1]}</li></a></Link>
+        return <Link key={"menu-link-" + index} href={link[0]}><li onClick={toggleHamburgerMenu} className={className}>{link[1]}</li></Link>;
     }
     );
 
