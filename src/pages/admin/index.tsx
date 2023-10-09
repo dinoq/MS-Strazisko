@@ -47,4 +47,4 @@ export const getServerSideProps = withIronSessionSsr(
   }
 );
 
-export default AdminHomePage
+export default AdminHomePage;

@@ -49,8 +49,6 @@ const AdminLoginPage: NextPage = (props: any)  => {
   )
 }
 
-export default AdminLoginPage
-
 export const getServerSideProps = withIronSessionSsr(
   async ({ req, res }) => {
 
@@ -79,3 +77,5 @@ export const getServerSideProps = withIronSessionSsr(
   }
 );
 
+
+export default AdminLoginPage;

@@ -221,4 +221,4 @@ export const getServerSideProps = withIronSessionSsr(
     }
 );
 
-export default AdminDocumentsPage
+export default AdminDocumentsPage;

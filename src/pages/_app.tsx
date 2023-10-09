@@ -1,4 +1,3 @@
-
 import '../../styles/globals.scss'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from '../components/header/Header';
@@ -6,7 +5,7 @@ import Footer from "../components/footer/Footer";
 import AdminPageLayout from "../components/admin/AdminPageLayout/AdminPageLayout"
 import "../../styles/adminStyles.scss"
 import { useRouter } from 'next/router';
-import { Provider, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from '../helpers/types';
 import store from "../store";
 import withPageStoreProvider from '../hoc/withStoreProvider';
