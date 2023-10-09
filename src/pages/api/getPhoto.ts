@@ -21,6 +21,7 @@ async function handler(req, res) {
   }
 
   filename = (filename.startsWith("/")) ? filename.substring(1) : filename; // ošetření počátečního lomítka
+  console.log('filename: ', filename);
   let imageBuffer: Buffer;
   try {
     let dirPath = "public/img/albums/";

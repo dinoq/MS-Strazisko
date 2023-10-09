@@ -115,13 +115,6 @@ export class XMLParser {
                 component.componentType = mapToComponentType(
                     getOptionalAttrFromXML("componentType", XMLcomponent), DetailFrameComponentType
                 );
-                component.componentSpecificProps = {};
-                if (component.componentType == DetailFrameComponentType.FileChooser) {
-                    component.componentSpecificProps.path = getREQUIREDAttrFromXML(
-                        "path",
-                        XMLcomponent
-                    );
-                }
                 component.componentName = getOptionalAttrFromXML(
                     "componentName",
                     XMLcomponent
@@ -138,23 +131,27 @@ export class XMLParser {
                     ? JSON.parse(constraints)
                     : "";
 
-                component.editable =
-                    getOptionalAttrFromXML("editable", XMLcomponent).toLowerCase() !=
-                    "false";
-                component.required =
-                    getOptionalAttrFromXML(
-                        "required",
-                        XMLcomponent,
-                        "true"
-                    ).toLowerCase() != "false";
+                component.editable = getOptionalAttrFromXML("editable", XMLcomponent).toLowerCase() != "false";
+
+                component.required = getOptionalAttrFromXML(
+                    "required",
+                    XMLcomponent,
+                    "true"
+                ).toLowerCase() != "false";
                 let values = getOptionalAttrFromXML("values", XMLcomponent);
                 if (values.length) {
                     component.values = ValuesDefinitions[values]();
                 }
-                
-                component.wide =
-                getOptionalAttrFromXML("wide", XMLcomponent, undefined).toLowerCase() ==
-                "true";
+
+                component.wide = getOptionalAttrFromXML("wide", XMLcomponent, undefined).toLowerCase() == "true";
+
+                component.componentSpecificProps = {};
+                if (component.componentType == DetailFrameComponentType.FileChooser) {
+                    component.componentSpecificProps.path = getREQUIREDAttrFromXML(
+                        "path",
+                        XMLcomponent
+                    );
+                }
 
                 def.detailFrame.components.push(component);
             }
@@ -193,11 +190,12 @@ export class XMLParser {
                 component.componentType = mapToComponentType(
                     getOptionalAttrFromXML("componentType", XMLcomponent), ListFrameComponentType
                 );
-                component.isBreadcrumbKey =
-                    getOptionalAttrFromXML(
-                        "isBreadcrumbKey",
-                        XMLcomponent
-                    ).toLowerCase() == "true";
+
+                component.isBreadcrumbKey = getOptionalAttrFromXML(
+                    "isBreadcrumbKey",
+                    XMLcomponent
+                ).toLowerCase() == "true";
+
                 component.transformation = getOptionalAttrFromXML(
                     "transformation",
                     XMLcomponent
@@ -218,7 +216,7 @@ export class XMLParser {
                 "forceDeleteItemMsg",
                 XMLLF
             );
-            
+
             let orderByAttr = getOptionalAttrFromXML(
                 "orderBy",
                 form.getElementsByTagName("ListFrame")[0]
@@ -228,7 +226,7 @@ export class XMLParser {
                 form.getElementsByTagName("ListFrame")[0]
             );
 
-            
+
             def.listFrame.afterDeleteMethod = getOptionalAttrFromXML(
                 "afterDeleteMethod",
                 XMLLF

@@ -1,0 +1,49 @@
+{
+  "Forms": [
+    {
+      "Form": {
+        "DetailFrame": {
+          "Params:": {
+            "createNewEntryText": ";optional",
+            "uniqueConstraintFailed": ";optional",
+            "afterSaveMethod": ";optional"
+          },
+          "Component": {
+            "Params:": {
+              "attributeKey": ";required",
+              "componentType": ";optional",
+              "componentName": ";optional",
+              "constraints": ";optional",
+              "editable": ";optional",
+              "required": ";optional",
+              "values": ";optional",
+              "wide": ";optional",
+
+              "path": ";required"
+            }
+          }
+        },
+        "ListFrame": {
+            "Params:": {
+              "detailDBOClass": ";optional",
+              "actions": {
+
+              },
+              "forceDeleteItemMsg": ";optional",
+              "orderBy": ";optional",
+              "descending": ";optional",
+              "afterDeleteMethod": ";optional"
+            },
+            "Component": {
+              "Params:": {
+                "attributeKey": ";required",
+                "componentName": ";optional",
+                "componentType": ";optional",
+                "isBreadcrumbKey": ";optional",
+                "transformation": ";optional"
+              }
+            }}
+      }
+    }
+  ]
+}
