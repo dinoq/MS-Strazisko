@@ -1,6 +1,7 @@
 import { withIronSessionApiRoute } from "iron-session/next";
 import Database from "better-sqlite3";
 import fs from "fs";
+import sharp from "sharp";
 
 const knownMethods = {
     createDirectoryIfNotExist: {
@@ -10,6 +11,9 @@ const knownMethods = {
         paramCount: 1,
     },
     deleteFile: {
+        paramCount: 1,
+    },
+    createThumbnail: {
         paramCount: 1,
     },
 };
@@ -51,8 +55,8 @@ const handler = async (req, res) => {
                 .send("ERROR - unknown server method '" + methodName + "' or bad param count!");
         }
 
-        let path;
-        switch(knownMethods[methodName]){
+        let path: string;
+        switch (knownMethods[methodName]) {
             case knownMethods.createDirectoryIfNotExist:
                 path = "./public/" + params[0];
                 if (!fs.existsSync(path)) {
@@ -60,18 +64,18 @@ const handler = async (req, res) => {
                     return res
                         .status(200).send("Directory created.");
                 }
-            break;
+                break;
             case knownMethods.deleteDirectory:
                 path = "./public/" + params[0];
                 if (fs.existsSync(path)) {
                     let result = fs.rmdirSync(path, { recursive: true });
                     return res
                         .status(200).send("Directory removed.");
-                }else{
+                } else {
                     return res
                         .status(404).send("Directory not found!");
                 }
-            break;
+                break;
             case knownMethods.deleteFile:
                 path = "./public/" + params[0];
                 if (fs.existsSync(path)) {
@@ -81,19 +85,46 @@ const handler = async (req, res) => {
                 }
                 return res
                     .status(404).send("File not found!");
-            break;
+                break;
+            case knownMethods.createThumbnail:
+                const originalFilePath = "./public/" + params[0];
+                let thumbnailsDirPath = originalFilePath.substring(0, originalFilePath.lastIndexOf("/")) + "/thumbnails";
+                let filename = originalFilePath.substring(originalFilePath.lastIndexOf("/"));
+                if (!fs.existsSync(thumbnailsDirPath)) {
+                    fs.mkdirSync(thumbnailsDirPath, { recursive: true });
+                }
+                
+                let fileData: any = await fs.readFileSync(originalFilePath);
+                await (sharp(fileData)
+                    .resize({
+                        fit: sharp.fit.inside,
+                        width: 200,
+                        height: 200,
+                    }).webp({ quality: 80 })
+                    .toFile(thumbnailsDirPath + "/" + filename));
+                    console.log('thumbnailsDirPath + "/" + filename: ', thumbnailsDirPath + "/" + filename);
+
+/*
+                if (fs.existsSync(path)) {
+                    let result = fs.unlinkSync(path)
+                    return res
+                        .status(200).send("File deleted.");
+                }*/
+                return res
+                    .status(404).send("File not found!");
+                break;
             default:
                 return res
                     .status(500)
                     .send("ERROR - Server method '" + methodName + "' not implemented!");
 
 
-            break;
+                break;
         }
-            db.close();
-            return res
-                .status(200)
-        
+        db.close();
+        return res
+            .status(200)
+
 
     } else {
         db.close();

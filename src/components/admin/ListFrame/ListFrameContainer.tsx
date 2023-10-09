@@ -10,7 +10,7 @@ import useAppDispatch from "../../../hooks/useAppDispatch";
 import { addItemToBreadcrumb } from "../../../store/reducers/BreadcrumbSlice";
 import { setNewDBObject } from "../../../store/reducers/DBObjectSlice";
 import { SagaActions } from "../../../store/sagas";
-import Dialog from "../TwoChoiceDialog";
+import Dialog from "../Dialogs/TwoChoiceDialog";
 import ListFrame from "./ListFrame";
 import { setEntries } from "../../../store/reducers/EntrySlice";
 

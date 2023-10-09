@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-//import classes from "./ErrorDialog.module.css";
+//import classes from "./ErrorDialog.module.scss";
 
 import { EventHandler, FC } from "react";
 

@@ -6,9 +6,9 @@ import { DetailFrameMode } from "../../../helpers/constants";
 import { DBObjectType, FormDef } from "../../../helpers/types";
 import BreadcrumbContainer from "../Breadcrumb/BreadcrumbContainer";
 import DetailFrameContainer from "../DetailFrame/DetailFrameContainer";
-import ErrorDialog from "../ErrorDialog";
+import ErrorDialog from "../Dialogs/ErrorDialog";
 import ListFrameContainer from "../ListFrame/ListFrameContainer";
-import TreeChoiceDialog from "../TreeChoiceDialog";
+import TreeChoiceDialog from "../Dialogs/TreeChoiceDialog";
 
 type FormFrameProps = { 
     errorMsg: string, 
