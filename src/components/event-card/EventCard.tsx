@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-import Image from "next/image";
+import Image from "next/legacy/image";
 import classes from "./EventCard.module.scss";
 import DOMPurify from "dompurify";
 import { DBManager } from "../../helpers/DBManager";

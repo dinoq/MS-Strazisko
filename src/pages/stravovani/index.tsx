@@ -3,7 +3,7 @@ import classes from "./Stravovani.module.scss";
 import allergens from "../../../public/img/alergeny2.png";
 import food1 from "../../../public/img/jidelna1.png";
 import food2 from "../../../public/img/jidelna2.png";
-import Image from "next/image"
+import Image from "next/legacy/image"
 import Link from "next/link";
 import { useEffect, useState } from "react";
 

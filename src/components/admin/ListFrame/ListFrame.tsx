@@ -2,7 +2,7 @@
 //import styles from "./ListFrame.module.css";
 
 import DOMPurify from "dompurify";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import { FC } from "react";
 import { ListFrameComponentType } from "../../../helpers/constants";
 import { DBManager } from "../../../helpers/DBManager";

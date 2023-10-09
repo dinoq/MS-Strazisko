@@ -1,6 +1,6 @@
 // eslint-disable-next-line
 //import classes from "./404.module.css";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import kid from "../../public/img/404.webp";
 
 const Error404 = (props) => {

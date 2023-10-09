@@ -5,7 +5,7 @@ import { GetServerSideProps } from "next";
 import { withIronSessionApiRoute } from "iron-session/next";
 import { useEffect, useState } from "react";
 import { useRef } from "react";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import Link from "next/link";
 import { getApiURL } from "../../../src/helpers/utils";
 

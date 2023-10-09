@@ -1,6 +1,6 @@
 // eslint-disable-next-line
 import classes from "./Teacher.module.scss";
-import Image from "next/image";
+import Image from "next/legacy/image";
 
 type TeacherProps = { 
     imgSrc: any, 

@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { ListFrameComponentType } from "../../../../helpers/constants";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import DOMPurify from "dompurify";
 //import styles from "./LFComponent.module.scss";
 
