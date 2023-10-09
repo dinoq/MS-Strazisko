@@ -1,7 +1,13 @@
 // eslint-disable-next-line
 import classes from "./KontaktPage.module.scss";
 
-const KontaktPage: React.FC<{ propname: any }> = (props) => {
+type KontaktPageProps = {
+
+}
+
+const KontaktPage: React.FC<KontaktPageProps> = ({
+
+}) => {
     
     return (
         <>

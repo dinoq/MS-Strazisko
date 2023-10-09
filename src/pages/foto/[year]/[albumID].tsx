@@ -1,9 +1,16 @@
 // eslint-disable-next-line
 import classes from "./albumID.module.scss";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import ContextMenu from "../../../components/ContextMenu/ContextMenu";
+import PhotoViewer from "../../../components/PhotoViewer/PhotoViewer";
 
-const AlbumDetail: React.FC<{ logged: boolean }> = (props) => {
+type AlbumDetailProps = {
+    logged: boolean
+}
+const AlbumDetail: React.FC<AlbumDetailProps> = ({
+    logged
+}) => {
   const router = useRouter();
   const { year, albumID } = router.query;
 
@@ -147,53 +154,5 @@ const AlbumDetail: React.FC<{ logged: boolean }> = (props) => {
   );
 };
 
-const ContextMenu = (props) => {
-
-  return (
-    <div className={classes.contextMenu} style={{ ...props.styles }}>
-      <span>Uložit jako</span>
-    </div>
-  )
-}
-
-const PhotoViewer = (props) => {
-  document.body.addEventListener('keydown', e => {
-    var key = e.key || e.key || 0;
-    if (e.key === "ArrowRight" || e.code === "ArrowRight") {
-      props.nextPhoto();
-    } else if (e.key === "ArrowLeft" || e.code === "ArrowLeft") {
-      props.prevPhoto();
-    }
-  });
-
-  return (
-    <div className={classes.photoViewer}>
-      <div className={classes.overlay} onClick={props.hide}>
-
-      </div>
-      <div className={classes.viewerWrapper}>
-
-        <div className={classes.photoWrapper}>
-
-          <div className={classes.arrowWrapper + " " + classes.leftArrow} onClick={props.prevPhoto}>
-            <div className={classes.arrow}>&lt;</div>
-          </div>
-          <div className={classes.arrowWrapper + " " + classes.rightArrow} onClick={props.nextPhoto}>
-            <div className={classes.arrow}>&gt;</div>
-          </div>
-
-          <div className={classes.closeBtnWrapper} onClick={props.hide}>
-            <div className={classes.closeBtn}></div>
-          </div>
-          {// eslint-disable-next-line @next/next/no-img-element
-            <img src={"/api/getPhoto?file=" + props.viewedPhoto.photoURL} alt={"Fotografie z alba \"" + props.viewedPhoto.album + "\""} />}
-
-
-        </div>
-      </div>
-
-    </div>
-  )
-}
 
 export default AlbumDetail;

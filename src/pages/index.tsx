@@ -8,10 +8,16 @@ import classes from "../../styles/index.module.scss"
 import toys from "../../public/img/toys.webp"
 import Teacher from '../../src/components/teacher/Teacher'
 import EventCard from '../../src/components/event-card/EventCard'
-import { useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { DBManager } from '../helpers/DBManager'
 
-export default function Home(props) {
+type HomeProps = {
+
+}
+
+const Home: FC<HomeProps>  = ({
+
+}) => {
     const a = "/navrh/unused/camping.jpg";
 
     const [introText, setIntroText]: [{ title: string, content: string }, any] = useState({ title: "", content: "" });
@@ -220,3 +226,5 @@ export default function Home(props) {
         </main>
     </>;
 }
+
+export default Home;

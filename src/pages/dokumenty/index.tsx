@@ -4,8 +4,14 @@
 import Link from "next/link";
 import { getApiURL } from "../../helpers/utils";
 
-const Dokumenty = (props) => {
-    const documents: Array<any> = (props.docs)? props.docs : [];    
+type DokumentyProps = {
+    docs: Array<any>
+}
+
+const Dokumenty = ({
+    docs
+}) => {
+    const documents: Array<any> = (docs)? docs : [];    
     return <>
         <div className="container-fluid">
             <div className="row justify-content-center">
@@ -22,8 +28,6 @@ const Dokumenty = (props) => {
     </>;
 }
 
-export default Dokumenty;
-
 export const getServerSideProps = async (req, res) =>{
     let docs = await(await fetch(getApiURL("getDocuments"))).json();
 
@@ -31,3 +35,5 @@ export const getServerSideProps = async (req, res) =>{
         props: { docs },
       };
 }
+
+export default Dokumenty;

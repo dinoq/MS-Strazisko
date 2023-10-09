@@ -1,14 +1,17 @@
 // eslint-disable-next-line
 import classes from "./Stravovani.module.scss";
 import allergens from "../../../public/img/alergeny2.png";
-import food1 from "../../../public/img/jidelna1.png";
-import food2 from "../../../public/img/jidelna2.png";
 import Image from "next/legacy/image"
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-const Stravovani: React.FC<{ propname: any }> = (props) => {
+type StravovaniProps = {
+    
+}
 
+const Stravovani: React.FC<StravovaniProps> = ({
+
+}) => {
     const [imgUrls, setImgUrls] = useState<Array<{img_url: string}>>([]);
     useEffect(() => {
         fetch("/api/data?table=food").then((data) => {

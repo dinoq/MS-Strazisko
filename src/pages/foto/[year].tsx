@@ -2,10 +2,16 @@
 import classes from "./year.module.scss";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { withIronSessionApiRoute, withIronSessionSsr } from "iron-session/next";
+import { FC, useEffect, useRef, useState } from "react";
+import { withIronSessionSsr } from "iron-session/next";
 
-const YearPage: React.FC<{ logged: boolean }> = (props) => {
+type YearPageProps = { 
+    logged: boolean 
+}
+
+const YearPage: React.FC<YearPageProps> = ({
+    logged
+}) => {
   const router = useRouter();
   let year  = (router.query.year as string).replace("_", "/");
 
@@ -14,8 +20,8 @@ const YearPage: React.FC<{ logged: boolean }> = (props) => {
       <div className="container-fluid">
         <div className={" row my-4 justify-content-center align-items-center"}>
           <div className="col-10">
-            {props.logged && <Gallery year={year} />}
-            {!props.logged && <Login year={year} />}
+            {logged && <Gallery year={year} />}
+            {!logged && <Login year={year} />}
           </div>
         </div>
       </div>
@@ -23,7 +29,12 @@ const YearPage: React.FC<{ logged: boolean }> = (props) => {
   );
 };
 
-const Login: React.FC<{ year: any }> = (props) => {
+type LoginProps = {
+    year: any
+}
+const Login: React.FC<LoginProps> = ({
+    year
+}) => {
   const pwdRef = useRef<HTMLInputElement>(null);
   const [wrongPwd, setWrongPwd] = useState(false);
   const [unknownErrorOccured, setUnknownErrorOccured] = useState(false);
@@ -32,7 +43,6 @@ const Login: React.FC<{ year: any }> = (props) => {
     event.preventDefault();
     setWrongPwd(false);
     setUnknownErrorOccured(false);
-    const year = props.year;
 
     let pwd = pwdRef?.current?.value;
     let resp = await fetch("/api/loginForYear", {
@@ -69,7 +79,7 @@ const Login: React.FC<{ year: any }> = (props) => {
           <div className={classes.message}>
             Pro přístup ke fotogalerii musíte zadat heslo:
           </div>
-          <input value={props.year} type="text" readOnly/>
+          <input value={year} type="text" readOnly/>
           <input ref={pwdRef} type="password" />
           <input type="submit" value="Odeslat" />
         </form>
@@ -78,11 +88,17 @@ const Login: React.FC<{ year: any }> = (props) => {
   );
 };
 
-const Gallery = (props) => {
+type GalleryProps = {
+    year: string
+}
+
+const Gallery: FC<GalleryProps>= ({
+    year
+}) => {
   const [albums, setAlbums] = useState<any>([]);
 
   useEffect(() => {
-    fetch("/api/getYearAlbumsInfo?year=" + props.year + "&limit=" + 6).then((resp) => {
+    fetch("/api/getYearAlbumsInfo?year=" + year + "&limit=" + 6).then((resp) => {
 
       if (resp.status == 200) {
         resp.json().then((json) => {
@@ -93,7 +109,7 @@ const Gallery = (props) => {
         });
       }
     });
-  }, [props.year]);
+  }, [year]);
 
   const albumYear = new Date(albums[0]?.date).getFullYear();
 
@@ -111,13 +127,13 @@ const Gallery = (props) => {
           return (
             <div key={"album-" + index}>
               <div className="text-blue text-center h4 my-3">
-                <Link href={"/foto/" + props.year.replace("/", "_") + "/" + album.title}>
+                <Link href={"/foto/" + year.replace("/", "_") + "/" + album.title}>
 
                   {date + " - " + album.name}
 
                 </Link>
               </div>
-              <Link href={"/foto/" + props.year.replace("/", "_") + "/" + album.title}>
+              <Link href={"/foto/" + year.replace("/", "_") + "/" + album.title}>
 
                 <div className={classes["overlay"] + " col-12"}>
                   <div>Více &gt;&gt;</div>

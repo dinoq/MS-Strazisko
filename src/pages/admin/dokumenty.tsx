@@ -2,7 +2,7 @@ import { withIronSessionSsr } from "iron-session/next";
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import { useState } from 'react';
+import { FC, MouseEventHandler, useState } from 'react';
 import AppTable from '../../../src/components/Table/Table';
 import { getApiURL } from '../../../src/helpers/utils';
 import classes from "./dokumenty.module.scss";
@@ -104,7 +104,13 @@ const AdminDocumentsPage: NextPage = (props: any) => {
     )
 }
 
-const NewDocumentManager = (props) => {
+type NewDocumentManagerProps = {
+    hideFileManager: MouseEventHandler<HTMLInputElement>
+}
+
+const NewDocumentManager: FC<NewDocumentManagerProps> = ({
+    hideFileManager
+}) => {
     const [fileLabel, setFileLabel] = useState("Vyberte soubor")
     const [file, setFile] = useState(undefined);
     const initFileName = "Název souboru";
@@ -163,28 +169,38 @@ const NewDocumentManager = (props) => {
                 </div>
                 <div className="d-flex justify-content-center">
                     <input className="button" type="submit" value="Uložit" />
-                    <input className="button button-danger" onClick={props.hideFileManager} type="button" value="Zrušit" />
+                    <input className="button button-danger" onClick={hideFileManager} type="button" value="Zrušit" />
                 </div>
             </form>
         </div>
     )
 }
 
-const Modal = (props) => {
+type ModalProps = {
+    cancelDeletion: MouseEventHandler<HTMLDivElement | HTMLButtonElement>,
+    deleteDocument: MouseEventHandler<HTMLButtonElement>,
+    deletedDocumentName: string
+}
+
+const Modal: FC<ModalProps> = ({
+    cancelDeletion, 
+    deleteDocument,
+    deletedDocumentName
+}) => {
 
 
     return (
         <div className="modal-window">
-            <div className="overlay" onClick={props.cancelDeletion}>
+            <div className="overlay" onClick={cancelDeletion}>
 
             </div>
             <div className="content">
                 <div className="text">
-                    Jste si jistí, že chcete dokument {props.deletedDocumentName} odstranit?
+                    Jste si jistí, že chcete dokument {deletedDocumentName} odstranit?
                 </div>
                 <div className="btns-container">
-                    <button className="btn btn-lg btn-danger" onClick={props.deleteDocument}>Odstranit</button>
-                    <button className="btn btn-lg btn-primary" onClick={props.cancelDeletion}>Ponechat</button>
+                    <button className="btn btn-lg btn-danger" onClick={deleteDocument}>Odstranit</button>
+                    <button className="btn btn-lg btn-primary" onClick={cancelDeletion}>Ponechat</button>
                 </div>
 
             </div>

@@ -1,6 +1,5 @@
 // eslint-disable-next-line
 //import styles from "./ListFrame.module.css";
-
 import { FC, MouseEventHandler, useState } from "react";
 import { useSelector } from "react-redux";
 import { DBManager } from "../../../helpers/DBManager";
@@ -14,7 +13,15 @@ import Dialog from "../Dialogs/TwoChoiceDialog";
 import ListFrame from "./ListFrame";
 import { setEntries } from "../../../store/reducers/EntrySlice";
 
-const ListFrameContainer: FC<{ editItemHandler: Function, hideDetailFrame: MouseEventHandler<HTMLInputElement> }> = (props) => {
+type ListFrameContainerProps = {
+    editItemHandler: Function, 
+    hideDetailFrame: MouseEventHandler<HTMLInputElement>
+}
+
+const ListFrameContainer: FC<ListFrameContainerProps> = ({
+    editItemHandler, 
+    hideDetailFrame
+}) => {
     const dispatch = useAppDispatch();
     const formDefinition = useSelector((state: RootState) => state.formDefinitions.actualFormDefinition);
     const DBObject = useSelector((state: RootState) => state.dbObject);
@@ -34,7 +41,7 @@ const ListFrameContainer: FC<{ editItemHandler: Function, hideDetailFrame: Mouse
      * Bylo kliknuto na položku, změní se úroveň
      */
      const detailClickedHandler = async (itm) => {
-        props.hideDetailFrame(undefined);
+        hideDetailFrame(undefined);
 
         let item: DBObjectType = itm as DBObjectType;
 
@@ -114,7 +121,7 @@ const ListFrameContainer: FC<{ editItemHandler: Function, hideDetailFrame: Mouse
 
     return (
         <>
-            {formDefinition && <ListFrame components={formDefinition?.listFrame?.components} actions={formDefinition?.listFrame?.actions} DBObject={DBObject} deleteItemHandler={deleteItemHandler} detailClickedHandler={detailClickedHandler} editItemHandler={props.editItemHandler} entries={entries} colspanNoData={colspanNoData} detailDBOClassLen={formDefinition?.listFrame?.detailDBOClass?.length ?? 0} />}
+            {formDefinition && <ListFrame components={formDefinition?.listFrame?.components} actions={formDefinition?.listFrame?.actions} DBObject={DBObject} deleteItemHandler={deleteItemHandler} detailClickedHandler={detailClickedHandler} editItemHandler={editItemHandler} entries={entries} colspanNoData={colspanNoData} detailDBOClassLen={formDefinition?.listFrame?.detailDBOClass?.length ?? 0} />}
             {showDialog && <Dialog msg={formDefinition.listFrame.forceDeleteItemMsg} onYes={confirmForceDeleteDialog} onNo={cancelForceDeleteDialog}/>}
         </>
     )

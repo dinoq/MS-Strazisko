@@ -13,7 +13,13 @@ import { setEntries } from "../../../store/reducers/EntrySlice";
 import { getRawDBObjectDefinition } from "../../../../database/definitions/db-object-definitions";
 import useAppDispatch from "../../../hooks/useAppDispatch";
 
-const FormFrameContainer: React.FC<{}> = (props) => {
+type FormFrameContainerProps = {
+
+}
+
+const FormFrameContainer: React.FC<FormFrameContainerProps> = ({
+
+}) => {
     const dispatch = useAppDispatch();
     const definition = useSelector((state: RootState) => state.formDefinitions.actualFormDefinition);
     let DBOClass = definition?.DB?.DBOClass ?? undefined;

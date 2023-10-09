@@ -1,6 +1,7 @@
 ############################################################################################
 TODO:
 Prioritně:
+-Rozdělit soubory, ať v žádném není více komponent současně
 -Maže se fotka učitele z disku při smazání v LF? Přijde mi že někdy jo a někdy ne? Pozn: v konzoli byla zvláštní chyba:The requested resource isn't a valid image for /img/albums/other/event-photos/null received text/html; charset=utf-8 (mohlo by souviset)
 -Použití nextauth
 Další:

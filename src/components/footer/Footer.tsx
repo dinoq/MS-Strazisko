@@ -5,7 +5,13 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import classes from "./Footer.module.scss";
 
-const Footer: React.FC<{}> = (props) => {
+type FooterProps = {
+
+}
+
+const Footer: React.FC<FooterProps> = ({
+
+}) => {
     const router = useRouter();
 
     const [contactText, setContactText] = useState({ tel: "", email: "" });

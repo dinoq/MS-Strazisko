@@ -1,4 +1,3 @@
-import { NextPage } from "next";
 import { FC, useEffect, useState } from "react";
 import useAppDispatch from "../../../hooks/useAppDispatch";
 import { SagaActions } from "../../../store/sagas";
@@ -7,14 +6,20 @@ import { RootState } from "../../../helpers/types";
 import Head from "next/head";
 import FormFrameContainer from "../FormFrame/FormFrameContainer";
 
-const AdminPage: FC<any> = (props: any) =>{
+type AdminPageProps = {
+    formID: string
+}
+
+const AdminPage: FC<any> = ({
+    formID
+}) =>{
     // eslint-disable-next-line react/display-name
         const dispatch = useAppDispatch();
         const [pageFormDefinitionLoaded, setPageFormDefinitionLoaded] = useState(false);
         const DBOClass = useSelector((state: RootState) => state.formDefinitions.actualFormDefinition.DB.DBOClass);
 
         useEffect(() => {
-            dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: props.formID });
+            dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: formID });
         }, [dispatch])
 
         useEffect(() => {

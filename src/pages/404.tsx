@@ -2,8 +2,15 @@
 //import classes from "./404.module.css";
 import Image from "next/legacy/image";
 import kid from "../../public/img/404.webp";
+import { FC } from "react";
 
-const Error404 = (props) => {
+type Error404Props = {
+
+}
+
+const Error404: FC<Error404Props>= ({
+
+}) => {
 
     return (
         <>
