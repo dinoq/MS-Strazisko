@@ -4,10 +4,8 @@ import { DBManager } from '../helpers/DBManager';
 import { FormDefinitionsState, RootState } from '../helpers/types';
 
 export enum SagaActions {
-    LOAD_FORM_DEFINITIONS = "LOAD_FORM_DEFINITIONS",
     SET_FORM_DEFINITIONS = "SET_FORM_DEFINITIONS",
 }
-
 
 function* setFormDefinitions(action){
     try {

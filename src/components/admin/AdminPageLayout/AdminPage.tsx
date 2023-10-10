@@ -20,6 +20,7 @@ const AdminPage: FC<any> = ({
 
         useEffect(() => {
             dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: formID });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [dispatch])
 
         useEffect(() => {

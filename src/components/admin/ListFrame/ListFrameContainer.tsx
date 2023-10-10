@@ -14,12 +14,12 @@ import ListFrame from "./ListFrame";
 import { setEntries } from "../../../store/reducers/EntrySlice";
 
 type ListFrameContainerProps = {
-    editItemHandler: Function, 
+    editItemHandler: Function,
     hideDetailFrame: MouseEventHandler<HTMLInputElement>
 }
 
 const ListFrameContainer: FC<ListFrameContainerProps> = ({
-    editItemHandler, 
+    editItemHandler,
     hideDetailFrame
 }) => {
     const dispatch = useAppDispatch();
@@ -36,17 +36,15 @@ const ListFrameContainer: FC<ListFrameContainerProps> = ({
         colspanNoData += (formDefinition.listFrame.detailDBOClass) ? 1 : 0;
         colspanNoData += (formDefinition.listFrame.actions) ? 1 : 0;
     }
-    
+
     /**
      * Bylo kliknuto na položku, změní se úroveň
      */
-     const detailClickedHandler = async (itm) => {
+    const detailClickedHandler = async (item: DBObjectType) => {
         hideDetailFrame(undefined);
 
-        let item: DBObjectType = itm as DBObjectType;
-
-        let definitionBreadcrumbAttr = await DBManager.getBreadcrumbAttr(DBObject, formDefinition);
-        let objBreadcrumbAttr = DBManager.getAttrFromArrByKey(item.attributes, (await definitionBreadcrumbAttr).key);
+        let definitionBreadcrumbAttr = DBManager.getBreadcrumbAttr(DBObject, formDefinition);
+        let objBreadcrumbAttr = DBManager.getAttrFromArrByKey(item.attributes, definitionBreadcrumbAttr.key);
 
         const newClass = formDefinition.listFrame.detailDBOClass;
         const newBItem: BreadcrumbItemDef = {
@@ -79,36 +77,36 @@ const ListFrameContainer: FC<ListFrameContainerProps> = ({
             setShowDialog(true);
             setItemToDelete(item);
             //dispatch(setErrorMsg(resultErr));
-        }else{
-            
-        let afterDeleteMethod = formDefinition.listFrame.afterDeleteMethod;
-        console.log('afterDeleteMethod: ', afterDeleteMethod);
-            if(afterDeleteMethod){
+        } else {
+
+            let afterDeleteMethod = formDefinition.listFrame.afterDeleteMethod;
+            console.log('afterDeleteMethod: ', afterDeleteMethod);
+            if (afterDeleteMethod) {
                 let methodName = afterDeleteMethod.substring(0, afterDeleteMethod.indexOf("("));
-                    
-                let rawParams = (afterDeleteMethod.substring(methodName.length+1, afterDeleteMethod.length-1)).split(",");
+
+                let rawParams = (afterDeleteMethod.substring(methodName.length + 1, afterDeleteMethod.length - 1)).split(",");
                 let params: Array<string> = [];
-                for(const rawParam of rawParams){
+                for (const rawParam of rawParams) {
                     let evaluated = DBManager.substituteExpression(rawParam, item);
                     params.push(evaluated);
                 }
-                
+
                 resultErr = await DBManager.runServerMethod(methodName, params);
 
             }
             let fileComponents = getFileComponents(formDefinition.listFrame);
-            if(fileComponents.length){
+            if (fileComponents.length) {
                 let evaluated = DBManager.substituteExpression(fileComponents[0].transformation, item);
 
                 resultErr = await DBManager.runServerMethod("deleteFile", [evaluated]);
 
             }
-            
+
         }
     }
 
 
-    const cancelForceDeleteDialog = ()=>{
+    const cancelForceDeleteDialog = () => {
         setShowDialog(false);
         setItemToDelete(undefined);
     }
@@ -122,7 +120,7 @@ const ListFrameContainer: FC<ListFrameContainerProps> = ({
     return (
         <>
             {formDefinition && <ListFrame components={formDefinition?.listFrame?.components} actions={formDefinition?.listFrame?.actions} DBObject={DBObject} deleteItemHandler={deleteItemHandler} detailClickedHandler={detailClickedHandler} editItemHandler={editItemHandler} entries={entries} colspanNoData={colspanNoData} detailDBOClassLen={formDefinition?.listFrame?.detailDBOClass?.length ?? 0} />}
-            {showDialog && <Dialog msg={formDefinition.listFrame.forceDeleteItemMsg} onYes={confirmForceDeleteDialog} onNo={cancelForceDeleteDialog}/>}
+            {showDialog && <Dialog msg={formDefinition.listFrame.forceDeleteItemMsg} onYes={confirmForceDeleteDialog} onNo={cancelForceDeleteDialog} />}
         </>
     )
 }
