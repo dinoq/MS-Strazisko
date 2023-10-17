@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { DBManager } from "../../helpers/DBManager";
-import { DBObjectType, DBObjectAttr, DBOClassType } from "../../helpers/types";
+import { DBObjectType, DBObjectAttr, DBOClassType, BreadcrumbItemDef } from "../../helpers/types";
+import { breadcrumbItemSelected } from "./BreadcrumbSlice";
 
 
 const initialState: DBObjectType = DBManager.getEmptyDBObject(undefined);
@@ -8,25 +9,25 @@ const initialState: DBObjectType = DBManager.getEmptyDBObject(undefined);
 const DBObjectSlice = createSlice({
     name: "DBObject",
     initialState,
-    reducers:{
-        setNewEmptyDBObject(state: DBObjectType, action: PayloadAction<string>){
+    reducers: {
+        setNewEmptyDBObject(state: DBObjectType, action: PayloadAction<string>) {
             let DBOClass = action.payload;
             let dbo = DBManager.getEmptyDBObject(DBOClass);
             return dbo;
         },
-        setNewDBObject(state: DBObjectType, action: PayloadAction<{DBOClass: DBOClassType, parentEntry: DBObjectType | undefined}>){
-            const {DBOClass, parentEntry} = action.payload;
+        setNewDBObject(state: DBObjectType, action: PayloadAction<{ DBOClass: DBOClassType, parentEntry: DBObjectType | undefined }>) {
+            const { DBOClass, parentEntry } = action.payload;
             let emptyObj: DBObjectType = DBManager.getEmptyDBObject(DBOClass);
             if (emptyObj && emptyObj.persistentAttributes && state && state.persistentAttributes && parentEntry) {
                 for (const attr of emptyObj.persistentAttributes) {
-                    if(parentEntry == undefined)
+                    if (parentEntry == undefined)
                         continue;
-                    if(attr.source){
+                    if (attr.source) {
                         const parentAttrKey = attr.source.substring(attr.source.indexOf(".") + 1, attr.source.indexOf("~"));
                         const substitutionExpresion = `@[${parentAttrKey}]`;
                         attr.value = DBManager.substituteExpression(substitutionExpresion, parentEntry);
                         //attr.value =  DBManager.substituteExpression(attr.source, parentEntry);
-                    }else{
+                    } else {
                         attr.value = DBManager.getAttrFromArrByKey(parentEntry.attributes, attr.key).value;
                     }
                 }
@@ -34,23 +35,23 @@ const DBObjectSlice = createSlice({
             return emptyObj;
         },
 
-        setDBObject(state: DBObjectType, action: PayloadAction<DBObjectType>){
+        setDBObject(state: DBObjectType, action: PayloadAction<DBObjectType>) {
             const DBObj = action.payload;
             return DBObj;
         },
 
-        setEditedAttrs(state: DBObjectType, action: PayloadAction<Array<DBObjectAttr>>){
+        setEditedAttrs(state: DBObjectType, action: PayloadAction<Array<DBObjectAttr>>) {
             const dBObjectEditedAttrs = action.payload;
             state.editedAttrs = dBObjectEditedAttrs;
         },
 
-        setPersistentAttrs: (state: DBObjectType, action: PayloadAction<Array<DBObjectAttr>>)=>{
+        setPersistentAttrs: (state: DBObjectType, action: PayloadAction<Array<DBObjectAttr>>) => {
             const persistenAttrs = action.payload;
             state.persistentAttributes = persistenAttrs;
         },
-        
-        editDBObjectAttr(state: DBObjectType, action: PayloadAction<{attrKey: string, value: any}>){
-            const {attrKey, value} = action.payload;            
+
+        editDBObjectAttr(state: DBObjectType, action: PayloadAction<{ attrKey: string, value: any }>) {
+            const { attrKey, value } = action.payload;
             let editedAttrs: Array<DBObjectAttr> = state.editedAttrs || [];
             if (editedAttrs.filter(editedAttr => { return editedAttr.key == attrKey }).length) { // Klíč je již přítomný
                 editedAttrs[editedAttrs.findIndex(editedAttr => editedAttr.key == attrKey)].value = value;
@@ -60,16 +61,26 @@ const DBObjectSlice = createSlice({
             state.isEdited = true;
         },
 
-        addFilesToUpload(state: DBObjectType, action: PayloadAction<File | File[]>){
+        addFilesToUpload(state: DBObjectType, action: PayloadAction<File | File[]>) {
             const files = action.payload;
-            if(Array.isArray(files)){
+            if (Array.isArray(files)) {
                 throw new Error("TODO addFilesToUpload ARRAY");
-            }else{
+            } else {
                 state.filesToUpload.push(files);
             }
         },
-    }
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(breadcrumbItemSelected, (state: DBObjectType, action: PayloadAction<{ index: number, items: Array<BreadcrumbItemDef> }>) => {
+                const { items, index } = action.payload;
+                const DBObj = items[index].DBObject;
+                console.log('DBObj: ', DBObj);
+                return DBObj;
+            })
+
+    },
 })
 
-export const {setNewEmptyDBObject, setNewDBObject, setDBObject, setEditedAttrs, setPersistentAttrs, editDBObjectAttr, addFilesToUpload} = DBObjectSlice.actions;
+export const { setNewEmptyDBObject, setNewDBObject, setDBObject, setEditedAttrs, setPersistentAttrs, editDBObjectAttr, addFilesToUpload } = DBObjectSlice.actions;
 export default DBObjectSlice.reducer;

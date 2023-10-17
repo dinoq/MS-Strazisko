@@ -7,6 +7,7 @@ import { RootState } from "../../../helpers/types";
 import DetailFrame from "./DetailFrame";
 import { getFileComponents } from "../../../helpers/utils";
 import useAppDispatch from "../../../hooks/useAppDispatch";
+import { selectActualDBOClass, selectActualFormDefinition } from "../../../store/formDefReducer/selector";
 
 type DetailFrameContainerProps = { 
     mode: DetailFrameMode, 
@@ -19,10 +20,9 @@ const DetailFrameContainer: FC<DetailFrameContainerProps> = ({
     hideDetailFrame, 
     setErrorMsg
 }) => {
-    const formDefinition = useSelector((state: RootState) => state.formDefinitions).actualFormDefinition;
-    const breadcrumbItems = useSelector((state: RootState) => state.breadcrumb.items);
     const dispatch = useAppDispatch();
-    let DBOClass = useSelector((state: RootState) => state.formDefinitions.actualFormDefinition.DB?.DBOClass);
+    const formDefinition = useSelector((state: RootState) => selectActualFormDefinition(state));
+    let DBOClass = useSelector((state: RootState) => selectActualDBOClass(state));
     const DBObject = useSelector((state: RootState) => state.dbObject);
 
     const formSubmitted = async (event) => {

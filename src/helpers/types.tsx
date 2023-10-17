@@ -114,7 +114,7 @@ export interface BreadcrumbState {
 
 export interface FormDefinitionsState {
     definitions: FormDefs,
-    actualFormDefinition: FormDef,
+    actualFormDefinition: string, // (FID)
     definitionsLoaded: boolean
 }
 

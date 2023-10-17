@@ -12,6 +12,7 @@ import { SagaActions } from "../../../store/sagas";
 import Dialog from "../Dialogs/TwoChoiceDialog";
 import ListFrame from "./ListFrame";
 import { setEntries } from "../../../store/reducers/EntrySlice";
+import { selectActualFormDefinition } from "../../../store/formDefReducer/selector";
 
 type ListFrameContainerProps = {
     editItemHandler: Function,
@@ -23,7 +24,7 @@ const ListFrameContainer: FC<ListFrameContainerProps> = ({
     hideDetailFrame
 }) => {
     const dispatch = useAppDispatch();
-    const formDefinition = useSelector((state: RootState) => state.formDefinitions.actualFormDefinition);
+    const formDefinition = useSelector((state: RootState) => selectActualFormDefinition(state));
     const DBObject = useSelector((state: RootState) => state.dbObject);
     const entries = useSelector((state: RootState) => state.entries);
     const breadcrumbItems = useSelector((state: RootState) => state.breadcrumb.items);

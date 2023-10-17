@@ -1,12 +1,15 @@
-.allergens{
+.allergens {
     width: 100%;
     max-width: 400px;
-    aspect-ratio: 1;
+    /*aspect-ratio: 1;*/
     margin: auto;
-    
+
+    h2 {
+        font-size: 1.2rem;
+    }
 }
 
-.food{
+.food {
     width: 100%;
     aspect-ratio: 1;
     margin: auto;

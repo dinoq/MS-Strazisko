@@ -12,6 +12,7 @@ import { setDBObject, setEditedAttrs, setNewDBObject } from "../../../store/redu
 import { setEntries } from "../../../store/reducers/EntrySlice";
 import { getRawDBObjectDefinition } from "../../../../database/definitions/db-object-definitions";
 import useAppDispatch from "../../../hooks/useAppDispatch";
+import { selectActualFormDefinition } from "../../../store/formDefReducer/selector";
 
 type FormFrameContainerProps = {
 
@@ -21,7 +22,7 @@ const FormFrameContainer: React.FC<FormFrameContainerProps> = ({
 
 }) => {
     const dispatch = useAppDispatch();
-    const definition = useSelector((state: RootState) => state.formDefinitions.actualFormDefinition);
+    const definition = useSelector((state: RootState) => selectActualFormDefinition(state));
     let DBOClass = definition?.DB?.DBOClass ?? undefined;
     const breadcrumbItems: Array<BreadcrumbItemDef> = useSelector((state: RootState) => state.breadcrumb.items);
     const errorMsg = useSelector((state: RootState) => state.errorReducers.msg);

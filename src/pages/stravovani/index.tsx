@@ -27,7 +27,7 @@ const Stravovani: React.FC<StravovaniProps> = ({
                 <div className="col-12 col-md-10">
                     <h1 className="text-center mb-4">Stravování</h1>
                     <div className={classes.allergens + " position-relative"}>
-                        <Link href={allergens.src} target="_blank"><Image src={allergens} alt="Seznam alergenů" layout="fill" objectFit="contain" /></Link>
+                        <Link href={allergens.src} target="_blank"><h2>Seznam alergenů</h2>{/*<Image src={allergens} alt="Seznam alergenů" layout="fill" objectFit="contain" />*/}</Link>
                     </div>
                     {imgUrls.map((img, index)=>{
                         return (

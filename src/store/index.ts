@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import createSagaMiddleware from 'redux-saga';
-import FormDefReducer from "./reducers/FormDefSlice";
+import FormDefReducer from "./formDefReducer";
 import BreadcrumbReducer from "./reducers/BreadcrumbSlice";
 import rootSaga from "./sagas";
 import ErrorReducer from "./reducers/ErrorSlice";
@@ -12,7 +12,7 @@ let sagaMiddleware = createSagaMiddleware();
 const store = configureStore({
     reducer: {
         breadcrumb: BreadcrumbReducer,
-        formDefinitions: FormDefReducer,
+        forms: FormDefReducer,
         errorReducers: ErrorReducer,
         dbObject: DBObjectReducer,
         entries: EntriesReducer

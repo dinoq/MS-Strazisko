@@ -8,6 +8,7 @@ import store from "../store"
 import { SagaActions } from "../store/sagas";
 import { setNewDBObject, setPersistentAttrs } from "../store/reducers/DBObjectSlice";
 import { setEntries } from "../store/reducers/EntrySlice";
+import { selectActualFormDefinition } from "../store/formDefReducer/selector";
 
 export class DBManager {
 
@@ -256,7 +257,6 @@ export class DBManager {
                 let breadcrumbItems = store.getState()?.breadcrumb?.items;
                 let state = store.getState();
                 let dbObject = store.getState()?.dbObject
-                //let def = store.getState()?.formDefinitions?.actualFormDefinition?.listFrame.;
                 if (breadcrumbItems.length) {
 
                     let item: DBObjectType = breadcrumbItems[breadcrumbItems.length - 1].DBObject as DBObjectType;
@@ -264,7 +264,7 @@ export class DBManager {
 
                     let detailItemCondition = `WHERE ${item.attributes[0].key}='${DBManager.getAttrFromArrByKey(breadcrumbItems[breadcrumbItems.length - 1].DBObject.attributes, item.attributes[0].key).value}'`;
 
-                    DBManager.getAllDBObjectEntries(dbObject.DBOClass, state.formDefinitions.actualFormDefinition.DB?.orderBy, detailItemCondition).then(entrs => {
+                    DBManager.getAllDBObjectEntries(dbObject.DBOClass, selectActualFormDefinition(state).DB?.orderBy, detailItemCondition).then(entrs => {
                         store.dispatch(setEntries(entrs));
                         //store.dispatch(setPersistentAttrs(entrs.length ? entrs[0].persistentAttributes : []))
                     })

@@ -1,5 +1,5 @@
 import { call, put, putResolve, select, takeLatest } from 'redux-saga/effects';
-import { loadFormDef, setActualFormDef } from './reducers/FormDefSlice';
+import { loadFormDef, setActualFormDef } from './formDefReducer';
 import { DBManager } from '../helpers/DBManager';
 import { FormDefinitionsState, RootState } from '../helpers/types';
 
@@ -9,12 +9,12 @@ export enum SagaActions {
 
 function* setFormDefinitions(action){
     try {
-        let formDefinitions: FormDefinitionsState = yield select((state: RootState)=>state.formDefinitions);
+        let formDefinitions: FormDefinitionsState = yield select((state: RootState)=>state.forms);
         if(!formDefinitions.definitionsLoaded){
             const definitions = yield call(DBManager.fetchFormDefinitions);
             yield putResolve(loadFormDef(definitions))    
         }
-        formDefinitions = yield select((state: RootState)=>state.formDefinitions);
+        formDefinitions = yield select((state: RootState)=>state.forms);
         if(formDefinitions.definitions[action.FID]){
             yield put(setActualFormDef(action.FID))   
         }     

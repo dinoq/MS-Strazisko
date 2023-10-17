@@ -5,6 +5,7 @@ import useSelector from "../../../hooks/useAppSelector";
 import { RootState } from "../../../helpers/types";
 import Head from "next/head";
 import FormFrameContainer from "../FormFrame/FormFrameContainer";
+import { selectActualDBOClass } from "../../../store/formDefReducer/selector";
 
 type AdminPageProps = {
     formID: string
@@ -16,7 +17,7 @@ const AdminPage: FC<any> = ({
     // eslint-disable-next-line react/display-name
         const dispatch = useAppDispatch();
         const [pageFormDefinitionLoaded, setPageFormDefinitionLoaded] = useState(false);
-        const DBOClass = useSelector((state: RootState) => state.formDefinitions.actualFormDefinition.DB.DBOClass);
+        const DBOClass = useSelector((state: RootState) => selectActualDBOClass(state));
 
         useEffect(() => {
             dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: formID });

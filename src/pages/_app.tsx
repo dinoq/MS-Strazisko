@@ -14,7 +14,7 @@ import { AppProps } from 'next/app';
 
 function MyApp({ Component, pageProps }: AppProps) {
     const router = useRouter();
-    const definitions = useSelector((state: RootState) => state.formDefinitions);
+    const definitions = useSelector((state: RootState) => state.forms);
 
     if (router.pathname === "/404") { // not index
         return (
