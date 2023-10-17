@@ -1,12 +1,15 @@
 ############################################################################################
 TODO:
 Prioritně:
+-dokumenty se nemaží (z disku; z databáze nevím, zjistit...)
+-multivýběr souborů na nahrátí
+-redesign reduxu
+-přidat selectory
 -Rozdělit soubory, ať v žádném není více komponent současně
 -Maže se fotka učitele z disku při smazání v LF? Přijde mi že někdy jo a někdy ne? Pozn: v konzoli byla zvláštní chyba:The requested resource isn't a valid image for /img/albums/other/event-photos/null received text/html; charset=utf-8 (mohlo by souviset)
 -Použití nextauth
 Další:
 -files a další v FileChooserContaineru předělat do reduxu
--multivýběr souborů na nahrátí
 -smazání podřízených položek na disku i v databázi při forceDelete
 -Patička se při změnšení okna (na telefonu) vykresluje divně (dát ty 3 seznamy nějak pod sebe do středu)
 -zrevidovat klíče (attributeKey v LF by možná nemuselo dávat smysl...)
