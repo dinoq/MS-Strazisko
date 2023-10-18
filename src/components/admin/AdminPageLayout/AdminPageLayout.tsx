@@ -1,16 +1,33 @@
 import { FC } from "react";
 import Link from "next/link";
 import classes from "./AdminPageLayout.module.scss";
+import { usePathname } from 'next/navigation'
 
 type AdminPageLayoutProps = {
     children: any
 }
+
+enum PATHS {
+    INTRO = "/admin/intro/intro",
+    TEACHERS = "/admin/intro/teachers",
+    EVENTS = "/admin/intro/events",
+    PUBLIC_PHOTOS = "/admin/intro/photos",
+    PRIVATE_PHOTOS = "/admin/foto",
+    FOOD = "/admin/food",
+    DOCUMENTS = "/admin/dokumenty",
+    CONTACTS = "/admin/kontakt",
+    WEB = "/"
+
+}
+
 const AdminPageLayout: FC<AdminPageLayoutProps> = ({
     children
 }) => {
+    const pathname = usePathname();
+
     const logout = async () => {
-        const result = await fetch("/api/admin/logoutAdmin", {
-            method: "POST",
+        const result = await fetch("/api/admin/session", {
+            method: "DELETE",
             mode: "same-origin",
         });
         if (result.status === 200) {
@@ -39,49 +56,49 @@ const AdminPageLayout: FC<AdminPageLayoutProps> = ({
 
                                 <ul aria-label="Úvodní strana">
                                     <li>
-                                        <Link href="/admin/intro/intro" className={"link"}>
+                                        <Link href={PATHS.INTRO} className={"link" + (pathname === PATHS.INTRO? " active" : "")}>
                                             Úvodní text
                                         </Link>
                                     </li>
                                     <li>
-                                        <Link href="/admin/intro/teachers" className={"link"}>
+                                        <Link href={PATHS.TEACHERS} className={"link" + (pathname === PATHS.TEACHERS? " active" : "")}>
                                             Učitelé
                                         </Link>
                                     </li>
                                     <li>
-                                        <Link href="/admin/intro/events" className={"link"}>
+                                        <Link href={PATHS.EVENTS} className={"link" + (pathname === PATHS.EVENTS? " active" : "")}>
                                             Události
                                         </Link>
                                     </li>
                                     <li>
-                                        <Link href="/admin/intro/photos" className={"link"}>
+                                        <Link href={PATHS.PUBLIC_PHOTOS} className={"link" + (pathname === PATHS.PUBLIC_PHOTOS? " active" : "")}>
                                             Foto
                                         </Link>
                                     </li>
                                 </ul>
                             </li>
                             <li>
-                                <Link href="/admin/foto" className={"link"}>
+                                <Link href={PATHS.PRIVATE_PHOTOS} className={"link" + (pathname === PATHS.PRIVATE_PHOTOS? " active" : "")}>
                                     Fotoalbum
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/admin/food" className={"link"}>
+                                <Link href={PATHS.FOOD} className={"link" + (pathname === PATHS.FOOD? " active" : "")}>
                                     Jídelníček
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/admin/dokumenty" className={"link"}>
+                                <Link href={PATHS.DOCUMENTS} className={"link" + (pathname === PATHS.DOCUMENTS? " active" : "")}>
                                     Dokumenty
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/admin/kontakt" className={"link"}>
+                                <Link href={PATHS.CONTACTS} className={"link" + (pathname === PATHS.CONTACTS? " active" : "")}>
                                     Kontakt
                                 </Link>
                             </li>
                         </ul>
-                        <Link href="/" className={"link"}>
+                        <Link href={PATHS.WEB} className={"link" + (pathname === PATHS.WEB? " active" : "")}>
                             &lt; Zpět na web
                         </Link>
                     </div>

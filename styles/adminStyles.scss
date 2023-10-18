@@ -55,9 +55,13 @@
     color: #a7caff;
     cursor: pointer;
 
-    &:hover,
-    &:focus {
-      color: #7bbff1;
+    &.active,
+    &:focus {        
+        color: #00ffaa;
+    }
+
+    &:hover {
+      color: #0095ff;
       //-2886414
     }
 

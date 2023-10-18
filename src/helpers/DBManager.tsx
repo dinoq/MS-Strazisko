@@ -290,7 +290,7 @@ export class DBManager {
             methodName,
             params
         }
-        return await DBManager.callAPI("runMethod", JSON.stringify(body), "POST", reload, "application/json");
+        return await DBManager.callAPI("method", JSON.stringify(body), "POST", reload, "application/json");
     }
 
     public static sendFiles = async (files: Array<File>, path: string): Promise<any> => {

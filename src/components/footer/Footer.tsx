@@ -47,7 +47,7 @@ const Footer: React.FC<FooterProps> = ({
                             </div><span className=""><a href={"mailto:" + contactText.email}>{contactText.email}</a></span>
                         </div>
                     </div>
-                    <div className="row d-flex flex-row justify-content-between align-items-start my-2">
+                    <div className="row flex-nowrap d-flex flex-column flex-lg-row justify-content-between align-items-start my-2">
                         <div className="w-fit-content my-2">
                             <ul aria-label="Adresa školky" className={classes["left-items"] + " " + classes["with-title"]}>
                                 <li>Mateřská školka Stražisko,</li>

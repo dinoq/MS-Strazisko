@@ -133,10 +133,6 @@ const AlbumDetail: React.FC<AlbumDetailProps> = ({
                       <div className={classes.imgContainer}>
                         {
                           // eslint-disable-next-line @next/next/no-img-element
-                          //<a href={"/api/getPhoto?file=" + photoURL} target="_blank" rel="noreferrer"><img alt={"Fotografie z alba \"" + album.name + "\""} src={"/api/getPhoto?file=" + photoURL + "&minify"} onContextMenu={showContextMenu} /></a>
-                        }
-                        {
-                          // eslint-disable-next-line @next/next/no-img-element
                           <img alt={"Fotografie z alba \"" + album.name + "\""} src={"/api/getPhoto?file=" + photoURL + "&minify"} onContextMenu={showContextMenu} onClick={showPhotoViewer.bind(this, photoURL)} />
                         }
                       </div>

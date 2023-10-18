@@ -60,13 +60,6 @@ const DetailFrameContainer: FC<DetailFrameContainerProps> = ({
             })
         }
 
-        /*
-        if(breadcrumbItems.length && breadcrumbItems[breadcrumbItems.length - 1].parentAttribute){
-            const parentAttribute = breadcrumbItems[breadcrumbItems.length - 1].parentAttribute;
-            body.attributes[parentAttribute.key] = parentAttribute.value;
-        }*/
-
-
         let resultErr = "";
         let afterSaveMethod = formDefinition.detailFrame.afterSaveMethod;
         if (mode == DetailFrameMode.EDITING_ENTRY) {
