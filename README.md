@@ -7,6 +7,7 @@ TODO features and bugs:
 
 TODO implementation prioritně
 - js > ts
+- https codes (200 -ok, 201 created for post)
 - db.close!!!
 -redesign reduxu
 -přidat selectory

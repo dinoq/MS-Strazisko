@@ -59,16 +59,7 @@ const DBObjectSlice = createSlice({
                 editedAttrs.push({ key: attrKey, value } as DBObjectAttr);
             }
             state.isEdited = true;
-        },
-
-        addFilesToUpload(state: DBObjectType, action: PayloadAction<File | File[]>) {
-            const files = action.payload;
-            if (Array.isArray(files)) {
-                throw new Error("TODO addFilesToUpload ARRAY");
-            } else {
-                state.filesToUpload.push(files);
-            }
-        },
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -82,5 +73,5 @@ const DBObjectSlice = createSlice({
     },
 })
 
-export const { setNewEmptyDBObject, setNewDBObject, setDBObject, setEditedAttrs, setPersistentAttrs, editDBObjectAttr, addFilesToUpload } = DBObjectSlice.actions;
+export const { setNewEmptyDBObject, setNewDBObject, setDBObject, setEditedAttrs, setPersistentAttrs, editDBObjectAttr } = DBObjectSlice.actions;
 export default DBObjectSlice.reducer;

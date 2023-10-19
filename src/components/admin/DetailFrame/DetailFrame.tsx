@@ -11,7 +11,9 @@ type DetailFrameProps = {
 	hideDetailFrame: MouseEventHandler<HTMLInputElement>
 	formSubmitted: FormEventHandler<HTMLFormElement>
 	setErrorMsg: Function
-	updateDBObject: Function 
+	updateDBObject: Function,
+    filesToUpload: File[] | undefined,
+    setFilesToUpload: Function
 }
 
 const DetailFrame: FC<DetailFrameProps> = ({ 
@@ -21,7 +23,9 @@ const DetailFrame: FC<DetailFrameProps> = ({
 	hideDetailFrame,
 	formSubmitted,
 	setErrorMsg,
-	updateDBObject
+	updateDBObject,
+    filesToUpload,
+    setFilesToUpload
 }) => {
     const getInput = (componentType: DetailFrameComponentType, attrs) => {
         switch (componentType) {
@@ -90,7 +94,7 @@ const DetailFrame: FC<DetailFrameProps> = ({
                     } else if (component.componentType == DetailFrameComponentType.FileChooser) {                        
                         let initLabel = DBManager.getAttrFromArrByKey(DBObject.attributes, component.attributeKey)?.value || "";
                         return (
-                            <FileChooserContainer key={"input-" + i} id={component.attributeKey} onChange={updateDBObject} initLabel={initLabel} />
+                            <FileChooserContainer key={"input-" + i} id={component.attributeKey} onChange={updateDBObject} initLabel={initLabel} filesToUpload={filesToUpload} setFilesToUpload={setFilesToUpload}  />
                         )
                     } else if (component.componentType == DetailFrameComponentType.RichTextField) {
                         const inputRef = createRef<HTMLTextAreaElement>();

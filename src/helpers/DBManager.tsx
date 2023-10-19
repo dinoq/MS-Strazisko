@@ -75,7 +75,6 @@ export class DBManager {
             attributes: (DBOClass == undefined || DBOClass == "") ? [] : DBManager.getDBObjectDefinition(DBOClass).attributes,
             persistentAttributes: (DBOClass == undefined || DBOClass == "") ? [] : DBManager.getDBObjectDefinition(DBOClass).persistentAttributes,
             editedAttrs: [],
-            filesToUpload: [],
             isEdited: false
         }
 
@@ -94,7 +93,6 @@ export class DBManager {
             }),
             persistentAttributes: clone(DBObject.persistentAttributes),
             editedAttrs: [],
-            filesToUpload: [],
             isEdited: false
         }
 
@@ -225,21 +223,21 @@ export class DBManager {
 
     }
 
-    public static insertToDB = async (body: any, reload: boolean = true): Promise<any> => {
+    public static insertToDB = async (body: any, reload: boolean = true): Promise<string> => {
         return await DBManager.fetchDB(body, "POST", reload);
     }
-    public static updateInDB = async (body: any, reload: boolean = true): Promise<any> => {
+    public static updateInDB = async (body: any, reload: boolean = true): Promise<string> => {
         return await DBManager.fetchDB(body, "PATCH", reload);
     }
-    public static deleteInDB = async (body: any, reload: boolean = true): Promise<any> => {
+    public static deleteInDB = async (body: any, reload: boolean = true): Promise<string> => {
         return await DBManager.fetchDB(body, "DELETE", reload);
     }
 
-    protected static fetchDB = async (body: any, method: string, reload: boolean = true): Promise<any> => {
+    protected static fetchDB = async (body: any, method: string, reload: boolean = true): Promise<string> => {
         return await DBManager.callAPI("data", JSON.stringify(body), method, reload, "application/json");
     }
 
-    protected static callAPI = async (handlerName: string, body: any, method: string, reload: boolean, contentType: string | undefined): Promise<any> => {
+    protected static callAPI = async (handlerName: string, body: any, method: string, reload: boolean, contentType: string | undefined): Promise<string> => {
         let init: RequestInit =
         {
             method,
@@ -285,7 +283,7 @@ export class DBManager {
         }
     }
 
-    public static runServerMethod = async (methodName: string, params: Array<string>, reload: boolean = true): Promise<any> => {
+    public static runServerMethod = async (methodName: string, params: Array<string>, reload: boolean = true): Promise<string> => {
         let body = {
             methodName,
             params
@@ -293,7 +291,7 @@ export class DBManager {
         return await DBManager.callAPI("method", JSON.stringify(body), "POST", reload, "application/json");
     }
 
-    public static sendFiles = async (files: Array<File>, path: string): Promise<any> => {
+    public static sendFiles = async (files: Array<File>, path: string): Promise<string> => {
         const body = new FormData();
         let index = 0;
         for (const file of files) {

@@ -1,4 +1,4 @@
-import { FC, MouseEventHandler } from "react";
+import { FC, MouseEventHandler, useState } from "react";
 import { useSelector } from "react-redux";
 import { DetailFrameComponentType, DetailFrameMode } from "../../../helpers/constants";
 import { DBManager } from "../../../helpers/DBManager";
@@ -25,12 +25,15 @@ const DetailFrameContainer: FC<DetailFrameContainerProps> = ({
     let DBOClass = useSelector((state: RootState) => selectActualDBOClass(state));
     const DBObject = useSelector((state: RootState) => state.dbObject);
 
+    
+    const [filesToUpload, setFilesToUpload] = useState<File[] | undefined>(undefined);
+
     const formSubmitted = async (event) => {
         event.preventDefault();
         let conditionError = "";
-        formDefinition.detailFrame.components.forEach((component, index, array) => {
+        formDefinition.detailFrame.components.forEach((component) => {
             if (component.constraints) {
-                component.constraints.forEach((constraint, index, array) => {
+                component.constraints.forEach((constraint) => {
                     let subtituted = constraint.condition.replaceAll("$", "DBObject.editedAttrs[DBObject.editedAttrs.findIndex(attr=>attr.key=='" + component.attributeKey + "')].value");
                     if (!eval(subtituted)) {
                         conditionError = constraint.errMsgIfFail;
@@ -65,31 +68,30 @@ const DetailFrameContainer: FC<DetailFrameContainerProps> = ({
         if (mode == DetailFrameMode.EDITING_ENTRY) {
             body["updateId"] = DBObject.id;
             body["primaryKey"] = DBObject.attributes[0].key;
-            resultErr = await DBManager.updateInDB(body, (!afterSaveMethod && !DBObject.filesToUpload.length));
+            resultErr = await DBManager.updateInDB(body, (!afterSaveMethod && !filesToUpload.length));
         } else {
-            resultErr = await DBManager.insertToDB(body, (!afterSaveMethod && !DBObject.filesToUpload.length));
+            resultErr = await DBManager.insertToDB(body, (!afterSaveMethod && !filesToUpload.length));
         }
 
-        if ((!resultErr || !resultErr.length) && DBObject.filesToUpload.length) {
+        if (!resultErr && filesToUpload.length) {
             let notSubstitutedPathComponent = formDefinition.detailFrame.components.find(c => c.componentSpecificProps?.path)
             const path = DBManager.substituteExpression(notSubstitutedPathComponent?.componentSpecificProps?.path, DBObject);
 
-            if (DBObject.filesToUpload.length > 1) {
-                throw new Error("multiple files not implemented! Bude potreba vymyslet cesty...Asi by se měly do parametru filename nějak ukládat všechny nazvy souborů...")
-            }
-            resultErr = await DBManager.sendFiles(DBObject.filesToUpload, path);
+            resultErr = await DBManager.sendFiles(filesToUpload, path);
 
             if (mode == DetailFrameMode.EDITING_ENTRY) {
-                let fileComponents = getFileComponents(formDefinition.listFrame);
+                console.error("TODO - zřejmě odkomentovat následující čast, příp. dořešit");
+                throw new Error("TODO - zřejmě odkomentovat následující čast, příp. dořešit");
+                /*let fileComponents = getFileComponents(formDefinition.listFrame);
                 if (fileComponents.length) {
                     let evaluated = DBManager.substituteExpression(fileComponents[0].transformation, DBObject, true);
                     resultErr = await DBManager.runServerMethod("deleteFile", [evaluated]);
-                }
+                }*/
             }
 
         }
 
-        if (resultErr && typeof resultErr == "string" && resultErr.length) {
+        if (resultErr) {
             if (resultErr.includes("UNIQUE constraint failed") && formDefinition?.detailFrame?.uniqueConstraintFailed?.length) {
                 setErrorMsg(formDefinition.detailFrame.uniqueConstraintFailed);
             } else {
@@ -127,7 +129,7 @@ const DetailFrameContainer: FC<DetailFrameContainerProps> = ({
     }
 
     return (
-        <DetailFrame DBObject={DBObject} definition={formDefinition} mode={mode} hideDetailFrame={hideDetailFrame} formSubmitted={formSubmitted} setErrorMsg={setErrorMsg} updateDBObject={updateDBObject} />
+        <DetailFrame DBObject={DBObject} definition={formDefinition} mode={mode} hideDetailFrame={hideDetailFrame} formSubmitted={formSubmitted} setErrorMsg={setErrorMsg} updateDBObject={updateDBObject} filesToUpload={filesToUpload} setFilesToUpload={setFilesToUpload} />
     )
 }
 

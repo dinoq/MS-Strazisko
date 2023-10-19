@@ -12,7 +12,6 @@ export interface DBObjectType {
     attributes: Array<DBObjectAttr>,
     persistentAttributes: Array<DBObjectAttr>,
     editedAttrs: Array<DBObjectAttr>,
-    filesToUpload: Array<File>,
     isEdited: boolean
 }
 
