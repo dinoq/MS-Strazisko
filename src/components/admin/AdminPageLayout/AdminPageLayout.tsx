@@ -72,7 +72,7 @@ const AdminPageLayout: FC<AdminPageLayoutProps> = ({
                                     </li>
                                     <li>
                                         <Link href={PATHS.PUBLIC_PHOTOS} className={"link" + (pathname === PATHS.PUBLIC_PHOTOS? " active" : "")}>
-                                            Foto
+                                            Veřejné foto
                                         </Link>
                                     </li>
                                 </ul>

@@ -22,8 +22,9 @@ const handler = async (req, res) => {
                     const path = fields["path" + i];
                     await saveFile(files[key], path);
                 }
+
+                return res.status(200).send("asd");
             });
-            return res.status(200).send("asd");
 
         } catch (error) {
             return res.status(500).send("ERROR - cannot parse submitted form!");

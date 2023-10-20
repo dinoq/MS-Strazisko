@@ -13,6 +13,7 @@ import Dialog from "../Dialogs/TwoChoiceDialog";
 import ListFrame from "./ListFrame";
 import { setEntries } from "../../../store/reducers/EntrySlice";
 import { selectActualFormDefinition } from "../../../store/formDefReducer/selector";
+import { ListFrameComponentType } from "../../../helpers/constants";
 
 type ListFrameContainerProps = {
     editItemHandler: Function,
@@ -96,10 +97,13 @@ const ListFrameContainer: FC<ListFrameContainerProps> = ({
 
             }
             let fileComponents = getFileComponents(formDefinition.listFrame);
-            if (fileComponents.length) {
-                let evaluated = DBManager.substituteExpression(fileComponents[0].transformation, item);
-
+            for(const component of fileComponents){
+                let evaluated = DBManager.substituteExpression(component.transformation, item);
                 resultErr = await DBManager.runServerMethod("deleteFile", [evaluated]);
+                if(component.componentType === ListFrameComponentType.ImagePreview){ // thumbnail was deleted and now delete "main" image
+                    evaluated = evaluated.replace("/thumbnails", "");
+                    resultErr = await DBManager.runServerMethod("deleteFile", [evaluated]);
+                }
 
             }
 

@@ -93,25 +93,16 @@ const handler = async (req, res) => {
                 if (!fs.existsSync(thumbnailsDirPath)) {
                     fs.mkdirSync(thumbnailsDirPath, { recursive: true });
                 }
-                
-                let fileData: any = await fs.readFileSync(originalFilePath);
+                let fileData = await fs.readFileSync(originalFilePath);
                 await (sharp(fileData)
                     .resize({
                         fit: sharp.fit.inside,
                         width: 200,
                         height: 200,
                     }).webp({ quality: 80 })
-                    .toFile(thumbnailsDirPath + "/" + filename));
-                    console.log('thumbnailsDirPath + "/" + filename: ', thumbnailsDirPath + "/" + filename);
-
-/*
-                if (fs.existsSync(path)) {
-                    let result = fs.unlinkSync(path)
-                    return res
-                        .status(200).send("File deleted.");
-                }*/
+                    .toFile(thumbnailsDirPath + filename));
                 return res
-                    .status(404).send("File not found!");
+                    .status(200).send("Thumbnail created.");
                 break;
             default:
                 return res
