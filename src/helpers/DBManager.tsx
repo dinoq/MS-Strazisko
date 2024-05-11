@@ -19,7 +19,7 @@ export class DBManager {
             let response: any = await fetch(getApiURL("/admin/forms"),
                 {
                     method: "GET",
-                    mode: "same-origin"
+                    mode: "same-site"
                 })
 
             try {

@@ -7,8 +7,10 @@ var hostname = os.hostname();
 const getEnvDomain = () => {
     let url = "";
     const production = process.env.NODE_ENV === 'production';
+    console.log('production: ', production);
     if(hostname){ // server is asking
-        if(hostname.includes("ms-strazsiko")){// production
+        console.log('hostname: ', hostname);
+        if(hostname.includes("ms-strazisko")){// production
             const protocol = (production)? "https" : "http";
             url = protocol + "://admin.ms-strazisko.cz";
         }else{ // localhost
