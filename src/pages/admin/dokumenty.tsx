@@ -1,4 +1,4 @@
-import { withIronSessionSsr } from "iron-session/next";
+
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -6,6 +6,9 @@ import { FC, MouseEventHandler, useState } from 'react';
 import AppTable from '../../../src/components/Table/Table';
 import { getApiURL } from '../../../src/helpers/utils';
 import classes from "./dokumenty.module.scss";
+import { cookies } from 'next/headers';
+import { getIronSession } from 'iron-session';
+import { sessionOptions } from '../../helpers/sessionConfig';
 
 
 const AdminDocumentsPage: NextPage = (props: any) => {
@@ -71,17 +74,17 @@ const AdminDocumentsPage: NextPage = (props: any) => {
             };
 
         })
-/*
-    bodyRows.unshift({
-        items: [{
-            colspan: 4,
-            content: (<>
-                {!fileManagerVisible && <span className={"link " + "add-document-btn mb-3"} onClick={showFileManager}>Přidat nový dokument</span>}
-                {fileManagerVisible && <NewDocumentManager hideFileManager={hideFileManager} />}
-            </>),
-            className: "text-center"
-        }]
-    })*/
+    /*
+        bodyRows.unshift({
+            items: [{
+                colspan: 4,
+                content: (<>
+                    {!fileManagerVisible && <span className={"link " + "add-document-btn mb-3"} onClick={showFileManager}>Přidat nový dokument</span>}
+                    {fileManagerVisible && <NewDocumentManager hideFileManager={hideFileManager} />}
+                </>),
+                className: "text-center"
+            }]
+        })*/
 
     return (
         <div className={""}>
@@ -131,7 +134,7 @@ const NewDocumentManager: FC<NewDocumentManagerProps> = ({
 
     const uploadToServer = async (event) => {
         event.preventDefault();
-        if(file == undefined){
+        if (file == undefined) {
             throw new Error("file is undefined!");
         }
         const body = new FormData();
@@ -183,7 +186,7 @@ type ModalProps = {
 }
 
 const Modal: FC<ModalProps> = ({
-    cancelDeletion, 
+    cancelDeletion,
     deleteDocument,
     deletedDocumentName
 }) => {
@@ -208,33 +211,26 @@ const Modal: FC<ModalProps> = ({
     )
 }
 
-export const getServerSideProps = withIronSessionSsr(
-    async ({ req, res }) => {
-        const adminLogged: boolean | undefined = req.session.adminLogged;
+export const getServerSideProps = async (context) => {
+    const { req, res } = context;
+    const session = await getIronSession(req, res, sessionOptions);
+    const adminLogged: boolean | undefined = (session as any).adminLogged;
 
-        if (adminLogged
-        ) {
+    if (adminLogged
+    ) {
 
-            let docs = await (await fetch(getApiURL("getDocuments"))).json();
-            return {
-                props: { docs },
-            };
-        } else {
-            return {
-                redirect: {
-                    destination: '/admin/login',
-                    permanent: false,
-                }
-            };
-        }
-    },
-    {
-        cookieName: "myapp_cookiename",
-        cookieOptions: {
-            secure: process.env.NODE_ENV === "production" ? true : false,
-        },
-        password: "P5hBP4iHlvp6obqtWK0mNuMrZow5x6DQV61W3EUG",
+        let docs = await (await fetch(getApiURL("getDocuments"))).json();
+        return {
+            props: { docs },
+        };
+    } else {
+        return {
+            redirect: {
+                destination: '/admin/login',
+                permanent: false,
+            }
+        };
     }
-);
+}
 
 export default AdminDocumentsPage;

@@ -1,12 +1,15 @@
-import { withIronSessionApiRoute } from "iron-session/next";
+
 import Database from "better-sqlite3";
 import { DBObjectType, DBObjectAttr } from "../../../helpers/types";
-import { checkIfLettersSlashUnderscoreUndef, checkIfNotDangerSQL } from "../../../helpers/utils";
+import { isValidClassName, checkIfNotDangerSQL } from "../../../helpers/utils";
 import { getRawDBObjectDefinition } from "../../../../database/definitions/db-object-definitions";
+import { getIronSession } from "iron-session";
+import { sessionOptions } from "../../../helpers/sessionConfig";
 
 
 const handler = async (req, res) => {
-    const adminLogged: boolean = await req.session.adminLogged;
+    const session = await getIronSession(req, res, sessionOptions);
+    const adminLogged: boolean = await (session as any).adminLogged;
     if (!adminLogged) {
         res.status(401).send("Unauthorized!");
         return;
@@ -24,7 +27,7 @@ const handler = async (req, res) => {
         condition = condition.length ? (" " + condition.trim()) : "";
         const order: string = req.query["order"] || "";
 
-        if (!checkIfLettersSlashUnderscoreUndef(className) || !checkIfNotDangerSQL([condition, order])) { // bezpečnostní pojistka
+        if (!isValidClassName(className) || !checkIfNotDangerSQL([condition, order])) { // bezpečnostní pojistka
             db.close();
             return res.status(500).send("ERROR - wrong data className, condition or order!");
         }
@@ -73,7 +76,7 @@ const handler = async (req, res) => {
         const className = req.body["className"];
         const attrs = req.body["attributes"];
         
-        if (!checkIfLettersSlashUnderscoreUndef(className) || !attrs || Array.isArray(attrs) || typeof attrs != "object") { // bezpečnostní pojistka
+        if (!isValidClassName(className) || !attrs || Array.isArray(attrs) || typeof attrs != "object") { // bezpečnostní pojistka
             db.close();
             return res.status(500).send("ERROR - wrong data className or attribute!");
         }
@@ -100,6 +103,7 @@ const handler = async (req, res) => {
             const info = stmt.run([...Object.values(attrs)]);
         } catch (error) {
             db.close();
+            console.log("ERROR 2! " + error);
             return res.status(500).send((process.env.NODE_ENV === "production" ? "Došlo k neznámé chybě!" : ("ERROR 2! " + error)));
         }
         db.close();
@@ -110,7 +114,7 @@ const handler = async (req, res) => {
         const updateId = req.body["updateId"];
         const primaryKey: string = req.body["primaryKey"];
 
-        if (!checkIfLettersSlashUnderscoreUndef([className, updateId, primaryKey]) || !attrs || Array.isArray(attrs) || typeof attrs != "object") { // bezpečnostní pojistka
+        if (!isValidClassName([className, updateId, primaryKey]) || !attrs || Array.isArray(attrs) || typeof attrs != "object") { // bezpečnostní pojistka
             console.log('attrs: ', attrs);
             console.log('className, updateId, primaryKey: ', className, updateId, primaryKey);
             db.close();
@@ -141,7 +145,7 @@ const handler = async (req, res) => {
         const deleteId: string = req.body["deleteId"].toString();
         const forceDelete: boolean = req.body["forceDelete"];
         const forceDeleteItemMsg: string = req.body["forceDeleteItemMsg"];
-        if (!checkIfLettersSlashUnderscoreUndef([className, detailClass, primaryKey, deleteId])) { // bezpečnostní pojistka
+        if (!isValidClassName([className, detailClass, primaryKey, deleteId])) { // bezpečnostní pojistka
             return res.status(500).send("ERROR - wrong data className, detailClass, primaryKey or deleteId!");
         }
         if (!className || !primaryKey || !deleteId) {
@@ -171,6 +175,7 @@ const handler = async (req, res) => {
             stmt.run(deleteId);
         } catch (error) {
             db.close();
+            console.log("ERROR 1! " + error);
             return res.status(500).send((process.env.NODE_ENV === "production" ? "Došlo k neznámé chybě!" : ("ERROR 1! " + error)));
         }
         db.close();
@@ -182,10 +187,4 @@ const handler = async (req, res) => {
 }
 
 
-export default withIronSessionApiRoute(handler, {
-    cookieName: "myapp_cookiename",
-    cookieOptions: {
-        secure: process.env.NODE_ENV === "production" ? true : false
-    },
-    password: "P5hBP4iHlvp6obqtWK0mNuMrZow5x6DQV61W3EUG",
-});
+export default handler;

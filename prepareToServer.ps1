@@ -18,7 +18,7 @@ $excludedFilesAndDirectories = @(
     ".nginx"
     ".vscode"
     "database\database.db"
-    "filesForServer"
+    ".filesForServer"
     "node_modules"
     "public\dokumenty"
     "public\img\albums"

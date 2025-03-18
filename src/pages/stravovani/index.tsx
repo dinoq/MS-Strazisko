@@ -6,46 +6,82 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 type StravovaniProps = {
-    
+
 }
 
 const Stravovani: React.FC<StravovaniProps> = ({
 
 }) => {
-    const [imgUrls, setImgUrls] = useState<Array<{img_url: string}>>([]);
-    useEffect(() => {
-        fetch("/api/data?table=food").then((data) => {
+    const [menuData, setMenuData] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-            data.json().then(json => {
-                setImgUrls(json.food);
-            })
-        })
-    }, [])
-    return <>
-        <div className="container-fluid">
-            <div className="row justify-content-center">
-                <div className="col-12 col-md-10">
-                    <h1 className="text-center mb-4">Stravování</h1>
-                    <div className={classes.allergens + " position-relative"}>
-                        <Link href={allergens.src} target="_blank"><h2>Seznam alergenů</h2>{/*<Image src={allergens} alt="Seznam alergenů" layout="fill" objectFit="contain" />*/}</Link>
-                    </div>
-                    {imgUrls.map((img, index)=>{
-                        return (
-                            <div key={"food-"+index} className={classes.food + " position-relative"}>
-                                <Link href={img.img_url} target="_blank"><Image src={img.img_url} alt="Seznam alergenů" layout="fill" objectFit="contain" /></Link>
-                            </div>
-                        );
-                    })}
-                    {/* <div className={classes.food + " position-relative"}>
-                        <Link href={food1.src}><a target="_blank"><Image src={food1} alt="Seznam alergenů" layout="fill" objectFit="contain" /></a></Link>
-                    </div>
-                    <div className={classes.food + " position-relative"}>
-                        <Link href={food2.src}><a target="_blank"><Image src={food2} alt="Seznam alergenů" layout="fill" objectFit="contain" /></a></Link>
-                    </div> */}
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch("https://www.strava.cz/strava5/Jidelnicky/XML?zarizeni=4129");
+                const text = await response.text();
+                const parser = new DOMParser();
+                const xml = parser.parseFromString(text, "application/xml");
+
+                const days = Array.from(xml.getElementsByTagName("den")).map((day) => {
+                    const date = day.getAttribute("datum");
+                    const meals = Array.from(day.getElementsByTagName("jidlo")).map((meal) => ({
+                        name: meal.getAttribute("nazev"),
+                        type: meal.getAttribute("druh"),
+                        allergens: meal.getAttribute("alergeny"),
+                    }));
+                    return { date, meals };
+                });
+
+                setMenuData(days);
+            } catch (error) {
+                console.error("Error fetching or parsing XML:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    if (loading) {
+        return <p>Načítám data...</p>;
+    }
+    return (
+
+        <div>
+            <h1>Jídelní lístek</h1>
+            {menuData.length === 0 ? (
+                <p>Žádná data nejsou k dispozici.</p>
+            ) : (
+                <div>
+                    {menuData.map((day) => (
+                        <div key={day.date} className="mb-4">
+                            <h2 className="font-bold text-xl mb-2">Datum: {day.date}</h2>
+                            <table className="table-auto border-collapse border border-gray-300 w-full">
+                                <thead>
+                                    <tr>
+                                        <th className="border border-gray-300 px-4 py-2">Jídlo</th>
+                                        <th className="border border-gray-300 px-4 py-2">Typ</th>
+                                        <th className="border border-gray-300 px-4 py-2">Alergeny</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {day.meals.map((meal, index) => (
+                                        <tr key={index}>
+                                            <td className="border border-gray-300 px-4 py-2">{meal.name}</td>
+                                            <td className="border border-gray-300 px-4 py-2">{meal.type}</td>
+                                            <td className="border border-gray-300 px-4 py-2">{meal.allergens || "Žádné"}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    ))}
                 </div>
-            </div>
+            )}
         </div>
-    </>;
+    )
 }
 
 export default Stravovani;

@@ -26,7 +26,7 @@ const DetailFrameContainer: FC<DetailFrameContainerProps> = ({
     const DBObject = useSelector((state: RootState) => state.dbObject);
 
     
-    const [filesToUpload, setFilesToUpload] = useState<File[] | undefined>(undefined);
+    const [filesToUpload, setFilesToUpload] = useState<File[]>([]);
 
     const formSubmitted = async (event) => {
         event.preventDefault();

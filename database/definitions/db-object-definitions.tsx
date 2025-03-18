@@ -1,4 +1,3 @@
-import { DBManager } from "../../src/helpers/DBManager";
 import { DBObjectType, DBOClassType, RecursivePartial } from "../../src/helpers/types";
 
 /**

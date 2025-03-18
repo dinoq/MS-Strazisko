@@ -1,6 +1,6 @@
-import { withIronSessionApiRoute } from "iron-session/next";
+
 import Database from "better-sqlite3";
-import { checkIfLettersSlashUnderscoreUndef, checkIfNotDangerSQL } from "../../helpers/utils";
+import { isValidClassName, checkIfNotDangerSQL } from "../../helpers/utils";
 
 const fakeTables = ["events", "teachers", "public_images", "contact_texts", "food", "intro"];
 const realTables = ["Event", "Teacher", "PublicPhoto", "ContactText", "Food", "IntroText"];
@@ -39,7 +39,7 @@ async function handler(req, res) {
             for(const tbl of tables){
                 const table =  mapTables(tbl, true);
                 
-                if (!checkIfLettersSlashUnderscoreUndef(table) || !checkIfNotDangerSQL(table)) { // bezpečnostní pojistka
+                if (!isValidClassName(table) || !checkIfNotDangerSQL(table)) { // bezpečnostní pojistka
                     db.close();
                     return res.status(500).send("ERROR - wrong data className, condition or order!");
                 }
@@ -69,10 +69,4 @@ async function handler(req, res) {
 
 }
 
-export default withIronSessionApiRoute(handler, {
-    cookieName: "myapp_cookiename",
-    cookieOptions: {
-        secure: process.env.NODE_ENV === "production" ? true : false
-    },
-    password: "P5hBP4iHlvp6obqtWK0mNuMrZow5x6DQV61W3EUG",
-});
+export default handler;

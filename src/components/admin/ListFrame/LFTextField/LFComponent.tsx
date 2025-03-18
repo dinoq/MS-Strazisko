@@ -30,7 +30,7 @@ const LFComponent: FC<LFComponentProps> = ({
         return (
             <div className={""}>
                 <div className="ImagePreview">
-                    <Image src={evaluated} alt="Náhled obrázku" layout="fill" objectFit="contain" />
+                    <Image src={evaluated} alt="Náhled obrázku" layout="fill" objectFit="contain" unoptimized/>
                 </div>
             </div>
         )

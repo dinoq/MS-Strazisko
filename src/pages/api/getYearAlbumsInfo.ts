@@ -1,12 +1,15 @@
-import { withIronSessionApiRoute } from "iron-session/next";
+
 import Database from "better-sqlite3";
+import { getIronSession } from "iron-session";
+import { sessionOptions } from "../../helpers/sessionConfig";
 
 
 const handler = async (req, res) => {
   const pageYear = req.query["year"].replace("_", "/");
   const limit = req.query["limit"];
 
-  const loggedForYears: Array<any> = await req.session.loggedForYears;
+  const session = await getIronSession(req, res, sessionOptions);
+  const loggedForYears: Array<any> = await (session as any).loggedForYears;
   if (!loggedForYears || !loggedForYears.length || !loggedForYears.includes(pageYear)) {
     res.status(401).send("Unauthorized!");
     return;
@@ -42,10 +45,4 @@ const handler = async (req, res) => {
   })
 }
 
-export default withIronSessionApiRoute(handler, {
-  cookieName: "myapp_cookiename",
-  cookieOptions: {
-    secure: process.env.NODE_ENV === "production" ? true : false
-  },
-  password: "P5hBP4iHlvp6obqtWK0mNuMrZow5x6DQV61W3EUG",
-});
+export default handler;

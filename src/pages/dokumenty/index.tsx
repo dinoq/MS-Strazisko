@@ -28,7 +28,7 @@ const Dokumenty = ({
     </>;
 }
 
-export const getServerSideProps = async (req, res) =>{
+export const getServerSideProps = async (_context) => {
     let docs = await(await fetch(getApiURL("getDocuments"))).json();
 
     return {

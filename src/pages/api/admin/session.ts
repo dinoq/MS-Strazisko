@@ -1,34 +1,33 @@
-import { withIronSessionApiRoute } from "iron-session/next";
-
+// pages/api/admin/session.ts
+import { getIronSession } from "iron-session";
+import { sessionOptions } from "../../../helpers/sessionConfig"; // Adjust the path accordingly
 
 async function handler(req, res) {
+    const session = await getIronSession(req, res, sessionOptions);
     if (req.method === "POST") {
         const { username, password } = req.body;
         if (password === "skolkaAdmin1" && username && username === "admin") {
-            req.session.adminLogged = true;
-            await req.session.save();
-            return res.status(200).send("Successfully logged in.");
+            (session as any).adminLogged = true;
+            await session.save();
+            res.send({ ok: true });
         } else {
+            console.log('Forbidden access attempt with username: ', username);
             return res.status(403).send("Forbidden!");
         }
     } else if (req.method === "DELETE") {
         try {
-          req.session.adminLogged = false; 
-          await req.session.save();
-          return res.status(200).send("Successfully logged out.");
+            //const session = await getIronSession(req, res, sessionOptions);
+            (session as any).adminLogged = false; 
+            await session.save();
+            return res.status(200).send("Successfully logged out.");
         } catch (error) {
-          return res.status(501).send("Internal Server Error!");
+            console.error('Error saving session: ', error);
+            return res.status(501).send("Internal Server Error!");
         }
     } else {
+        console.log('Method Not Allowed');
         return res.status(405).send("Method Not Allowed!");
     }
 }
 
-export default withIronSessionApiRoute(handler, {
-    password: "P5hBP4iHlvp6obqtWK0mNuMrZow5x6DQV61W3EUG",
-    cookieName: "myapp_cookiename",
-    // if your localhost is served on http:// then disable the secure flag
-    cookieOptions: {
-        secure: process.env.NODE_ENV === "production",
-    },
-});
+export default handler;

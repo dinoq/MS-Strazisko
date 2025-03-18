@@ -1,17 +1,26 @@
-import { withIronSessionApiRoute } from "iron-session/next";
+import { getIronSession } from "iron-session";
+import { sessionOptions } from "../../helpers/sessionConfig";
+
 
 async function handler(req, res) {
   //TODO získat heslo pro daný rok z DB
   
   const { pwd, year } = req.body;
+  console.log('pwd: ', pwd);
   const rigtPwd = "skolka" + year.substring(0, 4);
+  console.log('rigtPwd: ', rigtPwd);
   
   if (req.method === "POST" && pwd === rigtPwd && year) {
-    let prevLoggedForYears = req.session.loggedForYears;
+    const session = await getIronSession(req, res, sessionOptions);
+    console.log('session1: ', session);
+    let prevLoggedForYears = (session as any).loggedForYears;
+    console.log('prevLoggedForYears2: ', prevLoggedForYears);
     prevLoggedForYears ??= [];
+    console.log('prevLoggedForYears3: ', prevLoggedForYears);
     if(!prevLoggedForYears.includes(year)){
-      req.session.loggedForYears = [...prevLoggedForYears, year]; 
-      await req.session.save();
+        (session as any).loggedForYears = [...prevLoggedForYears, year]; 
+        console.log('prevLoggedForYears4: ', (session as any).loggedForYears);
+        await session.save();
     }
 
     return res.status(200).send("");
@@ -20,11 +29,4 @@ async function handler(req, res) {
   }
 }
 
-export default withIronSessionApiRoute(handler, {
-  password: "P5hBP4iHlvp6obqtWK0mNuMrZow5x6DQV61W3EUG",
-  cookieName: "myapp_cookiename",
-  // if your localhost is served on http:// then disable the secure flag
-  cookieOptions: {
-    secure: process.env.NODE_ENV === "production",
-  },
-});
+export default handler;

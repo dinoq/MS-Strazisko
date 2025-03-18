@@ -17,7 +17,7 @@ const Teacher: React.FC<TeacherProps> = ({
     return (
         <div className="d-flex flex-column align-items-center">
             <div className={classes["photo-container"] + " position-relative"}>
-                <Image src={imgSrc} alt={"fotka učitele/ky"} layout="fill" objectFit="cover" />
+                <Image src={imgSrc} alt={"fotka učitele/ky"} layout="fill" objectFit="cover" unoptimized/>
             </div>
             <div className={classes["text-container"] + " d-flex justify-content-center"}>
                 <div className={classes.text + " "}>

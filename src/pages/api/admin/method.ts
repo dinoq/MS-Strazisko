@@ -1,7 +1,9 @@
-import { withIronSessionApiRoute } from "iron-session/next";
+
 import Database from "better-sqlite3";
 import fs from "fs";
+import { getIronSession } from "iron-session";
 import sharp from "sharp";
+import { sessionOptions } from "../../../helpers/sessionConfig";
 
 const knownMethods = {
     createDirectoryIfNotExist: {
@@ -19,7 +21,8 @@ const knownMethods = {
 };
 
 const handler = async (req, res) => {
-    const adminLogged: boolean = await req.session.adminLogged;
+    const session = await getIronSession(req, res, sessionOptions);
+    const adminLogged: boolean = await (session as any).adminLogged;
     if (!adminLogged) {
         res.status(401).send("Unauthorized!");
         return;
@@ -59,11 +62,15 @@ const handler = async (req, res) => {
         switch (knownMethods[methodName]) {
             case knownMethods.createDirectoryIfNotExist:
                 path = "./public/" + params[0];
+                console.log('pathX', path);
                 if (!fs.existsSync(path)) {
+                    console.log('pathX, !exist:: ', path);
                     let newDirPath = fs.mkdirSync(path, { recursive: true });
                     return res
                         .status(200).send("Directory created.");
                 }
+                return res
+                    .status(200).send("OK");
                 break;
             case knownMethods.deleteDirectory:
                 path = "./public/" + params[0];
@@ -125,10 +132,4 @@ const handler = async (req, res) => {
     }
 };
 
-export default withIronSessionApiRoute(handler, {
-    cookieName: "myapp_cookiename",
-    cookieOptions: {
-        secure: process.env.NODE_ENV === "production" ? true : false,
-    },
-    password: "P5hBP4iHlvp6obqtWK0mNuMrZow5x6DQV61W3EUG",
-});
+export default handler;

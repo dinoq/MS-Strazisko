@@ -1,6 +1,6 @@
-import { withIronSessionApiRoute } from "iron-session/next";
+
 import Database from "better-sqlite3";
-import { checkIfLettersSlashUnderscoreUndef } from "../../../helpers/utils";
+import { isValidClassName } from "../../../helpers/utils";
 
 
 const handler = async (req, res) => {
@@ -19,7 +19,7 @@ const handler = async (req, res) => {
 	if (req.method == "GET") {
 		const className: string = req.query["className"];
         
-		if (!checkIfLettersSlashUnderscoreUndef(className)) { // bezpečnostní pojistka
+		if (!isValidClassName(className)) { // bezpečnostní pojistka
 			db.close();
 			return res.status(500).send("ERROR - wrong data className!");
 		}
@@ -49,10 +49,4 @@ const handler = async (req, res) => {
 }
 
 
-export default withIronSessionApiRoute(handler, {
-	cookieName: "myapp_cookiename",
-	cookieOptions: {
-		secure: process.env.NODE_ENV === "production" ? true : false
-	},
-	password: "P5hBP4iHlvp6obqtWK0mNuMrZow5x6DQV61W3EUG",
-});
+export default handler;

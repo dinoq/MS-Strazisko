@@ -1,4 +1,4 @@
-import { withIronSessionApiRoute } from "iron-session/next";
+//Pravděpodobně se nepoužívá a možno smazat
 import Database from "better-sqlite3";
 import fs from "fs";
 
@@ -47,10 +47,4 @@ const handler = async (req, res) => {
   }
 }
 
-export default withIronSessionApiRoute(handler, {
-  cookieName: "myapp_cookiename",
-  cookieOptions: {
-    secure: process.env.NODE_ENV === "production" ? true : false
-  },
-  password: "P5hBP4iHlvp6obqtWK0mNuMrZow5x6DQV61W3EUG",
-});
+export default handler;

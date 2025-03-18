@@ -11,7 +11,7 @@ const getEnvDomain = () => {
     if(hostname){ // server is asking
         console.log('hostname: ', hostname);
         if(hostname.includes("ms-strazisko")){// production
-            const protocol = (production)? "https" : "http";
+            const protocol = (production)? "https" : "https";
             url = protocol + "://admin.ms-strazisko.cz";
         }else{ // localhost
             url = "http://localhost:3000";
@@ -30,7 +30,12 @@ export const getApiURL = (url: string) => {
     return apiUrl;
 }
 
-export const checkIfLettersSlashUnderscoreUndef = (words: string | Array<string>) => {
+/**
+ * Kontrola, zda jde o validní formát názvu db třídy. Příp. je možné použít na kontrolu i jiných věcí. Vrací true, pokud předaný název (/názvy) obsahuje pouze písmena/čísla/podtržítko, či se jedná o undefined nebo prázdný řetězec (TODO opravdu undefined a prázdný řetězec má vyhovovat...?)
+ * @param words Název nebo pole názvů ke kontrole
+ * @returns True pokud se jedná o validní formát názvu db třídy
+ */
+export const isValidClassName = (words: string | Array<string>) => {
     const check = (w)=>{
         const word = (typeof w == "number")? (w as number).toString() : w;
         return word == undefined || typeof word == "string" && (word.match(/^[A-Za-z_/0-9]*$/) || word.length == 0);

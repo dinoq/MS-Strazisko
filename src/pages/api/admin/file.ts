@@ -1,4 +1,4 @@
-import { withIronSessionApiRoute } from "iron-session/next";
+// TODO autentizace...?
 import formidable from "formidable";
 import fs from "fs";
 import sharp from "sharp"
@@ -63,10 +63,4 @@ const saveFile = async (file, url) => {
     return;
 };
 
-export default withIronSessionApiRoute(handler, {
-    cookieName: "myapp_cookiename",
-    cookieOptions: {
-        secure: process.env.NODE_ENV === "production" ? true : false,
-    },
-    password: "P5hBP4iHlvp6obqtWK0mNuMrZow5x6DQV61W3EUG",
-});
+export default handler;

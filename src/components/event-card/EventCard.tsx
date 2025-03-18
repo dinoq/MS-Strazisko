@@ -20,7 +20,7 @@ const EventCard: React.FC<EventCardProps> = ({
         <div className={classes.card + " card mb-3"}>
             <div className="row g-0">
                 <div className="col-md-4 position-relative">
-                    <Image src={imgSrc} alt="Obrázek události" layout="fill" objectFit="cover" />
+                    <Image src={imgSrc} alt="Obrázek události" layout="fill" objectFit="cover" unoptimized/>
                 </div>
                 <div className="col-md-8">
                     <div className="card-body">

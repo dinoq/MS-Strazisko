@@ -117,7 +117,6 @@ const Home: FC<HomeProps>  = ({
         <div className={classes.hero + " col-12"}>
         </div>
       </div> */}
-
                 <div className={classes.about + " row my-4 justify-content-center align-items-center"}>
                     <div className="d-none d-lg-block col-lg-4 position-relative">
                         <Image src={toys} layout="responsive" sizes="33vw" alt="Hračky" placeholder="blur" id={classes["toys-img"]} />
@@ -185,7 +184,7 @@ const Home: FC<HomeProps>  = ({
                                     <div key={"img-thumbnail-" + index} className={"d-flex justify-content-center " + col}>
                                         <div className={classes["image-frame"] + " " + col}>
                                             <div className={classes["image-container"] + " position-relative"}>
-                                                <Image src={img.thumbnail} alt="Fotka školky" layout="fill" objectFit='contain' />
+                                                <Image src={img.thumbnail} alt="Fotka školky" layout="fill" objectFit='contain' unoptimized/>
                                             </div>
                                         </div>
                                     </div>
@@ -216,7 +215,7 @@ const Home: FC<HomeProps>  = ({
                             <div className={classes["mapouter"]}>
                                 <div className={classes["gmap_canvas"]}>
                                     {/* <iframe width="800" height="400" id="gmap_canvas" src="https://maps.google.com/maps?q=M%C5%A0%20Stra%C5%BEisko&t=&z=13&ie=UTF8&iwloc=&output=embed" scrolling="no"></iframe> */}
-                                    <div style={{ width: "100%" }}><iframe width="100%" height="600" frameBorder="0" scrolling="no" marginHeight={0} marginWidth={0} src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=M%C5%A1%20stra%C5%BEisko%2025+(M%C5%A0%20Stra%C5%BEisko)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe></div>
+                                    <div style={{ width: "100%" }}><iframe width="100%" height="600" frameBorder="0" scrolling="no" marginHeight={0} marginWidth={0} src="https://www.google.com/maps/embed/v1/place?q=Mateřská+škola+Doubrava+496,+735+33+Doubrava&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8"></iframe></div>
                                 </div>
                             </div>
                         </div>

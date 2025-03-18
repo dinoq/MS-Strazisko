@@ -16,10 +16,11 @@ export class DBManager {
 
     public static fetchFormDefinitions = async (): Promise<FormDefs> => {
         return new Promise(async (res, rej) => {
-            let response: any = await fetch(getApiURL("/admin/forms"),
+            let response: any = await fetch(/*getApiURL(*/"/api/admin/forms"/*)*/,
                 {
                     method: "GET",
-                    mode: "same-site"
+                    mode: 'cors',
+                    credentials: 'include'
                 })
 
             try {

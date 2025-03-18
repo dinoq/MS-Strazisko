@@ -1,38 +1,34 @@
-import { withIronSessionSsr } from "iron-session/next";
+
 import { NextPage } from "next";
 import AdminPage from "../../../components/admin/AdminPageLayout/AdminPage";
+import { sessionOptions } from "../../../helpers/sessionConfig";
+import { cookies } from "next/headers";
+import { getIronSession } from "iron-session";
 
-const EventsPage: NextPage = (props: any) =>{
+const EventsPage: NextPage = (props: any) => {
     return (
         <AdminPage formID="Event" />
     )
 }
 
-export const getServerSideProps = withIronSessionSsr(
-    async ({ req, res }) => {
-        const adminLogged: boolean | undefined = req.session.adminLogged;
+export const getServerSideProps = async (context) => {
+    const { req, res } = context;
+    const session = await getIronSession(req, res, sessionOptions);
+    const adminLogged: boolean | undefined = (session as any).adminLogged;
 
-        if (adminLogged
-        ) {
-            return {
-                props: {},
-            };
-        } else {
-            return {
-                redirect: {
-                    destination: '/admin/login',
-                    permanent: false,
-                }
-            };
-        }
-    },
-    {
-        cookieName: "myapp_cookiename",
-        cookieOptions: {
-            secure: process.env.NODE_ENV === "production" ? true : false,
-        },
-        password: "P5hBP4iHlvp6obqtWK0mNuMrZow5x6DQV61W3EUG",
+    if (adminLogged
+    ) {
+        return {
+            props: {},
+        };
+    } else {
+        return {
+            redirect: {
+                destination: '/admin/login',
+                permanent: false,
+            }
+        };
     }
-);
+}
 
 export default EventsPage;
