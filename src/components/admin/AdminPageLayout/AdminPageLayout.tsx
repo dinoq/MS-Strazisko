@@ -83,11 +83,6 @@ const AdminPageLayout: FC<AdminPageLayoutProps> = ({
                                 </Link>
                             </li>
                             <li>
-                                <Link href={PATHS.FOOD} className={"link" + (pathname === PATHS.FOOD? " active" : "")}>
-                                    Jídelníček
-                                </Link>
-                            </li>
-                            <li>
                                 <Link href={PATHS.DOCUMENTS} className={"link" + (pathname === PATHS.DOCUMENTS? " active" : "")}>
                                     Dokumenty
                                 </Link>

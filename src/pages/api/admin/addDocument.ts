@@ -11,7 +11,7 @@ export const config = {
 };
 
 const handler = async (req, res) => {
-    const session = getIronSession(req, res, sessionOptions);
+    const session = await getIronSession(req, res, sessionOptions);
     const adminLogged: boolean = await (session as any).adminLogged;
     if (!adminLogged) {
         res.status(401).send("Unauthorized!");
@@ -36,7 +36,7 @@ const handler = async (req, res) => {
 const saveFile = async (file, url) => {
     const data = await fs.readFileSync(file.path);
     const fullPath = "./public" + (url.startsWith("/") ? "" : "/") + url;
-    await fs.writeFileSync(fullPath, data);
+    fs.writeFileSync(fullPath, data);
     await fs.unlinkSync(file.path); // remove temp file
     return;
 };
