@@ -1,14 +1,14 @@
-import '../../styles/globals.scss'
+import '@styles/globals.scss'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Header from '../components/header/Header';
-import Footer from "../components/footer/Footer";
-import AdminPageLayout from "../components/admin/AdminPageLayout/AdminPageLayout"
-import "../../styles/adminStyles.scss"
+import Header from '../features/web/components/header/Header';
+import Footer from "../features/web/components/footer/Footer";
+import AdminPageLayout from "../features/admin/components/AdminPageLayout/AdminPageLayout"
+import "@styles/adminStyles.scss"
 import { useRouter } from 'next/router';
 import { useSelector } from "react-redux";
-import { RootState } from '../helpers/types';
+import { RootState } from '../FilesToDistribute/types';
 import store from "../store";
-import withPageStoreProvider from '../hoc/withStoreProvider';
+import withAppProviders from '../shared/hoc/withAppProviders';
 import { AppProps } from 'next/app';
 
 
@@ -52,5 +52,5 @@ function MyApp({ Component, pageProps }: AppProps) {
     )
 }
 
-export default withPageStoreProvider(MyApp, store);
+export default withAppProviders(MyApp);
 

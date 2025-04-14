@@ -1,7 +1,7 @@
 // eslint-disable-next-line
 //import classes from "./FotoPage.module.css";
 import Link from "next/link";
-import { getApiURL } from "../../../src/helpers/utils";
+import { getApiURL } from "../../FilesToDistribute/utils";
 
 type FotoPageProps = {
     years: Array<any>

@@ -1,8 +1,9 @@
 import Database from "better-sqlite3";
 import formidable from "formidable";
-import fs from "fs";
-import { sessionOptions } from "../../../helpers/sessionConfig";
+import fs from "fs/promises";
+import { sessionOptions } from "../../../features/auth/sessionConfig";
 import { getIronSession } from "iron-session";
+import { dataConfig } from "@features/data/database-config";
 
 export const config = {
     api: {
@@ -34,16 +35,16 @@ const handler = async (req, res) => {
 
 
 const saveFile = async (file, url) => {
-    const data = await fs.readFileSync(file.path);
+    const data = await fs.readFile(file.path, "utf-8");
     const fullPath = "./public" + (url.startsWith("/") ? "" : "/") + url;
-    fs.writeFileSync(fullPath, data);
-    await fs.unlinkSync(file.path); // remove temp file
+    await fs.writeFile(fullPath, data);
+    await fs.unlink(file.path); // remove temp file
     return;
 };
 
 const saveToDB = (name, url) => {
 
-    const db = new Database('database/database.db', { verbose: console.log });
+    const db = new Database(dataConfig.databasePath, { verbose: console.log });
 
     const stmt = db.prepare('INSERT INTO Document (name, url) VALUES (?, ?)');
     const info = stmt.run(name, url);

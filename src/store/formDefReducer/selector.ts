@@ -1,5 +1,5 @@
-import { XMLParser } from "../../helpers/XMLParser";
-import { FormDef, RootState } from "../../helpers/types";
+import { XMLParser } from "../../FilesToDistribute/XMLParser";
+import { FormDef, RootState } from "../../FilesToDistribute/types";
 
 export const selectActualFormDefinition = (state: RootState): FormDef  => {
     let fid = Object.keys(state.forms.definitions).find(fid => fid === state.forms.actualFormDefinition)
@@ -16,4 +16,4 @@ export const selectActualFormDefinition = (state: RootState): FormDef  => {
         return state.forms.definitions[fid];
     }
 }
-export const selectActualDBOClass = (state: RootState): string => selectActualFormDefinition(state)?.DB?.DBOClass;
+export const selectActualDBOClass = (state: RootState): string | undefined => selectActualFormDefinition(state)?.DB?.DBOClass;

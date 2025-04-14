@@ -3,12 +3,12 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { FC, MouseEventHandler, useState } from 'react';
-import AppTable from '../../../src/components/Table/Table';
-import { getApiURL } from '../../../src/helpers/utils';
+import AppTable from '../../shared/components/Table/Table';
+import { getApiURL } from '../../FilesToDistribute/utils';
 import classes from "./dokumenty.module.scss";
 import { cookies } from 'next/headers';
 import { getIronSession } from 'iron-session';
-import { sessionOptions } from '../../helpers/sessionConfig';
+import { sessionOptions } from '../../features/auth/sessionConfig';
 
 
 const AdminDocumentsPage: NextPage = (props: any) => {

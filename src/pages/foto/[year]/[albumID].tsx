@@ -2,8 +2,8 @@
 import classes from "./albumID.module.scss";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import ContextMenu from "../../../components/ContextMenu/ContextMenu";
-import PhotoViewer from "../../../components/PhotoViewer/PhotoViewer";
+import ContextMenu from "../../../features/web/components/ContextMenu/ContextMenu";
+import PhotoViewer from "../../../features/web/components/PhotoViewer/PhotoViewer";
 
 type AlbumDetailProps = {
     logged: boolean

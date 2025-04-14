@@ -1,11 +1,11 @@
 
 import Database from "better-sqlite3";
-import { DBObjectType, DBObjectAttr } from "../../../helpers/types";
-import { isValidClassName, checkIfNotDangerSQL } from "../../../helpers/utils";
-import { getRawDBObjectDefinition } from "../../../../database/definitions/db-object-definitions";
+import { DBObjectType, DBObjectAttr } from "../../../FilesToDistribute/types";
+import { isValidClassName, checkIfNotDangerSQL } from "../../../FilesToDistribute/utils";
+import { getRawDBObjectDefinition } from "../../../features/data/definitions/db-object-definitions";
 import { getIronSession } from "iron-session";
-import { sessionOptions } from "../../../helpers/sessionConfig";
-
+import { sessionOptions } from "../../../features/auth/sessionConfig";
+import { dataConfig } from "@features/data/database-config";
 
 const handler = async (req, res) => {
     const session = await getIronSession(req, res, sessionOptions);
@@ -20,7 +20,7 @@ const handler = async (req, res) => {
         return;
     }
 
-    const db = new Database('database/database.db', { verbose: console.log });
+    const db = new Database(dataConfig.databasePath, { verbose: console.log });
     if (req.method == "GET") {
         const className: string = req.query["className"];
         let condition: string = req.query["condition"] || "";
@@ -158,7 +158,7 @@ const handler = async (req, res) => {
                 if (!forceDelete) { // Pokud neni forceDelete
                     const stmtChildren = db.prepare("SELECT * FROM " + detailClass + " WHERE " + primaryKey + "=?");
                     const sqlChildrenResults = stmtChildren.all(deleteId);
-                    if (sqlChildrenResults.length) {// Nemuze se smazat zatnam, pokud obsahuje nejaka podrizena data (v podrizene tabulce)
+                    if (sqlChildrenResults.length) {// Nemuze se smazat záznam, pokud obsahuje nejaka podrizena data (v podrizene tabulce)
                         db.close();
                         let msg = (typeof forceDeleteItemMsg == "string" && forceDeleteItemMsg.length) ? forceDeleteItemMsg : "Chyba! Daný záznam zřejmě obsahuje nějaká podřízená data.<br>Nejprve musíte smazat je a až potom tento záznam!";
                         return res.status(500).send(msg);

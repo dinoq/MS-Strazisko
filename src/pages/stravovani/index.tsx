@@ -4,6 +4,7 @@ import allergens from "../../../public/img/alergeny2.png";
 import Image from "next/legacy/image"
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { FoodData } from "@features/web/components/types";
 
 type StravovaniProps = {
 
@@ -12,7 +13,7 @@ type StravovaniProps = {
 const Stravovani: React.FC<StravovaniProps> = ({
 
 }) => {
-    const [menuData, setMenuData] = useState([]);
+    const [menuData, setMenuData] = useState<FoodData[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -23,12 +24,12 @@ const Stravovani: React.FC<StravovaniProps> = ({
                 const parser = new DOMParser();
                 const xml = parser.parseFromString(text, "application/xml");
 
-                const days = Array.from(xml.getElementsByTagName("den")).map((day) => {
-                    const date = day.getAttribute("datum");
+                const days: Array<FoodData> = Array.from(xml.getElementsByTagName("den")).map((day) => {
+                    const date = day.getAttribute("datum") || "";
                     const meals = Array.from(day.getElementsByTagName("jidlo")).map((meal) => ({
-                        name: meal.getAttribute("nazev"),
-                        type: meal.getAttribute("druh"),
-                        allergens: meal.getAttribute("alergeny"),
+                        name: meal.getAttribute("nazev") || "",
+                        type: meal.getAttribute("druh") || "",
+                        allergens: meal.getAttribute("alergeny") || "",
                     }));
                     return { date, meals };
                 });

@@ -1,9 +1,9 @@
 
 import type { NextPage } from 'next';
 import { cookies } from 'next/headers';
-import AdminPage from "../../components/admin/AdminPageLayout/AdminPage";
+import AdminPage from "../../features/admin/components/AdminPageLayout/AdminPage";
 import { getIronSession } from 'iron-session';
-import { sessionOptions } from '../../helpers/sessionConfig';
+import { sessionOptions } from '../../features/auth/sessionConfig';
 
 const AdminFoodPage: NextPage = (props: any) => {
     return (

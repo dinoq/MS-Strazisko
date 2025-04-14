@@ -1,11 +1,11 @@
 // pages/api/admin/forms.ts
 
-import { sessionOptions } from "../../../helpers/sessionConfig"; // Adjust the path accordingly
+import { sessionOptions } from "@features/auth/sessionConfig"; // Adjust the path accordingly
+import { dataConfig } from "@features/data/database-config";
 import Database from "better-sqlite3";
 import fs from "fs";
 import { getIronSession } from "iron-session";
 import { NextApiRequest, NextApiResponse } from "next";
-import path from "path";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     res.setHeader('Access-Control-Allow-Origin', 'https://ms-strazisko.cz');
@@ -25,9 +25,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return;
     }
 
-    const db = new Database('database/database.db', { verbose: console.log });
+    const db = new Database(dataConfig.databasePath, { verbose: console.log });
     if (req.method == "GET") {
-        let definitions = await fs.readFileSync("./database/definitions/form-definitions.xml", 'utf8');
+        let definitions = await fs.readFileSync(dataConfig.formDefPath, 'utf8');
         return res.status(200).send(definitions);
     } else {
         db.close();

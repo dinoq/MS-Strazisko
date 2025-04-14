@@ -1,15 +1,15 @@
 import Head from 'next/head'
 import Image from "next/legacy/image"
 import Link from "next/link"
-import IconFeature from '../components/school-feature/IconFeature'
+import IconFeature from '../features/web/components/school-feature/IconFeature'
 
-import classes from "../../styles/index.module.scss"
+import classes from "@styles/index.module.scss"
 
 import toys from "../../public/img/toys.webp"
-import Teacher from '../../src/components/teacher/Teacher'
-import EventCard from '../../src/components/event-card/EventCard'
+import Teacher from '../features/web/components/teacher/Teacher'
+import EventCard from '../features/web/components/event-card/EventCard'
 import { FC, useEffect, useState } from 'react'
-import { DBManager } from '../helpers/DBManager'
+import { DBManager } from '../features/data/lib/DBManager'
 
 type HomeProps = {
 

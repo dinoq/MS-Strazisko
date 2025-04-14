@@ -1,4 +1,5 @@
 //Pravděpodobně se nepoužívá a možno smazat
+import { dataConfig } from "@features/data/database-config";
 import Database from "better-sqlite3";
 import fs from "fs";
 
@@ -20,7 +21,7 @@ const handler = async (req, res) => {
 
   let db;
   try {
-    db = new Database('database/database.db', { verbose: console.log });
+    db = new Database(dataConfig.databasePath, { verbose: console.log });
     let stmt = db.prepare("SELECT url from Document where id_document=" + id)
     const sqlResults = stmt.all();
     const url = sqlResults[0]?.url;

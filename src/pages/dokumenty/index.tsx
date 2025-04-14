@@ -2,7 +2,7 @@
 //import classes from "./foto.module.css";
 
 import Link from "next/link";
-import { getApiURL } from "../../helpers/utils";
+import { getApiURL } from "../../FilesToDistribute/utils";
 
 type DokumentyProps = {
     docs: Array<any>

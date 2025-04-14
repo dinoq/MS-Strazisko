@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { DBManager } from "../../helpers/DBManager";
-import { DBObjectType, DBObjectAttr, DBOClassType, BreadcrumbItemDef } from "../../helpers/types";
+import { DBManager } from "../../features/data/lib/DBManager";
+import { DBObjectType, DBObjectAttr, DBOClassType, BreadcrumbItemDef } from "../../FilesToDistribute/types";
 import { breadcrumbItemSelected } from "./BreadcrumbSlice";
 
 

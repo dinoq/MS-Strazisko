@@ -1,9 +1,9 @@
 
 import { NextPage } from "next";
-import AdminPage from "../../../components/admin/AdminPageLayout/AdminPage";
+import AdminPage from "../../../features/admin/components/AdminPageLayout/AdminPage";
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
-import { sessionOptions } from "../../../helpers/sessionConfig";
+import { sessionOptions } from "../../../features/auth/sessionConfig";
 
 const PhotosPage: NextPage = (props: any) => {
     return (

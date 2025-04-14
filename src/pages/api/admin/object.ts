@@ -1,6 +1,7 @@
 
 import Database from "better-sqlite3";
-import { isValidClassName } from "../../../helpers/utils";
+import { isValidClassName } from "../../../FilesToDistribute/utils";
+import { dataConfig } from "@features/data/database-config";
 
 
 const handler = async (req, res) => {
@@ -15,7 +16,7 @@ const handler = async (req, res) => {
 		return;
 	}
 
-	const db = new Database('database/database.db', { verbose: console.log });
+	const db = new Database(dataConfig.databasePath, { verbose: console.log });
 	if (req.method == "GET") {
 		const className: string = req.query["className"];
         

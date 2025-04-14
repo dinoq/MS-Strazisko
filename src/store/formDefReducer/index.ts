@@ -1,8 +1,5 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { DBManager } from "../../helpers/DBManager";
-import { FormDef, FormDefinitionsState, FormDefs } from "../../helpers/types";
-import { XMLParser } from "../../helpers/XMLParser";
-import { breadcrumbItemSelected } from "../reducers/BreadcrumbSlice";
+import { FormDefinitionsState, FormDefs } from "../../FilesToDistribute/types";
 import { SagaActions } from "../sagas";
 
 let initialState: FormDefinitionsState = {
@@ -24,13 +21,7 @@ const slice = createSlice({
         setActualFormDef(state: FormDefinitionsState, action: PayloadAction<string>){
             state.actualFormDefinition = action.payload;
         },
-    },
-    extraReducers: (builder) => {
-        builder
-            .addCase(sag, (state: FormDefinitionsState, action: PayloadAction<number>) => {
-                console.log("AAAAAAAAAAAA JEA sag");
-            })        
-    },
+    }
 })
 
 export const { loadFormDef, setActualFormDef } = slice.actions;

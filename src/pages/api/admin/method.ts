@@ -3,7 +3,8 @@ import Database from "better-sqlite3";
 import fs from "fs";
 import { getIronSession } from "iron-session";
 import sharp from "sharp";
-import { sessionOptions } from "../../../helpers/sessionConfig";
+import { sessionOptions } from "../../../features/auth/sessionConfig";
+import { dataConfig } from "@features/data/database-config";
 
 const knownMethods = {
     createDirectoryIfNotExist: {
@@ -33,7 +34,7 @@ const handler = async (req, res) => {
         return;
     }
 
-    const db = new Database("database/database.db", { verbose: console.log });
+    const db = new Database(dataConfig.databasePath, { verbose: console.log });
     if (req.method == "POST") {
         const methodName = req.body["methodName"];
         const params: Array<any> = req.body["params"];

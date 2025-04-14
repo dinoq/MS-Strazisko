@@ -1,7 +1,8 @@
 
 import Database from "better-sqlite3";
 import { getIronSession } from "iron-session";
-import { sessionOptions } from "../../helpers/sessionConfig";
+import { sessionOptions } from "../../features/auth/sessionConfig";
+import { dataConfig } from "@features/data/database-config";
 
 
 const handler = async (req, res) => {
@@ -16,7 +17,7 @@ const handler = async (req, res) => {
   }
 
   let albums: Array<{name: string, title: string, date: string, photos: Array<string>}> = [];
-  const db = new Database('database/database.db', { verbose: console.log });
+  const db = new Database(dataConfig.databasePath, { verbose: console.log });
   const sqlAlbums = "SELECT id_album, name, title, date FROM Album WHERE id_year='" + pageYear + "'";
   const stmtAlbums = db.prepare(sqlAlbums);
   const sqlResultsAlbums: Array<any> = stmtAlbums.all();

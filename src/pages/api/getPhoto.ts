@@ -4,7 +4,8 @@ import sharp from "sharp";
 import Database from "better-sqlite3";
 import fs from "fs";
 import { getIronSession } from "iron-session";
-import { sessionOptions } from "../../helpers/sessionConfig";
+import { sessionOptions } from "../../features/auth/sessionConfig";
+import { dataConfig } from "@features/data/database-config";
 
 async function handler(req, res) {
     let filename: string = req?.query?.file;
@@ -61,7 +62,7 @@ async function handler(req, res) {
 
     let db;
     try {
-        db = new Database('database/database.db', { verbose: console.log });
+        db = new Database(dataConfig.databasePath, { verbose: console.log });
         /*const sql = "select photos.filename, albumPasswords.password_hash from photos inner join Album on photos.id_album=Album.id_album inner join Year on Album.id_year=albumPasswords.id_year";
         const stmt = db.prepare(sql);
         const sqlResults: Array<any> = stmt.all();

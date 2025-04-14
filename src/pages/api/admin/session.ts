@@ -1,6 +1,6 @@
 // pages/api/admin/session.ts
 import { getIronSession } from "iron-session";
-import { sessionOptions } from "../../../helpers/sessionConfig"; // Adjust the path accordingly
+import { sessionOptions } from "../../../features/auth/sessionConfig"; // Adjust the path accordingly
 
 async function handler(req, res) {
     const session = await getIronSession(req, res, sessionOptions);

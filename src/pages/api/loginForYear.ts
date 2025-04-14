@@ -1,5 +1,5 @@
 import { getIronSession } from "iron-session";
-import { sessionOptions } from "../../helpers/sessionConfig";
+import { sessionOptions } from "../../features/auth/sessionConfig";
 
 
 async function handler(req, res) {

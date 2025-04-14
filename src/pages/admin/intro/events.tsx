@@ -1,7 +1,7 @@
 
 import { NextPage } from "next";
-import AdminPage from "../../../components/admin/AdminPageLayout/AdminPage";
-import { sessionOptions } from "../../../helpers/sessionConfig";
+import AdminPage from "../../../features/admin/components/AdminPageLayout/AdminPage";
+import { sessionOptions } from "../../../features/auth/sessionConfig";
 import { cookies } from "next/headers";
 import { getIronSession } from "iron-session";
 

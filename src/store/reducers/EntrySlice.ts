@@ -1,5 +1,5 @@
 import { CaseReducer, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import { DBObjectType } from "../../helpers/types";
+import { DBObjectType } from "../../FilesToDistribute/types";
 
 const initialState: Array<DBObjectType> = [];
 

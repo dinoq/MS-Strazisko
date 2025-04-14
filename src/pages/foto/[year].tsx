@@ -3,7 +3,7 @@ import classes from "./year.module.scss";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { FC, useEffect, useRef, useState } from "react";
-import { sessionOptions } from "../../helpers/sessionConfig";
+import { sessionOptions } from "../../features/auth/sessionConfig";
 import { cookies } from "next/headers";
 import { getIronSession } from "iron-session";
 import { GetServerSidePropsContext } from "next";

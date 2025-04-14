@@ -20,6 +20,19 @@
     "incremental": true,
     "sourceMap": true
     // "strictNullChecks": true
+    ,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "strictNullChecks": true,
+    "baseUrl": "src/",
+    "paths": {
+        "@features/*": ["features/*"],
+        "@store/*": ["store/*"],
+        "@styles/*": ["shared/styles/*"],
+    }
   },
   "include": [
     "next-env.d.ts",
@@ -27,9 +40,10 @@
     "**/*.ts",
     "**/*.tsx",
     "foto copy.text",
-    "src/components/admin/formComponents/FileChooser/FileChooser.tsx", 
-    "src/components/header/Header.tsx"  
-],
+    "src/features/admin/components/formComponents/FileChooser/FileChooser.tsx",
+    "src/features/web/components/header/Header.tsx",
+    ".next/types/**/*.ts"
+  ],
   "exclude": [
     "node_modules"
   ]

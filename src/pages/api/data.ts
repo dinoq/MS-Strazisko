@@ -1,6 +1,7 @@
 
 import Database from "better-sqlite3";
-import { isValidClassName, checkIfNotDangerSQL } from "../../helpers/utils";
+import { isValidClassName, checkIfNotDangerSQL } from "../../FilesToDistribute/utils";
+import { dataConfig } from "@features/data/database-config";
 
 const fakeTables = ["events", "teachers", "public_images", "contact_texts", "food", "intro"];
 const realTables = ["Event", "Teacher", "PublicPhoto", "ContactText", "Food", "IntroText"];
@@ -31,7 +32,7 @@ async function handler(req, res) {
     let data = {};
     let db;
     try {
-        db = new Database('database/database.db', { verbose: console.log });
+        db = new Database(dataConfig.databasePath, { verbose: console.log });
 
         if (req.method == "GET") {
             let tables = tablesString.split(";");

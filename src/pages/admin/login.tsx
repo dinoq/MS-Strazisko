@@ -3,7 +3,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
 import styles from './login.module.scss';
-import { sessionOptions } from '../../helpers/sessionConfig';
+import { sessionOptions } from '../../features/auth/sessionConfig';
 import { getIronSession } from 'iron-session';
 
 

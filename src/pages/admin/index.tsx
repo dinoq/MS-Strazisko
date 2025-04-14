@@ -3,9 +3,8 @@ import { getIronSession } from 'iron-session';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { cookies } from 'next/headers';
-import { sessionOptions } from '../../helpers/sessionConfig';
-;
-//import styles from '../styles/Home.module.css'
+import { sessionOptions } from '../../features/auth/sessionConfig';
+
 const styles: any = {};
 const AdminHomePage: NextPage = (props: any) => {
     return (
