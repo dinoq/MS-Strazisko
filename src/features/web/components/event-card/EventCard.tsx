@@ -1,8 +1,10 @@
+"use client"
+
 // eslint-disable-next-line
 import Image from "next/legacy/image";
 import classes from "./EventCard.module.scss";
 import DOMPurify from "dompurify";
-import { DBManager } from "../../../data/lib/DBManager";
+import { substituteTags } from "lib/editorUtils";
 
 type EventCardProps = {
     imgSrc: string,
@@ -28,7 +30,7 @@ const EventCard: React.FC<EventCardProps> = ({
                             {date}
                         </div>
                         <h5 className="card-title fw-bold">{title}</h5>
-                        <p className="card-text" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(DBManager.substituteTags(description, true)) }}></p>
+                        <p className="card-text" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(substituteTags(description, true)) }}></p>
                         {/* <p className="card-text"><small className="text-muted">Naposledy editováno...</small></p> */}
                     </div>
                 </div>

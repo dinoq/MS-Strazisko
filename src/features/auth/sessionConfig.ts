@@ -1,8 +1,8 @@
 // lib/sessionConfig.ts
 
-import { IronSessionOptions } from "iron-session";
+import { SessionOptions } from "iron-session";
 
-export const sessionOptions: IronSessionOptions = {
+export const sessionOptions: SessionOptions = {
     password: "P5hBP4iHlvp6obqtWK0mNuMrZow5x6DQV61W3EUG",
     cookieName: "myapp_cookiename",
     cookieOptions: {

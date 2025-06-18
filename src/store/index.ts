@@ -1,3 +1,5 @@
+"use client"
+
 import { configureStore } from "@reduxjs/toolkit";
 import createSagaMiddleware from 'redux-saga';
 import FormDefReducer from "./formDefReducer";
@@ -17,7 +19,8 @@ const store = configureStore({
         dbObject: DBObjectReducer,
         entries: EntriesReducer
     },
-    middleware: [sagaMiddleware]
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware().concat(sagaMiddleware)
 })
 
 sagaMiddleware.run(rootSaga);

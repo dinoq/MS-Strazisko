@@ -2,7 +2,7 @@
 //import classes from "./FileChooser.module.css";
 
 import { FC, useEffect, useState } from "react";
-import useAppDispatch from "../../../../../shared/hooks/useAppDispatch";
+import useAppDispatch from "../../../../../hooks/useAppDispatch";
 import FileChooser from "./FileChooser";
 
 const INIT_LABEL = "Výběr fotky";
@@ -23,6 +23,7 @@ const FileChooserContainer: FC<FileChooserContainerProps> = ({
     setFilesToUpload
 }) => {
     const [fileLabel, setFileLabel] = useState(initLabel || INIT_LABEL);
+    console.log('initLabel: ', initLabel);
     const initFileName = "Název souboru";
     const [fileName, setFileName]: [any, any] = useState(initFileName);
     const [urlName, setUrlName] = useState("");

@@ -1,6 +1,7 @@
+"use client"
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { FormDefinitionsState, FormDefs } from "../../FilesToDistribute/types";
-import { SagaActions } from "../sagas";
+import { SagaActions } from "@store/sagaActions";
 
 let initialState: FormDefinitionsState = {
     actualFormDefinition: "",

@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Year {
+  id_year       String  @id @unique
+  password_hash String
+  Album         Album[]
+}
+
+model Album {
+  id_album Int      @id @default(autoincrement())
+  date     DateTime
+  title    String @unique
+  id_year  String
+  name     String
+  Year     Year     @relation(fields: [id_year], references: [id_year], onDelete: NoAction, onUpdate: Cascade)
+  PrivatePhoto PrivatePhoto[]
+}
+
+model PrivatePhoto {
+  id_private_photo Int     @id @default(autoincrement())
+  filename         String? @unique(map: "sqlite_autoindex_PrivatePhoto_1")
+  id_album         Int
+  Album            Album  @relation(fields: [id_album], references: [id_album], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model ContactText {
+  id_contact_text Int                    @id @unique(map: "sqlite_autoindex_ContactText_1") @default(autoincrement())
+  title           String?
+  content         String?
+}
+
+model Document {
+  id_document Int     @id @default(autoincrement())
+  name        String?
+  filename    String?
+}
+
+model Event {
+  id_event    Int       @id @default(autoincrement())
+  img_url     String?
+  title       String?
+  date        DateTime?
+  description String?
+}
+
+model Food {
+  id_food Int                    @id @default(autoincrement())
+  img_url String?
+}
+
+model IntroText {
+  id_intro_text Int                    @id @unique(map: "sqlite_autoindex_IntroText_1") @default(autoincrement())
+  title         String?
+  content       String?
+}
+
+model PublicPhoto {
+  id_public_photo Int                    @id @unique(map: "sqlite_autoindex_PublicPhoto_1") @default(autoincrement())
+  filename        String?
+}
+
+model Teacher {
+  id_teacher Int                    @id @unique(map: "sqlite_autoindex_Teacher_1") @default(autoincrement())
+  name       String?
+  job        String?
+  filename   String?
+}
+
+model User {
+    id_user     Int     @id @default(autoincrement())
+    username    String @unique
+    password_hash String
+    role        Int
+    Role        Role    @relation(fields: [role], references: [id_role], onDelete: NoAction, onUpdate: NoAction)
+}
+
+enum RoleNames {
+    User
+    Admin
+}
+
+model Role {
+    id_role     Int @id @default(autoincrement())
+    name        RoleNames @default(User) @unique
+    User User[]
+}

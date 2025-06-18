@@ -13,13 +13,19 @@ const LFComponent: FC<LFComponentProps> = ({
     evaluated,
 }) => {
 
-    if (componentType == ListFrameComponentType.TextField) {
+    if (componentType == ListFrameComponentType.Text) {
         return (
             <div className={""}>
                 {evaluated}
             </div>
         )
-    } else if (componentType == ListFrameComponentType.DateField) {
+    } else if (componentType == ListFrameComponentType.Link) {
+        return (
+            <a href={evaluated} className={""}>
+                {evaluated}
+            </a>
+        )
+    } else if (componentType == ListFrameComponentType.Date) {
         return (
             <div className={""}>
                 {evaluated}

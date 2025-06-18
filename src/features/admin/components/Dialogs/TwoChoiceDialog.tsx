@@ -3,13 +3,13 @@
 
 import { EventHandler, FC } from "react";
 
-type DialogProps = { 
+type TwoChoiceDialogProps = { 
     msg: string, 
     onYes: EventHandler<any>, 
     onNo: EventHandler<any> 
 }
 
-const Dialog: FC<DialogProps> = ({ 
+const TwoChoiceDialog: FC<TwoChoiceDialogProps> = ({ 
     msg, 
     onYes, 
     onNo 
@@ -36,4 +36,4 @@ const Dialog: FC<DialogProps> = ({
     )
 }
 
-export default Dialog;
+export default TwoChoiceDialog;

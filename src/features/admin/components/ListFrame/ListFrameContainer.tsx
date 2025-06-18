@@ -4,15 +4,16 @@ import { useSelector } from "react-redux";
 import { DBManager } from "../../../data/lib/DBManager";
 import { BreadcrumbItemDef, DBObjectType, RootState } from "../../../../FilesToDistribute/types";
 import { getFileComponents } from "../../../../FilesToDistribute/utils";
-import useAppDispatch from "../../../../shared/hooks/useAppDispatch";
+import useAppDispatch from "../../../../hooks/useAppDispatch";
 import { addItemToBreadcrumb } from "../../../../store/reducers/BreadcrumbSlice";
 import { setNewDBObject } from "../../../../store/reducers/DBObjectSlice";
-import { SagaActions } from "../../../../store/sagas";
-import Dialog from "../Dialogs/TwoChoiceDialog";
+import TwoChoiceDialog from "../Dialogs/TwoChoiceDialog";
 import ListFrame from "./ListFrame";
 import { setEntries } from "../../../../store/reducers/EntrySlice";
 import { selectActualFormDefinition } from "../../../../store/formDefReducer/selector";
 import { ListFrameComponentType } from "../../../../FilesToDistribute/constants";
+import { SagaActions } from "@store/sagaActions";
+import ErrorDialog from "../Dialogs/ErrorDialog";
 
 type ListFrameContainerProps = {
     editItemHandler: Function,
@@ -30,6 +31,7 @@ const ListFrameContainer: FC<ListFrameContainerProps> = ({
     const breadcrumbItems = useSelector((state: RootState) => state.breadcrumb.items);
     const [showDialog, setShowDialog] = useState(false);
     const [itemToDelete, setItemToDelete] = useState<DBObjectType | undefined>(undefined)
+    const [dialog, setDialog] = useState<string>("");
 
     let colspanNoData = -1;
     if (!entries || !entries.length) {
@@ -71,44 +73,52 @@ const ListFrameContainer: FC<ListFrameContainerProps> = ({
         if (formDefinition.listFrame.forceDeleteItemMsg) {
             body["forceDeleteItemMsg"] = formDefinition.listFrame.forceDeleteItemMsg;
         }
-        let resultErr = await DBManager.deleteInDB(body);
-        console.log('resultErr: ', resultErr);
+        let result = await DBManager.deleteInDB(body, false);
 
-        if (resultErr && typeof resultErr == "string" && resultErr.length) {
+        if (result?.type === "error") {
             setShowDialog(true);
             setItemToDelete(item);
             //dispatch(setErrorMsg(resultErr));
         } else {
-
             let afterDeleteMethod = formDefinition.listFrame.afterDeleteMethod;
-            console.log('afterDeleteMethod: ', afterDeleteMethod);
             if (afterDeleteMethod) {
-                let methodName = afterDeleteMethod.substring(0, afterDeleteMethod.indexOf("("));
+                let methodName = afterDeleteMethod.substring(0, afterDeleteMethod.indexOf(";"));
 
-                let rawParams = (afterDeleteMethod.substring(methodName.length + 1, afterDeleteMethod.length - 1)).split(",");
+                let rawParams = afterDeleteMethod.split(";").slice(1);
                 let params: Array<string> = [];
                 for (const rawParam of rawParams) {
                     let evaluated = DBManager.substituteExpression(rawParam, item);
                     params.push(evaluated);
                 }
 
-                resultErr = await DBManager.runServerMethod(methodName, params);
+                result = await DBManager.runServerMethod(methodName, params);
 
             }
-            let fileComponents = getFileComponents(formDefinition.listFrame);
-            for(const component of fileComponents){
-                let evaluated = DBManager.substituteExpression(component.transformation, item);
-                resultErr = await DBManager.runServerMethod("deleteFile", [evaluated]);
-                if(component.componentType === ListFrameComponentType.ImagePreview){ // thumbnail was deleted and now delete "main" image
-                    evaluated = evaluated.replace("/thumbnails", "");
-                    resultErr = await DBManager.runServerMethod("deleteFile", [evaluated]);
-                }
+            let fileComponents = getFileComponents(formDefinition.detailFrame);
+            if(fileComponents.length){
+                for(const component of fileComponents){
+                    // TODO - pohlídat že se smazaly soubory a až pak mazat data z databáze?? Aby se nestávalo že uživatel smazal data, ale soubory zůstaly na disku
+                    let evaluated = DBManager.substituteExpression(component.componentSpecificProps?.path, item);
+                    console.log('[evaluated]: ', [evaluated]);
+                    result = await DBManager.runServerMethod("deleteFile", [evaluated], false);
+                    console.log('resultErr: ', result);
+                    if(result?.type === "warning" && result?.message?.includes("resource not found")){
+                        setDialog("Daný soubor '" + evaluated + "' nebyl nalezen. Je možné že byl smazán již dříve či došlo k nějaké chybě.")
+                    }else if(result?.type === "information"){                    
+                        window.location.reload();
+                    }
+                    /*if(component.componentType === ListFrameComponentType.ImagePreview){ // thumbnail was deleted and now delete "main" image
+                        evaluated = evaluated.replace("/thumbnails", "");
+                        resultErr = await DBManager.runServerMethod("deleteFile", [evaluated]);
+                    }*/
 
+                }
+            }else{           
+                window.location.reload();
             }
 
         }
     }
-
 
     const cancelForceDeleteDialog = () => {
         setShowDialog(false);
@@ -126,7 +136,8 @@ const ListFrameContainer: FC<ListFrameContainerProps> = ({
     return (
         <>
             {formDefinition && <ListFrame components={formDefinition?.listFrame?.components} actions={formDefinition?.listFrame?.actions} DBObject={DBObject} deleteItemHandler={deleteItemHandler} detailClickedHandler={detailClickedHandler} editItemHandler={editItemHandler} entries={entries} colspanNoData={colspanNoData} detailDBOClassLen={formDefinition?.listFrame?.detailDBOClass?.length ?? 0} />}
-            {showDialog && <Dialog msg={formDefinition.listFrame.forceDeleteItemMsg || "Daný záznam obsahuje podpoložky. Opravdu chcete smazat (vč. podpoložek)?"} onYes={confirmForceDeleteDialog} onNo={cancelForceDeleteDialog} />}
+            {showDialog && <TwoChoiceDialog msg={formDefinition.listFrame.forceDeleteItemMsg || "Daný záznam obsahuje podpoložky. Opravdu chcete smazat (vč. podpoložek)?"} onYes={confirmForceDeleteDialog} onNo={cancelForceDeleteDialog} />}
+            {dialog && dialog.length !== 0 && <ErrorDialog msg={dialog} onOk={() => window.location.reload()}/>}
         </>
     )
 }

@@ -1,14 +1,9 @@
 import { getRawDBObjectDefinition } from "../definitions/db-object-definitions";
 import { DetailFrameComponentType } from "../../../FilesToDistribute/constants";
-import { DBObjectType, DBObjectAttr, DBOClassType, DFComponentDef, FormDef, FormDefs, LFComponentDef, OrderByDef, RecursivePartial, RootState } from "../../../FilesToDistribute/types";
+import { DBObjectType, DBObjectAttr, DBOClassType, DFComponentDef, FormDef, FormDefs, LFComponentDef, OrderByDef } from "../../../FilesToDistribute/types";
 import clone from "clone";
-import { getApiURL } from "../../../FilesToDistribute/utils";
 import { XMLParser } from "../../../FilesToDistribute/XMLParser";
-import store from "../../../store"
-import { SagaActions } from "../../../store/sagas";
-import { setNewDBObject, setPersistentAttrs } from "../../../store/reducers/DBObjectSlice";
-import { setEntries } from "../../../store/reducers/EntrySlice";
-import { selectActualFormDefinition } from "../../../store/formDefReducer/selector";
+import { ServerResponse } from "./types";
 
 export class DBManager {
 
@@ -16,7 +11,7 @@ export class DBManager {
 
     public static fetchFormDefinitions = async (): Promise<FormDefs> => {
         return new Promise(async (res, rej) => {
-            let response: any = await fetch(/*getApiURL(*/"/api/admin/forms"/*)*/,
+            let response: any = await fetch("/api/admin/forms",
                 {
                     method: "GET",
                     mode: 'cors',
@@ -25,10 +20,12 @@ export class DBManager {
 
             try {
                 if (response.status == 200) {
-                    const definition = await response.text();
-                    res(XMLParser.parseXMLFormDefinitions(definition));
+                    const definition = (await response?.json())?.data?.definitions;
+                    if(definition){
+                        res(XMLParser.parseXMLFormDefinitions(definition));
+                    }
                 } else {
-                    throw new Error(await response.text());
+                    throw new Error(await response.json());
                 }
             } catch (error) {
                 return error.message;
@@ -172,33 +169,18 @@ export class DBManager {
     }
 
 
-    public static substituteTags = (text, toRegular) => {
-        if (toRegular) {
-            text = text.replaceAll("<TUCNE>", "<b>");
-            text = text.replaceAll("</TUCNE>", "</b>");
-            text = text.replaceAll("<CERVENE>", '<span style="color: red">');
-            text = text.replaceAll("</CERVENE>", '</span>');
-        } else {
-            text = text.replaceAll("<b>", "<TUCNE>");
-            text = text.replaceAll("</b>", "</TUCNE>");
-            text = text.replaceAll('<span style="color: red">', "<CERVENE>");
-            text = text.replaceAll('</span>', "</CERVENE>");
-        }
-        return text;
-    }
-
     public static getAllDBObjectEntries = async (DBOClass: DBOClassType, orderBy: OrderByDef | undefined, condition: string = ""): Promise<Array<DBObjectType>> => {
         if (DBOClass == undefined || DBOClass == "") {
             return [];
         } else {
             let order = "";
             if (orderBy !== undefined && orderBy.attr) {
-                order = "&order=" + orderBy.attr + "|" + (orderBy.descending ? "DESC" : "ASC");
+                order = "&order=" + orderBy.attr + "|" + (orderBy.descending ? "desc" : "asc");
             }
             const resp = await fetch("/api/admin/data?className=" + DBOClass + (condition ? "&condition=" + condition : "") + order);
             if (resp.status == 200) {
                 let entries: Array<DBObjectType> = [];
-                let json = await resp.json();
+                let json = (await resp.json())?.data || [];
                 for (const attributes of json) {
                     let entry = DBManager.getEmptyDBObject(DBOClass);
                     entry.id = attributes[Object.keys(attributes)[0]];
@@ -224,26 +206,27 @@ export class DBManager {
 
     }
 
-    public static insertToDB = async (body: any, reload: boolean = true): Promise<string> => {
+    public static insertToDB = async (body: any, reload: boolean = true): Promise<ServerResponse> => {
         return await DBManager.fetchDB(body, "POST", reload);
     }
-    public static updateInDB = async (body: any, reload: boolean = true): Promise<string> => {
+    public static updateInDB = async (body: any, reload: boolean = true): Promise<ServerResponse> => {
         return await DBManager.fetchDB(body, "PATCH", reload);
     }
-    public static deleteInDB = async (body: any, reload: boolean = true): Promise<string> => {
+    public static deleteInDB = async (body: any, reload: boolean = true): Promise<ServerResponse> => {
         return await DBManager.fetchDB(body, "DELETE", reload);
     }
 
-    protected static fetchDB = async (body: any, method: string, reload: boolean = true): Promise<string> => {
+    protected static fetchDB = async (body: any, method: string, reload: boolean = true): Promise<ServerResponse> => {
         return await DBManager.callAPI("data", JSON.stringify(body), method, reload, "application/json");
     }
 
-    protected static callAPI = async (handlerName: string, body: any, method: string, reload: boolean, contentType: string | undefined): Promise<string> => {
+    protected static callAPI = async (handlerName: string, body: string | FormData, method: string, reload: boolean, contentType: string | undefined): Promise<ServerResponse> => {
+        console.log('handlerName: ', handlerName);
         let init: RequestInit =
         {
             method,
             mode: "same-origin",
-            body
+            body: body
         }
         if (contentType && contentType.length) {
             init["headers"] = { "Content-Type": contentType };
@@ -253,40 +236,45 @@ export class DBManager {
 
         if (response.status == 200) {
             if (method != "GET" && reload) {
-                let breadcrumbItems = store.getState()?.breadcrumb?.items;
+                console.log('reload: ', reload, handlerName);
+                /*let breadcrumbItems = store.getState()?.breadcrumb?.items;
                 let state = store.getState();
                 let dbObject = store.getState()?.dbObject
                 if (breadcrumbItems.length) {
 
                     let item: DBObjectType = breadcrumbItems[breadcrumbItems.length - 1].DBObject as DBObjectType;
 
-
+detailItemCondition - formát?
                     let detailItemCondition = `WHERE ${item.attributes[0].key}='${DBManager.getAttrFromArrByKey(breadcrumbItems[breadcrumbItems.length - 1].DBObject.attributes, item.attributes[0].key).value}'`;
 
                     DBManager.getAllDBObjectEntries(dbObject.DBOClass, selectActualFormDefinition(state).DB?.orderBy, detailItemCondition).then(entrs => {
                         store.dispatch(setEntries(entrs));
-                        //store.dispatch(setPersistentAttrs(entrs.length ? entrs[0].persistentAttributes : []))
                     })
-                    //store.dispatch({ type: SagaActions.SET_FORM_DEFINITIONS, FID: item.DBOClass })                    
-                    //store.dispatch(setNewDBObject({ DBOClass: item.DBOClass, parentEntry: item }));
-                } else {
+                } else {*/
                     window.location.reload();
-                }
+                //}
             }
         } else {
-            let text = "";
+            let json;
             try {
-                text = await response.text();
-                return text;
+                json = await response.json();
+                console.log('json: ', json);
+                return json;
             } catch (error) {
-                return error.message;
+                return {
+                    message: error.message,
+                    type: "error"
+                }
             }
         }
 
-        return "";
+        return {
+            message: "",
+            type: "information"
+        }
     }
 
-    public static runServerMethod = async (methodName: string, params: Array<string>, reload: boolean = true): Promise<string> => {
+    public static runServerMethod = async (methodName: string, params: Array<string>, reload: boolean = true): Promise<ServerResponse> => {
         let body = {
             methodName,
             params
@@ -294,7 +282,7 @@ export class DBManager {
         return await DBManager.callAPI("method", JSON.stringify(body), "POST", reload, "application/json");
     }
 
-    public static sendFiles = async (files: Array<File>, path: string): Promise<string> => {
+    public static sendFiles = async (files: Array<File>, path: string): Promise<ServerResponse> => {
         const body = new FormData();
         let index = 0;
         for (const file of files) {

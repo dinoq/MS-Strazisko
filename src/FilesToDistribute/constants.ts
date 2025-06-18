@@ -9,8 +9,9 @@ export enum DetailFrameComponentType {
 }
 
 export enum ListFrameComponentType {
-    TextField,
-    DateField,
+    Text,
+    Link,
+    Date,
     ImagePreview,
     RichTextField,
     UNKNOWN,

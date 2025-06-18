@@ -1,8 +1,11 @@
+"use-client"
+
 import { createRef, FC, FormEventHandler, MouseEventHandler } from "react";
 import { DetailFrameComponentType, DetailFrameMode } from "../../../../FilesToDistribute/constants";
 import { DBManager } from "../../../data/lib/DBManager";
 import { DBObjectType, FormDef } from "../../../../FilesToDistribute/types";
 import FileChooserContainer from "../formComponents/FileChooser/FileChooserContainer";
+import { substituteTags } from "lib/editorUtils";
 
 type DetailFrameProps = { 
     DBObject: DBObjectType, 
@@ -30,9 +33,11 @@ const DetailFrame: FC<DetailFrameProps> = ({
     const getInput = (componentType: DetailFrameComponentType, attrs) => {
         switch (componentType) {
             case DetailFrameComponentType.DateField:
+                const {value, ...restAttrs} = attrs;
+                const dateValue = value.split("T")[0];
                 return (
                     <div className="position-relative">
-                        <input type="date" {...attrs} />
+                        <input type="date" value={dateValue} {...restAttrs} />
                         <label className="label" htmlFor={attrs.id}>{attrs.placeholder}</label>
                     </div>
                 );
@@ -70,7 +75,7 @@ const DetailFrame: FC<DetailFrameProps> = ({
                                         id: component.attributeKey,
                                         placeholder: component.componentName,
                                         value,
-                                        onChange: (e) => updateDBObject(component.attributeKey, e.target.value),
+                                        onChange: (e) => updateDBObject(component.attributeKey, component.componentType == DetailFrameComponentType.DateField? new Date(e.target.value).toISOString() : e.target.value),
                                         required: component.required,
                                         disabled,
                                         className: component.wide? "wide": ""
@@ -92,7 +97,7 @@ const DetailFrame: FC<DetailFrameProps> = ({
                             </div>
                         );
                     } else if (component.componentType == DetailFrameComponentType.FileChooser) {                        
-                        let initLabel = DBManager.getAttrFromArrByKey(DBObject.attributes, component.attributeKey)?.value || "";
+                        let initLabel = DBManager.getAttrFromArrByKey(DBObject.attributes, component.attributeKey)?.value || component.componentName || "";
                         return (
                             <FileChooserContainer key={"input-" + i} id={component.attributeKey} onChange={updateDBObject} initLabel={initLabel} filesToUpload={filesToUpload} setFilesToUpload={setFilesToUpload}  />
                         )
@@ -117,7 +122,7 @@ const DetailFrame: FC<DetailFrameProps> = ({
                             inputRef.current.focus();
                             inputRef.current.selectionStart = cursorPosStart + opening.length;
                             inputRef.current.selectionEnd = cursorPosStart + opening.length + selectionLength;
-                            updateDBObject(component.attributeKey, DBManager.substituteTags(inputRef.current.value, true) );
+                            updateDBObject(component.attributeKey, substituteTags(inputRef.current.value, true) );
                         }
 
                         
@@ -126,7 +131,7 @@ const DetailFrame: FC<DetailFrameProps> = ({
                                 <div className="d-flex justify-content-center">
 
                                     <div className="richtextEditContainer">
-                                        <textarea cols={45} rows={5} ref={inputRef} id={component.attributeKey} placeholder={component.componentName} onChange={(e) => updateDBObject(component.attributeKey, e.target.value)} required={component.required} disabled={disabled} value={DBManager.substituteTags(value, false)} />
+                                        <textarea cols={45} rows={5} ref={inputRef} id={component.attributeKey} placeholder={component.componentName} onChange={(e) => updateDBObject(component.attributeKey, e.target.value)} required={component.required} disabled={disabled} value={substituteTags(value, false)} />
                                         <label className="label" htmlFor={component.attributeKey}>{component.componentName}</label>
                                         <div className="richtextEditBtns">
                                             <a type="button" className="richtextEdit button" onClick={(e) => { insertTags("TUCNE") }}><b>tučně</b></a>

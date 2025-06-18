@@ -1,0 +1,55 @@
+﻿@use 'sass:math';
+@import "@styles/custom.scss";
+
+
+$size: 250px;
+$transition-time: 0.5s;
+.overlay {
+    //height: $size;
+    aspect-ratio: 2;
+    //width: $size * 4;
+    width: math.div(100%, 12) * 10;
+    @include media-breakpoint-up(md) {
+        //width: (100%);
+        aspect-ratio: 4;
+    }
+    @include media-breakpoint-up(lg) {
+        aspect-ratio: 6;
+    }
+    background: linear-gradient(90deg, rgba(2, 0, 36, 0) 80%, white 90%);
+    opacity: 1;
+    position: absolute;
+    display: flex;
+    //justify-content: flex-end;
+    align-items: center;
+    transition: opacity $transition-time ease;
+
+    &:hover{
+        //background: linear-gradient(90deg, rgb(2 0 36 / 0%), rgb(255 255 255) 80%);
+        opacity: 0.8;
+        div{
+            right: 25%;
+
+        }
+    }
+    div{
+        font-size: 3rem;
+        margin-right: 5%;
+        color: black;
+        position: absolute;
+        right: 0;
+        transition: right $transition-time ease;
+        
+        
+    }
+}
+.img-container {
+    //height: $size;
+    aspect-ratio: 1;
+
+    img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+    }
+}

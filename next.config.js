@@ -1,12 +1,34 @@
+const path = require("path");
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: false,
+});
+
 const nextConfig = {
   reactStrictMode: true,
-  i18n: {
-    locales: ["cs"],
-    defaultLocale: "cs",
-  },
   images: {
     deviceSizes: [320, 640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    domains: ["picsum.photos", "images.unsplash.com", "www.ms-strazisko.cz", "jidelna.zsmspteni.cz"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "picsum.photos",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "www.ms-strazisko.cz",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "jidelna.zsmspteni.cz",
+        pathname: "/**",
+      },
+    ],
   },
   async redirects() {
     return [
@@ -16,15 +38,11 @@ const nextConfig = {
         permanent: true,
       },
     ];
-   },
-//   api: {
-//     bodyParser: false,
-//   },
+  },
+  webpack(config) {
+    config.resolve.alias["@styles"] = path.resolve(__dirname, "src/styles");
+    return config;
+  },
 };
 
-const withBundleAnalyzer = require("@next/bundle-analyzer")({
-  enabled: false,
-});
-
 module.exports = withBundleAnalyzer(nextConfig);
-//module.exports = nextConfig;

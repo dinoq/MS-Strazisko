@@ -1,11 +1,10 @@
-import { FC, MouseEventHandler } from "react";
+import { FC } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../FilesToDistribute/types";
 import Breadcrumb from "./Breadcrumb";
 import { breadcrumbItemSelected } from "../../../../store/reducers/BreadcrumbSlice";
-import { SagaActions } from "../../../../store/sagas";
-import { setDBObject } from "../../../../store/reducers/DBObjectSlice";
-import useAppDispatch from "../../../../shared/hooks/useAppDispatch";
+import useAppDispatch from "../../../../hooks/useAppDispatch";
+import { SagaActions } from "@store/sagaActions"
 
 type BreadcrumbContainerProps = {
     hideDetailFrame: () => void
@@ -18,7 +17,9 @@ const BreadcrumbContainer: FC<BreadcrumbContainerProps> = ({
     const items = useSelector((state: RootState) => state.breadcrumb.items)
 
     const itemClicked = (index) => {
+        console.log('index: ', index);
         hideDetailFrame();
+        console.log('items: ', items);
         dispatch({type: SagaActions.SET_FORM_DEFINITIONS, FID: items[index].DBObject.DBOClass})
         dispatch(breadcrumbItemSelected({index, items}))
     }

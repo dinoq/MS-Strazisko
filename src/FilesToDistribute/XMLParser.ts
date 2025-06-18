@@ -38,7 +38,7 @@ export class XMLParser {
             },
             components: [
                 {
-                    componentType: ListFrameComponentType.TextField,
+                    componentType: ListFrameComponentType.Text,
                     componentName: "??",
                     isBreadcrumbKey: false,
                     transformation: "",
@@ -81,7 +81,11 @@ export class XMLParser {
 
         let mapToComponentType = (type: string, typeset: typeof DetailFrameComponentType | typeof ListFrameComponentType) => {
             if (type == "") {
-                return typeset.TextField;
+                if(typeset === DetailFrameComponentType){
+                    return typeset.TextField;
+                }else if(typeset === ListFrameComponentType){
+                    return typeset.Text;
+                }
             }
 
             if (typeset[type] == undefined) {

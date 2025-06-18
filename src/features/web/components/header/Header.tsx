@@ -1,9 +1,11 @@
+"use client"
+
 // eslint-disable-next-line
 import classes from "./Header.module.scss";
 import Link from "next/link";
 import { FC, useCallback, useEffect, useState } from "react";
 
-import { useRouter } from "next/router";
+import { usePathname } from "next/navigation";
 
 type HeaderProps = {
     noBackground: boolean
@@ -23,13 +25,13 @@ const Header: FC<HeaderProps> = ({
         })
     }
 
-
-    const router = useRouter();
+    
+    const pathname = usePathname(); // získání aktuální cesty
 
     const navigation = [["/", "Domů"], ["/foto", "Foto"], ["/stravovani", "Stravování"], ["/dokumenty", "Dokumenty"], ["/kontakt", "Kontakt"]];
     const links = navigation.map((link, index) => {
         let className = "";
-        if(router.asPath === link[0] || router.asPath.includes(link[0] + "/")){
+        if(pathname === link[0] || pathname?.includes(link[0] + "/")){
             className = classes.active;
         }
         return <Link key={"menu-link-" + index} href={link[0]}><li onClick={toggleHamburgerMenu} className={className}>{link[1]}</li></Link>;
@@ -37,7 +39,7 @@ const Header: FC<HeaderProps> = ({
     );
 
     
-    const isHomePage = router.asPath === navigation[0][0];
+    const isHomePage = pathname === navigation[0][0];
 
 
     const handleNavigation = useCallback(

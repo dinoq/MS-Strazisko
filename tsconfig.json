@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2015",
     "lib": [
       "dom",
       "dom.iterable",
@@ -31,7 +31,9 @@
     "paths": {
         "@features/*": ["features/*"],
         "@store/*": ["store/*"],
-        "@styles/*": ["shared/styles/*"],
+        "@styles/*": ["styles/*"],
+        "@public/*": ["../public/*"],
+        "@hooks/*": ["hooks/*"],
     }
   },
   "include": [

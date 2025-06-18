@@ -1,11 +1,11 @@
+"use client"
+
 import { call, put, putResolve, select, takeLatest } from 'redux-saga/effects';
 import { loadFormDef, setActualFormDef } from './formDefReducer';
 import { DBManager } from '../features/data/lib/DBManager';
 import { FormDefinitionsState, RootState } from '../FilesToDistribute/types';
+import { SagaActions } from './sagaActions';
 
-export enum SagaActions {
-    SET_FORM_DEFINITIONS = "SET_FORM_DEFINITIONS",
-}
 
 function* setFormDefinitions(action){
     try {

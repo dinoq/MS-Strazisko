@@ -43,7 +43,7 @@ const PhotoViewer: FC<PhotoViewerProps> = ({
                         <div className={classes.closeBtn}></div>
                     </div>
                     {// eslint-disable-next-line @next/next/no-img-element
-                        <img src={"/api/getPhoto?file=" + viewedPhoto.photoURL} alt={"Fotografie z alba \"" + viewedPhoto.album + "\""} />}
+                        <img src={"/api/photo?file=" + viewedPhoto.photoURL} alt={"Fotografie z alba \"" + viewedPhoto.album + "\""} />}
 
 
                 </div>

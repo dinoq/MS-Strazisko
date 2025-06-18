@@ -3,6 +3,7 @@ import { ListFrameComponentType } from "../../../../../FilesToDistribute/constan
 import { DBObjectType } from "../../../../../FilesToDistribute/types";
 import { DBManager } from "../../../../data/lib/DBManager";
 import LFComponent from "./LFComponent";
+import { substituteTags } from "lib/editorUtils";
 //import styles from "./LFComponentContainer.module.scss";
 
 type LFComponentContainerProps = {
@@ -23,16 +24,17 @@ const LFComponentContainer: FC<LFComponentContainerProps> = ({
     let evaluated = DBManager.substituteExpression(transformation, entry);
 
     switch (componentType) {
-        case ListFrameComponentType.TextField:
+        case ListFrameComponentType.Text:
+        case ListFrameComponentType.Link:
             value = evaluated;
             break;
         case ListFrameComponentType.RichTextField:
-            value = DBManager.substituteTags(evaluated, true);
+            value = substituteTags(evaluated, true);
             break;
         case ListFrameComponentType.ImagePreview:
             evaluated = evaluated.startsWith("/") ? evaluated : "/" + evaluated;
             break;
-        case ListFrameComponentType.DateField:
+        case ListFrameComponentType.Date:
             let date = new Date(evaluated);
             value = date.getDate() + ". " + (date.getMonth() + 1) + ". " + date.getFullYear();
             break;

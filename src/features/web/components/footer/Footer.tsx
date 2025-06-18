@@ -1,7 +1,8 @@
+"use client"
+
 // eslint-disable-next-line
 import Image from "next/legacy/image";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import classes from "./Footer.module.scss";
 
@@ -12,7 +13,6 @@ type FooterProps = {
 const Footer: React.FC<FooterProps> = ({
 
 }) => {
-    const router = useRouter();
 
     const [contactText, setContactText] = useState({ tel: "", email: "" });
 

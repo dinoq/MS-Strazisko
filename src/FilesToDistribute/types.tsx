@@ -63,7 +63,6 @@ export interface DFComponentDef {
     wide?: boolean
 }
 
-
 export interface FormAttrConstraintDef {
     condition: string,
     errMsgIfFail: string

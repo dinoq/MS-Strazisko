@@ -6,7 +6,7 @@ import { editDBObjectAttr } from "../../../../store/reducers/DBObjectSlice";
 import { RootState } from "../../../../FilesToDistribute/types";
 import DetailFrame from "./DetailFrame";
 import { getFileComponents } from "../../../../FilesToDistribute/utils";
-import useAppDispatch from "../../../../shared/hooks/useAppDispatch";
+import useAppDispatch from "../../../../hooks/useAppDispatch";
 import { selectActualDBOClass, selectActualFormDefinition } from "../../../../store/formDefReducer/selector";
 
 type DetailFrameContainerProps = { 
@@ -27,7 +27,7 @@ const DetailFrameContainer: FC<DetailFrameContainerProps> = ({
 
     
     const [filesToUpload, setFilesToUpload] = useState<File[]>([]);
-
+    
     const formSubmitted = async (event) => {
         event.preventDefault();
         let conditionError = "";
@@ -99,9 +99,9 @@ const DetailFrameContainer: FC<DetailFrameContainerProps> = ({
             }
         } else if (!resultErr) {
             if (afterSaveMethod) {
-                let methodName = afterSaveMethod.substring(0, afterSaveMethod.indexOf("("));
+                let methodName = afterSaveMethod.substring(0, afterSaveMethod.indexOf(";"));
 
-                let rawParams = (afterSaveMethod.substring(methodName.length + 1, afterSaveMethod.length - 1)).split(",");
+                let rawParams = afterSaveMethod.split(";").slice(1);
                 let params: Array<string> = [];
                 for (const rawParam of rawParams) {
                     let evaluated = DBManager.substituteExpression(rawParam, DBObject);

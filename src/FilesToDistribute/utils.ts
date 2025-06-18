@@ -1,34 +1,6 @@
-import { ListFrameComponentType } from "./constants";
-import { LFComponentDef, ListFrameDef } from "./types";
+import { DetailFrameComponentType, ListFrameComponentType } from "./constants";
+import { DetailFrameDef, DFComponentDef, LFComponentDef, ListFrameDef } from "./types";
 
-var os = require("os");
-var hostname = os.hostname();
-
-const getEnvDomain = () => {
-    let url = "";
-    const production = process.env.NODE_ENV === 'production';
-    console.log('production: ', production);
-    if(hostname){ // server is asking
-        console.log('hostname: ', hostname);
-        if(hostname.includes("ms-strazisko")){// production
-            const protocol = (production)? "https" : "https";
-            url = protocol + "://admin.ms-strazisko.cz";
-        }else{ // localhost
-            url = "http://localhost:3000";
-        }
-    }else{
-        console.log("Hostname not defined!");
-    }
-    const defaultPort = 3000;
-    //return (dev ? 'http://localhost:' + (process.env.APP_PORT || defaultPort) : 'http://localhost:' + (process.env.APP_PORT || defaultPort))/*'https://your_deployment.server.com')*/;
-    return url;
-}
-
-export const getApiURL = (url: string) => {
-    let urlWithoutSlash = url.startsWith("/")? url.substring(1) : url;
-    let apiUrl = getEnvDomain() + "/api/" + urlWithoutSlash;
-    return apiUrl;
-}
 
 /**
  * Kontrola, zda jde o validní formát názvu db třídy. Příp. je možné použít na kontrolu i jiných věcí. Vrací true, pokud předaný název (/názvy) obsahuje pouze písmena/čísla/podtržítko, či se jedná o undefined nebo prázdný řetězec (TODO opravdu undefined a prázdný řetězec má vyhovovat...?)
@@ -70,11 +42,11 @@ export const checkIfNotDangerSQL = (words: string | Array<string>) => {
 };
 
 
-export const getFileComponents = (LFDefinition: ListFrameDef): LFComponentDef[] => {
-    let fileComponents: Array<LFComponentDef> = [];
+export const getFileComponents = (LFDefinition: DetailFrameDef): DFComponentDef[] => {
+    let fileComponents: Array<DFComponentDef> = [];
 
     for(const c of LFDefinition.components){
-        if(c.componentType == ListFrameComponentType.ImagePreview){
+        if(c.componentType == DetailFrameComponentType.FileChooser){
             fileComponents.push(c);
         }
     }

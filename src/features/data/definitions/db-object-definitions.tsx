@@ -158,8 +158,6 @@ const DBObjectDefinitions: RecursivePartial<DBOBjectDefs> = {
         ]
     }, 
 
-
-
     ContactText: {
         DBOClass: "ContactText",
         attributes: [
@@ -174,6 +172,21 @@ const DBObjectDefinitions: RecursivePartial<DBOBjectDefs> = {
             {
                 key: "content",
                 //name: "Obsah"
+            }
+        ]
+    }, 
+
+    Document: {
+        DBOClass: "Document",
+        attributes: [
+            {
+                key: "id_document",
+            },
+            {
+                key: "name",
+            },
+            {
+                key: "filename",
             }
         ]
     }
