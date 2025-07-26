@@ -1,15 +1,15 @@
 ﻿"use client"
 
-import Image from "next/legacy/image"
-import Link from "next/link"
-import { FC, useEffect, useState } from 'react'
+import Image from "next/legacy/image";
+import Link from "next/link";
+import { FC, useEffect, useState } from 'react';
 
-import classes from "../../../../styles/index.module.scss"//"@styles/index.module.scss"
-import IconFeature from '@features/web/components/school-feature/IconFeature'
-import toys from "@public/img/toys.webp"
-import Teacher from '@features/web/components/teacher/Teacher'
-import EventCard from '@features/web/components/event-card/EventCard'
-import { substituteTags } from "lib/editorUtils"
+import classes from "../../../../styles/index.module.scss"; //"@styles/index.module.scss"
+import IconFeature from '@features/web/components/school-feature/IconFeature';
+import toys from "@public/img/toys.webp";
+import Teacher from '@features/web/components/teacher/Teacher';
+import EventCard from '@features/web/components/event-card/EventCard';
+import { substituteTags } from "lib/editorUtils";
 
 type HomeProps = {
 
@@ -27,20 +27,20 @@ const Home: FC<HomeProps>  = ({
     useEffect(() => {
         fetch("/api/data?table=events;teachers;public_images;intro").then((data) => {
             data.json().then(json => {
-                setEvents(json.events.map((event) => {
+                setEvents(json.events?.map((event) => {
                     return { imgSrc: (event.img_url ? "/img/albums/other/event-photos/" + event.img_url : "/img/albums/other/no-photo.jpg"), title: event.title, date: new Date(event.date).toLocaleDateString("cs-CZ", { weekday: undefined, year: 'numeric', month: 'short', day: 'numeric' }), description: event.description }
                 }));
 
-                setTeachers(json.teachers.map((teacher) => {
+                setTeachers(json.teachers?.map((teacher) => {
                     return { imgSrc: (teacher.filename ? "/img/albums/other/teacher-photos/" + teacher.filename : "/img/albums/other/photo.jpg"), name: teacher.name, job: teacher.job }
                 }))
 
-                setPublicImages(json.public_images.map((publicImage) => {
+                setPublicImages(json.public_images?.map((publicImage) => {
                     return { original: "/img/albums/other/public-photos/" + publicImage.filename, thumbnail: "/img/albums/other/public-photos/" + publicImage.filename + "?minify=true" }
                 }))
 
                 setIntroText({
-                    title: json.intro[0].title,
+                    title: json.intro[0]?.title,
                     content: substituteTags(json.intro[0].content, true)
                 });
             })
