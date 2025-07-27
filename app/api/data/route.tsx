@@ -1,6 +1,6 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest } from "next/server";
 import { checkIfNotDangerSQL, isValidClassName } from "FilesToDistribute/utils";
-import { getModelByClassName, prisma } from "lib/server/prisma";
+import { getModelByClassName } from "lib/server/prisma";
 import { nextResponse200OK, nextResponse404Error, nextResponse500Error } from "@features/data/lib/serverResponses";
 
 const fakeTables = ["events", "teachers", "public_images", "contact_texts", "food", "intro"];

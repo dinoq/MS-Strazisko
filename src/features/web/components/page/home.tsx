@@ -27,22 +27,25 @@ const Home: FC<HomeProps>  = ({
     useEffect(() => {
         fetch("/api/data?table=events;teachers;public_images;intro").then((data) => {
             data.json().then(json => {
-                setEvents(json.events?.map((event) => {
+                const data = json?.data || {};
+                setEvents(data.events?.map((event) => {
                     return { imgSrc: (event.img_url ? "/img/albums/other/event-photos/" + event.img_url : "/img/albums/other/no-photo.jpg"), title: event.title, date: new Date(event.date).toLocaleDateString("cs-CZ", { weekday: undefined, year: 'numeric', month: 'short', day: 'numeric' }), description: event.description }
                 }));
 
-                setTeachers(json.teachers?.map((teacher) => {
+                setTeachers(data.teachers?.map((teacher) => {
                     return { imgSrc: (teacher.filename ? "/img/albums/other/teacher-photos/" + teacher.filename : "/img/albums/other/photo.jpg"), name: teacher.name, job: teacher.job }
                 }))
 
-                setPublicImages(json.public_images?.map((publicImage) => {
+                setPublicImages(data.public_images?.map((publicImage) => {
                     return { original: "/img/albums/other/public-photos/" + publicImage.filename, thumbnail: "/img/albums/other/public-photos/" + publicImage.filename + "?minify=true" }
                 }))
 
-                setIntroText({
-                    title: json.intro[0]?.title,
-                    content: substituteTags(json.intro[0].content, true)
-                });
+                if (Array.isArray(data?.intro) && data.intro.length > 0) {
+                    setIntroText({
+                        title: data.intro[0].title,
+                        content: substituteTags(data.intro[0].content, true)
+                    });
+                }
             })
         })
         setFeatures([
@@ -84,7 +87,7 @@ const Home: FC<HomeProps>  = ({
                     <div className="col-10 d-flex flex-column justify-content-center">
                         <div className="row"><h2>Personál MŠ</h2></div>
                         <div className="row w-100 justify-content-center justify-content-lg-evenly">
-                            {teachers.map((teacher, index) => {
+                            {teachers?.map((teacher, index) => {
                                 return (
                                     <div key={"teacher-" + index} className="col-12 col-md-6 col-lg-3 mt-5 mt-lg-2 mb-5">
                                         <Teacher imgSrc={teacher.imgSrc} name={teacher.name} description={teacher.job} />
@@ -117,7 +120,7 @@ const Home: FC<HomeProps>  = ({
                         <div className="row"><h2>Foto školy</h2></div>
                         <div className="h5">(Pro více fotek přejděte z menu na <Link href="/foto">Foto</Link>)</div>
                         <div className={classes["gallery-container"] + " row justify-content-center"}>
-                            {publicImages.map((img, index) => {
+                            {publicImages?.map((img, index) => {
                                 let col = (publicImages.length % 4 == 0) ? "col-3" : "col-4";
 
                                 return (

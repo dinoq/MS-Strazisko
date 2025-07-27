@@ -1,7 +1,11 @@
-﻿import { NextRequest, NextResponse } from "next/server";
-import fs from "fs";
-import sharp from "sharp";
-import { nextResponse200OK, nextResponse500Error } from "@features/data/lib/serverResponses";
+﻿import { NextRequest } from 'next/server';
+import fs from 'fs';
+import sharp from 'sharp';
+import {
+    nextResponse200OK,
+    nextResponse500Error,
+} from '@features/data/lib/serverResponses';
+import path from 'path';
 
 export const POST = async (req: NextRequest) => {
     try {
@@ -17,9 +21,14 @@ export const POST = async (req: NextRequest) => {
             const [, type, indexStr] = match;
             const index = parseInt(indexStr, 10);
 
-            if (type === "path" && typeof value === "string") {
+            if (type === 'path' && typeof value === 'string') {
                 paths.set(index, value);
-            } else if (type === "file" && typeof value === "object" && value !== null && "arrayBuffer" in value) {
+            } else if (
+                type === 'file' &&
+                typeof value === 'object' &&
+                value !== null &&
+                'arrayBuffer' in value
+            ) {
                 files.set(index, value);
             }
         }
@@ -32,35 +41,60 @@ export const POST = async (req: NextRequest) => {
             await saveFile(file, path);
         }
 
-        return nextResponse200OK("success??");
-
+        return nextResponse200OK('success??');
     } catch (error) {
         console.log('error: ', error);
-        return nextResponse500Error("Chyba při zpracování souboru!");
+        return nextResponse500Error('Chyba při zpracování souboru!');
     }
-
-}
+};
 
 const saveFile = async (file: File, url: string) => {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    const fullPath = "./public" + (url.startsWith("/") ? "" : "/") + url;
-    const directory = fullPath.substring(0, fullPath.lastIndexOf("/"));
+    let fullPath = './public' + (url.startsWith('/') ? '' : '/') + url;
+    const parsedPath = path.parse(fullPath);
 
-    if (!(await fs.existsSync(directory))) {
-        await fs.mkdirSync(directory, { recursive: true });
+    const directory = parsedPath.dir;
+
+    if (!fs.existsSync(directory)) {
+        fs.mkdirSync(directory, { recursive: true });
     }
-    
+
+    if (fs.existsSync(fullPath)) {
+        let newPath = fullPath;
+        const parsedPath = path.parse(fullPath);
+        const match = parsedPath.name.match(/(.+)\((\d+)\)$/);
+
+        if (match) {
+            // If filename ends with an index in brackets, increment it
+            const baseName = match[1];
+            const currentIndex = parseInt(match[2], 10);
+            newPath = path.join(
+                parsedPath.dir,
+                `${baseName}(${currentIndex + 1})${parsedPath.ext}`
+            );
+        } else {
+            // If no index exists, add [1] to the filename
+            newPath = path.join(
+                parsedPath.dir,
+                `${parsedPath.name}(1)${parsedPath.ext}`
+            );
+        }
+
+        fullPath = newPath;
+    }
+
     const minify = true;
-    if (file?.type?.includes("image") && minify) {
-        await (sharp(buffer)
+    if (file?.type?.includes('image') && minify) {
+        await sharp(buffer)
             .resize({
                 fit: sharp.fit.inside,
                 width: 1920,
                 height: 1080,
-            }).webp({ quality: 80 })
-            .toFile(fullPath));
+            })
+            .webp({ quality: 80 })
+            .toFile(fullPath);
     } else {
         const arrayBuffer = await file.arrayBuffer();
         const uint8Array = new Uint8Array(arrayBuffer);

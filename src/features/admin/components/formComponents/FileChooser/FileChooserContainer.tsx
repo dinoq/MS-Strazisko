@@ -23,7 +23,6 @@ const FileChooserContainer: FC<FileChooserContainerProps> = ({
     setFilesToUpload
 }) => {
     const [fileLabel, setFileLabel] = useState(initLabel || INIT_LABEL);
-    console.log('initLabel: ', initLabel);
     const initFileName = "Název souboru";
     const [fileName, setFileName]: [any, any] = useState(initFileName);
     const [urlName, setUrlName] = useState("");

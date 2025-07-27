@@ -151,6 +151,7 @@ export class DBManager {
      * Function converts expression to expression with values (converts all @[attrKey] to real value)
      * @param rawExpression source expression to substitute
      * @param dbObject Database object from where get data for substitution
+     * @param fromOriginalAttrValues if true, get values from original attributes before editing, otherwise from edited attributes
      * @returns substituted expression (with real values)
      */
     public static substituteExpression(rawExpression: string | undefined, dbObject: DBObjectType, fromOriginalAttrValues: boolean = false): string {
@@ -210,7 +211,7 @@ export class DBManager {
         return await DBManager.fetchDB(body, "POST", reload);
     }
     public static updateInDB = async (body: any, reload: boolean = true): Promise<ServerResponse> => {
-        return await DBManager.fetchDB(body, "PATCH", reload);
+        return await DBManager.fetchDB(body, "PATCH", reload); // TODO nemělo by tu být PUT?
     }
     public static deleteInDB = async (body: any, reload: boolean = true): Promise<ServerResponse> => {
         return await DBManager.fetchDB(body, "DELETE", reload);
