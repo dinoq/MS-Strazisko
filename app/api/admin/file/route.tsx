@@ -1,11 +1,12 @@
-﻿import { NextRequest } from 'next/server';
-import fs from 'fs';
-import sharp from 'sharp';
-import {
+﻿import {
     nextResponse200OK,
     nextResponse500Error,
 } from '@features/data/lib/serverResponses';
+import fs from 'fs/promises';
+import { fileExists } from 'lib/fileUtils';
+import { NextRequest } from 'next/server';
 import path from 'path';
+import sharp from 'sharp';
 
 export const POST = async (req: NextRequest) => {
     try {
@@ -57,11 +58,11 @@ const saveFile = async (file: File, url: string) => {
 
     const directory = parsedPath.dir;
 
-    if (!fs.existsSync(directory)) {
-        fs.mkdirSync(directory, { recursive: true });
+    if (!(await fileExists(directory))) {
+        await fs.mkdir(directory, { recursive: true });
     }
 
-    if (fs.existsSync(fullPath)) {
+    if (await fileExists(fullPath)) {
         let newPath = fullPath;
         const parsedPath = path.parse(fullPath);
         const match = parsedPath.name.match(/(.+)\((\d+)\)$/);
@@ -98,7 +99,7 @@ const saveFile = async (file: File, url: string) => {
     } else {
         const arrayBuffer = await file.arrayBuffer();
         const uint8Array = new Uint8Array(arrayBuffer);
-        fs.writeFileSync(fullPath, uint8Array);
+        await fs.writeFile(fullPath, uint8Array);
     }
     return;
 };

@@ -7,7 +7,6 @@ TODO features and bugs:
 
 TODO implementation prioritně
 - požadavky na api route předělat na form data? Minimálně POST+PUT z DetailFrame a soubory předávat rovnou v požadavku
--   fs....sync funkce na neblokující await fs.promises...async
 -   při editaci dokumentů (změně dokumentu) se ten starý nesmaže...
 -   Při nahrávání souborů zkontrolovat jestli soubor ještě neexistuje a pokud ano, tak ten nový přejmenovat? Nebo minimálně varovat uživatele? Vymyslet...
 -   https codes (200 -ok, 201 created for post)

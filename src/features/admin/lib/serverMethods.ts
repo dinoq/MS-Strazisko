@@ -1,6 +1,7 @@
-﻿import 'server-only';
-import fs from 'fs';
-import { OperationResult } from '@features/data/lib/types';
+﻿import { OperationResult } from '@features/data/lib/types';
+import fs from 'fs/promises';
+import { fileExists } from 'lib/fileUtils';
+import 'server-only';
 import sharp from 'sharp';
 
 export const knownMethods: {
@@ -29,8 +30,8 @@ export const knownMethods: {
 
 async function createDirectoryIfNotExist(params): Promise<OperationResult> {
     const newDirPath = params[0];
-    if (!fs.existsSync(newDirPath)) {
-        fs.mkdirSync(newDirPath, { recursive: true });
+    if (!(await fileExists(newDirPath))) {
+        await fs.mkdir(newDirPath, { recursive: true });
         return {
             ok: true,
             msg: 'Directory created',
@@ -44,8 +45,8 @@ async function createDirectoryIfNotExist(params): Promise<OperationResult> {
 
 async function deleteDirectory(params): Promise<OperationResult> {
     const directoryPath = params[0];
-    if (fs.existsSync(directoryPath)) {
-        fs.rmdirSync(directoryPath, { recursive: true });
+    if (await fileExists(directoryPath)) {
+        await fs.rmdir(directoryPath, { recursive: true });
         return {
             ok: true,
             msg: 'Directory removed',
@@ -60,8 +61,8 @@ async function deleteDirectory(params): Promise<OperationResult> {
 
 async function deleteFile(params): Promise<OperationResult> {
     const filePath = 'public\\' + params[0];
-    if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
+    if (await fileExists(filePath)) {
+        await fs.unlink(filePath);
         return {
             ok: true,
             msg: 'File deleted',
@@ -82,10 +83,10 @@ async function createThumbnail(params): Promise<OperationResult> {
     let filename = originalFilePath.substring(
         originalFilePath.lastIndexOf('/')
     );
-    if (!fs.existsSync(thumbnailsDirPath)) {
-        fs.mkdirSync(thumbnailsDirPath, { recursive: true });
+    if (!(await fileExists(thumbnailsDirPath))) {
+        await fs.mkdir(thumbnailsDirPath, { recursive: true });
     }
-    let fileData = fs.readFileSync(originalFilePath);
+    let fileData = await fs.readFile(originalFilePath);
     await sharp(fileData)
         .resize({
             fit: sharp.fit.inside,
